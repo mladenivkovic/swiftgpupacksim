@@ -101,6 +101,7 @@ int io_util_check_file_exists(const char* fname) {
   return access(fname, F_OK) == 0;
 }
 
+
 /**
  * Check whether a directory exists. Returns 1 if true.
  */
@@ -118,6 +119,7 @@ int io_util_check_dir_exists(const char* dirname) {
     error("Error in opendir()");
   }
 }
+
 
 /**
  * Check whether this line is empty, i.e. only whitespaces or newlines.
