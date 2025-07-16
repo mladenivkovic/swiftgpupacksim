@@ -51,8 +51,9 @@ int main(void) {
 
   init_params(&params);
   int argc6 = 6;
-  char *argv6[] = {"swiftgpupack", "../data/IntelXeonGold5218_64", "--help", "-h", "-v",
-                   "--verbose"};
+  char *argv6[] = {"swiftgpupack", "../data/IntelXeonGold5218_64",
+                   "--help",       "-h",
+                   "-v",           "--verbose"};
   io_parse_cmdlineargs(argc6, argv6, &params);
   assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64") == 0);
   assert(params.verbose == 1);

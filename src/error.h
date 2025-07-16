@@ -31,23 +31,23 @@
  * @brief Error macro. Prints the message given in argument and aborts.
  *
  */
-#define error(s, ...)                                                          \
-  ({                                                                           \
-    fflush(stdout);                                                            \
-    fprintf(stderr, "%s:%s():%i: " s "\n", __FILE__, __FUNCTION__, __LINE__,   \
-            ##__VA_ARGS__);                                                    \
-    fflush(stderr);                                                            \
-    swift_abort(1);                                                            \
+#define error(s, ...)                                                        \
+  ({                                                                         \
+    fflush(stdout);                                                          \
+    fprintf(stderr, "%s:%s():%i: " s "\n", __FILE__, __FUNCTION__, __LINE__, \
+            ##__VA_ARGS__);                                                  \
+    fflush(stderr);                                                          \
+    swift_abort(1);                                                          \
   })
 
 /**
  * @brief Macro to print a localized message with variable arguments.
  *
  */
-#define message(s, ...)                                                        \
-  ({                                                                           \
-    printf("%s: " s "\n", __FUNCTION__, ##__VA_ARGS__);                        \
-    fflush(stdout);                                                            \
+#define message(s, ...)                                 \
+  ({                                                    \
+    printf("%s: " s "\n", __FUNCTION__, ##__VA_ARGS__); \
+    fflush(stdout);                                     \
   })
 
 /**
@@ -56,26 +56,26 @@
  * Same as message(), but this version prints to the standard error.
  *
  */
-#define warning(s, ...)                                                        \
-  ({                                                                           \
-    fprintf(stderr, "%s:%s():%i: WARNING: " s "\n", __FILE__, __FUNCTION__,    \
-            __LINE__, ##__VA_ARGS__);                                          \
-    fflush(stdout);                                                            \
+#define warning(s, ...)                                                     \
+  ({                                                                        \
+    fprintf(stderr, "%s:%s():%i: WARNING: " s "\n", __FILE__, __FUNCTION__, \
+            __LINE__, ##__VA_ARGS__);                                       \
+    fflush(stdout);                                                         \
   })
 
 /**
  * @brief Assertion macro compatible with MPI
  *
  */
-#define assert(expr)                                                           \
-  ({                                                                           \
-    if (!(expr)) {                                                             \
-      fflush(stdout);                                                          \
-      fprintf(stderr, "%s:%s():%i: FAILED ASSERTION: " #expr " \n", __FILE__,  \
-              __FUNCTION__, __LINE__);                                         \
-      fflush(stderr);                                                          \
-      swift_abort(1);                                                          \
-    }                                                                          \
+#define assert(expr)                                                          \
+  ({                                                                          \
+    if (!(expr)) {                                                            \
+      fflush(stdout);                                                         \
+      fprintf(stderr, "%s:%s():%i: FAILED ASSERTION: " #expr " \n", __FILE__, \
+              __FUNCTION__, __LINE__);                                        \
+      fflush(stderr);                                                         \
+      swift_abort(1);                                                         \
+    }                                                                         \
   })
 
 #endif /* SWIFT_ERROR_H */
