@@ -2,7 +2,7 @@
 #include "io.h"
 #include "parameters.h"
 
-int main(int argc, char* argv[]){
+int main(int argc, char *argv[]) {
 
   /* Initialise whatever needs to be initialized. */
   struct parameters params;
@@ -11,7 +11,6 @@ int main(int argc, char* argv[]){
   /* Get content of cmdline args. */
   io_parse_cmdlineargs(argc, argv, &params);
   validate_params(&params);
-
 
   return 0;
 }

@@ -24,11 +24,10 @@ struct packing_data {
   int cj_count;
 };
 
-
-inline void init_pack_data(struct packing_data* pd){
+inline void init_pack_data(struct packing_data *pd) {
   pd->task_type = task_type_none;
-  pd->ci_cellID = (unsigned long long) -1;
-  pd->cj_cellID = (unsigned long long) -1;
+  pd->ci_cellID = (unsigned long long)-1;
+  pd->cj_cellID = (unsigned long long)-1;
   pd->ci_cellID = -1;
   pd->cj_cellID = -1;
 }

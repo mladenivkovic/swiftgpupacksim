@@ -5,9 +5,7 @@
 #include "error.h"
 #include "io.h"
 
-
-
-int main(void){
+int main(void) {
 
   message("Running test_cmdlineargs");
 
@@ -15,13 +13,13 @@ int main(void){
   init_params(&params);
 
   int argc1 = 1;
-  char* argv1[] = {"../data/IntelXeonGold5218_64"};
+  char *argv1[] = {"../data/IntelXeonGold5218_64"};
   io_parse_cmdlineargs(argc1, argv1, &params);
   assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64") == 0);
 
   init_params(&params);
   int argc2 = 2;
-  char* argv2[] = {"../data/IntelXeonGold5218_64", "-v"};
+  char *argv2[] = {"../data/IntelXeonGold5218_64", "-v"};
   io_parse_cmdlineargs(argc2, argv2, &params);
   assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64") == 0);
   assert(params.verbose == 1);
@@ -29,7 +27,7 @@ int main(void){
 
   init_params(&params);
   int argc3 = 2;
-  char* argv3[] = {"../data/IntelXeonGold5218_64", "--verbose"};
+  char *argv3[] = {"../data/IntelXeonGold5218_64", "--verbose"};
   io_parse_cmdlineargs(argc3, argv3, &params);
   assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64") == 0);
   assert(params.verbose == 1);
@@ -37,7 +35,7 @@ int main(void){
 
   init_params(&params);
   int argc4 = 2;
-  char* argv4[] = {"../data/IntelXeonGold5218_64", "-h"};
+  char *argv4[] = {"../data/IntelXeonGold5218_64", "-h"};
   io_parse_cmdlineargs(argc4, argv4, &params);
   assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64") == 0);
   assert(params.verbose == 0);
@@ -45,7 +43,7 @@ int main(void){
 
   init_params(&params);
   int argc5 = 2;
-  char* argv5[] = {"../data/IntelXeonGold5218_64", "--help"};
+  char *argv5[] = {"../data/IntelXeonGold5218_64", "--help"};
   io_parse_cmdlineargs(argc5, argv5, &params);
   assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64") == 0);
   assert(params.verbose == 0);
@@ -53,12 +51,12 @@ int main(void){
 
   init_params(&params);
   int argc6 = 5;
-  char* argv6[] = {"../data/IntelXeonGold5218_64", "--help", "-h", "-v", "--verbose"};
+  char *argv6[] = {"../data/IntelXeonGold5218_64", "--help", "-h", "-v",
+                   "--verbose"};
   io_parse_cmdlineargs(argc6, argv6, &params);
   assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64") == 0);
   assert(params.verbose == 1);
   assert(params.help == 1);
-
 
   message("Done. Bye");
 }
