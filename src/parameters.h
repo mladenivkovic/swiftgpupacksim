@@ -29,3 +29,4 @@ struct parameters {
 
 void init_params(struct parameters *params);
 void validate_params(struct parameters *params);
+void print_params(struct parameters *params);

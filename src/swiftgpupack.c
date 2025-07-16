@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
   /* Get content of cmdline args. */
   io_parse_cmdlineargs(argc, argv, &params);
   validate_params(&params);
+  print_params(&params);
 
   return 0;
 }
