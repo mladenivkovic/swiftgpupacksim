@@ -1,1 +1,2 @@
 ./test_cmdlineargs.o
+debug.mk
