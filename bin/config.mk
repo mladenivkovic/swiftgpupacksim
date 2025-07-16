@@ -19,7 +19,7 @@ INCLUDES+=-I. -I$(SRCDIR)
 
 ifneq ("$(wildcard debug.mk)","")
 include debug.mk
-CFLAGS=$(CFLAGS_DEBUG)
+CFLAGS=$(CFLAGS_DEBUG) -DSWIFT_DEBUG
 endif
 
 
