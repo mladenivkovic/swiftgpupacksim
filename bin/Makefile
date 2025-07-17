@@ -6,12 +6,12 @@ include ../bin/config.mk
 
 # Note: order matters for linking. Most dependencies last.
 OBJECTS = io.o parameters.o help.o 
-EXEC = swiftgpupack
+EXEC = swiftgpupacksim
 
 
 default: $(EXEC)
 
-swiftgpupack: swiftgpupack.c $(OBJECTS)
+swiftgpupacksim: swiftgpupack.c $(OBJECTS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) $< -o $@ $(OBJECTS)
 
 
