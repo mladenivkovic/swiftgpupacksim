@@ -89,9 +89,14 @@ void io_read_params(struct parameters* params) {
 #endif
 
     if (strcmp(varname, "nr_threads") == 0) {
-      params->nthreads = atoi(varvalue);
+      params->nr_threads = atoi(varvalue);
+    }
+    if (strcmp(varname, "nr_parts") == 0) {
+      params->nr_parts = atoll(varvalue);
     }
   }
+
+  validate_read_params(params);
 }
 
 
@@ -152,32 +157,32 @@ void io_read_measurement_file(const char* filename,
     }
 
     enum task_types task_type = task_type_none;
-    long long ci_cellID = -1;
-    long long cj_cellID = -1;
+    long long ci_offset = -1;
+    long long cj_offset = -1;
     int ci_count = -1;
     int cj_count = -1;
     float timing = -1;
 
     /* Now get the actual data. */
-    io_util_parse_measurement_data_line(tempbuff, &task_type, &ci_cellID,
-                                        &cj_cellID, &ci_count, &cj_count,
+    io_util_parse_measurement_data_line(tempbuff, &task_type, &ci_offset,
+                                        &cj_offset, &ci_count, &cj_count,
                                         &timing);
 #ifdef SWIFT_DEBUG_CHECKS
     assert(task_type != task_type_none);
-    assert(ci_cellID != -1);
+    assert(ci_offset != -1);
     assert(ci_count != -1);
     assert(timing != -1);
     if (task_type == task_type_force_pair ||
         task_type == task_type_gradient_pair ||
         task_type == task_type_density_pair) {
-      assert(cj_cellID != -1);
-      assert(cj_count != -1);
+      assert(cj_offset != -1);
+      assert(cj_offset != -1);
     }
 #endif
 
     (*packing_sequence)[i].task_type = task_type;
-    (*packing_sequence)[i].ci_cellID = ci_cellID;
-    (*packing_sequence)[i].cj_cellID = cj_cellID;
+    (*packing_sequence)[i].ci_offset = ci_offset;
+    (*packing_sequence)[i].cj_offset = cj_offset;
     (*packing_sequence)[i].ci_count = ci_count;
     (*packing_sequence)[i].cj_count = cj_count;
     (*packing_sequence)[i].timing = timing;
@@ -421,8 +426,8 @@ int io_util_line_is_measurement_data(const char* line) {
  */
 void io_util_parse_measurement_data_line(const char* line,
                                          enum task_types* task_type,
-                                         long long* ci_cellID,
-                                         long long* cj_cellID, int* ci_count,
+                                         long long* ci_offset,
+                                         long long* cj_offset, int* ci_count,
                                          int* cj_count, float* timing) {
 
   char tempbuff[64];
@@ -465,7 +470,7 @@ void io_util_parse_measurement_data_line(const char* line,
       io_util_remove_whitespace(tempbuff);
       prev_delim = i + 1;
 
-      *ci_cellID = atoll(tempbuff);
+      *ci_offset = atoll(tempbuff);
       break;
     }
   }
@@ -476,7 +481,7 @@ void io_util_parse_measurement_data_line(const char* line,
       tempbuff[i - prev_delim] = '\0';
       io_util_remove_whitespace(tempbuff);
 
-      *cj_cellID = atoll(tempbuff);
+      *cj_offset = atoll(tempbuff);
       prev_delim = i + 1;
       break;
     }

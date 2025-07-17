@@ -38,5 +38,5 @@ debug:
 nodebug: 
 	rm -f debug.mk
 
-.PHONY: default all clean debug nodebug
+.PHONY: default all clean debug nodebug check
 

@@ -25,6 +25,6 @@ int io_util_split_name_colon_value_present(const char* line, char* varname,
 int io_util_line_is_measurement_data(const char* line);
 void io_util_parse_measurement_data_line(const char* line,
                                          enum task_types* task_type,
-                                         long long* ci_cellID,
-                                         long long* cj_cellID, int* ci_count,
+                                         long long* ci_offset,
+                                         long long* cj_offset, int* ci_count,
                                          int* cj_count, float* timing);

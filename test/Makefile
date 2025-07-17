@@ -4,7 +4,10 @@ include ../bin/Makefile
 
 TEST_EXECS=test_cmdlineargs.o test_read_paramfile.o test_read_data_file.o
 
-test: $(TEST_EXECS)
+check: $(TEST_EXECS)
+	./test_cmdlineargs.o
+	./test_read_paramfile.o
+	./test_read_data_file.o
 
 default: $(TEST_EXECS)
 

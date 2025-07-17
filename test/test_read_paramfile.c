@@ -19,7 +19,8 @@ int main(void) {
   validate_params(&params);
 
   io_read_params(&params);
-  assert(params.nthreads == 32);
+  validate_read_params(&params);
+  assert(params.nr_threads == 32);
 
   message("Done. Bye");
 }

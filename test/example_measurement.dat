@@ -1,4 +1,4 @@
-//task_type,ci_id,cj_id,ci_hydro_count,cj_hydro_count,time[ms]
+//task_type,ci_offset,cj_offset,ci_hydro_count,cj_hydro_count,time[ms]
 density_pair,11,12,110,120,1.0
 density_self,21,-1,210,-1,2.0
 gradient_self,31,-1,310,-1,3.0
