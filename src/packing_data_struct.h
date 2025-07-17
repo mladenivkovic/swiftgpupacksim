@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <stddef.h>
-
 #include "task.h"
+
+#include <stddef.h>
 
 struct packing_data {
 

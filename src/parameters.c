@@ -42,7 +42,6 @@ void validate_read_params(struct parameters *params) {
 
   assert(params->nr_parts > 0);
   assert(params->nr_threads > 0);
-
 }
 
 
