@@ -16,7 +16,8 @@ int main(void) {
   struct packing_data* packing_sequence = NULL;
   size_t n_elements = 0;
 
-  io_read_measurement_file("example_measurement.dat", &packing_sequence, &n_elements, &params);
+  io_read_measurement_file("example_measurement.dat", &packing_sequence,
+                           &n_elements, &params);
 
   assert(n_elements == 12);
 
@@ -66,5 +67,4 @@ int main(void) {
   free(packing_sequence);
 
   message("Done. Bye");
-
 }

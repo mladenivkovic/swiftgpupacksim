@@ -103,8 +103,10 @@ void io_read_params(struct parameters* params) {
  * within this function call.
  * `packing_sequence` will contain `n_elements` entries.
  */
-void io_read_measurement_file(const char* filename, struct packing_data**
-    packing_sequence, size_t *n_elements, const struct parameters* params){
+void io_read_measurement_file(const char* filename,
+                              struct packing_data** packing_sequence,
+                              size_t* n_elements,
+                              const struct parameters* params) {
 
   if (*packing_sequence != NULL)
     error("packing_sequence array is already allocated.");
@@ -113,8 +115,7 @@ void io_read_measurement_file(const char* filename, struct packing_data**
     error("File '%s' not found.", filename);
 
   FILE* f_p = fopen(filename, "r");
-  if (f_p == NULL)
-    error("Error opening '%s'.", filename);
+  if (f_p == NULL) error("Error opening '%s'.", filename);
 
   /* First, let's see how many lines with actual content we have to read */
   int nlines = 0;
@@ -131,7 +132,7 @@ void io_read_measurement_file(const char* filename, struct packing_data**
     error("Error rewinding file '%s'", filename);
 
   /* alloc space for data and store number of elements */
-  if (params->verbose){
+  if (params->verbose) {
     message("Allocating packing sequence containing %d elements", nlines);
   }
   *packing_sequence = malloc(nlines * sizeof(struct packing_data));
@@ -143,7 +144,9 @@ void io_read_measurement_file(const char* filename, struct packing_data**
     /* Are we skipping this particular line? */
     if (!io_util_line_is_measurement_data(tempbuff)) {
 #ifdef SWIFT_DEBUG
-      message("Line doesn't look like measurement line, skipping it. Line: '%s'", tempbuff);
+      message(
+          "Line doesn't look like measurement line, skipping it. Line: '%s'",
+          tempbuff);
 #endif
       continue;
     }
@@ -156,13 +159,17 @@ void io_read_measurement_file(const char* filename, struct packing_data**
     float timing = -1;
 
     /* Now get the actual data. */
-    io_util_parse_measurement_data_line(tempbuff, &task_type, &ci_cellID, &cj_cellID, &ci_count, &cj_count, &timing);
+    io_util_parse_measurement_data_line(tempbuff, &task_type, &ci_cellID,
+                                        &cj_cellID, &ci_count, &cj_count,
+                                        &timing);
 #ifdef SWIFT_DEBUG
     assert(task_type != task_type_none);
     assert(ci_cellID != -1);
     assert(ci_count != -1);
     assert(timing != -1);
-    if (task_type == task_type_force_pair || task_type == task_type_gradient_pair || task_type == task_type_density_pair){
+    if (task_type == task_type_force_pair ||
+        task_type == task_type_gradient_pair ||
+        task_type == task_type_density_pair) {
       assert(cj_cellID != -1);
       assert(cj_count != -1);
     }
@@ -376,7 +383,7 @@ int io_util_split_name_colon_value_present(const char* line, char* varname,
  * Does the line contain data which look like measurement data?
  * 1 if true.
  */
-int io_util_line_is_measurement_data(const char* line){
+int io_util_line_is_measurement_data(const char* line) {
 
   if (io_util_line_is_empty(line)) return 0;
   if (io_util_line_is_comment(line)) return 0;
@@ -385,8 +392,7 @@ int io_util_line_is_measurement_data(const char* line){
   int count = 0;
   int i = 0;
   for (i = 0; i < MAX_LINE_SIZE; i++) {
-    if (line[i] == '\0' || line[i] == '\n')
-      break;
+    if (line[i] == '\0' || line[i] == '\n') break;
     if (line[i] == delim) count++;
   }
 
@@ -414,21 +420,22 @@ int io_util_line_is_measurement_data(const char* line){
  * into appropriate data types.
  */
 void io_util_parse_measurement_data_line(const char* line,
-      enum task_types *task_type, long long* ci_cellID, long long* cj_cellID,
-      int* ci_count, int *cj_count, float* timing){
+                                         enum task_types* task_type,
+                                         long long* ci_cellID,
+                                         long long* cj_cellID, int* ci_count,
+                                         int* cj_count, float* timing) {
 
   char tempbuff[64];
   int prev_delim = 0;
 
   // Task type
-  for (int i = 0; i < MAX_LINE_SIZE; i++){
-    if (line[i] == '\0' || line[i] == '\n')
-      error("Ended too early?");
+  for (int i = 0; i < MAX_LINE_SIZE; i++) {
+    if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i);
       tempbuff[i] = '\0';
       io_util_remove_whitespace(tempbuff);
-      prev_delim = i+1;
+      prev_delim = i + 1;
 
       if (strcmp(tempbuff, "density_self") == 0) {
         *task_type = task_type_density_self;
@@ -450,67 +457,62 @@ void io_util_parse_measurement_data_line(const char* line,
   }
 
   // Cell_i ID
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++){
-    if (line[i] == '\0' || line[i] == '\n')
-      error("Ended too early?");
+  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+    if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
       tempbuff[i - prev_delim] = '\0';
       io_util_remove_whitespace(tempbuff);
-      prev_delim = i+1;
+      prev_delim = i + 1;
 
       *ci_cellID = atoll(tempbuff);
       break;
     }
   }
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++){
-    if (line[i] == '\0' || line[i] == '\n')
-      error("Ended too early?");
+  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+    if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
       tempbuff[i - prev_delim] = '\0';
       io_util_remove_whitespace(tempbuff);
 
       *cj_cellID = atoll(tempbuff);
-      prev_delim = i+1;
+      prev_delim = i + 1;
       break;
     }
   }
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++){
-    if (line[i] == '\0' || line[i] == '\n')
-      error("Ended too early?");
+  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+    if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
       tempbuff[i - prev_delim] = '\0';
       io_util_remove_whitespace(tempbuff);
 
       *ci_count = atoi(tempbuff);
-      prev_delim = i+1;
+      prev_delim = i + 1;
       break;
     }
   }
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++){
-    if (line[i] == '\0' || line[i] == '\n')
-      error("Ended too early?");
+  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+    if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
       tempbuff[i - prev_delim] = '\0';
       io_util_remove_whitespace(tempbuff);
 
       *cj_count = atoi(tempbuff);
-      prev_delim = i+1;
+      prev_delim = i + 1;
       break;
     }
   }
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++){
-    if (line[i] == ',')
-      error("Found too many elements?");
-    if (line[i] == '\0' || line[i] == '\n'){
+  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+    if (line[i] == ',') error("Found too many elements?");
+    if (line[i] == '\0' || line[i] == '\n') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
       io_util_remove_whitespace(tempbuff);
 
       *timing = atof(tempbuff);
-      prev_delim = i+1;
+      prev_delim = i + 1;
       break;
     }
   }

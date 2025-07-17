@@ -26,12 +26,11 @@ void validate_params(struct parameters *params) {
 }
 
 
-void print_params(struct parameters *params){
+void print_params(struct parameters *params) {
 
   printf("Runtime parameters:\n");
   printf("\t nr_threads:        %3d\n", params->nthreads);
   /* printf("\t step:              %6d\n", params->step); */
   /* printf("\t nsteps:            %6d\n", params->nsteps); */
   printf("\t measurement data:  %s\n", params->data_root_dir);
-
 }
