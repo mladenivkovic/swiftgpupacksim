@@ -1,0 +1,13 @@
+//task_type,ci_id,cj_id,ci_hydro_count,cj_hydro_count,time[ms]
+density_pair,11,12,110,120,1.0
+density_self,21,-1,210,-1,2.0
+gradient_self,31,-1,310,-1,3.0
+gradient_pair,41,42,410,420,4.0
+force_self,51,-1,510,-1,5.0
+force_pair,61,62,610,620,6.0
+density_pair  , 11 , 12 ,  110 , 120 , 1.0
+density_self  , 21 ,  -1 , 210 ,  -1 , 2.0
+gradient_self , 31 ,  -1 , 310 ,  -1 , 3.0
+gradient_pair , 41 ,  42 , 410 , 420 , 4.0
+force_self    , 51 ,  -1 , 510 ,  -1 , 5.0
+force_pair    , 61 , 62 ,  610 , 620 , 6.0

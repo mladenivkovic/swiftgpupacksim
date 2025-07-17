@@ -22,6 +22,9 @@ struct packing_data {
 
   // particle count of cell j
   int cj_count;
+
+  // Timing of the task
+  float timing;
 };
 
 inline void init_pack_data(struct packing_data *pd) {
@@ -30,4 +33,5 @@ inline void init_pack_data(struct packing_data *pd) {
   pd->cj_cellID = (unsigned long long)-1;
   pd->ci_cellID = -1;
   pd->cj_cellID = -1;
+  pd->timing = 0.f;
 }

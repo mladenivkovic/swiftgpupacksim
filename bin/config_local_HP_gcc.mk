@@ -9,4 +9,5 @@ CFLAGS_DEBUG = -g -O0 -O3 -flto=auto -gdwarf -fvar-tracking-assignments -fomit-f
 INCLUDES=
 LD_LIBRARY_PATH=
 LIBS=
+SANITIZE_FLAGS=-fsanitize=address
 
