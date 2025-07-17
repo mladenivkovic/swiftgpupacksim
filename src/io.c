@@ -84,7 +84,7 @@ void io_read_params(struct parameters* params) {
               tempbuff);
     }
 
-#ifdef SWIFT_DEBUG
+#ifdef SWIFT_DEBUG_CHECKS
     message("Got name='%s', value='%s'", varname, varvalue);
 #endif
 
@@ -143,7 +143,7 @@ void io_read_measurement_file(const char* filename,
 
     /* Are we skipping this particular line? */
     if (!io_util_line_is_measurement_data(tempbuff)) {
-#ifdef SWIFT_DEBUG
+#ifdef SWIFT_DEBUG_CHECKS
       message(
           "Line doesn't look like measurement line, skipping it. Line: '%s'",
           tempbuff);
@@ -162,7 +162,7 @@ void io_read_measurement_file(const char* filename,
     io_util_parse_measurement_data_line(tempbuff, &task_type, &ci_cellID,
                                         &cj_cellID, &ci_count, &cj_count,
                                         &timing);
-#ifdef SWIFT_DEBUG
+#ifdef SWIFT_DEBUG_CHECKS
     assert(task_type != task_type_none);
     assert(ci_cellID != -1);
     assert(ci_count != -1);
@@ -396,14 +396,14 @@ int io_util_line_is_measurement_data(const char* line) {
     if (line[i] == delim) count++;
   }
 
-#ifdef SWIFT_DEBUG
+#ifdef SWIFT_DEBUG_CHECKS
   if (i == MAX_LINE_SIZE) {
     warning("Line trimmed before the end?? '%s'", line);
   }
 #endif
 
   if (count != 5) {
-#ifdef SWIFT_DEBUG
+#ifdef SWIFT_DEBUG_CHECKS
     if (count > 0) {
       message("Found line with insufficient number of elements: '%s'", line);
     }
