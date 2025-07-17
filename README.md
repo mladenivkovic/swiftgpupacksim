@@ -8,7 +8,7 @@ tasks during a run with SWIFT and then to use this mini-benchmark to re-run the
 same order using varying memory layouts.
 
 
-## instructions
+## Instructions
 
 The experiment run can be created in the `/bin` directory.
 
