@@ -1,5 +1,6 @@
 # Load up a compiler configuration.
 include ../bin/config_local_HP_gcc.mk
+# include ../bin/config_cosma_gn001.mk
 
 # load up global configuration
 include ../bin/config.mk
