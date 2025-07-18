@@ -7,8 +7,6 @@
 #include <errno.h>
 #include <unistd.h>
 
-#define MAX_LINE_SIZE 256
-#define MAX_FILENAME_SIZE 256
 
 /**
  * Read in cmdline args and store relevant runtime parameters
@@ -19,13 +17,9 @@ void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params) {
 
   for (int i = 1; i < argc; i++) {
     char* arg = argv[i];
-    if (strcmp(arg, "-v") == 0) {
+    if (strcmp(arg, "-v") == 0 || strcmp(arg, "--verbose") == 0) {
       params->verbose = 1;
-    } else if (strcmp(arg, "--verbose") == 0) {
-      params->verbose = 1;
-    } else if (strcmp(arg, "-h") == 0) {
-      params->help = 1;
-    } else if (strcmp(arg, "--help") == 0) {
+    } else if (strcmp(arg, "-h") == 0 || strcmp(arg, "--help") == 0) {
       params->help = 1;
     } else {
       /* We may have been given the input file.
@@ -49,6 +43,7 @@ void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params) {
   }
 }
 
+
 /**
  * Read in runtime parameters stored in files.
  * In particular, what was stored during the measurement runs.
@@ -57,7 +52,7 @@ void io_read_params(struct parameters* params) {
 
   if (params->verbose) message("Reading run parameters log file.");
 
-  char filepath[MAX_FILENAME_SIZE];
+  char filepath[IO_MAX_FILENAME_SIZE];
   strcpy(filepath, params->data_root_dir);
   strcat(filepath, "/");
   strcat(filepath, "log_runtime_params.dat");
@@ -71,11 +66,11 @@ void io_read_params(struct parameters* params) {
     error("Something went wrong opening the parameter log file.");
   }
 
-  char varname[MAX_LINE_SIZE];
-  char varvalue[MAX_LINE_SIZE];
-  char tempbuff[MAX_LINE_SIZE];
+  char varname[IO_MAX_LINE_SIZE];
+  char varvalue[IO_MAX_LINE_SIZE];
+  char tempbuff[IO_MAX_LINE_SIZE];
 
-  while (fgets(tempbuff, MAX_LINE_SIZE, pfile)) {
+  while (fgets(tempbuff, IO_MAX_LINE_SIZE, pfile)) {
     if (io_util_line_is_comment(tempbuff)) continue;
     io_util_remove_trailing_comments(tempbuff);
     if (io_util_line_is_empty(tempbuff)) continue;
@@ -124,11 +119,11 @@ void io_read_measurement_file(const char* filename,
 
   /* First, let's see how many lines with actual content we have to read */
   int nlines = 0;
-  char tempbuff[MAX_LINE_SIZE];
+  char tempbuff[IO_MAX_LINE_SIZE];
 
   /* If there is an error with a too long line that doesn't fit into
-   * MAX_LINE_SIZE, the parsing of the line later should catch it. */
-  while (fgets(tempbuff, MAX_LINE_SIZE, f_p)) {
+   * IO_MAX_LINE_SIZE, the parsing of the line later should catch it. */
+  while (fgets(tempbuff, IO_MAX_LINE_SIZE, f_p)) {
     if (io_util_line_is_measurement_data(tempbuff)) nlines++;
   }
 
@@ -144,7 +139,7 @@ void io_read_measurement_file(const char* filename,
   *n_elements = nlines;
 
   int i = 0;
-  while (fgets(tempbuff, MAX_LINE_SIZE, f_p)) {
+  while (fgets(tempbuff, IO_MAX_LINE_SIZE, f_p)) {
 
     /* Are we skipping this particular line? */
     if (!io_util_line_is_measurement_data(tempbuff)) {
@@ -196,6 +191,25 @@ void io_read_measurement_file(const char* filename,
 
 
 /**
+ * Get the data measurement file name to read in
+ */
+void io_util_construct_log_filename(char filename[IO_MAX_FILENAME_SIZE], int threadid, int step, const struct parameters* params){
+
+  char tempbuff[IO_MAX_FILENAME_SIZE];
+  sprintf(tempbuff, "log_thread%03d_step%03d.dat", threadid, step);
+  strcpy(filename, params->data_root_dir);
+  strcat(filename, "/");
+  strcat(filename, tempbuff);
+
+  if (!io_util_check_file_exists(filename)) {
+    error("Didn't find measurement log file %s", filename);
+  }
+}
+
+
+
+
+/**
  * Check whether a file exists. Returns 1 if true.
  */
 int io_util_check_file_exists(const char* fname) {
@@ -224,12 +238,12 @@ int io_util_check_dir_exists(const char* dirname) {
 
 /**
  * Check whether this line is empty, i.e. only whitespaces or newlines.
- * returns 1 if true, 0 otherwise. assumes line is MAX_LINE_SIZE
+ * returns 1 if true, 0 otherwise. assumes line is IO_MAX_LINE_SIZE
  */
 int io_util_line_is_empty(const char* line) {
   int isempty = 0;
 
-  for (int i = 0; i < MAX_LINE_SIZE; i++) {
+  for (int i = 0; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] != ' ') {
       if (line[i] == '\n') {
         isempty = 1;
@@ -269,7 +283,7 @@ void io_util_remove_whitespace(char* line) {
   int stop = strlen(line);
 
   /* find first non-whitespace character */
-  for (int i = 0; i < MAX_LINE_SIZE; i++) {
+  for (int i = 0; i < IO_MAX_LINE_SIZE; i++) {
     if ((line[i] != ' ') && (line[i] != '\t')) {
       start = i;
       break;
@@ -285,7 +299,7 @@ void io_util_remove_whitespace(char* line) {
     }
   }
 
-  char newline[MAX_LINE_SIZE];
+  char newline[IO_MAX_LINE_SIZE];
   strncpy(newline, line + start, stop - start + 1);
   newline[stop - start + 1] = '\0';
   strcpy(line, newline);
@@ -298,7 +312,7 @@ void io_util_remove_whitespace(char* line) {
  */
 void io_util_remove_trailing_comments(char* line) {
 
-  for (int i = 0; i < MAX_LINE_SIZE - 2; i++) {
+  for (int i = 0; i < IO_MAX_LINE_SIZE - 2; i++) {
     /* -2: 1 for \0 char, 1 because comment is always 2 characters long,
      * and I only check for the first.*/
     if (line[i] == '\0') {
@@ -396,13 +410,13 @@ int io_util_line_is_measurement_data(const char* line) {
   const char delim = ',';
   int count = 0;
   int i = 0;
-  for (i = 0; i < MAX_LINE_SIZE; i++) {
+  for (i = 0; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') break;
     if (line[i] == delim) count++;
   }
 
 #ifdef SWIFT_DEBUG_CHECKS
-  if (i == MAX_LINE_SIZE) {
+  if (i == IO_MAX_LINE_SIZE) {
     warning("Line trimmed before the end?? '%s'", line);
   }
 #endif
@@ -434,7 +448,7 @@ void io_util_parse_measurement_data_line(const char* line,
   int prev_delim = 0;
 
   // Task type
-  for (int i = 0; i < MAX_LINE_SIZE; i++) {
+  for (int i = 0; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i);
@@ -462,7 +476,7 @@ void io_util_parse_measurement_data_line(const char* line,
   }
 
   // Cell_i ID
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+  for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
@@ -474,7 +488,7 @@ void io_util_parse_measurement_data_line(const char* line,
       break;
     }
   }
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+  for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
@@ -486,7 +500,7 @@ void io_util_parse_measurement_data_line(const char* line,
       break;
     }
   }
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+  for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
@@ -498,7 +512,7 @@ void io_util_parse_measurement_data_line(const char* line,
       break;
     }
   }
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+  for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
@@ -510,7 +524,7 @@ void io_util_parse_measurement_data_line(const char* line,
       break;
     }
   }
-  for (int i = prev_delim; i < MAX_LINE_SIZE; i++) {
+  for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == ',') error("Found too many elements?");
     if (line[i] == '\0' || line[i] == '\n') {
       strncpy(tempbuff, line + prev_delim, i - prev_delim);

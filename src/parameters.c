@@ -51,8 +51,8 @@ void validate_read_params(struct parameters *params) {
 void print_params(struct parameters *params) {
 
   printf("Runtime parameters:\n");
-  printf("\t nr_threads:        %3d\n", params->nr_threads);
-  printf("\t nr_parts:          %3lu\n", params->nr_parts);
+  printf("\t nr_threads:        %12d\n", params->nr_threads);
+  printf("\t nr_parts:          %12lu\n", params->nr_parts);
   /* printf("\t step:              %6d\n", params->step); */
   /* printf("\t nsteps:            %6d\n", params->nsteps); */
   printf("\t measurement data:  %s\n", params->data_root_dir);

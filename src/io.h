@@ -7,6 +7,9 @@
 #include "packing_data_struct.h"
 #include "parameters.h"
 
+#define IO_MAX_LINE_SIZE 256
+#define IO_MAX_FILENAME_SIZE 256
+
 void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params);
 void io_read_params(struct parameters* params);
 void io_read_measurement_file(const char* filename,
@@ -14,6 +17,7 @@ void io_read_measurement_file(const char* filename,
                               size_t* n_elements,
                               const struct parameters* params);
 
+void io_util_construct_log_filename(char filename[IO_MAX_FILENAME_SIZE], int threadid, int step, const struct parameters* params);
 int io_util_check_file_exists(const char* fname);
 int io_util_check_dir_exists(const char* dirname);
 int io_util_line_is_empty(const char* line);

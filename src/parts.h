@@ -22,3 +22,12 @@ void init_parts(struct part_arrays* data, const struct parameters* params) {
   message("size of alloc'd part is %.3g Mb",
           (params->nr_parts * sizeof(struct part)) / (1024. * 1024.));
 }
+
+
+/**
+ * Free the bytes from their prison of labour.
+ */
+void clear_parts(struct part_arrays* data) {
+
+  free(data->p);
+}
