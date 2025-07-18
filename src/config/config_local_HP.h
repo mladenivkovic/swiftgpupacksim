@@ -110,7 +110,7 @@
 /* #undef EXTERNAL_POTENTIAL_HERNQUIST */
 
 /* Hernquist external potential following Springel, Di Matteo & Hernquist 2005
-   */
+ */
 /* #undef EXTERNAL_POTENTIAL_HERNQUIST_SDMH05 */
 
 /* Isothermal external potential */
@@ -570,7 +570,7 @@
 /* #undef HYDRO_GAMMA_4_3 */
 
 /* Adiabatic index is 5/3 */
-#define HYDRO_GAMMA_5_3 5./3.
+#define HYDRO_GAMMA_5_3 5. / 3.
 
 /* Adiabatic index is 7/5 */
 /* #undef HYDRO_GAMMA_7_5 */
@@ -752,7 +752,26 @@
 /* #undef SWIFT_CELL_GRAPH */
 
 /* Flags passed to configure */
-#define SWIFT_CONFIG_FLAGS "--with-parmetis=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/oneapi-2025.0.0/parmetis-4.0.3-hxtrhch4wvpyjvorvzfuaijbbqvwrtf6 --with-metis=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/oneapi-2025.0.0/metis-5.1.0-zhdhbmtdh5oyvtntv2dechqyzuhwqesw --with-grackle=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/oneapi-2025.0.0/grackle-swift-3.2.1-36ugv6v3llvwrpktmh2ehfffwxbopk56 --with-gsl=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/oneapi-2025.0.0/gsl-2.8-7dwmptdar4t5tehsucnhb4yykxlakkk6 --with-fftw=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/oneapi-2025.0.0/fftw-3.3.10-cq7vq2pb7k3ujg63kedgqtsen57ij46j --with-hdf5=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/oneapi-2025.0.0/hdf5-1.14.5-5yhjsaluaiu2upiv66penewjta76j26g/bin/h5cc --disable-doxygen-doc --enable-option-checking --with-rt=GEAR_1 --with-rt-riemann-solver=GLF --with-hydro-dimension=1 --with-hydro=sphenix --with-stars=GEAR --with-feedback=none --enable-debug --enable-debugging-checks CFLAGS=-fno-lto LDFLAGS=-fno-lto"
+#define SWIFT_CONFIG_FLAGS                                                     \
+  "--with-parmetis=/home/mivkov/software/spack/opt/spack/"                     \
+  "linux-manjaro25-icelake/oneapi-2025.0.0/"                                   \
+  "parmetis-4.0.3-hxtrhch4wvpyjvorvzfuaijbbqvwrtf6 "                           \
+  "--with-metis=/home/mivkov/software/spack/opt/spack/"                        \
+  "linux-manjaro25-icelake/oneapi-2025.0.0/"                                   \
+  "metis-5.1.0-zhdhbmtdh5oyvtntv2dechqyzuhwqesw "                              \
+  "--with-grackle=/home/mivkov/software/spack/opt/spack/"                      \
+  "linux-manjaro25-icelake/oneapi-2025.0.0/"                                   \
+  "grackle-swift-3.2.1-36ugv6v3llvwrpktmh2ehfffwxbopk56 "                      \
+  "--with-gsl=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/"  \
+  "oneapi-2025.0.0/gsl-2.8-7dwmptdar4t5tehsucnhb4yykxlakkk6 "                  \
+  "--with-fftw=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/" \
+  "oneapi-2025.0.0/fftw-3.3.10-cq7vq2pb7k3ujg63kedgqtsen57ij46j "              \
+  "--with-hdf5=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/" \
+  "oneapi-2025.0.0/hdf5-1.14.5-5yhjsaluaiu2upiv66penewjta76j26g/bin/h5cc "     \
+  "--disable-doxygen-doc --enable-option-checking --with-rt=GEAR_1 "           \
+  "--with-rt-riemann-solver=GLF --with-hydro-dimension=1 "                     \
+  "--with-hydro=sphenix --with-stars=GEAR --with-feedback=none "               \
+  "--enable-debug --enable-debugging-checks CFLAGS=-fno-lto LDFLAGS=-fno-lto"
 
 /* Enable expensive debugging */
 #define SWIFT_DEBUG_CHECKS 1
@@ -844,24 +863,24 @@
 
 /* Enable extensions on AIX, Interix, z/OS.  */
 #ifndef _ALL_SOURCE
-# define _ALL_SOURCE 1
+#define _ALL_SOURCE 1
 #endif
 /* Enable general extensions on macOS.  */
 #ifndef _DARWIN_C_SOURCE
-# define _DARWIN_C_SOURCE 1
+#define _DARWIN_C_SOURCE 1
 #endif
 /* Enable general extensions on Solaris.  */
 #ifndef __EXTENSIONS__
-# define __EXTENSIONS__ 1
+#define __EXTENSIONS__ 1
 #endif
 /* Enable GNU extensions on systems that have them.  */
 #ifndef _GNU_SOURCE
-# define _GNU_SOURCE 1
+#define _GNU_SOURCE 1
 #endif
 /* Enable X/Open compliant socket functions that do not require linking
    with -lxnet on HP-UX 11.11.  */
 #ifndef _HPUX_ALT_XOPEN_SOCKET_API
-# define _HPUX_ALT_XOPEN_SOCKET_API 1
+#define _HPUX_ALT_XOPEN_SOCKET_API 1
 #endif
 /* Identify the host operating system as Minix.
    This macro does not affect the system headers' behavior.
@@ -872,12 +891,12 @@
 /* Enable general extensions on NetBSD.
    Enable NetBSD compatibility extensions on Minix.  */
 #ifndef _NETBSD_SOURCE
-# define _NETBSD_SOURCE 1
+#define _NETBSD_SOURCE 1
 #endif
 /* Enable OpenBSD compatibility extensions on NetBSD.
    Oddly enough, this does nothing on OpenBSD.  */
 #ifndef _OPENBSD_SOURCE
-# define _OPENBSD_SOURCE 1
+#define _OPENBSD_SOURCE 1
 #endif
 /* Define to 1 if needed for POSIX-compatible behavior.  */
 #ifndef _POSIX_SOURCE
@@ -889,43 +908,43 @@
 #endif
 /* Enable POSIX-compatible threading on Solaris.  */
 #ifndef _POSIX_PTHREAD_SEMANTICS
-# define _POSIX_PTHREAD_SEMANTICS 1
+#define _POSIX_PTHREAD_SEMANTICS 1
 #endif
 /* Enable extensions specified by ISO/IEC TS 18661-5:2014.  */
 #ifndef __STDC_WANT_IEC_60559_ATTRIBS_EXT__
-# define __STDC_WANT_IEC_60559_ATTRIBS_EXT__ 1
+#define __STDC_WANT_IEC_60559_ATTRIBS_EXT__ 1
 #endif
 /* Enable extensions specified by ISO/IEC TS 18661-1:2014.  */
 #ifndef __STDC_WANT_IEC_60559_BFP_EXT__
-# define __STDC_WANT_IEC_60559_BFP_EXT__ 1
+#define __STDC_WANT_IEC_60559_BFP_EXT__ 1
 #endif
 /* Enable extensions specified by ISO/IEC TS 18661-2:2015.  */
 #ifndef __STDC_WANT_IEC_60559_DFP_EXT__
-# define __STDC_WANT_IEC_60559_DFP_EXT__ 1
+#define __STDC_WANT_IEC_60559_DFP_EXT__ 1
 #endif
 /* Enable extensions specified by C23 Annex F.  */
 #ifndef __STDC_WANT_IEC_60559_EXT__
-# define __STDC_WANT_IEC_60559_EXT__ 1
+#define __STDC_WANT_IEC_60559_EXT__ 1
 #endif
 /* Enable extensions specified by ISO/IEC TS 18661-4:2015.  */
 #ifndef __STDC_WANT_IEC_60559_FUNCS_EXT__
-# define __STDC_WANT_IEC_60559_FUNCS_EXT__ 1
+#define __STDC_WANT_IEC_60559_FUNCS_EXT__ 1
 #endif
 /* Enable extensions specified by C23 Annex H and ISO/IEC TS 18661-3:2015.  */
 #ifndef __STDC_WANT_IEC_60559_TYPES_EXT__
-# define __STDC_WANT_IEC_60559_TYPES_EXT__ 1
+#define __STDC_WANT_IEC_60559_TYPES_EXT__ 1
 #endif
 /* Enable extensions specified by ISO/IEC TR 24731-2:2010.  */
 #ifndef __STDC_WANT_LIB_EXT2__
-# define __STDC_WANT_LIB_EXT2__ 1
+#define __STDC_WANT_LIB_EXT2__ 1
 #endif
 /* Enable extensions specified by ISO/IEC 24747:2009.  */
 #ifndef __STDC_WANT_MATH_SPEC_FUNCS__
-# define __STDC_WANT_MATH_SPEC_FUNCS__ 1
+#define __STDC_WANT_MATH_SPEC_FUNCS__ 1
 #endif
 /* Enable extensions on HP NonStop.  */
 #ifndef _TANDEM_SOURCE
-# define _TANDEM_SOURCE 1
+#define _TANDEM_SOURCE 1
 #endif
 /* Enable X/Open extensions.  Define to 500 only if necessary
    to make mbstate_t available.  */
@@ -992,6 +1011,6 @@
    in the previous line.  This workaround can be removed once
    we assume Oracle Developer Studio 12.5 (2016) or later.  */
 #if defined __SUNPRO_CC && !defined __RESTRICT && !defined __restrict__
-# define _Restrict
-# define __restrict__
+#define _Restrict
+#define __restrict__
 #endif

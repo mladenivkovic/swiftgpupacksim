@@ -7,5 +7,3 @@
 #ifdef CONFIG_LOCAL_HP_GCC
 #include "config/config_local_HP.h"
 #endif
-
-

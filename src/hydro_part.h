@@ -26,14 +26,12 @@
  *        with added SPHENIX physics (Borrow 2020) (particle definition)
  */
 
-#include <stddef.h>
-
-#include "placeholder_structs.h"
-
 #include "align.h"
 #include "error.h"
+#include "placeholder_structs.h"
 #include "timestep_limiter_struct.h"
 
+#include <stddef.h>
 
 
 /**
