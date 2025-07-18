@@ -1,7 +1,8 @@
 
 #include "io.h"
-#include "parameters.h"
 #include "help.h"
+#include "parameters.h"
+#include "parts.h"
 
 int main(int argc, char *argv[]) {
 
@@ -21,6 +22,10 @@ int main(int argc, char *argv[]) {
 
   /* Show me what we're doing */
   print_params(&params);
+
+  /* Allocate data to work on */
+  struct part_arrays part_data;
+  init_parts(&part_data, &params);
 
   return 0;
 }
