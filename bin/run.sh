@@ -2,4 +2,4 @@
 
 make
 
-./swiftgpupacksim ../data/IntelXeonGold5218_64_1thread
+./swiftgpupacksim -v ../data/IntelXeonGold5218_64_1thread

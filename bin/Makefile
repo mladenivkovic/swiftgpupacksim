@@ -5,7 +5,7 @@ include ../bin/config_local_HP_gcc.mk
 include ../bin/config.mk
 
 # Note: order matters for linking. Most dependencies last.
-OBJECTS = io.o parameters.o help.o 
+OBJECTS = io.o parameters.o help.o timers.o clocks.o task.o
 EXEC = swiftgpupacksim
 
 

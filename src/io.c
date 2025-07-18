@@ -2,6 +2,7 @@
 
 #include "error.h"
 #include "help.h"
+#include "task.h"
 
 #include <dirent.h>
 #include <errno.h>
@@ -156,7 +157,7 @@ void io_read_measurement_file(const char* filename,
     long long cj_offset = -1;
     int ci_count = -1;
     int cj_count = -1;
-    float timing = -1;
+    double timing = -1;
 
     /* Now get the actual data. */
     io_util_parse_measurement_data_line(tempbuff, &task_type, &ci_offset,
@@ -442,12 +443,12 @@ void io_util_parse_measurement_data_line(const char* line,
                                          enum task_types* task_type,
                                          long long* ci_offset,
                                          long long* cj_offset, int* ci_count,
-                                         int* cj_count, float* timing) {
+                                         int* cj_count, double* timing) {
 
   char tempbuff[64];
   int prev_delim = 0;
 
-  // Task type
+  /* Task type */
   for (int i = 0; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -475,7 +476,7 @@ void io_util_parse_measurement_data_line(const char* line,
     }
   }
 
-  // Cell_i ID
+  /* Cell i offset */
   for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -488,6 +489,8 @@ void io_util_parse_measurement_data_line(const char* line,
       break;
     }
   }
+
+  /* Cell j offset */
   for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -500,6 +503,8 @@ void io_util_parse_measurement_data_line(const char* line,
       break;
     }
   }
+
+  /* cell i count */
   for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -512,6 +517,8 @@ void io_util_parse_measurement_data_line(const char* line,
       break;
     }
   }
+
+  /* cell j count */
   for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -524,6 +531,8 @@ void io_util_parse_measurement_data_line(const char* line,
       break;
     }
   }
+
+  /* operation timing */
   for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == ',') error("Found too many elements?");
     if (line[i] == '\0' || line[i] == '\n') {

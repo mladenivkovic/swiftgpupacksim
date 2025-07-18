@@ -31,4 +31,4 @@ void io_util_parse_measurement_data_line(const char* line,
                                          enum task_types* task_type,
                                          long long* ci_offset,
                                          long long* cj_offset, int* ci_count,
-                                         int* cj_count, float* timing);
+                                         int* cj_count, double* timing);

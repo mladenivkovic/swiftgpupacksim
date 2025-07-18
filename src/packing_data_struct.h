@@ -26,8 +26,9 @@ struct packing_data {
   size_t cj_count;
 
   // Timing of the task
-  float timing;
+  double timing;
 };
+
 
 inline void init_pack_data(struct packing_data *pd) {
   pd->task_type = task_type_none;
