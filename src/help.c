@@ -11,8 +11,9 @@ void help(void) {
   printf("    ./swiftgpupacksim path/to/measurement/data [-v -h]\n\n");
   printf(
       "     Some measurement data should be available in the repository.\n\n");
-  printf("    -v, --verbose: Increase run verbosity\n");
-  printf("    -h, --help:    print this help and exit\n");
+  printf("    -h, --help:               print this help and exit\n");
+  printf("    -p, --print-each-step:    print measurements after each simulation step individually\n");
+  printf("    -v, --verbose:            Increase run verbosity\n");
 
   exit(0);
 }
