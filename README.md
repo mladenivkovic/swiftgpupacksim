@@ -31,6 +31,26 @@ Run the compiled `swiftgpupacksim` executable with the path to the data to be
 read in as the only cmdline arg to execute the simulation, e.g.
 
 ```
-./swiftgpupacksim ../data/IntelXeonGold512
+./swiftgpupacksim ../data/IntelXeonGold512_64_1thread
 ```
+
+
+
+
+## Adding setups for new machines
+
+I'm sure there's plenty of ways to automate the process of moving to a new
+machine, but ain't nobody got time for that. Instead, do it manually:
+
+- Create a `bin/config_YOUR_MACHINE.mk` file, where you define the compiler
+  flags et al. I usually just copy the `CFLAGS=` line from the file generated in
+  the SWIFT repository.
+- Make sure the main Makefile, `bin/Makefile`, is including that file at the
+  top.
+- Copy the `config.h` file that automake generates in the SWIFT repository on
+  the machine you're using into `src/config/config_YOUR_MACHINE.h`
+- Add a macro branch in `src/config.h` to include your config file. You should
+  have defined a corresponding unique preprocessing macro
+  `-DCONFIG_YOUR_MACHINE` in `bin/config_YOUR_MACHINE.mk`
+
 

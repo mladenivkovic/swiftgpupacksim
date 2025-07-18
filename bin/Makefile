@@ -11,21 +11,21 @@ EXEC = swiftgpupacksim
 
 default: $(EXEC)
 
-swiftgpupacksim: swiftgpupack.c $(OBJECTS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) $< -o $@ $(OBJECTS)
+swiftgpupacksim: swiftgpupack.c $(OBJECTS) parts.h
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) $< -o $@ $(OBJECTS)
 
 
 help.o: help.c
-	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS)
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 io.o: io.c
-	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS)
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 parameters.o: parameters.c 
-	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS)
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS)
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 
 
