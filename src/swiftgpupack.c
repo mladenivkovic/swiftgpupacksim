@@ -129,7 +129,7 @@ void run_simulation(struct parameters *params){
   /* Read trace */
   struct packing_data* packing_sequence = NULL;
   size_t n_events = 0;
-  io_read_measurement_file(logfile, &packing_sequence, &n_events, params);
+  io_read_logged_events_file(logfile, &packing_sequence, &n_events, params);
 
   if (params->verbose)
     message("Thread %d step %d found %lu events.", thread_id, step, n_events);
@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) {
   }
 
   /* Read parameters from run log file */
-  io_read_params(&params);
+  io_read_logged_params(&params);
 
   /* Show me what we're doing */
   print_params(&params);

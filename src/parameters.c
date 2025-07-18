@@ -10,8 +10,7 @@ void init_params(struct parameters *params) {
 
   params->nr_threads = 0;
   params->nr_parts = 0;
-  params->step = 0;
-  params->nsteps = 0;
+  params->nr_steps = 0;
 
   params->verbose = 0;
   params->help = 0;
@@ -42,6 +41,7 @@ void validate_read_params(struct parameters *params) {
 
   assert(params->nr_parts > 0);
   assert(params->nr_threads > 0);
+  assert(params->nr_steps > 0);
 }
 
 
@@ -53,6 +53,7 @@ void print_params(struct parameters *params) {
   printf("Runtime parameters:\n");
   printf("\t nr_threads:        %12d\n", params->nr_threads);
   printf("\t nr_parts:          %12lu\n", params->nr_parts);
+  printf("\t nr_steps:          %12d\n", params->nr_steps);
   /* printf("\t step:              %6d\n", params->step); */
   /* printf("\t nsteps:            %6d\n", params->nsteps); */
   printf("\t measurement data:  %s\n", params->data_root_dir);

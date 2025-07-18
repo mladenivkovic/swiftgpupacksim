@@ -18,9 +18,9 @@ int main(void) {
   io_parse_cmdlineargs(argc, argv, &params);
   validate_params(&params);
 
-  io_read_params(&params);
+  io_read_logged_params(&params);
   validate_read_params(&params);
   assert(params.nr_threads == 32);
 
-  message("Done. Bye");
+  message("Test passed.");
 }

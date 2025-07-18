@@ -11,8 +11,8 @@
 #define IO_MAX_FILENAME_SIZE 256
 
 void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params);
-void io_read_params(struct parameters* params);
-void io_read_measurement_file(const char* filename,
+void io_read_logged_params(struct parameters* params);
+void io_read_logged_events_file(const char* filename,
                               struct packing_data** packing_sequence,
                               size_t* n_elements,
                               const struct parameters* params);

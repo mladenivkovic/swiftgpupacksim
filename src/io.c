@@ -49,7 +49,7 @@ void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params) {
  * Read in runtime parameters stored in files.
  * In particular, what was stored during the measurement runs.
  */
-void io_read_params(struct parameters* params) {
+void io_read_logged_params(struct parameters* params) {
 
   if (params->verbose) message("Reading run parameters log file.");
 
@@ -87,8 +87,14 @@ void io_read_params(struct parameters* params) {
     if (strcmp(varname, "nr_threads") == 0) {
       params->nr_threads = atoi(varvalue);
     }
-    if (strcmp(varname, "nr_parts") == 0) {
+    else if (strcmp(varname, "nr_parts") == 0) {
       params->nr_parts = atoll(varvalue);
+    }
+    else if (strcmp(varname, "nr_steps") == 0) {
+      params->nr_steps = atoi(varvalue);
+    }
+    else {
+      message("Unrecognised parameter '%s' in file", varname);
     }
   }
 
@@ -104,7 +110,7 @@ void io_read_params(struct parameters* params) {
  * within this function call.
  * `packing_sequence` will contain `n_elements` entries.
  */
-void io_read_measurement_file(const char* filename,
+void io_read_logged_events_file(const char* filename,
                               struct packing_data** packing_sequence,
                               size_t* n_elements,
                               const struct parameters* params) {

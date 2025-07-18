@@ -11,11 +11,8 @@ struct parameters {
   // How many threads have we run on?
   int nr_threads;
 
-  // Which step do we run on?
-  int step;
-
   // How many steps do we run on?
-  int nsteps;
+  int nr_steps;
 
   // Are we verbose?
   int verbose;

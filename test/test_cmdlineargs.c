@@ -69,5 +69,5 @@ int main(void) {
   assert(params.verbose == 1);
   assert(params.help == 1);
 
-  message("Done. Bye");
+  message("Test passed.");
 }
