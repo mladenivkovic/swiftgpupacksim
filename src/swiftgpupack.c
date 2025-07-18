@@ -15,7 +15,8 @@
  * Dummy function for now.
  *
  * @param data: Struct holding pointers to all particle data
- * @param ci_offset: index at which this cell's particles start in global particle array
+ * @param ci_offset: index at which this cell's particles start in global
+ * particle array
  * @param count: nr of particles in this cell
  * @param nr_parts: total number of particles in this simulation
  */
@@ -23,7 +24,8 @@ void pack_cell(struct part_arrays* data, size_t ci_offset, size_t count) {
 
 #ifdef SWIFT_DEBUG_CHECKS
   if ((ci_offset + count) > data->nr_parts)
-    error("Will reach beyond array length: %lu %lu %lu %lu", ci_offset, count, ci_offset+count, data->nr_parts);
+    error("Will reach beyond array length: %lu %lu %lu %lu", ci_offset, count,
+          ci_offset + count, data->nr_parts);
 #endif
 
   for (size_t i = ci_offset; i < ci_offset + count; i++) {
@@ -116,7 +118,7 @@ void run_simulation(struct parameters* params) {
   // - check that we're running on the same nr of threads as
   //   the original simulation
 
-  for (int step = 0; step < params->nr_steps; step++){
+  for (int step = 0; step < params->nr_steps; step++) {
 
     // For each thread:
     int thread_id = 0;
@@ -139,12 +141,11 @@ void run_simulation(struct parameters* params) {
     }
 
     message("Finished step %d", step);
-    if (params->print_each_step)
-      print_timers(timers_step, timing_log_step);
+    if (params->print_each_step) print_timers(timers_step, timing_log_step);
     free(packing_sequence);
 
     // omp single
-    for (int i = 0; i < timer_count; i++){
+    for (int i = 0; i < timer_count; i++) {
       timers_full[i] += timers_step[i];
       timers_step[i] = 0;
       timing_log_full[i] += timing_log_step[i];
