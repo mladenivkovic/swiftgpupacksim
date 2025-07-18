@@ -65,7 +65,8 @@ INLINE static ticks timers_toc(unsigned int t, ticks tic) {
   atomic_add(&timers[t], d);
   return d;
 }
-INLINE static ticks timers_toc_location(unsigned int t, ticks tic, ticks* location) {
+INLINE static ticks timers_toc_location(unsigned int t, ticks tic,
+                                        ticks *location) {
   const ticks d = (getticks() - tic);
   atomic_add(&location[t], d);
   return d;
@@ -84,6 +85,7 @@ void timing_reset_time(double *time);
 void timers_open_file(int rank);
 void timers_close_file(void);
 void timers_print_file(int step);
-void print_timers(const ticks timers_arr[timer_count], const double timing_log_arr[timer_count]);
+void print_timers(const ticks timers_arr[timer_count],
+                  const double timing_log_arr[timer_count]);
 
 #endif /* SWIFT_TIMERS_H */

@@ -17,7 +17,7 @@ int main(void) {
   size_t n_elements = 0;
 
   io_read_logged_events_file("example_measurement.dat", &packing_sequence,
-                           &n_elements, &params);
+                             &n_elements, &params);
 
   assert(n_elements == 12);
 

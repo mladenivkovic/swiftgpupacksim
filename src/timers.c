@@ -31,7 +31,6 @@
 /* Local includes. */
 #include "clocks.h"
 #include "error.h"
-
 #include "task.h"
 
 /* The timers. */
@@ -39,13 +38,8 @@ ticks timers[timer_count];
 
 /* Timer names. */
 const char* timers_names[timer_count] = {
-    "none",
-    "density_self",
-    "density_pair",
-    "gradient_self",
-    "gradient_pair",
-    "force_self",
-    "force_pair",
+    "none",          "density_self", "density_pair", "gradient_self",
+    "gradient_pair", "force_self",   "force_pair",
 };
 
 /* File to store the timers */
@@ -60,11 +54,11 @@ void timers_reset_all(void) {
   for (int k = 0; k < timer_count; k++) timers[k] = 0;
 }
 
-void timers_reset(ticks *timer) {
+void timers_reset(ticks* timer) {
   for (int k = 0; k < timer_count; k++) timer[k] = 0;
 }
 
-void timing_reset_time(double *time) {
+void timing_reset_time(double* time) {
   for (int k = 0; k < timer_count; k++) time[k] = 0.;
 }
 
@@ -108,11 +102,18 @@ void timers_close_file(void) { fclose(timers_file); }
 /**
  * Print output to screen.
  */
-void print_timers(const ticks timers_arr[timer_count], const double timing_log_arr[timer_count]){
+void print_timers(const ticks timers_arr[timer_count],
+                  const double timing_log_arr[timer_count]) {
 
-  printf("---------------------------------------------------------------------\n");
-  printf("| Name            | Simulation       | Measured log     | Ratio     |\n");
-  printf("---------------------------------------------------------------------\n");
+  printf(
+      "---------------------------------------------------------------------"
+      "\n");
+  printf(
+      "| Name            | Simulation       | Measured log     | Ratio     "
+      "|\n");
+  printf(
+      "---------------------------------------------------------------------"
+      "\n");
 
   double dt_sim = 0.;
   double dt_log = 0.;
@@ -120,45 +121,39 @@ void print_timers(const ticks timers_arr[timer_count], const double timing_log_a
   dt_sim = clocks_from_ticks(timers_arr[timer_density_self]);
   dt_log = timing_log_arr[timer_density_self];
   printf("| %15s | %16.4g | %16.4g |  %8.4f |\n",
-      task_type_names[task_type_density_self],
-      dt_sim, dt_log, dt_sim / dt_log
-      );
+         task_type_names[task_type_density_self], dt_sim, dt_log,
+         dt_sim / dt_log);
 
   dt_sim = clocks_from_ticks(timers_arr[timer_density_pair]);
   dt_log = timing_log_arr[timer_density_pair];
   printf("| %15s | %16.4g | %16.4g |  %8.4f |\n",
-      task_type_names[task_type_density_pair],
-      dt_sim, dt_log, dt_sim / dt_log
-      );
+         task_type_names[task_type_density_pair], dt_sim, dt_log,
+         dt_sim / dt_log);
 
   dt_sim = clocks_from_ticks(timers_arr[timer_gradient_self]);
   dt_log = timing_log_arr[timer_gradient_self];
   printf("| %15s | %16.4g | %16.4g |  %8.4f |\n",
-      task_type_names[task_type_gradient_self],
-      dt_sim, dt_log, dt_sim / dt_log
-      );
+         task_type_names[task_type_gradient_self], dt_sim, dt_log,
+         dt_sim / dt_log);
 
   dt_sim = clocks_from_ticks(timers_arr[timer_gradient_pair]);
   dt_log = timing_log_arr[timer_gradient_pair];
   printf("| %15s | %16.4g | %16.4g |  %8.4f |\n",
-      task_type_names[task_type_gradient_pair],
-      dt_sim, dt_log, dt_sim / dt_log
-      );
+         task_type_names[task_type_gradient_pair], dt_sim, dt_log,
+         dt_sim / dt_log);
 
   dt_sim = clocks_from_ticks(timers_arr[timer_force_self]);
   dt_log = timing_log_arr[timer_force_self];
   printf("| %15s | %16.4g | %16.4g |  %8.4f |\n",
-      task_type_names[task_type_force_self],
-      dt_sim, dt_log, dt_sim / dt_log
-      );
+         task_type_names[task_type_force_self], dt_sim, dt_log,
+         dt_sim / dt_log);
 
   dt_sim = clocks_from_ticks(timers_arr[timer_force_pair]);
   dt_log = timing_log_arr[timer_force_pair];
   printf("| %15s | %16.4g | %16.4g |  %8.4f |\n",
-      task_type_names[task_type_force_pair],
-      dt_sim, dt_log, dt_sim / dt_log
-      );
-  printf("---------------------------------------------------------------------\n");
+         task_type_names[task_type_force_pair], dt_sim, dt_log,
+         dt_sim / dt_log);
+  printf(
+      "---------------------------------------------------------------------"
+      "\n");
 }
-
-

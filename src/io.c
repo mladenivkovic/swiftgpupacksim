@@ -86,14 +86,11 @@ void io_read_logged_params(struct parameters* params) {
 
     if (strcmp(varname, "nr_threads") == 0) {
       params->nr_threads = atoi(varvalue);
-    }
-    else if (strcmp(varname, "nr_parts") == 0) {
+    } else if (strcmp(varname, "nr_parts") == 0) {
       params->nr_parts = atoll(varvalue);
-    }
-    else if (strcmp(varname, "nr_steps") == 0) {
+    } else if (strcmp(varname, "nr_steps") == 0) {
       params->nr_steps = atoi(varvalue);
-    }
-    else {
+    } else {
       message("Unrecognised parameter '%s' in file", varname);
     }
   }
@@ -111,9 +108,9 @@ void io_read_logged_params(struct parameters* params) {
  * `packing_sequence` will contain `n_elements` entries.
  */
 void io_read_logged_events_file(const char* filename,
-                              struct packing_data** packing_sequence,
-                              size_t* n_elements,
-                              const struct parameters* params) {
+                                struct packing_data** packing_sequence,
+                                size_t* n_elements,
+                                const struct parameters* params) {
 
   if (*packing_sequence != NULL)
     error("packing_sequence array is already allocated.");
@@ -200,7 +197,9 @@ void io_read_logged_events_file(const char* filename,
 /**
  * Get the data measurement file name to read in
  */
-void io_util_construct_log_filename(char filename[IO_MAX_FILENAME_SIZE], int threadid, int step, const struct parameters* params){
+void io_util_construct_log_filename(char filename[IO_MAX_FILENAME_SIZE],
+                                    int threadid, int step,
+                                    const struct parameters* params) {
 
   char tempbuff[IO_MAX_FILENAME_SIZE];
   sprintf(tempbuff, "log_thread%03d_step%03d.dat", threadid, step);
@@ -212,8 +211,6 @@ void io_util_construct_log_filename(char filename[IO_MAX_FILENAME_SIZE], int thr
     error("Didn't find measurement log file %s", filename);
   }
 }
-
-
 
 
 /**

@@ -2,8 +2,8 @@
  * This is where the party is at.
  */
 
-#include "help.h"
 #include "clocks.h"
+#include "help.h"
 #include "io.h"
 #include "packing_data_struct.h"
 #include "parameters.h"
@@ -14,10 +14,9 @@
 /**
  * Dummy function for now.
  */
-void pack_cell(struct part_arrays* data,
-    size_t ci_offset, size_t count){
+void pack_cell(struct part_arrays* data, size_t ci_offset, size_t count) {
 
-  for (size_t i = ci_offset; i < ci_offset + count; i++){
+  for (size_t i = ci_offset; i < ci_offset + count; i++) {
     struct part* p = &data->p[i];
     part_set_id(p, part_get_id(p) + 1);
   }
@@ -30,16 +29,16 @@ void pack_cell(struct part_arrays* data,
  * This region may be executed in parallel, so use atomics where
  * necessary.
  *
- * @param event: Recorded/logged event in measurement run to be reproduced in this function
+ * @param event: Recorded/logged event in measurement run to be reproduced in
+ * this function
  * @param data: Struct holding pointers to all particle data
- * @param timings_log: Array to store measured times (already converted from ticks during measurement run)
+ * @param timings_log: Array to store measured times (already converted from
+ * ticks during measurement run)
  * @param timers: Array to store timers (ticks) for this step of the simulation
  */
-void do_work(const struct packing_data* event,
-    struct part_arrays* data,
-    ticks timers_step[timer_count],
-    double timings_log_step[timer_count]
-    ){
+void do_work(const struct packing_data* event, struct part_arrays* data,
+             ticks timers_step[timer_count],
+             double timings_log_step[timer_count]) {
 
   enum task_types type = event->task_type;
   if (type == task_type_density_self) {
@@ -47,51 +46,44 @@ void do_work(const struct packing_data* event,
     pack_cell(data, event->ci_offset, event->ci_count);
     TIMER_TOC_LOCATION(timer_density_self, timers_step);
     atomic_add_d(&timings_log_step[timer_density_self], event->timing);
-  }
-  else if (type == task_type_gradient_self) {
+  } else if (type == task_type_gradient_self) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     TIMER_TOC_LOCATION(timer_gradient_self, timers_step);
     atomic_add_d(&timings_log_step[timer_gradient_self], event->timing);
-  }
-  else if (type == task_type_force_self) {
+  } else if (type == task_type_force_self) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     TIMER_TOC_LOCATION(timer_force_self, timers_step);
     atomic_add_d(&timings_log_step[timer_force_self], event->timing);
-  }
-  else if (type == task_type_density_pair){
+  } else if (type == task_type_density_pair) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     pack_cell(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_density_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_density_pair], event->timing);
-  }
-  else if (type == task_type_gradient_pair){
+  } else if (type == task_type_gradient_pair) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     pack_cell(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_gradient_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_gradient_pair], event->timing);
-  }
-  else if (type == task_type_force_pair){
+  } else if (type == task_type_force_pair) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     pack_cell(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_force_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_force_pair], event->timing);
-  }
-  else {
+  } else {
     error("Unknown task type");
   }
 }
 
 
-
 /**
  * Run the actual thing.
  */
-void run_simulation(struct parameters *params){
+void run_simulation(struct parameters* params) {
 
   /* Allocate data to work on */
   struct part_arrays part_data;
@@ -134,7 +126,7 @@ void run_simulation(struct parameters *params){
   if (params->verbose)
     message("Thread %d step %d found %lu events.", thread_id, step, n_events);
 
-  for (size_t i = 0; i < n_events; i++){
+  for (size_t i = 0; i < n_events; i++) {
     struct packing_data event = packing_sequence[i];
     do_work(&event, &part_data, timers_step, timing_log_step);
   }
@@ -146,10 +138,7 @@ void run_simulation(struct parameters *params){
 }
 
 
-
-
-
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
   /* Initialise whatever needs to be initialized. */
   struct parameters params;
@@ -165,7 +154,8 @@ int main(int argc, char *argv[]) {
   /* Genesis 1.1: And then, there was time ! */
   clocks_set_cpufreq(0);
   if (params.verbose) {
-    message("CPU frequency used for tick conversion: %llu Hz", clocks_get_cpufreq());
+    message("CPU frequency used for tick conversion: %llu Hz",
+            clocks_get_cpufreq());
   }
 
   /* Read parameters from run log file */

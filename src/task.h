@@ -17,4 +17,3 @@ enum task_types {
 
 
 extern const char *task_type_names[task_type_count];
-
