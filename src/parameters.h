@@ -25,6 +25,9 @@ struct parameters {
 
   // Root dir of measurement data
   char data_root_dir[200];
+
+  // Print measurements each step?
+  int print_each_step;
 };
 
 void init_params(struct parameters *params);

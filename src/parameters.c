@@ -15,6 +15,8 @@ void init_params(struct parameters *params) {
   params->verbose = 0;
   params->help = 0;
 
+  params->print_each_step = 0;
+
   strcpy(params->data_root_dir, "\0");
 }
 

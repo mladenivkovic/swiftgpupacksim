@@ -22,6 +22,8 @@ void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params) {
       params->verbose = 1;
     } else if (strcmp(arg, "-h") == 0 || strcmp(arg, "--help") == 0) {
       params->help = 1;
+    } else if (strcmp(arg, "-p") == 0 || strcmp(arg, "--print-each-step") == 0) {
+      params->print_each_step = 1;
     } else {
       /* We may have been given the input file.
        * Check whether directory exists. */

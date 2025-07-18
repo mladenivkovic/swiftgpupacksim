@@ -139,7 +139,8 @@ void run_simulation(struct parameters* params) {
     }
 
     message("Finished step %d", step);
-    print_timers(timers_step, timing_log_step);
+    if (params->print_each_step)
+      print_timers(timers_step, timing_log_step);
     free(packing_sequence);
 
     // omp single
