@@ -13,8 +13,18 @@
 
 /**
  * Dummy function for now.
+ *
+ * @param data: Struct holding pointers to all particle data
+ * @param ci_offset: index at which this cell's particles start in global particle array
+ * @param count: nr of particles in this cell
+ * @param nr_parts: total number of particles in this simulation
  */
 void pack_cell(struct part_arrays* data, size_t ci_offset, size_t count) {
+
+#ifdef SWIFT_DEBUG_CHECKS
+  if ((ci_offset + count) > data->nr_parts)
+    error("Will reach beyond array length: %lu %lu %lu %lu", ci_offset, count, ci_offset+count, data->nr_parts);
+#endif
 
   for (size_t i = ci_offset; i < ci_offset + count; i++) {
     struct part* p = &data->p[i];
