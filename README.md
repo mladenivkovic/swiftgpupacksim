@@ -54,3 +54,13 @@ machine, but ain't nobody got time for that. Instead, do it manually:
   `-DCONFIG_YOUR_MACHINE` in `bin/config_YOUR_MACHINE.mk`
 
 
+## Adding new measurement data
+
+The measured event logs are kept under [git-lfs]() revision. To add your new
+data correctly without messing up this repo's size, do the following:
+
+- Make a new empty subdirectory to `data/`
+- Add the path to that subdirectory in `.gitattributes`
+- Move your data into your new subdir
+- `git add` your data and `.gitattributes` to stage them
+- Make a `git commit` as usual.
