@@ -101,11 +101,6 @@ void run_simulation(struct parameters* params) {
 
   message("Starting simulation.");
 
-  // TODO(mivkov):
-  // - loop over steps
-  int step = 0;
-  int thread_id = 0;
-
   /* Init timers */
   ticks timers_step[timer_count];
   timers_reset(timers_step);
@@ -121,28 +116,44 @@ void run_simulation(struct parameters* params) {
   // - check that we're running on the same nr of threads as
   //   the original simulation
 
+  for (int step = 0; step < params->nr_steps; step++){
 
-  // For each thread:
+    // For each thread:
+    int thread_id = 0;
 
-  /* Get file to read */
-  char logfile[IO_MAX_FILENAME_SIZE];
-  io_util_construct_log_filename(logfile, 0, step, params);
+    /* Get file to read */
+    char logfile[IO_MAX_FILENAME_SIZE];
+    io_util_construct_log_filename(logfile, 0, step, params);
 
-  /* Read trace */
-  struct packing_data* packing_sequence = NULL;
-  size_t n_events = 0;
-  io_read_logged_events_file(logfile, &packing_sequence, &n_events, params);
+    /* Read trace */
+    struct packing_data* packing_sequence = NULL;
+    size_t n_events = 0;
+    io_read_logged_events_file(logfile, &packing_sequence, &n_events, params);
 
-  if (params->verbose)
-    message("Thread %d step %d found %lu events.", thread_id, step, n_events);
+    if (params->verbose)
+      message("Thread %d step %d found %lu events.", thread_id, step, n_events);
 
-  for (size_t i = 0; i < n_events; i++) {
-    struct packing_data event = packing_sequence[i];
-    do_work(&event, &part_data, timers_step, timing_log_step);
+    for (size_t i = 0; i < n_events; i++) {
+      struct packing_data event = packing_sequence[i];
+      do_work(&event, &part_data, timers_step, timing_log_step);
+    }
+
+    message("Finished step %d", step);
+    print_timers(timers_step, timing_log_step);
+    free(packing_sequence);
+
+    // omp single
+    for (int i = 0; i < timer_count; i++){
+      timers_full[i] += timers_step[i];
+      timers_step[i] = 0;
+      timing_log_full[i] += timing_log_step[i];
+      timing_log_step[i] = 0.;
+    }
+    // omp barrier
   }
 
-  message("Finished step %d", step);
-  print_timers(timers_step, timing_log_step);
+  message("Finished simulation.");
+  print_timers(timers_full, timing_log_full);
 
   clear_parts(&part_data);
 }
