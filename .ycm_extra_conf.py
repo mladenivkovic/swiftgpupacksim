@@ -83,6 +83,11 @@ try:
     include.append("-I")
     include.append(os.path.join(CUDA_PATH, "include"))
 except KeyError:
+    try:
+        # cosma
+        CUDA_PATH = os.environ["NVHPC_ROOT"]
+        include.append("-I")
+        include.append(os.path.join(CUDA_PATH, "cuda", "include"))
     pass
 
 
