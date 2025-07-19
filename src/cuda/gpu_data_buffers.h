@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <vector_types.h>
 
 #include "pack_vars.h"
@@ -64,6 +68,7 @@ void gpu_data_clear_first_part_host_arrays(
     /* int2 **d_task_first_part_f4_f */
     );
 
+
 /**
  * TODO: restructure to one function call per array
  */
@@ -83,3 +88,6 @@ void gpu_data_clear_send_recv_host_arrays(
     );
 
 
+#ifdef __cplusplus
+}
+#endif

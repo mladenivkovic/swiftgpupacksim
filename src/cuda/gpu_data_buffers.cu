@@ -2,6 +2,11 @@
  * Functions around data buffers for gpu offloading
  */
 
+/* CUDA Header. Wrap in extern "C" to prevent C++ function name mangling */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "error.h"
 #include "gpu_data_buffers.h"
 #include "gpu_packing_defines.h"
@@ -11,11 +16,6 @@
 
 #include <math.h>
 
-
-/* CUDA Header. Wrap in extern "C" to prevent C++ function name mangling */
-/* #ifdef __cplusplus */
-/* extern "C" { */
-/* #endif */
 
 void gpu_data_init_pack_arrays(
         struct pack_vars_self **pack_vars_self_dens,
@@ -331,12 +331,13 @@ void gpu_data_clear_send_recv_host_arrays(
   struct part_aos_f4_g_send **parts_aos_pair_f4_g_send,
   struct part_aos_f4_g_recv **parts_aos_pair_f4_g_recv,
   struct part_aos_f4_f_send **parts_aos_pair_f4_f_send,
-  struct part_aos_f4_f_recv **parts_aos_pair_f4_f_recv,
-  size_t count_max_parts_tmp
+  struct part_aos_f4_f_recv **parts_aos_pair_f4_f_recv
     ){
   error("TODO");
 }
-/* #ifdef __cplusplus */
-/* } */
-/* #endif */
+
+
+#ifdef __cplusplus
+}
+#endif
 

@@ -20,7 +20,7 @@ struct part_arrays {
  */
 void init_parts(struct part_arrays* data, const struct parameters* params) {
 
-  data->p = calloc(params->nr_parts, sizeof(struct part));
+  data->p = (struct part*)calloc(params->nr_parts, sizeof(struct part));
 
 #ifdef SWIFT_DEBUG_CHECKS
   data->nr_parts = params->nr_parts;

@@ -32,7 +32,7 @@ struct pack_vars_self {
   int target_n_tasks;
   int nBundles;
   int tasksperbundle;
-} pack_vars_self;
+};
 
 struct leaf_cell_list {
   struct cell **ci;
@@ -86,7 +86,6 @@ struct pack_vars_pair {
   int tasksperbundle;
   int task_locked;
 
-} pack_vars_pair;
-
+};
 
 

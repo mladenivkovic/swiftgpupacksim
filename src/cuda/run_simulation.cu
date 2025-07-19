@@ -1,24 +1,13 @@
-/**
- * This is where the party is at.
- */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "run_simulation.h"
 
 #include <math.h>
-#include <vector_types.h>
 
-#include "cell.h"
-#include "clocks.h"
-#include "cuda/gpu_data_buffers.h"
 #include "cuda/gpu_packing_defines.h"
-#include "cuda/part_gpu.h"
-#include "help.h"
 #include "io.h"
-#include "packing_data_struct.h"
-#include "parameters.h"
-#include "parts.h"
-#include "runner.h"
-#include "scheduler.h"
-#include "timers.h"
-
 #include "runner_doiact_functions_hydro_gpu.h"
 
 
@@ -31,7 +20,7 @@
  * @param count: nr of particles in this cell
  * @param nr_parts: total number of particles in this simulation
  */
-void pack_cell(struct part_arrays* data, size_t ci_offset, size_t count) {
+void pack_cell_dummy(struct part_arrays* data, size_t ci_offset, size_t count) {
 
 #ifdef SWIFT_DEBUG_CHECKS
   if ((ci_offset + count) > data->nr_parts)
@@ -102,34 +91,34 @@ void replay_event(const struct packing_data* event,
   }
   else if (type == task_type_gradient_self) {
     TIMER_TIC;
-    pack_cell(data, event->ci_offset, event->ci_count);
+    pack_cell_dummy(data, event->ci_offset, event->ci_count);
     TIMER_TOC_LOCATION(timer_gradient_self, timers_step);
     atomic_add_d(&timings_log_step[timer_gradient_self], event->timing);
   }
   else if (type == task_type_force_self) {
     TIMER_TIC;
-    pack_cell(data, event->ci_offset, event->ci_count);
+    pack_cell_dummy(data, event->ci_offset, event->ci_count);
     TIMER_TOC_LOCATION(timer_force_self, timers_step);
     atomic_add_d(&timings_log_step[timer_force_self], event->timing);
   }
   else if (type == task_type_density_pair) {
     TIMER_TIC;
-    pack_cell(data, event->ci_offset, event->ci_count);
-    pack_cell(data, event->cj_offset, event->cj_count);
+    pack_cell_dummy(data, event->ci_offset, event->ci_count);
+    pack_cell_dummy(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_density_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_density_pair], event->timing);
   }
   else if (type == task_type_gradient_pair) {
     TIMER_TIC;
-    pack_cell(data, event->ci_offset, event->ci_count);
-    pack_cell(data, event->cj_offset, event->cj_count);
+    pack_cell_dummy(data, event->ci_offset, event->ci_count);
+    pack_cell_dummy(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_gradient_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_gradient_pair], event->timing);
   }
   else if (type == task_type_force_pair) {
     TIMER_TIC;
-    pack_cell(data, event->ci_offset, event->ci_count);
-    pack_cell(data, event->cj_offset, event->cj_count);
+    pack_cell_dummy(data, event->ci_offset, event->ci_count);
+    pack_cell_dummy(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_force_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_force_pair], event->timing);
   }
@@ -412,35 +401,7 @@ void run_simulation(struct parameters* params) {
 }
 
 
-int main(int argc, char* argv[]) {
-
-  /* Initialise whatever needs to be initialized. */
-  struct parameters params;
-  init_params(&params);
-
-  /* Get content of cmdline args. */
-  io_parse_cmdlineargs(argc, argv, &params);
-  validate_params(&params);
-
-  /* If we're continuing, print out the banner now. */
-  banner();
-
-  /* Genesis 1.1: And then, there was time ! */
-  clocks_set_cpufreq(0);
-  if (params.verbose) {
-    message("CPU frequency used for tick conversion: %llu Hz",
-            clocks_get_cpufreq());
-  }
-
-  /* Read parameters from run log file */
-  io_read_logged_params(&params);
-
-  /* Show me what we're doing */
-  print_params(&params);
-
-  /* Let's get to work. */
-  run_simulation(&params);
-
-
-  return 0;
+#ifdef __cplusplus
 }
+#endif
+
