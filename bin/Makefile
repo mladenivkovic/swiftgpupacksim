@@ -1,12 +1,14 @@
 # Load up a compiler configuration.
-include ../bin/config_local_HP_icx.mk
+# Only load one of these, the one you need.
+include ../bin/config_local_HP_gcc.mk
+# include ../bin/config_local_HP_icx.mk
 # include ../bin/config_cosma_gn001.mk
 
-# load up global configuration
+# Now load up global configuration. Always include this.
 include ../bin/config.mk
 
 # Note: order matters for linking. Most dependencies last.
-OBJECTS = io.o parameters.o help.o timers.o clocks.o task.o
+OBJECTS = io.o parameters.o help.o runner_gpu_pack_functions.o gpu_data_buffers.o timers.o clocks.o task.o
 EXEC = swiftgpupacksim
 
 
@@ -23,6 +25,9 @@ io.o: io.c
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 parameters.o: parameters.c 
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
+
+gpu_data_buffers.o: cuda/gpu_data_buffers.cu
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 %.o: %.c
