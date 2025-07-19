@@ -41,9 +41,9 @@ void validate_params(struct parameters *params) {
  */
 void validate_read_params(struct parameters *params) {
 
-  assert(params->nr_parts > 0);
-  assert(params->nr_threads > 0);
-  assert(params->nr_steps > 0);
+  swift_assert(params->nr_parts > 0);
+  swift_assert(params->nr_threads > 0);
+  swift_assert(params->nr_steps > 0);
 }
 
 

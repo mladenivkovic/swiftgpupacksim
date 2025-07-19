@@ -20,7 +20,9 @@ int main(void) {
 
   io_read_logged_params(&params);
   validate_read_params(&params);
-  assert(params.nr_threads == 32);
+  swift_assert(params.nr_threads == 32);
+  swift_assert(params.nr_steps == 3);
+  swift_assert(params.nr_parts == 101);
 
   message("Test passed.");
 }
