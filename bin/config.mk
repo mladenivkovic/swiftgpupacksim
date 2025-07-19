@@ -11,7 +11,7 @@ VPATH=$(SRCDIR)
 IDIR=$(SRCDIR)
 
 
-VPATH=../src
+VPATH=../src:../src/cuda
 
 INCLUDES+=-I. -I$(SRCDIR)
 
