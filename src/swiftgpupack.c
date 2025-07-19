@@ -2,13 +2,24 @@
  * This is where the party is at.
  */
 
+#include <math.h>
+#include <vector_types.h>
+
+#include "cell.h"
 #include "clocks.h"
+#include "cuda/gpu_data_buffers.h"
+#include "cuda/gpu_packing_defines.h"
+#include "cuda/part_gpu.h"
 #include "help.h"
 #include "io.h"
 #include "packing_data_struct.h"
 #include "parameters.h"
 #include "parts.h"
+#include "runner.h"
+#include "scheduler.h"
 #include "timers.h"
+
+#include "runner_doiact_functions_hydro_gpu.h"
 
 
 /**
@@ -48,45 +59,81 @@ void pack_cell(struct part_arrays* data, size_t ci_offset, size_t count) {
  * ticks during measurement run)
  * @param timers: Array to store timers (ticks) for this step of the simulation
  */
-void do_work(const struct packing_data* event, struct part_arrays* data,
-             ticks timers_step[timer_count],
-             double timings_log_step[timer_count]) {
+void replay_event(const struct packing_data* event,
+    struct part_arrays* data,
+    struct runner* r,
+    struct cell* ci,
+    struct cell* cj,
+    struct task* t,
+    struct scheduler* sched,
+    struct pack_vars_self *pack_vars_self_dens,
+    struct pack_vars_pair *pack_vars_pair_dens,
+    struct pack_vars_self *pack_vars_self_grad,
+    struct pack_vars_pair *pack_vars_pair_grad,
+    struct pack_vars_self *pack_vars_self_forc,
+    struct pack_vars_pair *pack_vars_pair_forc,
+    int2 *task_first_part_f4,
+    int2 *task_first_part_f4_g,
+    int2 *task_first_part_f4_f,
+    struct part_aos_f4_send *parts_aos_f4_send,
+    struct part_aos_f4_recv *parts_aos_f4_recv,
+    struct part_aos_f4_g_send *parts_aos_grad_f4_send,
+    struct part_aos_f4_g_recv *parts_aos_grad_f4_recv,
+    struct part_aos_f4_f_send *parts_aos_forc_f4_send,
+    struct part_aos_f4_f_recv *parts_aos_forc_f4_recv,
+    struct part_aos_f4_send *parts_aos_pair_f4_send,
+    struct part_aos_f4_recv *parts_aos_pair_f4_recv,
+    struct part_aos_f4_g_send *parts_aos_pair_f4_g_send,
+    struct part_aos_f4_g_recv *parts_aos_pair_f4_g_recv,
+    struct part_aos_f4_f_send *parts_aos_pair_f4_f_send,
+    struct part_aos_f4_f_recv *parts_aos_pair_f4_f_recv,
+    ticks timers_step[timer_count],
+    double timings_log_step[timer_count]) {
 
   enum task_types type = event->task_type;
   if (type == task_type_density_self) {
     TIMER_TIC;
-    pack_cell(data, event->ci_offset, event->ci_count);
+
+    runner_doself1_pack_f4(r, sched, pack_vars_self_dens, ci, t,
+                           parts_aos_f4_send, task_first_part_f4);
+
     TIMER_TOC_LOCATION(timer_density_self, timers_step);
     atomic_add_d(&timings_log_step[timer_density_self], event->timing);
-  } else if (type == task_type_gradient_self) {
+  }
+  else if (type == task_type_gradient_self) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     TIMER_TOC_LOCATION(timer_gradient_self, timers_step);
     atomic_add_d(&timings_log_step[timer_gradient_self], event->timing);
-  } else if (type == task_type_force_self) {
+  }
+  else if (type == task_type_force_self) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     TIMER_TOC_LOCATION(timer_force_self, timers_step);
     atomic_add_d(&timings_log_step[timer_force_self], event->timing);
-  } else if (type == task_type_density_pair) {
+  }
+  else if (type == task_type_density_pair) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     pack_cell(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_density_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_density_pair], event->timing);
-  } else if (type == task_type_gradient_pair) {
+  }
+  else if (type == task_type_gradient_pair) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     pack_cell(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_gradient_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_gradient_pair], event->timing);
-  } else if (type == task_type_force_pair) {
+  }
+  else if (type == task_type_force_pair) {
     TIMER_TIC;
     pack_cell(data, event->ci_offset, event->ci_count);
     pack_cell(data, event->cj_offset, event->cj_count);
     TIMER_TOC_LOCATION(timer_force_pair, timers_step);
     atomic_add_d(&timings_log_step[timer_force_pair], event->timing);
-  } else {
+  }
+  else {
     error("Unknown task type");
   }
 }
@@ -118,10 +165,114 @@ void run_simulation(struct parameters* params) {
   // - check that we're running on the same nr of threads as
   //   the original simulation
 
+  // For each thread:
+  int thread_id = 0;
+
+  /* Pretend we're running swift.*/
+  struct runner r;
+  r.id = thread_id;
+
+  struct scheduler sched;
+
+  struct pack_vars_self *pack_vars_self_dens = NULL;
+  struct pack_vars_self *pack_vars_self_forc = NULL;
+  struct pack_vars_self *pack_vars_self_grad = NULL;
+  struct pack_vars_pair *pack_vars_pair_dens = NULL;
+  struct pack_vars_pair *pack_vars_pair_forc = NULL;
+  struct pack_vars_pair *pack_vars_pair_grad = NULL;
+  gpu_data_init_pack_arrays(
+    &pack_vars_self_dens,
+    &pack_vars_pair_dens,
+    &pack_vars_self_grad,
+    &pack_vars_pair_grad,
+    &pack_vars_self_forc,
+    &pack_vars_pair_forc);
+    // TODO(mivkov): check is NULL
+
+  // Keep track of first and last particles for each task (particle data is
+  // arranged in long arrays containing particles from all the tasks we will
+  // work with)
+  /* A. N.: Needed for offloading self tasks as we use these to sort through
+   *        which parts need to interact with which */
+  int2 *task_first_part_f4 = NULL;
+  int2 *task_first_part_f4_f = NULL;
+  int2 *task_first_part_f4_g = NULL;
+  /* int2 *d_task_first_part_f4; */
+  /* int2 *d_task_first_part_f4_f; */
+  /* int2 *d_task_first_part_f4_g; */
+
+  gpu_data_init_first_part_host_arrays(
+      &task_first_part_f4,
+      &task_first_part_f4_f,
+      &task_first_part_f4_g
+      /* &d_task_first_part_f4, */
+      /* &d_task_first_part_f4_f, */
+      /* &d_task_first_part_f4_g */
+      );
+    // TODO(mivkov): check is NULL
+
+  const int target_n_tasks = TARGET_N_TASKS_PACK_SIZE;
+  const int np_per_cell = PARTS_PER_CELL;
+  const int buff = ceil(0.5 * np_per_cell);
+  const int count_max_parts_tmp = 64 * 8 * target_n_tasks * (np_per_cell + buff);
+
+  struct part_aos_f4_send *parts_aos_f4_send = NULL;
+  struct part_aos_f4_recv *parts_aos_f4_recv = NULL;
+  struct part_aos_f4_f_send *parts_aos_forc_f4_send = NULL;
+  struct part_aos_f4_f_recv *parts_aos_forc_f4_recv = NULL;
+  struct part_aos_f4_g_send *parts_aos_grad_f4_send = NULL;
+  struct part_aos_f4_g_recv *parts_aos_grad_f4_recv = NULL;
+  struct part_aos_f4_send *parts_aos_pair_f4_send = NULL;
+  struct part_aos_f4_recv *parts_aos_pair_f4_recv = NULL;
+  struct part_aos_f4_f_send *parts_aos_pair_f4_f_send = NULL;
+  struct part_aos_f4_f_recv *parts_aos_pair_f4_f_recv = NULL;
+  struct part_aos_f4_g_send *parts_aos_pair_f4_g_send = NULL;
+  struct part_aos_f4_g_recv *parts_aos_pair_f4_g_recv = NULL;
+
+  gpu_data_init_send_recv_host_arrays(
+    &parts_aos_f4_send,
+    &parts_aos_f4_recv,
+    &parts_aos_grad_f4_send,
+    &parts_aos_grad_f4_recv,
+    &parts_aos_forc_f4_send,
+    &parts_aos_forc_f4_recv,
+    &parts_aos_pair_f4_send,
+    &parts_aos_pair_f4_recv,
+    &parts_aos_pair_f4_g_send,
+    &parts_aos_pair_f4_g_recv,
+    &parts_aos_pair_f4_f_send,
+    &parts_aos_pair_f4_f_recv,
+    count_max_parts_tmp);
+    // TODO(mivkov): check is NULL
+
+
+  /* -------------------------------------------------*/
+  /* Loop over recorded simulation steps              */
+  /* this loop corresponds to the 'Main loop', i.e.   */
+  /* the first `while (1){}` in runner_main           */
+  /* -------------------------------------------------*/
   for (int step = 0; step < params->nr_steps; step++) {
 
-    // For each thread:
-    int thread_id = 0;
+    // Initialise packing counters
+    pack_vars_self_dens->tasks_packed = 0;
+    pack_vars_pair_dens->tasks_packed = 0;
+    pack_vars_self_dens->count_parts = 0;
+    pack_vars_pair_dens->count_parts = 0;
+    pack_vars_pair_dens->task_locked = 0;
+    pack_vars_pair_dens->top_tasks_packed = 0;
+    // Initialise packing counters
+    pack_vars_self_forc->tasks_packed = 0;
+    pack_vars_pair_forc->tasks_packed = 0;
+    pack_vars_self_forc->count_parts = 0;
+    pack_vars_pair_forc->count_parts = 0;
+    // Initialise packing counters
+    pack_vars_self_grad->tasks_packed = 0;
+    pack_vars_pair_grad->tasks_packed = 0;
+    pack_vars_self_grad->count_parts = 0;
+    pack_vars_pair_grad->count_parts = 0;
+
+    for(int i = 0; i < target_n_tasks; i++)
+    	pack_vars_pair_dens->leaf_list[i].n_leaves = 0;
 
     /* Get file to read */
     char logfile[IO_MAX_FILENAME_SIZE];
@@ -135,9 +286,75 @@ void run_simulation(struct parameters* params) {
     if (params->verbose)
       message("Thread %d step %d found %lu events.", thread_id, step, n_events);
 
+
+    /* ----------------------------------------------*/
+    /* Loop over recorded packing tasks.             */
+    /* This loop corresponds to second `while (1){}` */
+    /* loop in runner_main                           */
+    /* ----------------------------------------------*/
     for (size_t i = 0; i < n_events; i++) {
       struct packing_data event = packing_sequence[i];
-      do_work(&event, &part_data, timers_step, timing_log_step);
+
+      /* Get cells and feed them into the task struct*/
+      struct cell ci;
+      init_cell(&ci);
+      ci.hydro.count = event.ci_count;
+      ci.hydro.parts = part_data.p + event.ci_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+      if ((event.ci_offset + event.ci_count) > part_data.nr_parts)
+        error("Will reach beyond array length: %lu %lu %lu %lu", event.ci_offset, event.ci_count,
+              event.ci_offset + event.ci_count, part_data.nr_parts);
+#endif
+      struct task t;
+      t.ci = &ci;
+      t.cj = NULL;
+
+      struct cell cj;
+      init_cell(&cj);
+      if (event.task_type == task_type_density_pair ||
+          event.task_type == task_type_gradient_pair ||
+          event.task_type == task_type_force_pair){
+        cj.hydro.count = event.cj_count;
+        cj.hydro.parts = part_data.p + event.cj_offset;
+
+#ifdef SWIFT_DEBUG_CHECKS
+        if ((event.cj_offset + event.cj_count) > part_data.nr_parts)
+          error("Will reach beyond array length: %lu %lu %lu %lu", event.cj_offset, event.cj_count,
+                event.cj_offset + event.cj_count, part_data.nr_parts);
+#endif
+        t.cj = &cj;
+      }
+
+      replay_event(&event,
+          &part_data,
+          &r,
+          &ci,
+          &cj,
+          &t,
+          &sched,
+          pack_vars_self_dens,
+          pack_vars_pair_dens,
+          pack_vars_self_grad,
+          pack_vars_pair_grad,
+          pack_vars_self_forc,
+          pack_vars_pair_forc,
+          task_first_part_f4,
+          task_first_part_f4_g,
+          task_first_part_f4_f,
+          parts_aos_f4_send,
+          parts_aos_f4_recv,
+          parts_aos_grad_f4_send,
+          parts_aos_grad_f4_recv,
+          parts_aos_forc_f4_send,
+          parts_aos_forc_f4_recv,
+          parts_aos_pair_f4_send,
+          parts_aos_pair_f4_recv,
+          parts_aos_pair_f4_g_send,
+          parts_aos_pair_f4_g_recv,
+          parts_aos_pair_f4_f_send,
+          parts_aos_pair_f4_f_recv,
+          timers_step,
+          timing_log_step);
     }
 
     message("Finished step %d", step);
@@ -153,6 +370,40 @@ void run_simulation(struct parameters* params) {
     }
     // omp barrier
   }
+
+    gpu_data_clear_pack_arrays(
+      &pack_vars_self_dens,
+      &pack_vars_pair_dens,
+      &pack_vars_self_grad,
+      &pack_vars_pair_grad,
+      &pack_vars_self_forc,
+      &pack_vars_pair_forc);
+
+    gpu_data_clear_first_part_host_arrays(
+        &task_first_part_f4,
+        &task_first_part_f4_g,
+        &task_first_part_f4_f
+        /* &d_task_first_part_f4, */
+        /* &d_task_first_part_f4_g, */
+        /* &d_task_first_part_f4_f */
+        );
+
+    gpu_data_clear_send_recv_host_arrays(
+      &parts_aos_f4_send,
+      &parts_aos_f4_recv,
+      &parts_aos_grad_f4_send,
+      &parts_aos_grad_f4_recv,
+      &parts_aos_forc_f4_send,
+      &parts_aos_forc_f4_recv,
+      &parts_aos_pair_f4_send,
+      &parts_aos_pair_f4_recv,
+      &parts_aos_pair_f4_g_send,
+      &parts_aos_pair_f4_g_recv,
+      &parts_aos_pair_f4_f_send,
+      &parts_aos_pair_f4_f_recv);
+
+
+
 
   message("Finished simulation.");
   print_timers(timers_full, timing_log_full);
