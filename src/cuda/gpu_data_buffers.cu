@@ -298,17 +298,17 @@ void gpu_data_init_send_recv_host_arrays(
 void gpu_data_clear_pack_arrays(
     struct pack_vars_self **pack_vars_self_dens,
     struct pack_vars_pair **pack_vars_pair_dens,
-    struct pack_vars_self **pack_vars_self_forc,
-    struct pack_vars_pair **pack_vars_pair_forc,
     struct pack_vars_self **pack_vars_self_grad,
-    struct pack_vars_pair **pack_vars_pair_grad){
+    struct pack_vars_pair **pack_vars_pair_grad,
+    struct pack_vars_self **pack_vars_self_forc,
+    struct pack_vars_pair **pack_vars_pair_forc){
 
   error("TODO");
 }
 
 
 
-void gpu_data_clear_first_part_arrays(
+void gpu_data_clear_first_part_host_arrays(
     int2 **task_first_part_f4,
     int2 **task_first_part_f4_g,
     int2 **task_first_part_f4_f ) {

@@ -9,8 +9,8 @@ include ../bin/config.mk
 
 # Note: order matters for linking. Most dependencies last.
 OBJECTS = swiftgpupacksim.o io.o parameters.o help.o runner_gpu_pack_functions.o \
-	  timers.o clocks.o task.o
-CUDA_OBJECTS=run_simulation.o gpu_data_buffers.o 
+	  timers.o clocks.o task.o run_simulation.o 
+CUDA_OBJECTS=gpu_data_buffers.o 
 
 EXEC = swiftgpupacksim
 
@@ -35,6 +35,9 @@ io.o: io.c
 parameters.o: parameters.c 
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
+run_simulation.o: run_simulation.c
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
+
 runner_gpu_pack_functions.o: runner_gpu_pack_functions.c 
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
@@ -49,8 +52,6 @@ timers.o: timers.c
 gpu_data_buffers.o: cuda/gpu_data_buffers.cu
 	$(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -c $@ $<
 
-run_simulation.o: cuda/run_simulation.cu
-	$(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -c $@ $<
 
 
 
