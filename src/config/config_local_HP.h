@@ -32,7 +32,7 @@
 /* #undef CHEMISTRY_QLA */
 
 /* Use doubles in grackle */
-#define CONFIG_BFLOAT_8 1
+/* #undef CONFIG_BFLOAT_8 */
 
 /* Const du/dt cooling function */
 /* #undef COOLING_CONST_DU */
@@ -110,7 +110,7 @@
 /* #undef EXTERNAL_POTENTIAL_HERNQUIST */
 
 /* Hernquist external potential following Springel, Di Matteo & Hernquist 2005
- */
+   */
 /* #undef EXTERNAL_POTENTIAL_HERNQUIST_SDMH05 */
 
 /* Isothermal external potential */
@@ -282,7 +282,7 @@
 #define HAVE_CLOCK_GETTIME 1
 
 /* The CUDA compiler is installed. */
-/* #undef HAVE_CUDA */
+#define HAVE_CUDA 1
 
 /* Define to 1 if you have the <c_asm.h> header file. */
 /* #undef HAVE_C_ASM_H */
@@ -323,7 +323,7 @@
 /* #undef HAVE_GETHRTIME */
 
 /* The GRACKLE library appears to be present. */
-#define HAVE_GRACKLE 1
+/* #undef HAVE_GRACKLE */
 
 /* Defined if you have HDF5 support */
 #define HAVE_HDF5 1
@@ -552,13 +552,13 @@
 /* #undef HOPKINS_PU_SPH_MONAGHAN */
 
 /* 1D solver */
-#define HYDRO_DIMENSION_1D 1
+/* #undef HYDRO_DIMENSION_1D */
 
 /* 2D solver */
 /* #undef HYDRO_DIMENSION_2D */
 
 /* 3D solver */
-/* #undef HYDRO_DIMENSION_3D */
+#define HYDRO_DIMENSION_3D 3
 
 /* Hydro scheme with mass fluxes */
 /* #undef HYDRO_DOES_MASS_FLUX */
@@ -570,7 +570,7 @@
 /* #undef HYDRO_GAMMA_4_3 */
 
 /* Adiabatic index is 5/3 */
-#define HYDRO_GAMMA_5_3 5. / 3.
+#define HYDRO_GAMMA_5_3 5./3.
 
 /* Adiabatic index is 7/5 */
 /* #undef HYDRO_GAMMA_7_5 */
@@ -597,7 +597,7 @@
 /* #undef MOVING_MESH_HYDRO */
 
 /* Do symmetric MPI interactions */
-#define MPI_SYMMETRIC_FORCE_INTERACTION_RT 1
+/* #undef MPI_SYMMETRIC_FORCE_INTERACTION_RT */
 
 /* Gravity scheme with per-particle type softening value and background
    particles */
@@ -674,22 +674,22 @@
 /* #undef RT_DEBUG */
 
 /* GEAR M1 closure scheme */
-#define RT_GEAR 1
+/* #undef RT_GEAR */
 
 /* Number of photon groups to follow */
-#define RT_NGROUPS 1
+/* #undef RT_NGROUPS */
 
 /* No radiative transfer scheme */
-/* #undef RT_NONE */
+#define RT_NONE 1
 
 /* GLF RT riemann solver */
-#define RT_RIEMANN_SOLVER_GLF 1
+/* #undef RT_RIEMANN_SOLVER_GLF */
 
 /* HLL RT riemann solver */
 /* #undef RT_RIEMANN_SOLVER_HLL */
 
 /* No RT riemann solver */
-/* #undef RT_RIEMANN_SOLVER_NONE */
+#define RT_RIEMANN_SOLVER_NONE 1
 
 /* SPHM1RT radiative transfer scheme (Chan+21: 2102.08404) */
 /* #undef RT_SPHM1RT */
@@ -717,13 +717,13 @@
 #define SPHENIX_SPH 1
 
 /* Basic stellar model */
-/* #undef STARS_BASIC */
+#define STARS_BASIC 1
 
 /* EAGLE stellar model */
 /* #undef STARS_EAGLE */
 
 /* GEAR stellar model */
-#define STARS_GEAR 1
+/* #undef STARS_GEAR */
 
 /* No stellar model */
 /* #undef STARS_NONE */
@@ -752,26 +752,7 @@
 /* #undef SWIFT_CELL_GRAPH */
 
 /* Flags passed to configure */
-#define SWIFT_CONFIG_FLAGS                                                     \
-  "--with-parmetis=/home/mivkov/software/spack/opt/spack/"                     \
-  "linux-manjaro25-icelake/oneapi-2025.0.0/"                                   \
-  "parmetis-4.0.3-hxtrhch4wvpyjvorvzfuaijbbqvwrtf6 "                           \
-  "--with-metis=/home/mivkov/software/spack/opt/spack/"                        \
-  "linux-manjaro25-icelake/oneapi-2025.0.0/"                                   \
-  "metis-5.1.0-zhdhbmtdh5oyvtntv2dechqyzuhwqesw "                              \
-  "--with-grackle=/home/mivkov/software/spack/opt/spack/"                      \
-  "linux-manjaro25-icelake/oneapi-2025.0.0/"                                   \
-  "grackle-swift-3.2.1-36ugv6v3llvwrpktmh2ehfffwxbopk56 "                      \
-  "--with-gsl=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/"  \
-  "oneapi-2025.0.0/gsl-2.8-7dwmptdar4t5tehsucnhb4yykxlakkk6 "                  \
-  "--with-fftw=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/" \
-  "oneapi-2025.0.0/fftw-3.3.10-cq7vq2pb7k3ujg63kedgqtsen57ij46j "              \
-  "--with-hdf5=/home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/" \
-  "oneapi-2025.0.0/hdf5-1.14.5-5yhjsaluaiu2upiv66penewjta76j26g/bin/h5cc "     \
-  "--disable-doxygen-doc --enable-option-checking --with-rt=GEAR_1 "           \
-  "--with-rt-riemann-solver=GLF --with-hydro-dimension=1 "                     \
-  "--with-hydro=sphenix --with-stars=GEAR --with-feedback=none "               \
-  "--enable-debug --enable-debugging-checks CFLAGS=-fno-lto LDFLAGS=-fno-lto"
+#define SWIFT_CONFIG_FLAGS "--with-parmetis=/home/mivkov/software/spack/opt/spack/linux-icelake/parmetis-4.0.3-eviqtuzti2n2txavw2rngfsccb23qd43 --with-metis=/home/mivkov/software/spack/opt/spack/linux-icelake/metis-5.1.0-qaawev2dmwyrndn2exuz763mgl3tdrn3 --with-gsl=/home/mivkov/software/spack/opt/spack/linux-icelake/gsl-2.8-iu2hcbkbp2vdjw6vhi5ydc6cx4to6clj --with-fftw=/home/mivkov/software/spack/opt/spack/linux-icelake/fftw-3.3.10-xeuwcpcqcaaugjundzolbkn5xma6ck3q --with-hdf5=/home/mivkov/software/spack/opt/spack/linux-icelake/hdf5-1.14.5-vxt5asrjjqc5anx4mdrqxvxdy3iyxz4m/bin/h5cc --with-cuda=/opt/cuda --enable-option-checking --enable-compiler-warnings --enable-debug --enable-debugging-checks"
 
 /* Enable expensive debugging */
 #define SWIFT_DEBUG_CHECKS 1
@@ -825,7 +806,7 @@
 #define SWIFT_RANDOM_SEED_XOR 0
 
 /* additional debugging checks for RT */
-#define SWIFT_RT_DEBUG_CHECKS 1
+/* #undef SWIFT_RT_DEBUG_CHECKS */
 
 /* Enable sink density brute-force checks */
 /* #undef SWIFT_SINK_DENSITY_CHECKS */

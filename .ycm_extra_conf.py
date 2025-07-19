@@ -67,13 +67,23 @@ flags = [
     '-Wno-unused-includes',
     '-Wno-unused-parameter',
     '-Wno-unused-function',
-    '-std=c11'
+    '-std=c11',
+    '-DHAVE_CUDA=1', # cheat for the bloody linter
+    '-DCONFIG_LOCAL_HP_ICX=1',
 ]
+
 
 include = [
     "-I", DIR_OF_THIS_SCRIPT,       # add config.h
     "-I", os.path.join(DIR_OF_THIS_SCRIPT, "src"),
         ]
+
+try:
+    CUDA_PATH = os.environ["CUDA_PATH"]
+    include.append("-I")
+    include.append(os.path.join(CUDA_PATH, "include"))
+except KeyError:
+    pass
 
 
 

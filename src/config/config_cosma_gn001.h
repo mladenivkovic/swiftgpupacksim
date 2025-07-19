@@ -961,7 +961,7 @@
 /* #undef WITH_STAND_ALONE_FOF */
 
 /* Enable hand-written vectorization */
-#define WITH_VECTORIZATION 1
+#define WITH_VECTORIZATION 0
 
 /* Hack for min() and max() using g++ 6+ */
 #define _GLIBCXX_INCLUDE_NEXT_C_HEADERS 1
