@@ -210,7 +210,7 @@ struct cell {
 /**
  * Minimalistic cell initialisation for this benchmark
  */
-inline void init_cell(struct cell* c){
+static __attribute__((always_inline)) INLINE void init_cell(struct cell* c){
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;

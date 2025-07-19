@@ -5,6 +5,7 @@
 #include "cuda/gpu_data_buffers.h"
 #include "cuda/gpu_packing_defines.h"
 #include "io.h"
+#include "parts.h"
 #include "runner_doiact_functions_hydro_gpu.h"
 
 
@@ -161,11 +162,11 @@ void run_simulation(struct parameters* params) {
   struct scheduler sched;
 
   struct pack_vars_self *pack_vars_self_dens = NULL;
-  struct pack_vars_self *pack_vars_self_forc = NULL;
-  struct pack_vars_self *pack_vars_self_grad = NULL;
   struct pack_vars_pair *pack_vars_pair_dens = NULL;
-  struct pack_vars_pair *pack_vars_pair_forc = NULL;
+  struct pack_vars_self *pack_vars_self_grad = NULL;
   struct pack_vars_pair *pack_vars_pair_grad = NULL;
+  struct pack_vars_self *pack_vars_self_forc = NULL;
+  struct pack_vars_pair *pack_vars_pair_forc = NULL;
   gpu_data_init_pack_arrays(
     &pack_vars_self_dens,
     &pack_vars_pair_dens,
@@ -175,27 +176,41 @@ void run_simulation(struct parameters* params) {
     &pack_vars_pair_forc);
     // TODO(mivkov): check is NULL
 
+#ifdef SWIFT_DEBUG_CHECKS
+  swift_assert(pack_vars_self_dens != NULL);
+  swift_assert(pack_vars_pair_dens != NULL);
+  swift_assert(pack_vars_self_grad != NULL);
+  swift_assert(pack_vars_pair_grad != NULL);
+  swift_assert(pack_vars_self_forc != NULL);
+  swift_assert(pack_vars_pair_forc != NULL);
+#endif
+
   // Keep track of first and last particles for each task (particle data is
   // arranged in long arrays containing particles from all the tasks we will
   // work with)
   /* A. N.: Needed for offloading self tasks as we use these to sort through
    *        which parts need to interact with which */
   int2 *task_first_part_f4 = NULL;
-  int2 *task_first_part_f4_f = NULL;
   int2 *task_first_part_f4_g = NULL;
+  int2 *task_first_part_f4_f = NULL;
   /* int2 *d_task_first_part_f4; */
   /* int2 *d_task_first_part_f4_f; */
   /* int2 *d_task_first_part_f4_g; */
 
   gpu_data_init_first_part_host_arrays(
       &task_first_part_f4,
-      &task_first_part_f4_f,
-      &task_first_part_f4_g
+      &task_first_part_f4_g,
+      &task_first_part_f4_f
       /* &d_task_first_part_f4, */
-      /* &d_task_first_part_f4_f, */
-      /* &d_task_first_part_f4_g */
+      /* &d_task_first_part_f4_g, */
+      /* &d_task_first_part_f4_f */
       );
-    // TODO(mivkov): check is NULL
+
+#ifdef SWIFT_DEBUG_CHECKS
+  swift_assert(task_first_part_f4 != NULL);
+  swift_assert(task_first_part_f4_g != NULL);
+  swift_assert(task_first_part_f4_f != NULL);
+#endif
 
   const int target_n_tasks = TARGET_N_TASKS_PACK_SIZE;
   const int np_per_cell = PARTS_PER_CELL;
@@ -229,7 +244,21 @@ void run_simulation(struct parameters* params) {
     &parts_aos_pair_f4_f_send,
     &parts_aos_pair_f4_f_recv,
     count_max_parts_tmp);
-    // TODO(mivkov): check is NULL
+
+#ifdef SWIFT_DEBUG_CHECKS
+  swift_assert(parts_aos_f4_send != NULL);
+  swift_assert(parts_aos_f4_recv != NULL);
+  swift_assert(parts_aos_grad_f4_send != NULL);
+  swift_assert(parts_aos_grad_f4_recv != NULL);
+  swift_assert(parts_aos_forc_f4_send != NULL);
+  swift_assert(parts_aos_forc_f4_recv != NULL);
+  swift_assert(parts_aos_pair_f4_send != NULL);
+  swift_assert(parts_aos_pair_f4_recv != NULL);
+  swift_assert(parts_aos_pair_f4_g_send != NULL);
+  swift_assert(parts_aos_pair_f4_g_recv != NULL);
+  swift_assert(parts_aos_pair_f4_f_send != NULL);
+  swift_assert(parts_aos_pair_f4_f_recv != NULL);
+#endif
 
 
   /* -------------------------------------------------*/
