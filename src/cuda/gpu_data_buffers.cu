@@ -39,9 +39,14 @@ void gpu_data_init_pack_arrays(
   cudaMallocHost((void **)pack_vars_pair_grad,
                  sizeof(struct pack_vars_pair *));
 
+  struct pack_vars_self *p2 ;
+  cudaMallocHost((void **)&pack_vars_self_dens,
+                 sizeof(struct pack_vars_self *));
 
   const int target_n_tasks = TARGET_N_TASKS_PACK_SIZE;
   const int target_n_tasks_pair = TARGET_N_TASKS_PACK_SIZE_PAIR;
+  p2->target_n_tasks = target_n_tasks;
+
   (*pack_vars_self_dens)->target_n_tasks = target_n_tasks;
   (*pack_vars_pair_dens)->target_n_tasks = target_n_tasks_pair;
   (*pack_vars_self_forc)->target_n_tasks = target_n_tasks;
