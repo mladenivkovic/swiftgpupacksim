@@ -8,15 +8,23 @@ include ../bin/config_local_HP_gcc.mk
 include ../bin/config.mk
 
 # Note: order matters for linking. Most dependencies last.
-OBJECTS = io.o parameters.o help.o runner_gpu_pack_functions.o gpu_data_buffers.o timers.o clocks.o task.o
+OBJECTS = swiftgpupacksim.o io.o parameters.o help.o runner_gpu_pack_functions.o \
+	  timers.o clocks.o task.o
+CUDA_OBJECTS=run_simulation.o gpu_data_buffers.o 
+
 EXEC = swiftgpupacksim
 
 
 default: $(EXEC)
 
-swiftgpupacksim: swiftgpupack.c $(OBJECTS) parts.h
-	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) $< -o $@ $(OBJECTS)
+$(EXEC): $(OBJECTS) $(CUDA_OBJECTS)
+	$(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) $(OBJECTS) $(CUDA_OBJECTS) -o $@
 
+swiftgpupacksim.o: swiftgpupacksim.c
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
+
+clocks.o: clocks.c
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 help.o: help.c
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
@@ -27,11 +35,27 @@ io.o: io.c
 parameters.o: parameters.c 
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
-gpu_data_buffers.o: cuda/gpu_data_buffers.cu
+runner_gpu_pack_functions.o: runner_gpu_pack_functions.c 
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
-%.o: %.c
+task.o: task.c
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
+
+timers.o: timers.c
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
+
+
+
+gpu_data_buffers.o: cuda/gpu_data_buffers.cu
+	$(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -c $@ $<
+
+run_simulation.o: cuda/run_simulation.cu
+	$(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -c $@ $<
+
+
+
+# %.o: %.c
+#         $(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 
 

@@ -10,22 +10,22 @@
 
 struct packing_data {
 
-  // task type
+  /* task type */
   enum task_types task_type;
 
-  // ID of cell i
+  /* ID of cell i */
   size_t ci_offset;
 
-  // ID of cell j
+   /* ID of cell j */
   size_t cj_offset;
 
-  // particle count of cell i
-  size_t ci_count;
+  /* particle count of cell i */
+  int ci_count;
 
-  // particle count of cell j
-  size_t cj_count;
+  /* particle count of cell j */
+  int cj_count;
 
-  // Timing of the task
+  /* Timing of the task */
   double timing;
 };
 
