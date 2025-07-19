@@ -5,7 +5,9 @@
 #pragma once
 
 #if defined CONFIG_LOCAL_HP_ICX
-#include "config/config_local_HP.h"
+#include "config/config_local_HP_icx.h"
+#elif defined CONFIG_LOCAL_HP_GCC
+#include "config/config_local_HP_gcc.h"
 #elif defined CONFIG_COSMA_GN001_GCC
 #include "config/config_cosma_gn001.h"
 #else
