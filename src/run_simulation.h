@@ -11,7 +11,8 @@ extern "C" {
 #include <vector_types.h>
 
 #include "cell.h"
-#include "gpu_data_buffers.h"
+#include "cuda/pack_vars.h"
+#include "cuda/part_gpu.h"
 #include "packing_data_struct.h"
 #include "parameters.h"
 #include "parts.h"

@@ -7,7 +7,7 @@
 #include "help.h"
 #include "io.h"
 #include "parameters.h"
-#include "cuda/run_simulation.h"
+#include "run_simulation.h"
 
 
 

@@ -18,7 +18,7 @@ struct part_arrays {
 /**
  * Initialize particle data array(s).
  */
-void init_parts(struct part_arrays* data, const struct parameters* params) {
+inline void init_parts(struct part_arrays* data, const struct parameters* params) {
 
   data->p = (struct part*)calloc(params->nr_parts, sizeof(struct part));
 
@@ -35,4 +35,4 @@ void init_parts(struct part_arrays* data, const struct parameters* params) {
 /**
  * Free the bytes from their prison of labour.
  */
-void clear_parts(struct part_arrays* data) { free(data->p); }
+inline void clear_parts(struct part_arrays* data) { free(data->p); }

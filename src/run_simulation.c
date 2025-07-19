@@ -1,11 +1,8 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "run_simulation.h"
 
 #include <math.h>
 
+#include "cuda/gpu_data_buffers.h"
 #include "cuda/gpu_packing_defines.h"
 #include "io.h"
 #include "runner_doiact_functions_hydro_gpu.h"
@@ -291,7 +288,7 @@ void run_simulation(struct parameters* params) {
       ci.hydro.parts = part_data.p + event.ci_offset;
 #ifdef SWIFT_DEBUG_CHECKS
       if ((event.ci_offset + event.ci_count) > part_data.nr_parts)
-        error("Will reach beyond array length: %lu %lu %lu %lu", event.ci_offset, event.ci_count,
+        error("Will reach beyond array length: %lu %d %lu %lu", event.ci_offset, event.ci_count,
               event.ci_offset + event.ci_count, part_data.nr_parts);
 #endif
       struct task t;
@@ -308,7 +305,7 @@ void run_simulation(struct parameters* params) {
 
 #ifdef SWIFT_DEBUG_CHECKS
         if ((event.cj_offset + event.cj_count) > part_data.nr_parts)
-          error("Will reach beyond array length: %lu %lu %lu %lu", event.cj_offset, event.cj_count,
+          error("Will reach beyond array length: %lu %d %lu %lu", event.cj_offset, event.cj_count,
                 event.cj_offset + event.cj_count, part_data.nr_parts);
 #endif
         t.cj = &cj;
@@ -400,8 +397,4 @@ void run_simulation(struct parameters* params) {
   clear_parts(&part_data);
 }
 
-
-#ifdef __cplusplus
-}
-#endif
 
