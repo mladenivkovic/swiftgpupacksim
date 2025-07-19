@@ -170,15 +170,15 @@ void io_read_logged_events_file(const char* filename,
                                         &cj_offset, &ci_count, &cj_count,
                                         &timing);
 #ifdef SWIFT_DEBUG_CHECKS
-    assert(task_type != task_type_none);
-    assert(ci_offset != -1);
-    assert(ci_count != -1);
-    assert(timing != -1);
+    swift_assert(task_type != task_type_none);
+    swift_assert(ci_offset != -1);
+    swift_assert(ci_count != -1);
+    swift_assert(timing != -1);
     if (task_type == task_type_force_pair ||
         task_type == task_type_gradient_pair ||
         task_type == task_type_density_pair) {
-      assert(cj_offset != -1);
-      assert(cj_offset != -1);
+      swift_assert(cj_offset != -1);
+      swift_assert(cj_offset != -1);
     }
 #endif
 

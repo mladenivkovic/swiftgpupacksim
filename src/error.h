@@ -67,7 +67,7 @@
  * @brief Assertion macro compatible with MPI
  *
  */
-#define assert(expr)                                                          \
+#define swift_assert(expr)                                                    \
   ({                                                                          \
     if (!(expr)) {                                                            \
       fflush(stdout);                                                         \
