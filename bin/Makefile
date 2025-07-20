@@ -1,8 +1,8 @@
 # Load up a compiler configuration.
 # Only load one of these, the one you need.
-include ../bin/config_local_HP_gcc.mk
+# include ../bin/config_local_HP_gcc.mk
 # include ../bin/config_local_HP_icx.mk
-# include ../bin/config_cosma_gn001.mk
+include ../bin/config_cosma_gn001.mk
 
 # Now load up global configuration. Always include this.
 include ../bin/config.mk
