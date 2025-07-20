@@ -11,9 +11,9 @@ VPATH=$(SRCDIR)
 IDIR=$(SRCDIR)
 
 
-VPATH=../src:../src/cuda
+VPATH=$(SRCDIR):$(SRCDIR)/cuda:$(SRCDIR)/swift_placeholders
 
-INCLUDES+=-I. -I$(SRCDIR)
+INCLUDES+=-I. -I$(SRCDIR) -I$(SRCDIR)/cuda -I$(SRCDIR)/swift_placeholders
 
 
 
