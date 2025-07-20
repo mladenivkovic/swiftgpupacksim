@@ -25,27 +25,30 @@ void gpu_data_init_pack_arrays(
         struct pack_vars_self **pack_vars_self_forc,
         struct pack_vars_pair **pack_vars_pair_forc){
 
-  cudaMallocHost((void **)pack_vars_self_dens,
-                 sizeof(struct pack_vars_self *));
-  cudaMallocHost((void **)pack_vars_self_forc,
-                 sizeof(struct pack_vars_self *));
-  cudaMallocHost((void **)pack_vars_self_grad,
-                 sizeof(struct pack_vars_self *));
+  cudaError_t err = cudaSuccess;
 
-  cudaMallocHost((void **)pack_vars_pair_dens,
-                 sizeof(struct pack_vars_pair *));
-  cudaMallocHost((void **)pack_vars_pair_forc,
-                 sizeof(struct pack_vars_pair *));
-  cudaMallocHost((void **)pack_vars_pair_grad,
-                 sizeof(struct pack_vars_pair *));
-
-  struct pack_vars_self *p2 ;
-  cudaMallocHost((void **)&pack_vars_self_dens,
+  err = cudaMallocHost((void **)pack_vars_self_dens,
                  sizeof(struct pack_vars_self *));
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)pack_vars_self_forc,
+                 sizeof(struct pack_vars_self *));
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)pack_vars_self_grad,
+                 sizeof(struct pack_vars_self *));
+  swift_assert(err == cudaSuccess);
+
+  err = cudaMallocHost((void **)pack_vars_pair_dens,
+                 sizeof(struct pack_vars_pair *));
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)pack_vars_pair_forc,
+                 sizeof(struct pack_vars_pair *));
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)pack_vars_pair_grad,
+                 sizeof(struct pack_vars_pair *));
+  swift_assert(err == cudaSuccess);
 
   const int target_n_tasks = TARGET_N_TASKS_PACK_SIZE;
   const int target_n_tasks_pair = TARGET_N_TASKS_PACK_SIZE_PAIR;
-  p2->target_n_tasks = target_n_tasks;
 
   (*pack_vars_self_dens)->target_n_tasks = target_n_tasks;
   (*pack_vars_pair_dens)->target_n_tasks = target_n_tasks_pair;
@@ -80,48 +83,66 @@ void gpu_data_init_pack_arrays(
   // first part and last part are the first and last particle ids (locally
   // within this thread). A. Nasar: All these are used in GPU offload setup
 
-  cudaMallocHost((void **)&(*pack_vars_self_dens)->bundle_first_part,
+  err = cudaMallocHost((void **)&(*pack_vars_self_dens)->bundle_first_part,
                  nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_self_dens)->bundle_last_part,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_self_dens)->bundle_last_part,
                  nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_self_dens)->bundle_first_task_list,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_self_dens)->bundle_first_task_list,
                  nBundles * sizeof(int));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)&(*pack_vars_pair_dens)->bundle_first_part,
+  err = cudaMallocHost((void **)&(*pack_vars_pair_dens)->bundle_first_part,
                  2 * nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_pair_dens)->bundle_last_part,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_pair_dens)->bundle_last_part,
                  2 * nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_pair_dens)->bundle_first_task_list,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_pair_dens)->bundle_first_task_list,
                  2 * nBundles * sizeof(int));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)&(*pack_vars_self_forc)->bundle_first_part,
+  err = cudaMallocHost((void **)&(*pack_vars_self_forc)->bundle_first_part,
                  nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_self_forc)->bundle_last_part,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_self_forc)->bundle_last_part,
                  nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_self_forc)->bundle_first_task_list,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_self_forc)->bundle_first_task_list,
                  nBundles * sizeof(int));
+  swift_assert(err == cudaSuccess);
 
 
-  cudaMallocHost((void **)&(*pack_vars_pair_forc)->bundle_first_part,
+  err = cudaMallocHost((void **)&(*pack_vars_pair_forc)->bundle_first_part,
                  2 * nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_pair_forc)->bundle_last_part,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_pair_forc)->bundle_last_part,
                  2 * nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_pair_forc)->bundle_first_task_list,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_pair_forc)->bundle_first_task_list,
                  2 * nBundles * sizeof(int));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)&(*pack_vars_self_grad)->bundle_first_part,
+  err = cudaMallocHost((void **)&(*pack_vars_self_grad)->bundle_first_part,
                  nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_self_grad)->bundle_last_part,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_self_grad)->bundle_last_part,
                  nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_self_grad)->bundle_first_task_list,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_self_grad)->bundle_first_task_list,
                  nBundles * sizeof(int));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)&(*pack_vars_pair_grad)->bundle_first_part,
+  err = cudaMallocHost((void **)&(*pack_vars_pair_grad)->bundle_first_part,
                  2 * nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_pair_grad)->bundle_last_part,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_pair_grad)->bundle_last_part,
                  2 * nBundles * sizeof(int));
-  cudaMallocHost((void **)&(*pack_vars_pair_grad)->bundle_first_task_list,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)&(*pack_vars_pair_grad)->bundle_first_task_list,
                  2 * nBundles * sizeof(int));
+  swift_assert(err == cudaSuccess);
 
 
   int tasksperbundle = (target_n_tasks + nBundles - 1) / nBundles;
@@ -239,12 +260,25 @@ void gpu_data_init_first_part_host_arrays(
   const int target_n_tasks = TARGET_N_TASKS_PACK_SIZE;
   /* const int target_n_tasks_pair = TARGET_N_TASKS_PACK_SIZE_PAIR; */
 
-  cudaMallocHost((void **)&task_first_part_f4, target_n_tasks * sizeof(int2));
-  /* cudaMalloc((void **)&d_task_first_part_f4, target_n_tasks * sizeof(int2)); */
-  cudaMallocHost((void **)&task_first_part_f4_f, target_n_tasks * sizeof(int2));
-  /* cudaMalloc((void **)&d_task_first_part_f4_f, target_n_tasks * sizeof(int2)); */
-  cudaMallocHost((void **)&task_first_part_f4_g, target_n_tasks * sizeof(int2));
-  /* cudaMalloc((void **)&d_task_first_part_f4_g, target_n_tasks * sizeof(int2)); */
+  cudaError_t err = cudaSuccess;
+
+  err = cudaMallocHost((void **)task_first_part_f4, target_n_tasks * sizeof(int2));
+  swift_assert(err == cudaSuccess);
+
+  /* err = cudaMalloc((void **)d_task_first_part_f4, target_n_tasks * sizeof(int2)); */
+  /* swift_assert(err == cudaSuccess); */
+
+  err = cudaMallocHost((void **)task_first_part_f4_f, target_n_tasks * sizeof(int2));
+  swift_assert(err == cudaSuccess);
+
+  /* err = cudaMalloc((void **)d_task_first_part_f4_f, target_n_tasks * sizeof(int2)); */
+  /* swift_assert(err == cudaSuccess); */
+
+  err = cudaMallocHost((void **)task_first_part_f4_g, target_n_tasks * sizeof(int2));
+  swift_assert(err == cudaSuccess);
+
+  /* err = cudaMalloc((void **)d_task_first_part_f4_g, target_n_tasks * sizeof(int2)); */
+  /* swift_assert(err == cudaSuccess); */
 
 }
 
@@ -265,36 +299,50 @@ void gpu_data_init_send_recv_host_arrays(
   const int count_max_parts_tmp
     ){
 
+  cudaError_t err = cudaSuccess;
+
   /*Now allocate memory for Buffer and GPU particle arrays*/
-  cudaMallocHost((void **)parts_aos_f4_send,
+  err = cudaMallocHost((void **)parts_aos_f4_send,
                  count_max_parts_tmp * sizeof(struct part_aos_f4_send));
-  cudaMallocHost((void **)parts_aos_f4_recv,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)parts_aos_f4_recv,
                  count_max_parts_tmp * sizeof(struct part_aos_f4_recv));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)parts_aos_forc_f4_send,
+  err = cudaMallocHost((void **)parts_aos_forc_f4_send,
                  count_max_parts_tmp * sizeof(struct part_aos_f4_f_send));
-  cudaMallocHost((void **)parts_aos_forc_f4_recv,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)parts_aos_forc_f4_recv,
                  count_max_parts_tmp * sizeof(struct part_aos_f4_f_recv));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)parts_aos_grad_f4_send,
+  err = cudaMallocHost((void **)parts_aos_grad_f4_send,
                  count_max_parts_tmp * sizeof(struct part_aos_f4_g_send));
-  cudaMallocHost((void **)parts_aos_grad_f4_recv,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)parts_aos_grad_f4_recv,
                  count_max_parts_tmp * sizeof(struct part_aos_f4_g_recv));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)parts_aos_pair_f4_send,
+  err = cudaMallocHost((void **)parts_aos_pair_f4_send,
                  2 * count_max_parts_tmp * sizeof(struct part_aos_f4_send));
-  cudaMallocHost((void **)parts_aos_pair_f4_recv,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)parts_aos_pair_f4_recv,
                  2 * count_max_parts_tmp * sizeof(struct part_aos_f4_recv));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)parts_aos_pair_f4_g_send,
+  err = cudaMallocHost((void **)parts_aos_pair_f4_g_send,
                  2 * count_max_parts_tmp * sizeof(struct part_aos_f4_g_send));
-  cudaMallocHost((void **)parts_aos_pair_f4_g_recv,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)parts_aos_pair_f4_g_recv,
                  2 * count_max_parts_tmp * sizeof(struct part_aos_f4_g_recv));
+  swift_assert(err == cudaSuccess);
 
-  cudaMallocHost((void **)parts_aos_pair_f4_f_send,
+  err = cudaMallocHost((void **)parts_aos_pair_f4_f_send,
                  2 * count_max_parts_tmp * sizeof(struct part_aos_f4_f_send));
-  cudaMallocHost((void **)parts_aos_pair_f4_f_recv,
+  swift_assert(err == cudaSuccess);
+  err = cudaMallocHost((void **)parts_aos_pair_f4_f_recv,
                  2 * count_max_parts_tmp * sizeof(struct part_aos_f4_f_recv));
+  swift_assert(err == cudaSuccess);
 
 }
 
