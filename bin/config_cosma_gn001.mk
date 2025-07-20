@@ -16,7 +16,7 @@ NVCC_FLAGS = -D_FORCE_INLINES -O4 -lineinfo -src-in-ptx --maxrregcount=64 -ftz=t
 NVCC_FLAGS += -arch=sm_70
 NVCC_FLAGS += --extra-device-vectorization
 
-NVCC_FLAGS_DEBUG = -D_FORCE_INLINES -O4 -lineinfo -src-in-ptx --maxrregcount=64 -ftz=true -DWITH_CUDA --default-stream per-thread --use_fast_math -lcudadevrt #-dlink -ccbin=gcc 
+NVCC_FLAGS_DEBUG = -g -G -D_FORCE_INLINES -O4 -src-in-ptx --maxrregcount=64 -ftz=true -DWITH_CUDA --default-stream per-thread --use_fast_math -lcudadevrt #-dlink -ccbin=gcc 
 NVCC_FLAGS_DEBUG += -arch=sm_70
 NVCC_FLAGS_DEBUG += --extra-device-vectorization
 

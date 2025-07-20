@@ -140,7 +140,7 @@ void io_read_logged_events_file(const char* filename,
 
   /* alloc space for data and store number of elements */
   if (params->verbose) {
-    message("Allocating packing sequence containing %d elements", nlines);
+    message("Allocating packing sequence containing %d elements, size=%lu", nlines, nlines * sizeof(struct packing_data));
   }
   *packing_sequence = malloc(nlines * sizeof(struct packing_data));
   *n_elements = nlines;
