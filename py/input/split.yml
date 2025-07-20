@@ -1,0 +1,15 @@
+meta:
+    id:
+        type: long long
+    timebin:
+        type: timebin_t
+
+density:
+    x:
+        type: double
+        size: 3
+    h:
+
+force:
+    u:
+    m:

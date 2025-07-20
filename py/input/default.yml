@@ -1,0 +1,8 @@
+part:
+    x:
+        type: double
+        size: 3
+    m:
+    id:
+        type: long long
+    u:
