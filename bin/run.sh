@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-make
+make clean && make
 cmd="./swiftgpupacksim -v ../data/IntelXeonGold5218_64_1thread"
 if [ $# -gt 0 ]; then
     case "$1" in

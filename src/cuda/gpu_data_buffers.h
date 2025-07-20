@@ -9,22 +9,27 @@ extern "C" {
 #include "pack_vars.h"
 #include "part_gpu.h"
 
+
+void test_alloc_and_free(int** test2);
+
 void gpu_data_init_pack_arrays(
     struct pack_vars_self **pack_vars_self_dens,
     struct pack_vars_pair **pack_vars_pair_dens,
     struct pack_vars_self **pack_vars_self_grad,
     struct pack_vars_pair **pack_vars_pair_grad,
     struct pack_vars_self **pack_vars_self_forc,
-    struct pack_vars_pair **pack_vars_pair_forc);
+    struct pack_vars_pair **pack_vars_pair_forc,
+    const int verbose);
 
 
 void gpu_data_init_first_part_host_arrays(
     int2 **task_first_part_f4,
     int2 **task_first_part_f4_g,
-    int2 **task_first_part_f4_f
+    int2 **task_first_part_f4_f,
     /* int2 **d_task_first_part_f4, */
     /* int2 **d_task_first_part_f4_g, */
     /* int2 **d_task_first_part_f4_f */
+    const int verbose
         );
 
 /**
@@ -43,7 +48,8 @@ void gpu_data_init_send_recv_host_arrays(
   struct part_aos_f4_g_recv **parts_aos_pair_f4_g_recv,
   struct part_aos_f4_f_send **parts_aos_pair_f4_f_send,
   struct part_aos_f4_f_recv **parts_aos_pair_f4_f_recv,
-  const int count_max_parts_tmp
+  const int count_max_parts_tmp,
+  const int verbose
     );
 
 
