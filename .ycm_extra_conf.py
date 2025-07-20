@@ -76,6 +76,8 @@ flags = [
 include = [
     "-I", DIR_OF_THIS_SCRIPT,       # add config.h
     "-I", os.path.join(DIR_OF_THIS_SCRIPT, "src"),
+    "-I", os.path.join(DIR_OF_THIS_SCRIPT, "src/cuda"),
+    "-I", os.path.join(DIR_OF_THIS_SCRIPT, "src/swift_placeholders"),
         ]
 
 try:

@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 /* Config parameters. */
-#include "../config.h"
+#include "config.h"
 
 #ifdef HAVE_CUDA
 #include <vector_types.h>
@@ -13,7 +13,7 @@
 #endif
 
 
-#include "../align.h"
+#include "align.h"
 
 
 typedef int8_t timebin_t;

@@ -28,7 +28,7 @@
 
 #include "align.h"
 #include "error.h"
-#include "placeholder_structs.h"
+#include "hydro_part_placeholder_structs.h"
 #include "timestep_limiter_struct.h"
 
 #include <stddef.h>
