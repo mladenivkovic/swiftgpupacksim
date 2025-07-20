@@ -1,0 +1,39 @@
+{{TEMPLATE_WARNING}}
+
+
+/*******************************************************************************
+ * This file is part of SWIFT.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ******************************************************************************/
+#ifndef SWIFT_SPHENIX_HYDRO_{{GIT_COMMIT}}_H
+#define SWIFT_SPHENIX_HYDRO_{{GIT_COMMIT}}_H
+
+#include "align.h"
+#include "error.h"
+#include "placeholder_structs.h"
+#include "timestep_limiter_struct.h"
+
+#include <stddef.h>
+
+
+/**
+ * @brief Particle fields for the SPH particles
+ */
+struct part {
+
+}
+
+#endif /* SWIFT_SPHENIX_HYDRO_{{GIT_COMMIT}}_H */
