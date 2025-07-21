@@ -4,7 +4,9 @@ from parse_yaml import FieldEntry
 from templates import jinja_generate_hydro_part_h
 
 
-def generate_hydro_part_header(part_d: dict, swift_header: bool = True, verbose: bool=False):
+def generate_hydro_part_header(
+    part_d: dict, swift_header: bool = True, verbose: bool = False
+):
     """
     Generate a hydro_part.h with a single struct part.
 
@@ -48,8 +50,8 @@ def generate_hydro_part_header(part_d: dict, swift_header: bool = True, verbose:
         # store the parsed data
         part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations}
 
-    jinja_generate_hydro_part_h(part_struct_d, swift_header=swift_header, verbose=verbose)
+    jinja_generate_hydro_part_h(
+        part_struct_d, swift_header=swift_header, verbose=verbose
+    )
 
     return
-
-
