@@ -1,0 +1,3 @@
+{% if HAS_DOC %}/*! {{DOC}} */
+{% endif %}{% for i in range(INDENT) %}  {% endfor %}{{TYPE}} _{{NAME}}{%if IS_ARRAY%}[{{SIZE}}]{%endif%};
+
