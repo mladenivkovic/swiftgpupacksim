@@ -63,3 +63,4 @@ swiftgpupack
 
 # python suff
 __pycache__
+.black_formatting_env
