@@ -51,13 +51,20 @@ if __name__ == "__main__":
     args = parser.parse_args()
     verbose = args.verbose
     swift_headers = args.swift
+    outdir = check_output_directory(args.output_dir)
+    dry_run = args.dry_run
     input_file = args.input_file
     verify_file_exists(input_file)
-
-    outdir = check_output_directory(args.output_dir)
 
     input_fp = open(input_file, "r")
     particle_fields_d = yaml.safe_load(input_fp)
     input_fp.close()
 
-    generate_hydro_part_header(particle_fields_d, swift_headers, verbose)
+    hydro_part_header = generate_hydro_part_header(particle_fields_d, swift_headers, verbose)
+
+    if (dry_run):
+        print(hydro_part_header)
+    else:
+        # TODO: write output to file.
+        pass
+

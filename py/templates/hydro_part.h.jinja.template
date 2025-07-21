@@ -3,6 +3,10 @@
   * File template is {{TEMPLATE_FILENAME}}
   */
 
+{# ------------------- HEADER OF THE HEADER. INCLUDES, LICENSE, ETC ------------------- #}
+#ifndef SWIFT_HYDRO_PART_{{HEADER_GUARD}}_H
+#define SWIFT_HYDRO_PART_{{HEADER_GUARD}}_H
+
 {% if HEADER_FOR_SWIFT %}
 // license
 // includes swift
@@ -11,8 +15,19 @@
 // includes swiftgpupacksim
 {% endif %}
 
+
+{# --------------------------------- GENERATE STUCTS ---------------------------------- #}
 {% for STRUCT_NAME in STRUCT_NAMES %}
 struct {{STRUCT_NAME}} {
 
 {% for DECL in STRUCT_CONTENTS[STRUCT_NAME]["DECLARATIONS"] %}{{DECL}}{% endfor %}} {# <- closing brace is here #}
 {% endfor %}
+
+{# ------------------------- GENERATE GETTERS AND SETTERS  ---------------------------- #}
+{% for STRUCT_NAME in STRUCT_NAMES %}
+{% for API in STRUCT_CONTENTS[STRUCT_NAME]["API"] %}
+{{API}}
+{% endfor %}
+{% endfor %}
+
+#endif /* SWIFT_HYDRO_PART_{{HEADER_GUARD}}_H */
