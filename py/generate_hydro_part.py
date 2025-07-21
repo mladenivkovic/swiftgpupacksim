@@ -10,11 +10,40 @@ from hydro_part_header import generate_hydro_part_header
 
 parser = argparse.ArgumentParser(description="Generate the hydro_part.h file.")
 parser.add_argument("input_file")
-parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=False, help="Toggle verbosity")
-parser.add_argument("-s", "--swift", dest="swift", action="store_true", default=False, help="Generate output compatible swift, not for swiftgpupacksim")
-parser.add_argument("-d", "--dry-run", dest="dry_run", action="store_true", default=False, help="Dry run: Print output files to screen instead of writing them to file")
-parser.add_argument("-o", "--outputdir", nargs=1, dest="output_dir", action="store", default=".", type=str, help="Directory to write output into")
-
+parser.add_argument(
+    "-v",
+    "--verbose",
+    dest="verbose",
+    action="store_true",
+    default=False,
+    help="Toggle verbosity",
+)
+parser.add_argument(
+    "-s",
+    "--swift",
+    dest="swift",
+    action="store_true",
+    default=False,
+    help="Generate output compatible swift, not for swiftgpupacksim",
+)
+parser.add_argument(
+    "-d",
+    "--dry-run",
+    dest="dry_run",
+    action="store_true",
+    default=False,
+    help="Dry run: Print output files to screen instead of writing them to file",
+)
+parser.add_argument(
+    "-o",
+    "--outputdir",
+    nargs=1,
+    dest="output_dir",
+    action="store",
+    default=".",
+    type=str,
+    help="Directory to write output into",
+)
 
 
 if __name__ == "__main__":
@@ -32,5 +61,3 @@ if __name__ == "__main__":
     input_fp.close()
 
     generate_hydro_part_header(particle_fields_d, swift_headers, verbose)
-
-

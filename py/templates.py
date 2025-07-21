@@ -19,12 +19,19 @@ def init_jinja_env(template_dir: str = _default_template_dir) -> jinja2.Environm
     """
 
     verify_dir_exists(template_dir)
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir), keep_trailing_newline=True)
+    env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(template_dir), keep_trailing_newline=True
+    )
 
     return env
 
 
-def jinja_generate_hydro_part_h(part_structs_d: dict, template_dir: str = _default_template_dir, swift_header: bool = True, verbose: bool=False) -> str:
+def jinja_generate_hydro_part_h(
+    part_structs_d: dict,
+    template_dir: str = _default_template_dir,
+    swift_header: bool = True,
+    verbose: bool = False,
+) -> str:
     """
     Generates the full hydro_part.h header.
 
@@ -65,7 +72,6 @@ def jinja_generate_hydro_part_h(part_structs_d: dict, template_dir: str = _defau
         templ_prefix = os.path.join(template_dir)
     templ_full_fname = os.path.join(templ_prefix, templ_fname)
 
-
     d = {}
     d["STRUCT_NAMES"] = list(part_structs_d.keys())
     d["STRUCT_CONTENTS"] = part_structs_d
@@ -74,14 +80,6 @@ def jinja_generate_hydro_part_h(part_structs_d: dict, template_dir: str = _defau
 
     print(templ.render(d))
 
-
-
     header_template = ""
 
     return header_template
-
-
-
-
-
-

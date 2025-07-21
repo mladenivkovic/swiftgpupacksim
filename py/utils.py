@@ -34,7 +34,9 @@ def check_output_directory(outdir: Union[str, list], verbose: bool = True):
 
     if isinstance(outdir, list):
         if len(outdir) > 1:
-            raise ValueError("outdir cmdline arg should only contain 1 element?", outdir)
+            raise ValueError(
+                "outdir cmdline arg should only contain 1 element?", outdir
+            )
         outdir = outdir[0]
     elif isinstance(outdir, str):
         # we're good
@@ -48,5 +50,3 @@ def check_output_directory(outdir: Union[str, list], verbose: bool = True):
         os.makedirs(outdir)
 
     return outdir
-
-
