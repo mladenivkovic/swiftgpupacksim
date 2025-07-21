@@ -4,32 +4,33 @@ import argparse
 import os
 import yaml
 
-from utils import _verify_file_exists
-from hydro_part_header import generate_single_part_struct, generate_split_part_structs
+from utils import verify_file_exists, check_output_directory
+from hydro_part_header import generate_hydro_part_header
 
 
 parser = argparse.ArgumentParser(description="Generate the hydro_part.h file.")
 parser.add_argument("input_file")
-parser.add_argument("-v", "--verbose", dest="verbose", action="store_true")
+parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=False, help="Toggle verbosity")
+parser.add_argument("-s", "--swift", dest="swift", action="store_true", default=False, help="Generate output compatible swift, not for swiftgpupacksim")
+parser.add_argument("-d", "--dry-run", dest="dry_run", action="store_true", default=False, help="Dry run: Print output files to screen instead of writing them to file")
+parser.add_argument("-o", "--outputdir", nargs=1, dest="output_dir", action="store", default=".", type=str, help="Directory to write output into")
 
 
 
 if __name__ == "__main__":
-    print("Hello world!")
 
     args = parser.parse_args()
     verbose = args.verbose
+    swift_headers = args.swift
     input_file = args.input_file
-    _verify_file_exists(input_file)
+    verify_file_exists(input_file)
+
+    outdir = check_output_directory(args.output_dir)
 
     input_fp = open(input_file, "r")
-    #  particle_fields_d = yaml.load(input_fp, Loader=yaml.Loader)
     particle_fields_d = yaml.safe_load(input_fp)
     input_fp.close()
 
-    if len(particle_fields_d.keys()) == 1:
-        generate_single_part_struct(particle_fields_d)
-    else:
-        generate_split_part_structs(particle_fields_d)
+    generate_hydro_part_header(particle_fields_d, swift_headers, verbose)
 
 

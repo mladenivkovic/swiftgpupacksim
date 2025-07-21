@@ -2,7 +2,9 @@ part:
     x:
         type: double
         size: 3
+        doc: particle position
     m:
     id:
         type: long long
     u:
+        doc: internal energy
