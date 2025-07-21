@@ -23,9 +23,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  */
 static __attribute__((always_inline)) INLINE void 
   part_set_{{NAME}}(struct part *restrict p, const {{TYPE}} {{NAME}}[{{SIZE}}]) {
-{% for i in range(SIZE) %}
-  p->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
-{% endfor %}
+{% for i in range(SIZE) %}  p->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}]; {% endfor %}
 }
 
 /**
