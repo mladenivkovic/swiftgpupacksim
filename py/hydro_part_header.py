@@ -6,7 +6,7 @@ from templates import jinja_generate_hydro_part_h
 
 def generate_hydro_part_header(
     part_d: dict, swift_header: bool = True, verbose: bool = False
-):
+)-> str:
     """
     Generate a hydro_part.h with a single struct part.
 
@@ -21,6 +21,12 @@ def generate_hydro_part_header(
 
     verbose: bool
         if True, be talkative
+
+    Returns
+    -------
+
+    header_file: str
+        The contents of the hydro_part.h file.
     """
 
     if verbose:
@@ -50,8 +56,8 @@ def generate_hydro_part_header(
         # store the parsed data
         part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations}
 
-    jinja_generate_hydro_part_h(
+    header_file = jinja_generate_hydro_part_h(
         part_struct_d, swift_header=swift_header, verbose=verbose
     )
 
-    return
+    return header_file

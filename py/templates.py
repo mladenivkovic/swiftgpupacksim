@@ -6,7 +6,7 @@ Stuff related to templates.
 
 import jinja2
 import os
-from utils import verify_dir_exists
+from utils import verify_dir_exists, get_git_hash
 
 _default_template_dir = os.path.join(os.getcwd(), "templates")
 
@@ -72,14 +72,14 @@ def jinja_generate_hydro_part_h(
         templ_prefix = os.path.join(template_dir)
     templ_full_fname = os.path.join(templ_prefix, templ_fname)
 
+    # fill up dict for template rendering
     d = {}
     d["STRUCT_NAMES"] = list(part_structs_d.keys())
     d["STRUCT_CONTENTS"] = part_structs_d
     d["TEMPLATE_FILENAME"] = templ_full_fname
     d["HEADER_FOR_SWIFT"] = swift_header
+    d["HEADER_GUARD"] = get_git_hash()
 
-    print(templ.render(d))
-
-    header_template = ""
+    header_template = templ.render(d)
 
     return header_template
