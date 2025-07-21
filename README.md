@@ -64,3 +64,12 @@ data correctly without messing up this repo's size, do the following:
 - Move your data into your new subdir
 - `git add` your data and `.gitattributes` to stage them
 - Make a `git commit` as usual.
+
+
+
+## Particle struct generation
+
+The purpose of this mini-benchmark is to try out various particle memory layout
+realisations. To do so, we can generate different realisations of particle
+structs using `python 3` and the `jinja2` templating engine. Consult the
+`py/README.md` for instructions how to use the scripts.
