@@ -8,19 +8,21 @@ from templates import init_jinja_env
 # List of all permissible field descriptors for a particle field.
 # Used for consistency checks.
 _allowed_field_descriptors = [
-        "type",
-        "size",
-        "doc",
-        "documentation",
-        ]
+    "type",
+    "size",
+    "doc",
+    "documentation",
+]
 
 # List of all permissible particle field data types.
 # Used for consistency checks.
 _allowed_field_data_types = [
-        "int", "long", "long long",
-        "float", "double",
-        ]
-
+    "int",
+    "long",
+    "long long",
+    "float",
+    "double",
+]
 
 
 class FieldEntry(object):
@@ -31,7 +33,6 @@ class FieldEntry(object):
 
     # jinja environment used to load and generate templates
     jinja_env = init_jinja_env()
-
 
     def __init__(self, field_name, field_props: Union[dict, None], verbose=False):
 
@@ -47,7 +48,6 @@ class FieldEntry(object):
         # Now read what was written.
         self._extract_field_data()
         return
-
 
     def _extract_field_data(self):
         """
@@ -96,8 +96,7 @@ class FieldEntry(object):
                 pass
         return
 
-
-    def _get_field_dict(self, indent_level: int=0) -> dict:
+    def _get_field_dict(self, indent_level: int = 0) -> dict:
         """
         Generate a dict with this field's properties for the jinja templates.
 
@@ -107,20 +106,18 @@ class FieldEntry(object):
         """
 
         d = {
-                "NAME": self.field_name,
-                "SIZE": self.field_size,
-                "DOC": self.documentation,
-                "TYPE": self.field_type,
-                "INDENT_LEVEL": indent_level,
-                "HAS_DOC": self.documentation is not None,
-                "IS_ARRAY": self.field_size > 1,
-                }
+            "NAME": self.field_name,
+            "SIZE": self.field_size,
+            "DOC": self.documentation,
+            "TYPE": self.field_type,
+            "INDENT_LEVEL": indent_level,
+            "HAS_DOC": self.documentation is not None,
+            "IS_ARRAY": self.field_size > 1,
+        }
 
         return d
 
-
-
-    def generate_declaration(self, indent_level: int=1):
+    def generate_declaration(self, indent_level: int = 1):
         """
         Generate the field declaration
 
@@ -136,10 +133,6 @@ class FieldEntry(object):
 
         return decl
 
-
-
-
-
     def generate_API(self):
         """
         Generate the getters and setters C code.
@@ -153,5 +146,3 @@ class FieldEntry(object):
 
         api = templ.render(params_dict)
         return api
-
-
