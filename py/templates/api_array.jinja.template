@@ -1,0 +1,38 @@
+{# deliberately empty line #}
+/**
+ * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %},
+ * for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const {{TYPE}}* 
+  part_get_const_{{NAME}}(const struct part *restrict p) {
+  return p->_{{NAME}};
+}
+
+/**
+ * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %},
+ * by index.
+ */
+static __attribute__((always_inline)) INLINE {{TYPE}}
+  part_get_{{NAME}}_ind(const struct part *restrict p, const size_t ind) {
+  return p->_{{NAME}}[ind];
+}
+
+/**
+ * @brief set all values of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %},
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void 
+  part_set_{{NAME}}(struct part *restrict p, const {{TYPE}} {{NAME}}[{{SIZE}}]) {
+{% for i in range(SIZE) %}
+  p->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+{% endfor %}
+}
+
+/**
+ * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}, by index.
+ */
+static __attribute__((always_inline)) INLINE void 
+  part_set_{{NAME}}_ind(struct part *restrict p, const size_t i, const {{TYPE}} {{NAME}}) {
+  p->_{{NAME}}[i] = {{NAME}};
+}
+{# deliberately empty line #}

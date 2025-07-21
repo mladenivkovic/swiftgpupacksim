@@ -1,0 +1,37 @@
+{# deliberately empty line #}
+/**
+ * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
+ */
+static __attribute__((always_inline)) INLINE {{TYPE}} 
+  part_get_{{NAME}}(const struct part *restrict p) {
+  return p->_{{NAME}};
+}
+
+/**
+ * @brief get a pointer to {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to {{NAME}}. If you need read-only access to {{NAME}}, use part_get_const_{{NAME}}_p() instead.
+ */
+static __attribute__((always_inline)) INLINE {{TYPE}}*
+  part_get_{{NAME}}_p(struct part *restrict p) {
+  return &p->_{{NAME}};
+}
+
+/**
+ * @brief get read-only access to pointer to {{NAME}}{% if not HAS_DOC %}.{% else %},
+ * {{DOC}}.{% endif %}
+ * If you need write access to {{NAME}}, use part_get_{{NAME}}_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const {{TYPE}}*
+  part_get_const_{{NAME}}_p(const struct part *restrict p) {
+  return &p->_{{NAME}};
+}
+
+/**
+ * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
+ */
+static __attribute__((always_inline)) INLINE void 
+  part_set_{{NAME}}(struct part *restrict p, const {{TYPE}} {{NAME}}) {
+  &p->_{{NAME}} = {{NAME}};
+}
+{# deliberately empty line #}
