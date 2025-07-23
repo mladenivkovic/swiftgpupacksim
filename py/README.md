@@ -18,7 +18,10 @@ Dependencies:
 The structs are generated using specifications in yaml files.
 Some defaults are stored in `input/`.
 
+### Scalar and array native data types
+
 The general specification requirement is as follows:
+
 
 ```
 part_struct1_name:          # name of struct (e.g. 'part', 'density', 'force'...)
@@ -43,3 +46,46 @@ part_struct2_name:
   field1_name:
     ... # etc etc
 ```
+
+
+
+### Structs
+
+To specify a struct defined within a parent particle struct, use the following
+syntax:
+
+```
+parent_struct:         # such as part, xpart, ...
+  your_struct_name:
+    type: struct
+    contents:
+      a:
+        type: int
+        documentation: "the first field of 'your_struct_name' struct"
+      b:
+        type: double
+        documentation: "the second field of 'your_struct_name' struct"
+```
+
+
+### Unions
+
+To specify a union within a parent particle struct, use the following
+syntax:
+
+```
+parent_struct:         # such as part, xpart, ...
+  union:
+    contents:
+      a:
+        type: int
+        documentation: "the first field of union"
+      b:
+        type: double
+        documentation: "the second field of union"
+```
+
+
+
+
+
