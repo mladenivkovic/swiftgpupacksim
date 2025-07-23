@@ -12,7 +12,7 @@ _allowed_field_descriptors = [
     "size",
     "doc",
     "documentation",
-    "contents"
+    "contents",
 ]
 
 # List of all permissible particle field data types.
@@ -23,7 +23,8 @@ _allowed_field_data_types = [
     "long long",
     "float",
     "double",
-    "struct"
+    "struct",
+    "union",
 ]
 
 
@@ -35,6 +36,8 @@ class FieldEntry(object):
 
     # jinja environment used to load and generate templates
     jinja_env = init_jinja_env()
+    # used to give unions unique identifier in dicts
+    union_count = 0
 
     def __init__(self, field_name: str, field_props: Union[dict, None], verbose=False, recursion_level=0):
         """
@@ -82,10 +85,17 @@ class FieldEntry(object):
         Extracts the field data from the field_props dict.
         """
 
+        if self.name == "union":
+            self.name = "union" + str(self.union_count)
+            self.union_count += 1
+            self.type = "union"
+
         if self.verbose:
             print(f"Found field '{self.name}'")
 
         if self.props is None:
+            if self.type == "union":
+                raise ValueError("Found 'union' with no further specification?")
             if self.verbose:
                 # default is set in initialiser
                 print(f"  type: default [{self.type}]")
@@ -129,11 +139,12 @@ class FieldEntry(object):
             pass
 
         # todo: struct* ?
-        if self.type == "struct":
+        if self.type == "struct" or self.type== "union":
+            print("CHECK", self.type)
             try:
                 contents = self.props["contents"]
             except KeyError:
-                raise KeyError("'struct' definition within struct needs contents.")
+                raise KeyError(f"'{self.type}' definition within parent struct needs 'contents' specification.")
             for key in contents.keys():
                 new_entry = FieldEntry(key, contents[key], verbose=self.verbose, recursion_level=self.recursion_level + 1)
                 self.sub_entries.append(new_entry)
