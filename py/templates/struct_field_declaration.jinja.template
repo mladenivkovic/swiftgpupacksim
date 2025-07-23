@@ -6,9 +6,8 @@
 {# ------------------------------------------------------------------ add data type and name -#}
 {%- for i in range(INDENT_LEVEL) %}  {% endfor -%} {# --------------- add indent        -#}
 {{TYPE}} {
-
-{{SUB_FIELD_DECLARATIONS}} {# Taking the declarations here as a full variable (complete string) so we can do this recursively. #}
-{%- for i in range(INDENT_LEVEL) %}  {% endfor -%} {# --------------- add indent        -#}
+{{SUB_FIELD_DECLARATIONS}}{#    Taking the declarations here as a full variable (complete string) so we can do this recursively. #}
+{%- for i in range(INDENT_LEVEL) %}  {% endfor -%}{# ---------------- add indent        -#}
 }
 {%- if not IS_UNION %} _{{NAME}}{% endif %}; {# ----------------------- close bracket and add name #}
 {# ------------------------------------------------------------------- deliberately empty newline #}
