@@ -66,5 +66,5 @@ if __name__ == "__main__":
         print(hydro_part_header)
     else:
         # TODO: write output to file.
-        pass
+        raise NotImplementedError()
 
