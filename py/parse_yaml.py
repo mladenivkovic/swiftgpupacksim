@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import yaml
+import sys
 from typing import Union
 from templates import init_jinja_env
 
@@ -13,6 +14,8 @@ _allowed_field_descriptors = [
     "doc",
     "documentation",
     "contents",
+    "ifdef",
+    "ifdef_return_val",
 ]
 
 # List of all permissible particle field data types.
@@ -23,9 +26,27 @@ _allowed_field_data_types = [
     "long long",
     "float",
     "double",
+    "char",
+    "integertime_t",
+    "timebin_t",
     "struct",
     "union",
 ]
+
+
+_field_data_type_default_return_vals = {
+        "int": "INT_MAX",
+        "long": "LONG_MAX",
+        "long long": "LONG_LONG_MAX",
+        "float": "FLT_MAX",
+        "double": "DBL_MAX",
+        "char": "CHAR_MAX",
+        "integertime_t": "LONG_LONG_MAX",
+        "timebin_t": "CHAR_MAX",
+        "struct": None,
+        "union": None
+}
+
 
 
 class FieldEntry(object):
@@ -75,6 +96,8 @@ class FieldEntry(object):
         self.size = 1
         self.documentation = None
         self.sub_entries = []
+        self.ifdef = None
+        self.ifdef_return_val = None
 
         # Now read what was written.
         self._extract_field_data()
@@ -100,15 +123,15 @@ class FieldEntry(object):
                 # default is set in initialiser
                 print(f"  type: default [{self.type}]")
 
-            #nothing else to do.
+            # nothing else to do.
             return
 
         # We have props to sort through.
         # First, validate that we have no unknown fields.
         for key in self.props.keys():
             if key not in _allowed_field_descriptors:
-                print(f"WARNING: Field '{self.name}':")
-                print(f"WARNING: Unknown field descriptor '{key}'. Skipping it.")
+                print(f"WARNING: Field '{self.name}':", file=sys.stderr)
+                print(f"WARNING: Unknown field descriptor '{key}'. Skipping it.", file=sys.stderr)
 
         # Now see what's around.
         try:
@@ -117,6 +140,10 @@ class FieldEntry(object):
                 print("  type:", self.type)
         except KeyError:
             pass
+
+        if self.type not in _allowed_field_data_types:
+            if not self.type.startswith("struct "):
+                raise ValueError(f"Unknown data type '{self.type}'")
 
         try:
             self.size = self.props["size"]
@@ -137,10 +164,22 @@ class FieldEntry(object):
                 print("  documentation:", self.documentation)
         except KeyError:
             pass
+        try:
+            self.ifdef = self.props["ifdef"]
+            if self.verbose:
+                print("  macro guard:", self.ifdef)
+        except KeyError:
+            pass
+        try:
+            self.ifdef_return_val = self.props["ifdef_return_val"]
+            if self.verbose:
+                print("  getter return value:", self.ifdef_return_val)
+        except KeyError:
+            pass
+
 
         # todo: struct* ?
         if self.type == "struct" or self.type== "union":
-            print("CHECK", self.type)
             try:
                 contents = self.props["contents"]
             except KeyError:
@@ -161,13 +200,27 @@ class FieldEntry(object):
             indents the line by 2 whitespaces.
         """
 
+        if self.ifdef:
+            # do we use the default return value?
+            if self.ifdef_return_val is None:
+                self.ifdef_return_val = _field_data_type_default_return_vals[self.type]
+            # if still None, something is wrong.
+            if self.ifdef_return_val is None:
+                raise ValueError(
+                        "No return value available for field with IFDEF." +
+                        f"name: {self.name}, type: {self.type}"
+                        )
+
         d = {
             "NAME": self.name,
             "SIZE": self.size,
             "DOC": self.documentation,
             "TYPE": self.type,
             "INDENT_LEVEL": indent_level,
+            "IFDEF": self.ifdef,
+            "IFDEF_RETURN_VAL": self.ifdef_return_val,
             "HAS_DOC": self.documentation is not None,
+            "HAS_IFDEF": self.ifdef != None,
             "IS_ARRAY": self.size > 1,
             "IS_UNION": self.type == "union",
             "IS_STRUCT": self.type == "struct",

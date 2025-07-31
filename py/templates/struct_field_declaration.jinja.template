@@ -1,13 +1,24 @@
-{# ------------------------------------------------------------------ add documentation -#}
+{%- if HAS_IFDEF -%}
+    #ifdef {(IFDEF}}
+{% endif -%}
+
 {% if HAS_DOC -%}
-{% for i in range(INDENT_LEVEL) %}  {% endfor -%} {# ---------------- add indent        -#}
-/*! {{DOC}} */
-{%- endif %}
-{# ------------------------------------------------------------------ add data type and name -#}
-{%- for i in range(INDENT_LEVEL) %}  {% endfor -%} {# --------------- add indent        -#}
+{% for i in range(INDENT_LEVEL) %}  {% endfor -%} {#- adds indent -#}
+    /*! {{DOC}} */
+{% endif -%}
+
+{% for i in range(INDENT_LEVEL) %}  {% endfor -%} {#- adds indent -#}
 {{TYPE}} {
-{{SUB_FIELD_DECLARATIONS}}{#    Taking the declarations here as a full variable (complete string) so we can do this recursively. #}
-{%- for i in range(INDENT_LEVEL) %}  {% endfor -%}{# ---------------- add indent        -#}
+
+{{SUB_FIELD_DECLARATIONS}} {#  Taking the declarations here as a full variable (complete string) so we can do this recursively. #}
+{%- for i in range(INDENT_LEVEL) %}  {% endfor -%} {#- adds indent -#}
 }
-{%- if not IS_UNION %} _{{NAME}}{% endif %}; {# ----------------------- close bracket and add name #}
-{# ------------------------------------------------------------------- deliberately empty newline #}
+
+{%- if not IS_UNION -%}
+    _{{NAME}}
+{%- endif %}; 
+
+{%- if HAS_IFDEF %}
+#endif
+{%- endif %}
+{# deliberately empty line #}
