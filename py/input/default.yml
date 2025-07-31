@@ -4,7 +4,15 @@ part:
         size: 3
         doc: particle position
     m:
-    id:
-        type: long long
-    u:
-        doc: internal energy
+    s:
+        ifdef: DEBUG
+    comp:
+        type: struct
+        doc: documentation
+        contents:
+            a:
+                doc: element a
+            b:
+                doc: element b
+    c:
+        type: double
