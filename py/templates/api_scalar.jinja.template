@@ -32,6 +32,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 #endif 
 {%- endif %}
 }
+{% if not IS_POINTER %}
 
 /**
  * @brief get read-only access to pointer to {{NAME}}{% if not HAS_DOC %}.{% else %},
@@ -51,15 +52,16 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 {%- endif %}
 }
 
+{% endif %}
 /**
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
 static __attribute__((always_inline)) INLINE void 
-  part_set_{{NAME}}(struct part *restrict p, const {{TYPE}} {{NAME}}) {
+  part_set_{{NAME}}(struct part *restrict p, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-  &p->_{{NAME}} = {{NAME}};
+  p->_{{NAME}} = {{NAME}};
 {%- if HAS_IFDEF %}
 #endif 
 {%- endif %}
