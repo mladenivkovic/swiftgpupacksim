@@ -210,6 +210,10 @@ class FieldEntry(object):
                         "No return value available for field with IFDEF." +
                         f"name: {self.name}, type: {self.type}"
                         )
+        is_pointer = False
+        if "*" in self.type:
+            # don't make pointers const
+            is_pointer = True
 
         d = {
             "NAME": self.name,
@@ -219,6 +223,7 @@ class FieldEntry(object):
             "INDENT_LEVEL": indent_level,
             "IFDEF": self.ifdef,
             "IFDEF_RETURN_VAL": self.ifdef_return_val,
+            "IS_POINTER": is_pointer,
             "HAS_DOC": self.documentation is not None,
             "HAS_IFDEF": self.ifdef != None,
             "IS_ARRAY": self.size > 1,

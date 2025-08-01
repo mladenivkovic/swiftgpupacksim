@@ -65,6 +65,9 @@ if __name__ == "__main__":
     if (dry_run):
         print(hydro_part_header)
     else:
-        # TODO: write output to file.
-        raise NotImplementedError()
+        outfile = os.path.join(outdir, "hydro_part.h")
+        fp = open(outfile, "w")
+        fp.write(hydro_part_header)
+        fp.close()
+        print("Written", outfile)
 
