@@ -1,14 +1,14 @@
 {# --------------------------------- GENERATE STUCTS -------------------------------- #}
-{% for STRUCT_NAME in STRUCT_NAMES %}
-struct {{STRUCT_NAME}} {
-
-{% for DECL in STRUCT_CONTENTS[STRUCT_NAME]["DECLARATIONS"] %}{{DECL}}{% endfor %}} {# <- closing brace is here #}
-{% endfor %}
+{#- {% for STRUCT_NAME in STRUCT_NAMES %} #}
+{#- struct {{STRUCT_NAME}} {  #}
+{#-  #}
+{#- {% for DECL in STRUCT_CONTENTS[STRUCT_NAME]["DECLARATIONS"] %}{{DECL}}{% endfor %}} #} {# <- closing brace is here #}
+{#- {% endfor %} #}
 
 {#- ------------------------- GENERATE GETTERS AND SETTERS  -------------------------- #}
-{#- {% for STRUCT_NAME in STRUCT_NAMES %} #}
-{#- {% for API in STRUCT_CONTENTS[STRUCT_NAME]["API"] %} #}
-{#- {{API}} #}
-{#- {% endfor %} #}
-{#- {% endfor %} #}
+{% for STRUCT_NAME in STRUCT_NAMES %}
+{% for API in STRUCT_CONTENTS[STRUCT_NAME]["API"] %}
+{{API}}
+{% endfor %}
+{% endfor %}
 
