@@ -5,7 +5,15 @@
  */
 static __attribute__((always_inline)) INLINE const {{TYPE}}* 
   part_get_const_{{NAME}}(const struct part *restrict p) {
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
   return p->_{{NAME}};
+{%- if HAS_IFDEF %}
+#else 
+  return NULL;
+#endif 
+{%- endif %}
 }
 
 /**
@@ -14,7 +22,15 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}
   part_get_{{NAME}}_ind(const struct part *restrict p, const size_t ind) {
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
   return p->_{{NAME}}[ind];
+{%- if HAS_IFDEF %}
+#else 
+  return {{IFDEF_RETURN_VAL}};
+#endif 
+{%- endif %}
 }
 
 /**
@@ -23,7 +39,15 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  */
 static __attribute__((always_inline)) INLINE void 
   part_set_{{NAME}}(struct part *restrict p, const {{TYPE}} {{NAME}}[{{SIZE}}]) {
-{% for i in range(SIZE) %}  p->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}]; {% endfor %}
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
+{%- for i in range(SIZE) %}
+  p->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+{%- endfor %}
+{%- if HAS_IFDEF %}
+#endif 
+{%- endif %}
 }
 
 /**
@@ -31,6 +55,12 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void 
   part_set_{{NAME}}_ind(struct part *restrict p, const size_t i, const {{TYPE}} {{NAME}}) {
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
   p->_{{NAME}}[i] = {{NAME}};
+{%- if HAS_IFDEF %}
+#endif 
+{%- endif %}
 }
 {# deliberately empty line #}

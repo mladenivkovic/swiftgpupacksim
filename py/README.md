@@ -36,7 +36,7 @@ part_struct1_name:          # name of struct (e.g. 'part', 'density', 'force'...
     type: double
     size: 3
     doc: the particle position
-  m: # no further specification works too.
+  m: # no further specification works too. Defaults to float.
   u:
     doc: the comoving specific internal energy
   id:
@@ -67,6 +67,49 @@ parent_struct:         # such as part, xpart, ...
         documentation: "the second field of 'your_struct_name' struct"
 ```
 
+this results in
+
+```
+/* header... */
+
+struct parent_struct {
+
+  struct {
+
+    /*! the first field of 'your_struct_name' struct
+    int a;
+
+    /*! the second field of 'your_struct_name' struct
+    double b;
+
+  } your_struct_name;
+};
+
+/* getters and setters... */
+
+```
+
+To use a struct which is defined somewhere else, just add it as a type
+descriptor. Example:
+
+```
+parent_struct:         # such as part, xpart, ...
+  limiter_data:
+    type: struct limiter_timestep_data;
+```
+
+results in:
+
+```
+parent_struct {
+  struct limiter_timestep_data limiter_data;
+};
+```
+
+
+
+
+
 
 ### Unions
 
@@ -85,7 +128,71 @@ parent_struct:         # such as part, xpart, ...
         documentation: "the second field of union"
 ```
 
+This also works with structs as elements of the union.
 
 
 
 
+
+
+### IFDEF macros
+
+You may want to hide some particle fields behind a macro guard. To do so, use
+the ``ifdef: MACRO_NAME`` keyword.
+
+However, to have functional getters and setters API, we need to provide a return
+value for the getters. By default, the values will be set to the max value of
+the data type (e.g. ``FLT_MAX``, ``INT_MAX``, etc.). If you want to modify that
+value, provide the ``ifdef_return_val`` parameter.
+
+Example:
+
+```
+part:
+  debug_counter:
+    type: int
+    ifdef: SWIFT_DEBUG_CHECKS
+
+  collect_mpi:
+    type: float
+    ifdef: WITH_MPI
+    ifdef_return_val: 1.f
+```
+
+this results in:
+
+
+TODO
+```
+# ... header and definitions...
+
+
+/**
+ * @brief get debug_counter.
+ */
+static __attribute__((always_inline)) INLINE int
+  part_get_debug_counter(const struct part *restrict p) {
+#ifdef SWIFT_DEBUG_CHECKS
+  return p->_debug_counter;
+#else
+  return INT_MAX;
+#endif
+}
+
+# ... more getters and setters ...
+
+/**
+ * @brief get collect_mpi.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_collect_mpi(const struct part *restrict p) {
+#ifdef WITH_MPI
+  return p->_collect_mpi;
+#else
+  return 1.f;
+#endif
+}
+
+```
+
+**WARNING**: This currently doesn't work for structs or unions.
