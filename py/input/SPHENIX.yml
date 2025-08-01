@@ -13,29 +13,27 @@ part:
     doc: the particle position
 
   v:
-    # type: float
     size: 3
     doc: Particle predicted velocity
 
   a_hydro:
-    # type: float
     size: 3
-    doc: Particle acceleration. 
+    doc: Particle acceleration 
 
   mass:
-    doc: Particle mass.
+    doc: Particle mass
 
   h:
-    doc: Particle smoothing length.
+    doc: Particle smoothing length
 
   u:
-    doc: Particle internal energy.
+    doc: Particle internal energy
 
   u_dt:
-    doc: Time derivative of the internal energy.
+    doc: Time derivative of the internal energy
 
   rho:
-    doc: Particle density.
+    doc: Particle density
 
   viscosity:
     type: struct
@@ -58,7 +56,7 @@ part:
 
   diffusion:
     type: struct
-    doc: Store thermal diffusion information in a separate struct.
+    doc: Store thermal diffusion information in a separate struct
     contents:
 
       laplace_u:
@@ -72,24 +70,24 @@ part:
     contents:
       density:
         type: struct
-        doc: Structure for the variables only used in the density loop over neighbours. 
+        doc: Structure for the variables only used in the density loop over neighbours 
              Quantities in this sub-structure should only be accessed in the density loop 
-             over neighbours and the ghost task.
+             over neighbours and the ghost task
         contents:
           wcount:
-            doc: Neighbour number count.
+            doc: Neighbour number count
           wcount_dh:
-            doc: Derivative of the neighbour number with respect to h.
+            doc: Derivative of the neighbour number with respect to h
           rho_dh:
             doc: Derivative of density with respect to h
           rot_v:
-            doc: Particle velocity curl.
+            doc: Particle velocity curl
             size: 3
       force:
         type: struct
-        doc: Structure for the variables only used in the force loop over neighbours. 
+        doc: Structure for the variables only used in the force loop over neighbours 
              Quantities in this sub-structure should only be accessed in the force loop 
-             over neighbours and the ghost, drift and kick tasks.
+             over neighbours and the ghost, drift and kick tasks
         contents:
           f_gradh:
             doc: "'Grad h' term -- only partial in P-U"
@@ -126,11 +124,11 @@ part:
 
   black_holes_data:
     type: struct black_holes_part_data
-    doc: Black holes information (e.g. swallowing ID)
+    doc: Black holes information (eg swallowing ID)
 
   sink_data:
     type: struct sink_part_data
-    doc: Sink information (e.g. swallowing ID)
+    doc: Sink information (eg swallowing ID)
 
   pressure_floor_data:
     type: struct pressure_floor_part_data
@@ -243,6 +241,6 @@ part:
 
   geometry:
     type: struct fvpm_geometry_struct
-    doc: Geometrical quantities used for Finite Volume Particle Method RT.
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
 
 
