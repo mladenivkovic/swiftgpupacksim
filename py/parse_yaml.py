@@ -37,11 +37,11 @@ _allowed_field_data_types = [
 _field_data_type_default_return_vals = {
         "int": "INT_MAX",
         "long": "LONG_MAX",
-        "long long": "LONG_LONG_MAX",
+        "long long": "LLONG_MAX",
         "float": "FLT_MAX",
         "double": "DBL_MAX",
         "char": "CHAR_MAX",
-        "integertime_t": "LONG_LONG_MAX",
+        "integertime_t": "LLONG_MAX",
         "timebin_t": "CHAR_MAX",
         "struct": None,
         "union": None
