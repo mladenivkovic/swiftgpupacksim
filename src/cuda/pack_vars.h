@@ -85,7 +85,4 @@ struct pack_vars_pair {
   int nBundles;
   int tasksperbundle;
   int task_locked;
-
 };
-
-

@@ -64,4 +64,3 @@ INLINE static int lock_lock(volatile int *l) {
 #endif
 
 #endif /* SWIFT_LOCK_H */
-

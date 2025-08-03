@@ -101,4 +101,3 @@ struct queue {
 
 
 #endif /* SWIFT_QUEUE_H */
-

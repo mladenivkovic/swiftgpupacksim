@@ -206,11 +206,10 @@ struct cell {
 } SWIFT_STRUCT_ALIGN;
 
 
-
 /**
  * Minimalistic cell initialisation for this benchmark
  */
-static __attribute__((always_inline)) INLINE void init_cell(struct cell* c){
+static __attribute__((always_inline)) INLINE void init_cell(struct cell *c) {
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;
@@ -219,4 +218,3 @@ static __attribute__((always_inline)) INLINE void init_cell(struct cell* c){
   c->hydro.count = 0;
   c->hydro.parts = 0;
 }
-

@@ -9,7 +9,7 @@
 #ifdef HAVE_CUDA
 #include <vector_types.h>
 #else
-#error  Cant compile this without cuda
+#error Cant compile this without cuda
 #endif
 
 
