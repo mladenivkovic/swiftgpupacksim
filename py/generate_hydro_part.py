@@ -60,9 +60,11 @@ if __name__ == "__main__":
     particle_fields_d = yaml.safe_load(input_fp)
     input_fp.close()
 
-    hydro_part_header = generate_hydro_part_header(particle_fields_d, swift_headers, verbose)
+    hydro_part_header = generate_hydro_part_header(
+        particle_fields_d, swift_headers, verbose
+    )
 
-    if (dry_run):
+    if dry_run:
         print(hydro_part_header)
     else:
         outfile = os.path.join(outdir, "hydro_part.h")
@@ -70,4 +72,3 @@ if __name__ == "__main__":
         fp.write(hydro_part_header)
         fp.close()
         print("Written", outfile)
-

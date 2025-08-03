@@ -35,18 +35,17 @@ _allowed_field_data_types = [
 
 
 _field_data_type_default_return_vals = {
-        "int": "INT_MAX",
-        "long": "LONG_MAX",
-        "long long": "LLONG_MAX",
-        "float": "FLT_MAX",
-        "double": "DBL_MAX",
-        "char": "CHAR_MAX",
-        "integertime_t": "LLONG_MAX",
-        "timebin_t": "CHAR_MAX",
-        "struct": None,
-        "union": None
+    "int": "INT_MAX",
+    "long": "LONG_MAX",
+    "long long": "LLONG_MAX",
+    "float": "FLT_MAX",
+    "double": "DBL_MAX",
+    "char": "CHAR_MAX",
+    "integertime_t": "LLONG_MAX",
+    "timebin_t": "CHAR_MAX",
+    "struct": None,
+    "union": None,
 }
-
 
 
 class FieldEntry(object):
@@ -60,7 +59,13 @@ class FieldEntry(object):
     # used to give unions unique identifier in dicts
     union_count = 0
 
-    def __init__(self, field_name: str, field_props: Union[dict, None], verbose=False, recursion_level=0):
+    def __init__(
+        self,
+        field_name: str,
+        field_props: Union[dict, None],
+        verbose=False,
+        recursion_level=0,
+    ):
         """
         Parameters
         ----------
@@ -131,7 +136,10 @@ class FieldEntry(object):
         for key in self.props.keys():
             if key not in _allowed_field_descriptors:
                 print(f"WARNING: Field '{self.name}':", file=sys.stderr)
-                print(f"WARNING: Unknown field descriptor '{key}'. Skipping it.", file=sys.stderr)
+                print(
+                    f"WARNING: Unknown field descriptor '{key}'. Skipping it.",
+                    file=sys.stderr,
+                )
 
         # Now see what's around.
         try:
@@ -177,21 +185,31 @@ class FieldEntry(object):
         except KeyError:
             pass
 
-
         # todo: struct* ?
-        if self.type == "struct" or self.type== "union":
+        if self.type == "struct" or self.type == "union":
             try:
                 contents = self.props["contents"]
             except KeyError:
-                raise KeyError(f"'{self.type}' definition within parent struct needs 'contents' specification.")
+                raise KeyError(
+                    f"'{self.type}' definition within parent struct needs 'contents' specification."
+                )
             for key in contents.keys():
-                new_entry = FieldEntry(key, contents[key], verbose=self.verbose, recursion_level=self.recursion_level + 1)
+                new_entry = FieldEntry(
+                    key,
+                    contents[key],
+                    verbose=self.verbose,
+                    recursion_level=self.recursion_level + 1,
+                )
                 self.sub_entries.append(new_entry)
 
         return
 
-
-    def _get_field_dict(self, parent_struct: Union[str, None] = None, indent_level: int = 0, verbose:bool = False) -> dict:
+    def _get_field_dict(
+        self,
+        parent_struct: Union[str, None] = None,
+        indent_level: int = 0,
+        verbose: bool = False,
+    ) -> dict:
         """
         Generate a dict with this field's properties for the jinja templates.
 
@@ -213,9 +231,9 @@ class FieldEntry(object):
             # if still None, something is wrong.
             if self.ifdef_return_val is None:
                 raise ValueError(
-                        "No return value available for field with IFDEF." +
-                        f"name: {self.name}, type: {self.type}"
-                        )
+                    "No return value available for field with IFDEF."
+                    + f"name: {self.name}, type: {self.type}"
+                )
         is_pointer = False
         if "*" in self.type:
             # don't make pointers const
@@ -244,7 +262,7 @@ class FieldEntry(object):
 
         return d
 
-    def generate_declaration(self, indent_level: int = 1, verbose: bool=False):
+    def generate_declaration(self, indent_level: int = 1, verbose: bool = False):
         """
         Generate the field declaration
 
@@ -259,15 +277,17 @@ class FieldEntry(object):
         if verbose:
             print(f"-- Generating declaration for {self.type} {self.name}")
 
-        params_dict = self._get_field_dict(indent_level = indent_level, verbose=verbose)
+        params_dict = self._get_field_dict(indent_level=indent_level, verbose=verbose)
 
         if params_dict["IS_INTERNAL_STRUCT"] or params_dict["IS_UNION"]:
             decl_subfields = ""
             for entry in self.sub_entries:
                 new_entry_c_code = entry.generate_declaration(indent_level + 1)
                 decl_subfields = "".join((decl_subfields, new_entry_c_code))
-            params_dict["SUB_FIELD_DECLARATIONS"]=decl_subfields
-            templ = self.jinja_env.get_template("struct_field_declaration.jinja.template")
+            params_dict["SUB_FIELD_DECLARATIONS"] = decl_subfields
+            templ = self.jinja_env.get_template(
+                "struct_field_declaration.jinja.template"
+            )
             decl = templ.render(params_dict)
 
         else:
@@ -276,7 +296,9 @@ class FieldEntry(object):
 
         return decl
 
-    def generate_API(self, parent_struct: Union[str, None]=None, verbose: bool = False) -> str:
+    def generate_API(
+        self, parent_struct: Union[str, None] = None, verbose: bool = False
+    ) -> str:
         """
         Generate the getters and setters C code.
 
@@ -300,7 +322,7 @@ class FieldEntry(object):
         if verbose:
             print(f"-- Generating API for {self.type} {self.name}")
 
-        params_dict = self._get_field_dict(parent_struct=parent_struct, verbose = verbose)
+        params_dict = self._get_field_dict(parent_struct=parent_struct, verbose=verbose)
 
         if params_dict["IS_INTERNAL_STRUCT"] or params_dict["IS_UNION"]:
             api_sub_entries = []
@@ -313,10 +335,14 @@ class FieldEntry(object):
                     if parent_struct is not None:
                         # Append struct recursively
                         parent = parent_struct + "._" + self.name
-                        raise RuntimeWarning("API for structs within structs is untested, may contain errors.")
+                        raise RuntimeWarning(
+                            "API for structs within structs is untested, may contain errors."
+                        )
                     else:
                         parent = self.name
-                    api_entry = entry.generate_API(parent_struct=parent, verbose=verbose)
+                    api_entry = entry.generate_API(
+                        parent_struct=parent, verbose=verbose
+                    )
 
                 api_sub_entries.append(api_entry)
 
@@ -324,7 +350,9 @@ class FieldEntry(object):
         else:
             if params_dict["IS_ARRAY"]:
                 if self.type.startswith("struct "):
-                    raise NotImplementedError("externally defined structs as arrays is untested, could contain errors.")
+                    raise NotImplementedError(
+                        "externally defined structs as arrays is untested, could contain errors."
+                    )
                 templ = self.jinja_env.get_template("api_array.jinja.template")
             else:
                 templ = self.jinja_env.get_template("api_scalar.jinja.template")
