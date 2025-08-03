@@ -1,0 +1,55 @@
+part:
+    my_int:
+        type: int
+        doc: my integer
+        size: 4
+
+    my_long:
+        type: long
+        doc: my long
+        size: 4
+
+    my_longlong:
+        type: long long
+        doc: my long long
+        size: 4
+    
+    my_float:
+        doc: my float
+        size: 4
+
+    my_dble:
+        type: double
+        doc: my double
+        size: 4
+
+    my_char:
+        type: char
+        doc: my_char
+        size: 4
+
+    my_integertime:
+        type: integertime_t
+        doc: my integertime
+        size: 4
+
+    my_timebin:
+        type: timebin_t
+        doc: my timebin
+        size: 4
+
+    my_external_struct:
+        type: struct my_struct
+        doc: some externally defined struct
+        size: 4
+
+    my_pointer_struct:
+        type: struct gpart*
+        doc: pointer to externally defined struct
+        size: 4
+
+    my_pointer:
+        type: int*
+        doc: pointer to integer array
+        size: 4
+

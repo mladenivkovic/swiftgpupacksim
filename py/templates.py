@@ -8,7 +8,8 @@ import jinja2
 import os
 from utils import verify_dir_exists, get_git_hash
 
-_default_template_dir = os.path.join(os.getcwd(), "templates")
+_root_dir = os.path.dirname(__file__)
+_default_template_dir = os.path.join(_root_dir, "templates")
 
 
 def init_jinja_env(template_dir: str = _default_template_dir) -> jinja2.Environment:
