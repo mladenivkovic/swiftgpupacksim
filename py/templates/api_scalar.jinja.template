@@ -7,7 +7,11 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
+{%- if HAS_PARENT_STRUCT %}
+  return p->_{{PARENT_STRUCT}}._{{NAME}};
+{%- else %}
   return p->_{{NAME}};
+{%- endif %}
 {%- if HAS_IFDEF %}
 #else 
   return {{IFDEF_RETURN_VAL}};
@@ -25,7 +29,11 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
+{%- if HAS_PARENT_STRUCT %}
+  return &p->_{{PARENT_STRUCT}}._{{NAME}};
+{%- else %}
   return &p->_{{NAME}};
+{%- endif %}
 {%- if HAS_IFDEF %}
 #else 
   return NULL;
@@ -44,7 +52,11 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
+{%- if HAS_PARENT_STRUCT %}
+  return &p->_{{PARENT_STRUCT}}._{{NAME}};
+{%- else %}
   return &p->_{{NAME}};
+{%- endif %}
 {%- if HAS_IFDEF %}
 #else 
   return NULL;
@@ -61,7 +73,11 @@ static __attribute__((always_inline)) INLINE void
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
+{%- if HAS_PARENT_STRUCT %}
+  return p->_{{PARENT_STRUCT}}._{{NAME}} == {{NAME}};
+{%- else %}
   p->_{{NAME}} = {{NAME}};
+{%- endif %}
 {%- if HAS_IFDEF %}
 #endif 
 {%- endif %}

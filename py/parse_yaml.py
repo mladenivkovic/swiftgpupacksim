@@ -191,13 +191,19 @@ class FieldEntry(object):
         return
 
 
-    def _get_field_dict(self, indent_level: int = 0) -> dict:
+    def _get_field_dict(self, parent_struct: Union[str, None] = None, indent_level: int = 0, verbose:bool = False) -> dict:
         """
         Generate a dict with this field's properties for the jinja templates.
+
+        parent_struct: None or str
+            If not None, name of the struct this field is internal to.
 
         indent_level: int
             Increment the indent level of the declaration. Each indent_level
             indents the line by 2 whitespaces.
+
+        verbose: bool
+            Set verbosity
         """
 
         if self.ifdef:
@@ -223,28 +229,39 @@ class FieldEntry(object):
             "INDENT_LEVEL": indent_level,
             "IFDEF": self.ifdef,
             "IFDEF_RETURN_VAL": self.ifdef_return_val,
+            "PARENT_STRUCT": parent_struct,
             "IS_POINTER": is_pointer,
             "HAS_DOC": self.documentation is not None,
-            "HAS_IFDEF": self.ifdef != None,
+            "HAS_IFDEF": self.ifdef is not None,
+            "HAS_PARENT_STRUCT": parent_struct is not None,
             "IS_ARRAY": self.size > 1,
             "IS_UNION": self.type == "union",
-            "IS_STRUCT": self.type == "struct",
+            "IS_INTERNAL_STRUCT": self.type == "struct",
         }
+
+        if verbose:
+            print("----", d)
 
         return d
 
-    def generate_declaration(self, indent_level: int = 1):
+    def generate_declaration(self, indent_level: int = 1, verbose: bool=False):
         """
         Generate the field declaration
 
         indent_level: int
             Increment the indent level of the declaration. Each indent_level
             indents the line by 2 whitespaces.
+
+        verbose: bool
+            Set verbosity level
         """
 
-        params_dict = self._get_field_dict(indent_level)
+        if verbose:
+            print(f"-- Generating declaration for {self.type} {self.name}")
 
-        if params_dict["IS_STRUCT"] or params_dict["IS_UNION"]:
+        params_dict = self._get_field_dict(indent_level = indent_level, verbose=verbose)
+
+        if params_dict["IS_INTERNAL_STRUCT"] or params_dict["IS_UNION"]:
             decl_subfields = ""
             for entry in self.sub_entries:
                 new_entry_c_code = entry.generate_declaration(indent_level + 1)
@@ -259,16 +276,59 @@ class FieldEntry(object):
 
         return decl
 
-    def generate_API(self):
+    def generate_API(self, parent_struct: Union[str, None]=None, verbose: bool = False) -> str:
         """
         Generate the getters and setters C code.
+
+        Parameters
+        ----------
+
+        parent_struct: str or None
+            If not None, this denoted that field is a sub-field contained within
+            the given parent struct.
+
+        verbose: bool
+            Set verbosity level
+
+        Returns
+        -------
+
+        api: str
+            generated API C-code as a string
         """
 
-        params_dict = self._get_field_dict()
-        if params_dict["IS_ARRAY"]:
-            templ = self.jinja_env.get_template("api_array.jinja.template")
-        else:
-            templ = self.jinja_env.get_template("api_scalar.jinja.template")
+        if verbose:
+            print(f"-- Generating API for {self.type} {self.name}")
 
-        api = templ.render(params_dict)
+        params_dict = self._get_field_dict(parent_struct=parent_struct, verbose = verbose)
+
+        if params_dict["IS_INTERNAL_STRUCT"] or params_dict["IS_UNION"]:
+            api_sub_entries = []
+            for entry in self.sub_entries:
+                if params_dict["IS_UNION"]:
+                    # we don't need any modification to the accessors.
+                    api_entry = entry.generate_API(verbose=verbose)
+                else:
+                    parent = parent_struct
+                    if parent_struct is not None:
+                        # Append struct recursively
+                        parent = parent_struct + "._" + self.name
+                        raise RuntimeWarning("API for structs within structs is untested, may contain errors.")
+                    else:
+                        parent = self.name
+                    api_entry = entry.generate_API(parent_struct=parent, verbose=verbose)
+
+                api_sub_entries.append(api_entry)
+
+            api = "".join(api_sub_entries)
+        else:
+            if params_dict["IS_ARRAY"]:
+                if self.type.startswith("struct "):
+                    raise NotImplementedError("externally defined structs as arrays is untested, could contain errors.")
+                templ = self.jinja_env.get_template("api_array.jinja.template")
+            else:
+                templ = self.jinja_env.get_template("api_scalar.jinja.template")
+
+            api = templ.render(params_dict)
+
         return api
