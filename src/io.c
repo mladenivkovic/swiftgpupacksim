@@ -152,8 +152,9 @@ void io_read_logged_events_file(const char* filename,
     /* Are we skipping this particular line? */
     if (!io_util_line_is_measurement_data(tempbuff)) {
 #ifdef SWIFT_DEBUG_CHECKS
+      io_util_remove_whitespace(tempbuff);
       message(
-          "Line doesn't look like measurement line, skipping it. Line: '%s'",
+          "Line doesn't look like measurement line, skipping it.\n\t Line: '%s'",
           tempbuff);
 #endif
       continue;
