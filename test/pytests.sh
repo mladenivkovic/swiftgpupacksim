@@ -3,15 +3,35 @@
 set -e
 rm -f hydro_part.h
 
+
+function COMPILE_AND_RUN() {
+  # Compile the test program.
+  if [[ -z "${CC}" ]]; then
+    CC=gcc
+  fi
+  "$CC" test_header_output.c -o test_header_output.o -Wall -Werror
+  ./test_header_output.o
+  rm -f ./test_header_output.o
+}
+
+
+function DIFF(){
+  # Run a diff on files provided as args 1 and 2.
+  diff --ignore-all-space --ignore-blank-lines "$1" "$2"
+}
+
+
 echo "running test_data_types"
 python3 ../py/generate_hydro_part.py --test ./input/test_data_types.yml
-diff --ignore-all-space --ignore-blank-lines hydro_part.h output/test_data_types.h
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_data_types.h
 rm -f hydro_part.h
 
 
 echo "running test_arrays"
 python3 ../py/generate_hydro_part.py --test ./input/test_arrays.yml
-diff --ignore-all-space --ignore-blank-lines hydro_part.h output/test_arrays.h
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_arrays.h
 rm -f hydro_part.h
 
 
