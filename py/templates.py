@@ -28,6 +28,7 @@ def jinja_generate_hydro_part_h(
     part_structs_d: dict,
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
+    testing: bool = False,
     verbose: bool = False,
 ) -> str:
     """
@@ -51,6 +52,10 @@ def jinja_generate_hydro_part_h(
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
 
+    testing: bool
+        if True, use minimalistic header template for unit tests to generate
+        header file
+
     verbose: bool
         if True, be talkative
 
@@ -63,6 +68,8 @@ def jinja_generate_hydro_part_h(
 
     env = init_jinja_env(template_dir)
     templ_fname = "hydro_part.h.jinja.template"
+    if testing:
+        templ_fname = "test_hydro_part.h.jinja.template"
     templ = env.get_template(templ_fname)
 
     templ_prefix = template_dir
