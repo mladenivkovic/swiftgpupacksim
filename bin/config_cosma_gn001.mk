@@ -6,6 +6,7 @@ NVCC = nvcc
 CFLAGS = -flto=auto -flto -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -funroll-loops -march=skylake-avx512 -mavx512dq -pthread  -Wall -Wextra -Wshadow -Wstrict-prototypes
 CFLAGS_DEBUG = -g -flto=auto -flto -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -funroll-loops -march=skylake-avx512 -mavx512dq -pthread  -Wall -Wextra -Wshadow -Wstrict-prototypes
 
+
 INCLUDES=
 LD_LIBRARY_PATH=
 LIBS=

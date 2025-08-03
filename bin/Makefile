@@ -1,16 +1,16 @@
 # Load up a compiler configuration.
 # Only load one of these, the one you need.
-# include ../bin/config_local_HP_gcc.mk
+include ../bin/config_local_HP_gcc.mk
 # include ../bin/config_local_HP_icx.mk
-include ../bin/config_cosma_gn001.mk
+# include ../bin/config_cosma_gn001.mk
 
 # Now load up global configuration. Always include this.
 include ../bin/config.mk
 
 # Note: order matters for linking. Most dependencies last.
 OBJECTS = swiftgpupacksim.o io.o parameters.o help.o runner_gpu_pack_functions.o \
-	  timers.o clocks.o task.o run_simulation.o 
-CUDA_OBJECTS=gpu_data_buffers.o 
+	  timers.o clocks.o task.o run_simulation.o gpu_data_buffers.o 
+CUDA_OBJECTS=
 
 EXEC = swiftgpupacksim
 
@@ -18,7 +18,7 @@ EXEC = swiftgpupacksim
 default: $(EXEC)
 
 $(EXEC): $(OBJECTS) $(CUDA_OBJECTS)
-	$(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) $(OBJECTS) $(CUDA_OBJECTS) -o $@
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) $(OBJECTS) $(CUDA_OBJECTS) -o $@
 
 swiftgpupacksim.o: swiftgpupacksim.c
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
@@ -47,10 +47,10 @@ task.o: task.c
 timers.o: timers.c
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
+gpu_data_buffers.o: cuda/gpu_data_buffers.c
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
-
-gpu_data_buffers.o: cuda/gpu_data_buffers.cu
-	$(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -c $@ $<
+#         $(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -c $@ $<
 
 
 

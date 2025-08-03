@@ -318,7 +318,7 @@ void gpu_data_init_pack_arrays(
       (struct cell **)calloc(target_n_tasks, sizeof(struct cell *));
 
   if(verbose)
-    message("Total alloc'd memory: %lld", total);
+    message("Total alloc'd memory: %lu", total);
 
 }
 
