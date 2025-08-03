@@ -362,9 +362,10 @@ class FieldEntry(object):
             api = "".join(api_sub_entries)
         else:
             if params_dict["IS_ARRAY"]:
-                if self.type.startswith("struct "):
+                if params_dict["IS_POINTER"]:
                     raise NotImplementedError(
-                        "externally defined structs as arrays is untested, could contain errors."
+                        f"Field {self.type} {self.name}[{self.size}]:" +
+                        "arrays of pointers is untested, could contain errors."
                     )
                 templ = self.jinja_env.get_template("api_array.jinja.template")
             else:

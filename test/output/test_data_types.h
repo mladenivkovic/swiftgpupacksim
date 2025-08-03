@@ -12,10 +12,10 @@ typedef unsigned long long integertime_t;
 typedef char timebin_t;
 
 struct my_struct{};
-
-
-
-
+struct gpart{
+  double x[3];
+  float m;
+};
 
 
 
@@ -23,7 +23,7 @@ struct my_struct{};
 
 struct part {
   /*! my integer */
-        int _my_int;
+  int _my_int;
 
   /*! my long */
   long _my_long;

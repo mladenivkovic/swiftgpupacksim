@@ -43,13 +43,15 @@ part:
         doc: some externally defined struct
         size: 4
 
-    my_pointer_struct:
-        type: struct gpart*
-        doc: pointer to externally defined struct
-        size: 4
+    # Not implemented yet
+    # my_pointer_struct:
+    #     type: struct gpart*
+    #     doc: pointer to externally defined struct
+    #     size: 4
 
-    my_pointer:
-        type: int*
-        doc: pointer to integer array
-        size: 4
+    # Not implemented yet
+    # my_pointer:
+    #     type: int*
+    #     doc: pointer to integer array
+    #     size: 4
 
