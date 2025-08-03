@@ -41,8 +41,6 @@ void runner_doself1_gpu_pack_neat_aos_f4(
 }
 
 
-
-
 void pack_neat_aos_f4(struct cell *__restrict__ c,
                       struct part_aos_f4_send *__restrict__ parts_aos_buffer,
                       int tid, int local_pack_position, int count,
@@ -74,5 +72,3 @@ void pack_neat_aos_f4(struct cell *__restrict__ c,
     //    parts_aos_buffer[id_in_pack].rot_ux_div_v = zeroes;
   }
 }
-
-

@@ -10,8 +10,6 @@
 #include "run_simulation.h"
 
 
-
-
 int main(int argc, char* argv[]) {
 
   /* Initialise whatever needs to be initialized. */

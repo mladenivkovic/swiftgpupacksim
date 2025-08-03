@@ -16,7 +16,7 @@ struct packing_data {
   /* ID of cell i */
   size_t ci_offset;
 
-   /* ID of cell j */
+  /* ID of cell j */
   size_t cj_offset;
 
   /* particle count of cell i */

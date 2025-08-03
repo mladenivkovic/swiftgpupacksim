@@ -1,6 +1,6 @@
 /* #include "runner_doiact_hydro.h" */
-#include "cuda/part_gpu.h"
 #include "cuda/pack_vars.h"
+#include "cuda/part_gpu.h"
 #include "runner.h"
 #include "scheduler.h"
 #include "task.h"
@@ -65,7 +65,8 @@ double runner_doself1_pack_f4(struct runner *r, struct scheduler *s,
   /* lock_lock(&s->queues[qid].lock); */
   /* s->queues[qid].n_packs_self_left_d--; */
 
-  /* if (s->queues[qid].n_packs_self_left_d < 1) pack_vars->launch_leftovers = 1; */
+  /* if (s->queues[qid].n_packs_self_left_d < 1) pack_vars->launch_leftovers =
+   * 1; */
   /* lock_unlock(&s->queues[qid].lock); */
 
   /* Have we packed enough tasks to offload to GPU? */
@@ -78,7 +79,7 @@ double runner_doself1_pack_f4(struct runner *r, struct scheduler *s,
   /* cell_unlocktree(ci); */
   t->gpu_done = 1;
   /*Calculate time spent packing and return to runner_main*/
-  /* return (t1.tv_sec - t0.tv_sec) + (t1.tv_nsec - t0.tv_nsec) / 1000000000.0; */
+  /* return (t1.tv_sec - t0.tv_sec) + (t1.tv_nsec - t0.tv_nsec) / 1000000000.0;
+   */
   return 0.;
 }
-

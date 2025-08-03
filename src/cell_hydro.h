@@ -171,5 +171,3 @@ struct cell_hydro {
   /*! Nr of #part in this cell. */
   int count;
 };
-
-

@@ -10,7 +10,6 @@
 #endif
 
 
-
 void runner_doself1_gpu_pack_neat_aos_f4(
     struct runner *r, struct cell *__restrict__ c,
     struct part_aos_f4_send *__restrict__ parts_aos, int timer,
