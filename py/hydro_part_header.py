@@ -5,7 +5,7 @@ from templates import jinja_generate_hydro_part_h
 
 
 def generate_hydro_part_header(
-    part_d: dict, swift_header: bool = True, verbose: bool = False
+        part_d: dict, swift_header: bool = True, testing: bool = False, verbose: bool = False
 ) -> str:
     """
     Generate a hydro_part.h with a single struct part.
@@ -18,6 +18,10 @@ def generate_hydro_part_header(
 
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
+
+    testing: bool
+        if True, use minimalistic header template for unit tests to generate
+        header file
 
     verbose: bool
         if True, be talkative
@@ -60,7 +64,7 @@ def generate_hydro_part_header(
 
     # Now generate the file from template
     header_file = jinja_generate_hydro_part_h(
-        part_struct_d, swift_header=swift_header, verbose=verbose
+        part_struct_d, swift_header=swift_header, testing=testing, verbose=verbose
     )
 
     return header_file

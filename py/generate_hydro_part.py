@@ -44,16 +44,25 @@ parser.add_argument(
     type=str,
     help="Directory to write output into",
 )
+parser.add_argument(
+    "-t",
+    "--test",
+    dest="testing",
+    action="store_true",
+    default=False,
+    help="Use minimalistic templates for unit tests",
+)
 
 
 if __name__ == "__main__":
 
     args = parser.parse_args()
     verbose = args.verbose
-    swift_headers = args.swift
+    swift_header = args.swift
     outdir = check_output_directory(args.output_dir)
     dry_run = args.dry_run
     input_file = args.input_file
+    testing = args.testing
     verify_file_exists(input_file)
 
     input_fp = open(input_file, "r")
@@ -61,7 +70,7 @@ if __name__ == "__main__":
     input_fp.close()
 
     hydro_part_header = generate_hydro_part_header(
-        particle_fields_d, swift_headers, verbose
+        particle_fields_d, swift_header=swift_header, testing=testing, verbose=verbose
     )
 
     if dry_run:
