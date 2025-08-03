@@ -48,7 +48,7 @@ part:
       div_v_previous_step:
         doc: Particle velocity divergence from previous step
 
-      alpha:
+      alpha_av:
         doc: Artificial viscosity parameter
       
       v_sig:
@@ -62,7 +62,7 @@ part:
       laplace_u:
         doc: del^2 u, a smoothed quantity
 
-      alpha: 
+      alpha_diff: 
         doc: Thermal diffusion coefficient
 
   union:
