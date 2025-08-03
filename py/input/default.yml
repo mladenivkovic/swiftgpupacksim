@@ -1,0 +1,18 @@
+part:
+    x:
+        type: double
+        size: 3
+        doc: particle position
+    m:
+    s:
+        ifdef: DEBUG
+    comp:
+        type: struct
+        doc: documentation
+        contents:
+            a:
+                doc: element a
+            b:
+                doc: element b
+    c:
+        type: double
