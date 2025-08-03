@@ -1,0 +1,100 @@
+/*******************************************************************************
+ * This file is part of SWIFT.
+ * Copyright (c) 2012 Pedro Gonnet (pedro.gonnet@durham.ac.uk)
+ *                    Matthieu Schaller (schaller@strw.leidenuniv.nl)
+ *               2015 Peter W. Draper (p.w.draper@durham.ac.uk)
+ *               2016 John A. Regan (john.a.regan@durham.ac.uk)
+ *                    Tom Theuns (tom.theuns@durham.ac.uk)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ******************************************************************************/
+#ifndef SWIFT_RUNNER_H
+#define SWIFT_RUNNER_H
+
+#include <pthread.h>
+
+/* Config parameters. */
+#include <config.h>
+
+#include "cycle.h"
+
+
+/* Local headers. */
+#include "cache.h"
+#include "gravity_cache.h"
+
+struct cell;
+struct engine;
+struct task;
+
+/* Unique identifier of loop types */
+#define TASK_LOOP_DENSITY 0
+#define TASK_LOOP_GRADIENT 1
+#define TASK_LOOP_FORCE 2
+#define TASK_LOOP_LIMITER 3
+#define TASK_LOOP_FEEDBACK 4
+#define TASK_LOOP_SWALLOW 5
+#define TASK_LOOP_SINK_SWALLOW 6
+#define TASK_LOOP_SINK_DO_SINK_SWALLOW 7
+#define TASK_LOOP_SINK_DO_GAS_SWALLOW 8
+#define TASK_LOOP_STARS_PREP1 9
+#define TASK_LOOP_STARS_PREP2 10
+#define TASK_LOOP_RT_GRADIENT 11
+#define TASK_LOOP_RT_TRANSPORT 12
+
+/**
+ * @brief A struct representing a runner's thread and its data.
+ */
+struct runner {
+
+  /*! The id of this thread. */
+  int id;
+
+  /*! The actual thread which it is running. */
+  pthread_t thread;
+
+  /*! The queue to use to get tasks. */
+  int cpuid, qid;
+
+  /*! The engine owing this runner. */
+  struct engine *e;
+
+  /*! The particle gravity_cache of cell ci. */
+  struct gravity_cache ci_gravity_cache;
+
+  /*! The particle gravity_cache of cell cj. */
+  struct gravity_cache cj_gravity_cache;
+
+  /*! Time this runner was active during the last engine_launch. */
+  ticks active_time;
+
+#ifdef WITH_VECTORIZATION
+
+  /*! The particle cache of cell ci. */
+  struct cache ci_cache;
+
+  /*! The particle cache of cell cj. */
+  struct cache cj_cache;
+#endif
+
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! Pointer to the task this runner is currently performing */
+  const struct task *t;
+#endif
+};
+
+
+
+#endif /* SWIFT_RUNNER_H */

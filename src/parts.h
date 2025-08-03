@@ -1,5 +1,6 @@
 #pragma once
 
+#include "inline.h"
 #include "hydro_part.h"
 #include "parameters.h"
 
@@ -18,9 +19,9 @@ struct part_arrays {
 /**
  * Initialize particle data array(s).
  */
-void init_parts(struct part_arrays* data, const struct parameters* params) {
+static __attribute__((always_inline)) INLINE void init_parts(struct part_arrays* data, const struct parameters* params) {
 
-  data->p = calloc(params->nr_parts, sizeof(struct part));
+  data->p = (struct part*)calloc(params->nr_parts, sizeof(struct part));
 
 #ifdef SWIFT_DEBUG_CHECKS
   data->nr_parts = params->nr_parts;
@@ -35,4 +36,4 @@ void init_parts(struct part_arrays* data, const struct parameters* params) {
 /**
  * Free the bytes from their prison of labour.
  */
-void clear_parts(struct part_arrays* data) { free(data->p); }
+static __attribute__((always_inline)) INLINE void clear_parts(struct part_arrays* data) { free(data->p); }

@@ -76,6 +76,8 @@ flags = [
 include = [
     "-I", DIR_OF_THIS_SCRIPT,       # add config.h
     "-I", os.path.join(DIR_OF_THIS_SCRIPT, "src"),
+    "-I", os.path.join(DIR_OF_THIS_SCRIPT, "src/cuda"),
+    "-I", os.path.join(DIR_OF_THIS_SCRIPT, "src/swift_placeholders"),
         ]
 
 try:
@@ -88,7 +90,8 @@ except KeyError:
         CUDA_PATH = os.environ["NVHPC_ROOT"]
         include.append("-I")
         include.append(os.path.join(CUDA_PATH, "cuda", "include"))
-    pass
+    except KeyError:
+        pass
 
 
 
