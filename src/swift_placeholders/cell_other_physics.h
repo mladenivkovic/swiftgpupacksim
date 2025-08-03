@@ -5,8 +5,6 @@
 #include "timeline.h"
 
 
-
-
 /**
  * @brief BHs-related cell variables.
  */
@@ -226,7 +224,6 @@ enum grid_completeness {
 };
 
 
-
 struct cell_grid {
   /*! Pointer to parent where the grid is constructed. */
   struct cell *construction_level;
@@ -267,7 +264,6 @@ struct cell_grid {
   /*! Time of last construction */
   integertime_t ti_old;
 };
-
 
 
 /**
@@ -573,5 +569,3 @@ struct cell_rt {
   /*! Number of #part updated for RT in this cell */
   int updated;
 };
-
-

@@ -110,7 +110,7 @@
 /* #undef EXTERNAL_POTENTIAL_HERNQUIST */
 
 /* Hernquist external potential following Springel, Di Matteo & Hernquist 2005
-   */
+ */
 /* #undef EXTERNAL_POTENTIAL_HERNQUIST_SDMH05 */
 
 /* Isothermal external potential */
@@ -570,7 +570,7 @@
 /* #undef HYDRO_GAMMA_4_3 */
 
 /* Adiabatic index is 5/3 */
-#define HYDRO_GAMMA_5_3 5./3.
+#define HYDRO_GAMMA_5_3 5. / 3.
 
 /* Adiabatic index is 7/5 */
 /* #undef HYDRO_GAMMA_7_5 */
@@ -752,7 +752,19 @@
 /* #undef SWIFT_CELL_GRAPH */
 
 /* Flags passed to configure */
-#define SWIFT_CONFIG_FLAGS "--with-parmetis=/home/mivkov/software/spack/opt/spack/linux-icelake/parmetis-4.0.3-eviqtuzti2n2txavw2rngfsccb23qd43 --with-metis=/home/mivkov/software/spack/opt/spack/linux-icelake/metis-5.1.0-qaawev2dmwyrndn2exuz763mgl3tdrn3 --with-gsl=/home/mivkov/software/spack/opt/spack/linux-icelake/gsl-2.8-iu2hcbkbp2vdjw6vhi5ydc6cx4to6clj --with-fftw=/home/mivkov/software/spack/opt/spack/linux-icelake/fftw-3.3.10-xeuwcpcqcaaugjundzolbkn5xma6ck3q --with-hdf5=/home/mivkov/software/spack/opt/spack/linux-icelake/hdf5-1.14.5-vxt5asrjjqc5anx4mdrqxvxdy3iyxz4m/bin/h5cc --with-cuda=/opt/cuda --enable-option-checking --enable-compiler-warnings --enable-debug --enable-debugging-checks"
+#define SWIFT_CONFIG_FLAGS                                                     \
+  "--with-parmetis=/home/mivkov/software/spack/opt/spack/linux-icelake/"       \
+  "parmetis-4.0.3-eviqtuzti2n2txavw2rngfsccb23qd43 "                           \
+  "--with-metis=/home/mivkov/software/spack/opt/spack/linux-icelake/"          \
+  "metis-5.1.0-qaawev2dmwyrndn2exuz763mgl3tdrn3 "                              \
+  "--with-gsl=/home/mivkov/software/spack/opt/spack/linux-icelake/"            \
+  "gsl-2.8-iu2hcbkbp2vdjw6vhi5ydc6cx4to6clj "                                  \
+  "--with-fftw=/home/mivkov/software/spack/opt/spack/linux-icelake/"           \
+  "fftw-3.3.10-xeuwcpcqcaaugjundzolbkn5xma6ck3q "                              \
+  "--with-hdf5=/home/mivkov/software/spack/opt/spack/linux-icelake/"           \
+  "hdf5-1.14.5-vxt5asrjjqc5anx4mdrqxvxdy3iyxz4m/bin/h5cc "                     \
+  "--with-cuda=/opt/cuda --enable-option-checking --enable-compiler-warnings " \
+  "--enable-debug --enable-debugging-checks"
 
 /* Enable expensive debugging */
 #define SWIFT_DEBUG_CHECKS 1

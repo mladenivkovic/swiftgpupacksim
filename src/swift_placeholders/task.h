@@ -106,5 +106,3 @@ struct task {
 #endif /* SWIFT_DEBUG_CHECKS */
 
 } SWIFT_STRUCT_ALIGN;
-
-

@@ -26,9 +26,9 @@
 #include <pthread.h>
 
 /* Config parameters. */
-#include <config.h>
-
 #include "cycle.h"
+
+#include <config.h>
 
 
 /* Local headers. */
@@ -94,7 +94,6 @@ struct runner {
   const struct task *t;
 #endif
 };
-
 
 
 #endif /* SWIFT_RUNNER_H */

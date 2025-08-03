@@ -15,16 +15,16 @@ int main(void) {
   int argc1 = 2;
   char *argv1[] = {"swiftgpupack", "../data/IntelXeonGold5218_64_1thread"};
   io_parse_cmdlineargs(argc1, argv1, &params);
-  swift_assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64_1thread") ==
-         0);
+  swift_assert(strcmp(params.data_root_dir,
+                      "../data/IntelXeonGold5218_64_1thread") == 0);
 
   init_params(&params);
   int argc2 = 3;
   char *argv2[] = {"swiftgpupack", "../data/IntelXeonGold5218_64_1thread",
                    "-v"};
   io_parse_cmdlineargs(argc2, argv2, &params);
-  swift_assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64_1thread") ==
-         0);
+  swift_assert(strcmp(params.data_root_dir,
+                      "../data/IntelXeonGold5218_64_1thread") == 0);
   swift_assert(params.verbose == 1);
   swift_assert(params.help == 0);
 
@@ -33,8 +33,8 @@ int main(void) {
   char *argv3[] = {"swiftgpupack", "../data/IntelXeonGold5218_64_1thread",
                    "--verbose"};
   io_parse_cmdlineargs(argc3, argv3, &params);
-  swift_assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64_1thread") ==
-         0);
+  swift_assert(strcmp(params.data_root_dir,
+                      "../data/IntelXeonGold5218_64_1thread") == 0);
   swift_assert(params.verbose == 1);
   swift_assert(params.help == 0);
 
@@ -43,8 +43,8 @@ int main(void) {
   char *argv4[] = {"swiftgpupack", "../data/IntelXeonGold5218_64_1thread",
                    "-h"};
   io_parse_cmdlineargs(argc4, argv4, &params);
-  swift_assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64_1thread") ==
-         0);
+  swift_assert(strcmp(params.data_root_dir,
+                      "../data/IntelXeonGold5218_64_1thread") == 0);
   swift_assert(params.verbose == 0);
   swift_assert(params.help == 1);
 
@@ -53,8 +53,8 @@ int main(void) {
   char *argv5[] = {"swiftgpupack", "../data/IntelXeonGold5218_64_1thread",
                    "--help"};
   io_parse_cmdlineargs(argc5, argv5, &params);
-  swift_assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64_1thread") ==
-         0);
+  swift_assert(strcmp(params.data_root_dir,
+                      "../data/IntelXeonGold5218_64_1thread") == 0);
   swift_assert(params.verbose == 0);
   swift_assert(params.help == 1);
 
@@ -64,8 +64,8 @@ int main(void) {
                    "--help",       "-h",
                    "-v",           "--verbose"};
   io_parse_cmdlineargs(argc6, argv6, &params);
-  swift_assert(strcmp(params.data_root_dir, "../data/IntelXeonGold5218_64_1thread") ==
-         0);
+  swift_assert(strcmp(params.data_root_dir,
+                      "../data/IntelXeonGold5218_64_1thread") == 0);
   swift_assert(params.verbose == 1);
   swift_assert(params.help == 1);
 
