@@ -6,6 +6,14 @@
 #include <limits.h>
 #include <stddef.h>
 
+/* workaround for unit tests to produce compilable headers */
+#define INLINE inline
+typedef unsigned long long integertime_t;
+typedef char timebin_t;
+
+struct my_struct{};
+
+
 {# --------------------------------- GENERATE STUCTS -------------------------------- #}
 {% for STRUCT_NAME in STRUCT_NAMES %}
 struct {{STRUCT_NAME}} {

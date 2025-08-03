@@ -34,6 +34,7 @@ _allowed_field_data_types = [
 ]
 
 
+# Default return values for variables hidden behind macros
 _field_data_type_default_return_vals = {
     "int": "INT_MAX",
     "long": "LONG_MAX",
@@ -114,6 +115,8 @@ class FieldEntry(object):
         """
 
         if self.name == "union":
+            # Change the internal name of the union so it has a unique key in
+            # the dict that we'll create
             self.name = "union" + str(self.union_count)
             self.union_count += 1
             self.type = "union"
@@ -124,6 +127,8 @@ class FieldEntry(object):
         if self.props is None:
             if self.type == "union":
                 raise ValueError("Found 'union' with no further specification?")
+            if self.type == "struct":
+                raise ValueError("Found 'struct' with no further specification?")
             if self.verbose:
                 # default is set in initialiser
                 print(f"  type: default [{self.type}]")
@@ -150,7 +155,7 @@ class FieldEntry(object):
             pass
 
         if self.type not in _allowed_field_data_types:
-            if not self.type.startswith("struct "):
+            if not (self.type.startswith("struct ") or self.type.endswith("*")):
                 raise ValueError(f"Unknown data type '{self.type}'")
 
         try:
