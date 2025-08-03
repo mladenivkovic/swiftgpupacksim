@@ -2,7 +2,7 @@
 /**
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
-static __attribute__((always_inline)) INLINE {{TYPE}} 
+static __attribute__((always_inline)) INLINE {{TYPE}}
   part_get_{{NAME}}(const struct part *restrict p) {
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -13,9 +13,9 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
   return p->_{{NAME}};
 {%- endif %}
 {%- if HAS_IFDEF %}
-#else 
+#else
   return {{IFDEF_RETURN_VAL}};
-#endif 
+#endif
 {%- endif %}
 }
 
@@ -35,9 +35,9 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
   return &p->_{{NAME}};
 {%- endif %}
 {%- if HAS_IFDEF %}
-#else 
+#else
   return NULL;
-#endif 
+#endif
 {%- endif %}
 }
 {% if not IS_POINTER %}
@@ -58,9 +58,9 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
   return &p->_{{NAME}};
 {%- endif %}
 {%- if HAS_IFDEF %}
-#else 
+#else
   return NULL;
-#endif 
+#endif
 {%- endif %}
 }
 
@@ -68,18 +68,18 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 /**
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
-static __attribute__((always_inline)) INLINE void 
+static __attribute__((always_inline)) INLINE void
   part_set_{{NAME}}(struct part *restrict p, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 {%- if HAS_PARENT_STRUCT %}
-  return p->_{{PARENT_STRUCT}}._{{NAME}} == {{NAME}};
+  p->_{{PARENT_STRUCT}}._{{NAME}} = {{NAME}};
 {%- else %}
   p->_{{NAME}} = {{NAME}};
 {%- endif %}
 {%- if HAS_IFDEF %}
-#endif 
+#endif
 {%- endif %}
 }
 {# deliberately empty line #}
