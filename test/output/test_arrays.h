@@ -23,488 +23,488 @@ struct gpart{
 
 struct part {
   /*! my integer */
-  int _my_int[4];
+  int _my_int_arr[4];
 
   /*! my long */
-  long _my_long[4];
+  long _my_long_arr[4];
 
   /*! my long long */
-  long long _my_longlong[4];
+  long long _my_longlong_arr[4];
 
   /*! my float */
-  float _my_float[4];
+  float _my_float_arr[4];
 
   /*! my double */
-  double _my_dble[4];
+  double _my_dble_arr[4];
 
   /*! my_char */
-  char _my_char[4];
+  char _my_char_arr[4];
 
   /*! my integertime */
-  integertime_t _my_integertime[4];
+  integertime_t _my_integertime_arr[4];
 
   /*! my timebin */
-  timebin_t _my_timebin[4];
+  timebin_t _my_timebin_arr[4];
 
   /*! some externally defined struct */
-  struct my_struct _my_external_struct[4];
+  struct my_struct _my_external_struct_arr[4];
 
 };
 
 /**
- * @brief get my_int, my integer,
+ * @brief get my_int_arr, my integer,
  * for read and write access. For read-only access, use
- * part_get_const_my_int() instead.
+ * part_get_const_my_int_arr() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int(struct part *restrict p) {
-  return p->_my_int;
+  part_get_my_int_arr(struct part *restrict p) {
+  return p->_my_int_arr;
 }
 
 /**
- * @brief get my_int, my integer,
+ * @brief get my_int_arr, my integer,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int(const struct part *restrict p) {
-  return p->_my_int;
+  part_get_const_my_int_arr(const struct part *restrict p) {
+  return p->_my_int_arr;
 }
 
 /**
- * @brief get my_int, my integer,
+ * @brief get my_int_arr, my integer,
  * by index.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_int[ind];
+  part_get_my_int_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_int_arr[ind];
 }
 
 /**
- * @brief set all values of my_int, my integer,
+ * @brief set all values of my_int_arr, my integer,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int(struct part *restrict p, const int my_int[4]) {
-  p->_my_int[0] = my_int[0];
-  p->_my_int[1] = my_int[1];
-  p->_my_int[2] = my_int[2];
-  p->_my_int[3] = my_int[3];
+  part_set_my_int_arr(struct part *restrict p, const int my_int_arr[4]) {
+  p->_my_int_arr[0] = my_int_arr[0];
+  p->_my_int_arr[1] = my_int_arr[1];
+  p->_my_int_arr[2] = my_int_arr[2];
+  p->_my_int_arr[3] = my_int_arr[3];
 }
 
 /**
- * @brief set the value of my_int, my integer, by index.
+ * @brief set the value of my_int_arr, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_ind(struct part *restrict p, const size_t i, const int my_int) {
-  p->_my_int[i] = my_int;
+  part_set_my_int_arr_ind(struct part *restrict p, const size_t i, const int my_int_arr) {
+  p->_my_int_arr[i] = my_int_arr;
 }
 
 
 
 
 /**
- * @brief get my_long, my long,
+ * @brief get my_long_arr, my long,
  * for read and write access. For read-only access, use
- * part_get_const_my_long() instead.
+ * part_get_const_my_long_arr() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long(struct part *restrict p) {
-  return p->_my_long;
+  part_get_my_long_arr(struct part *restrict p) {
+  return p->_my_long_arr;
 }
 
 /**
- * @brief get my_long, my long,
+ * @brief get my_long_arr, my long,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long(const struct part *restrict p) {
-  return p->_my_long;
+  part_get_const_my_long_arr(const struct part *restrict p) {
+  return p->_my_long_arr;
 }
 
 /**
- * @brief get my_long, my long,
+ * @brief get my_long_arr, my long,
  * by index.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_long[ind];
+  part_get_my_long_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_long_arr[ind];
 }
 
 /**
- * @brief set all values of my_long, my long,
+ * @brief set all values of my_long_arr, my long,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long(struct part *restrict p, const long my_long[4]) {
-  p->_my_long[0] = my_long[0];
-  p->_my_long[1] = my_long[1];
-  p->_my_long[2] = my_long[2];
-  p->_my_long[3] = my_long[3];
+  part_set_my_long_arr(struct part *restrict p, const long my_long_arr[4]) {
+  p->_my_long_arr[0] = my_long_arr[0];
+  p->_my_long_arr[1] = my_long_arr[1];
+  p->_my_long_arr[2] = my_long_arr[2];
+  p->_my_long_arr[3] = my_long_arr[3];
 }
 
 /**
- * @brief set the value of my_long, my long, by index.
+ * @brief set the value of my_long_arr, my long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_ind(struct part *restrict p, const size_t i, const long my_long) {
-  p->_my_long[i] = my_long;
+  part_set_my_long_arr_ind(struct part *restrict p, const size_t i, const long my_long_arr) {
+  p->_my_long_arr[i] = my_long_arr;
 }
 
 
 
 
 /**
- * @brief get my_longlong, my long long,
+ * @brief get my_longlong_arr, my long long,
  * for read and write access. For read-only access, use
- * part_get_const_my_longlong() instead.
+ * part_get_const_my_longlong_arr() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong(struct part *restrict p) {
-  return p->_my_longlong;
+  part_get_my_longlong_arr(struct part *restrict p) {
+  return p->_my_longlong_arr;
 }
 
 /**
- * @brief get my_longlong, my long long,
+ * @brief get my_longlong_arr, my long long,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong(const struct part *restrict p) {
-  return p->_my_longlong;
+  part_get_const_my_longlong_arr(const struct part *restrict p) {
+  return p->_my_longlong_arr;
 }
 
 /**
- * @brief get my_longlong, my long long,
+ * @brief get my_longlong_arr, my long long,
  * by index.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_longlong[ind];
+  part_get_my_longlong_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_longlong_arr[ind];
 }
 
 /**
- * @brief set all values of my_longlong, my long long,
+ * @brief set all values of my_longlong_arr, my long long,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong(struct part *restrict p, const long long my_longlong[4]) {
-  p->_my_longlong[0] = my_longlong[0];
-  p->_my_longlong[1] = my_longlong[1];
-  p->_my_longlong[2] = my_longlong[2];
-  p->_my_longlong[3] = my_longlong[3];
+  part_set_my_longlong_arr(struct part *restrict p, const long long my_longlong_arr[4]) {
+  p->_my_longlong_arr[0] = my_longlong_arr[0];
+  p->_my_longlong_arr[1] = my_longlong_arr[1];
+  p->_my_longlong_arr[2] = my_longlong_arr[2];
+  p->_my_longlong_arr[3] = my_longlong_arr[3];
 }
 
 /**
- * @brief set the value of my_longlong, my long long, by index.
+ * @brief set the value of my_longlong_arr, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_ind(struct part *restrict p, const size_t i, const long long my_longlong) {
-  p->_my_longlong[i] = my_longlong;
+  part_set_my_longlong_arr_ind(struct part *restrict p, const size_t i, const long long my_longlong_arr) {
+  p->_my_longlong_arr[i] = my_longlong_arr;
 }
 
 
 
 
 /**
- * @brief get my_float, my float,
+ * @brief get my_float_arr, my float,
  * for read and write access. For read-only access, use
- * part_get_const_my_float() instead.
+ * part_get_const_my_float_arr() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float(struct part *restrict p) {
-  return p->_my_float;
+  part_get_my_float_arr(struct part *restrict p) {
+  return p->_my_float_arr;
 }
 
 /**
- * @brief get my_float, my float,
+ * @brief get my_float_arr, my float,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float(const struct part *restrict p) {
-  return p->_my_float;
+  part_get_const_my_float_arr(const struct part *restrict p) {
+  return p->_my_float_arr;
 }
 
 /**
- * @brief get my_float, my float,
+ * @brief get my_float_arr, my float,
  * by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_float[ind];
+  part_get_my_float_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_float_arr[ind];
 }
 
 /**
- * @brief set all values of my_float, my float,
+ * @brief set all values of my_float_arr, my float,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float(struct part *restrict p, const float my_float[4]) {
-  p->_my_float[0] = my_float[0];
-  p->_my_float[1] = my_float[1];
-  p->_my_float[2] = my_float[2];
-  p->_my_float[3] = my_float[3];
+  part_set_my_float_arr(struct part *restrict p, const float my_float_arr[4]) {
+  p->_my_float_arr[0] = my_float_arr[0];
+  p->_my_float_arr[1] = my_float_arr[1];
+  p->_my_float_arr[2] = my_float_arr[2];
+  p->_my_float_arr[3] = my_float_arr[3];
 }
 
 /**
- * @brief set the value of my_float, my float, by index.
+ * @brief set the value of my_float_arr, my float, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_ind(struct part *restrict p, const size_t i, const float my_float) {
-  p->_my_float[i] = my_float;
+  part_set_my_float_arr_ind(struct part *restrict p, const size_t i, const float my_float_arr) {
+  p->_my_float_arr[i] = my_float_arr;
 }
 
 
 
 
 /**
- * @brief get my_dble, my double,
+ * @brief get my_dble_arr, my double,
  * for read and write access. For read-only access, use
- * part_get_const_my_dble() instead.
+ * part_get_const_my_dble_arr() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble(struct part *restrict p) {
-  return p->_my_dble;
+  part_get_my_dble_arr(struct part *restrict p) {
+  return p->_my_dble_arr;
 }
 
 /**
- * @brief get my_dble, my double,
+ * @brief get my_dble_arr, my double,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble(const struct part *restrict p) {
-  return p->_my_dble;
+  part_get_const_my_dble_arr(const struct part *restrict p) {
+  return p->_my_dble_arr;
 }
 
 /**
- * @brief get my_dble, my double,
+ * @brief get my_dble_arr, my double,
  * by index.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_dble[ind];
+  part_get_my_dble_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_dble_arr[ind];
 }
 
 /**
- * @brief set all values of my_dble, my double,
+ * @brief set all values of my_dble_arr, my double,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble(struct part *restrict p, const double my_dble[4]) {
-  p->_my_dble[0] = my_dble[0];
-  p->_my_dble[1] = my_dble[1];
-  p->_my_dble[2] = my_dble[2];
-  p->_my_dble[3] = my_dble[3];
+  part_set_my_dble_arr(struct part *restrict p, const double my_dble_arr[4]) {
+  p->_my_dble_arr[0] = my_dble_arr[0];
+  p->_my_dble_arr[1] = my_dble_arr[1];
+  p->_my_dble_arr[2] = my_dble_arr[2];
+  p->_my_dble_arr[3] = my_dble_arr[3];
 }
 
 /**
- * @brief set the value of my_dble, my double, by index.
+ * @brief set the value of my_dble_arr, my double, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_ind(struct part *restrict p, const size_t i, const double my_dble) {
-  p->_my_dble[i] = my_dble;
+  part_set_my_dble_arr_ind(struct part *restrict p, const size_t i, const double my_dble_arr) {
+  p->_my_dble_arr[i] = my_dble_arr;
 }
 
 
 
 
 /**
- * @brief get my_char, my_char,
+ * @brief get my_char_arr, my_char,
  * for read and write access. For read-only access, use
- * part_get_const_my_char() instead.
+ * part_get_const_my_char_arr() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char(struct part *restrict p) {
-  return p->_my_char;
+  part_get_my_char_arr(struct part *restrict p) {
+  return p->_my_char_arr;
 }
 
 /**
- * @brief get my_char, my_char,
+ * @brief get my_char_arr, my_char,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char(const struct part *restrict p) {
-  return p->_my_char;
+  part_get_const_my_char_arr(const struct part *restrict p) {
+  return p->_my_char_arr;
 }
 
 /**
- * @brief get my_char, my_char,
+ * @brief get my_char_arr, my_char,
  * by index.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_char[ind];
+  part_get_my_char_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_char_arr[ind];
 }
 
 /**
- * @brief set all values of my_char, my_char,
+ * @brief set all values of my_char_arr, my_char,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char(struct part *restrict p, const char my_char[4]) {
-  p->_my_char[0] = my_char[0];
-  p->_my_char[1] = my_char[1];
-  p->_my_char[2] = my_char[2];
-  p->_my_char[3] = my_char[3];
+  part_set_my_char_arr(struct part *restrict p, const char my_char_arr[4]) {
+  p->_my_char_arr[0] = my_char_arr[0];
+  p->_my_char_arr[1] = my_char_arr[1];
+  p->_my_char_arr[2] = my_char_arr[2];
+  p->_my_char_arr[3] = my_char_arr[3];
 }
 
 /**
- * @brief set the value of my_char, my_char, by index.
+ * @brief set the value of my_char_arr, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_ind(struct part *restrict p, const size_t i, const char my_char) {
-  p->_my_char[i] = my_char;
+  part_set_my_char_arr_ind(struct part *restrict p, const size_t i, const char my_char_arr) {
+  p->_my_char_arr[i] = my_char_arr;
 }
 
 
 
 
 /**
- * @brief get my_integertime, my integertime,
+ * @brief get my_integertime_arr, my integertime,
  * for read and write access. For read-only access, use
- * part_get_const_my_integertime() instead.
+ * part_get_const_my_integertime_arr() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime(struct part *restrict p) {
-  return p->_my_integertime;
+  part_get_my_integertime_arr(struct part *restrict p) {
+  return p->_my_integertime_arr;
 }
 
 /**
- * @brief get my_integertime, my integertime,
+ * @brief get my_integertime_arr, my integertime,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime(const struct part *restrict p) {
-  return p->_my_integertime;
+  part_get_const_my_integertime_arr(const struct part *restrict p) {
+  return p->_my_integertime_arr;
 }
 
 /**
- * @brief get my_integertime, my integertime,
+ * @brief get my_integertime_arr, my integertime,
  * by index.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_integertime[ind];
+  part_get_my_integertime_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_integertime_arr[ind];
 }
 
 /**
- * @brief set all values of my_integertime, my integertime,
+ * @brief set all values of my_integertime_arr, my integertime,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime(struct part *restrict p, const integertime_t my_integertime[4]) {
-  p->_my_integertime[0] = my_integertime[0];
-  p->_my_integertime[1] = my_integertime[1];
-  p->_my_integertime[2] = my_integertime[2];
-  p->_my_integertime[3] = my_integertime[3];
+  part_set_my_integertime_arr(struct part *restrict p, const integertime_t my_integertime_arr[4]) {
+  p->_my_integertime_arr[0] = my_integertime_arr[0];
+  p->_my_integertime_arr[1] = my_integertime_arr[1];
+  p->_my_integertime_arr[2] = my_integertime_arr[2];
+  p->_my_integertime_arr[3] = my_integertime_arr[3];
 }
 
 /**
- * @brief set the value of my_integertime, my integertime, by index.
+ * @brief set the value of my_integertime_arr, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime) {
-  p->_my_integertime[i] = my_integertime;
+  part_set_my_integertime_arr_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime_arr) {
+  p->_my_integertime_arr[i] = my_integertime_arr;
 }
 
 
 
 
 /**
- * @brief get my_timebin, my timebin,
+ * @brief get my_timebin_arr, my timebin,
  * for read and write access. For read-only access, use
- * part_get_const_my_timebin() instead.
+ * part_get_const_my_timebin_arr() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin(struct part *restrict p) {
-  return p->_my_timebin;
+  part_get_my_timebin_arr(struct part *restrict p) {
+  return p->_my_timebin_arr;
 }
 
 /**
- * @brief get my_timebin, my timebin,
+ * @brief get my_timebin_arr, my timebin,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin(const struct part *restrict p) {
-  return p->_my_timebin;
+  part_get_const_my_timebin_arr(const struct part *restrict p) {
+  return p->_my_timebin_arr;
 }
 
 /**
- * @brief get my_timebin, my timebin,
+ * @brief get my_timebin_arr, my timebin,
  * by index.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_timebin[ind];
+  part_get_my_timebin_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_timebin_arr[ind];
 }
 
 /**
- * @brief set all values of my_timebin, my timebin,
+ * @brief set all values of my_timebin_arr, my timebin,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin(struct part *restrict p, const timebin_t my_timebin[4]) {
-  p->_my_timebin[0] = my_timebin[0];
-  p->_my_timebin[1] = my_timebin[1];
-  p->_my_timebin[2] = my_timebin[2];
-  p->_my_timebin[3] = my_timebin[3];
+  part_set_my_timebin_arr(struct part *restrict p, const timebin_t my_timebin_arr[4]) {
+  p->_my_timebin_arr[0] = my_timebin_arr[0];
+  p->_my_timebin_arr[1] = my_timebin_arr[1];
+  p->_my_timebin_arr[2] = my_timebin_arr[2];
+  p->_my_timebin_arr[3] = my_timebin_arr[3];
 }
 
 /**
- * @brief set the value of my_timebin, my timebin, by index.
+ * @brief set the value of my_timebin_arr, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin) {
-  p->_my_timebin[i] = my_timebin;
+  part_set_my_timebin_arr_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin_arr) {
+  p->_my_timebin_arr[i] = my_timebin_arr;
 }
 
 
 
 
 /**
- * @brief get my_external_struct, some externally defined struct,
+ * @brief get my_external_struct_arr, some externally defined struct,
  * for read and write access. For read-only access, use
- * part_get_const_my_external_struct() instead.
+ * part_get_const_my_external_struct_arr() instead.
  */
 static __attribute__((always_inline)) INLINE struct my_struct*
-  part_get_my_external_struct(struct part *restrict p) {
-  return p->_my_external_struct;
+  part_get_my_external_struct_arr(struct part *restrict p) {
+  return p->_my_external_struct_arr;
 }
 
 /**
- * @brief get my_external_struct, some externally defined struct,
+ * @brief get my_external_struct_arr, some externally defined struct,
  * for read-only access.
  */
 static __attribute__((always_inline)) INLINE const struct my_struct*
-  part_get_const_my_external_struct(const struct part *restrict p) {
-  return p->_my_external_struct;
+  part_get_const_my_external_struct_arr(const struct part *restrict p) {
+  return p->_my_external_struct_arr;
 }
 
 /**
- * @brief get my_external_struct, some externally defined struct,
+ * @brief get my_external_struct_arr, some externally defined struct,
  * by index.
  */
 static __attribute__((always_inline)) INLINE struct my_struct
-  part_get_my_external_struct_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_external_struct[ind];
+  part_get_my_external_struct_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_external_struct_arr[ind];
 }
 
 /**
- * @brief set all values of my_external_struct, some externally defined struct,
+ * @brief set all values of my_external_struct_arr, some externally defined struct,
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct(struct part *restrict p, const struct my_struct my_external_struct[4]) {
-  p->_my_external_struct[0] = my_external_struct[0];
-  p->_my_external_struct[1] = my_external_struct[1];
-  p->_my_external_struct[2] = my_external_struct[2];
-  p->_my_external_struct[3] = my_external_struct[3];
+  part_set_my_external_struct_arr(struct part *restrict p, const struct my_struct my_external_struct_arr[4]) {
+  p->_my_external_struct_arr[0] = my_external_struct_arr[0];
+  p->_my_external_struct_arr[1] = my_external_struct_arr[1];
+  p->_my_external_struct_arr[2] = my_external_struct_arr[2];
+  p->_my_external_struct_arr[3] = my_external_struct_arr[3];
 }
 
 /**
- * @brief set the value of my_external_struct, some externally defined struct, by index.
+ * @brief set the value of my_external_struct_arr, some externally defined struct, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct_ind(struct part *restrict p, const size_t i, const struct my_struct my_external_struct) {
-  p->_my_external_struct[i] = my_external_struct;
+  part_set_my_external_struct_arr_ind(struct part *restrict p, const size_t i, const struct my_struct my_external_struct_arr) {
+  p->_my_external_struct_arr[i] = my_external_struct_arr;
 }
 
 
