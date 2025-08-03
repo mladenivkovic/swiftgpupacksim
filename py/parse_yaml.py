@@ -185,7 +185,6 @@ class FieldEntry(object):
         except KeyError:
             pass
 
-        # todo: struct* ?
         if self.type == "struct" or self.type == "union":
             try:
                 contents = self.props["contents"]
@@ -213,6 +212,9 @@ class FieldEntry(object):
         """
         Generate a dict with this field's properties for the jinja templates.
 
+        Parameters
+        ----------
+
         parent_struct: None or str
             If not None, name of the struct this field is internal to.
 
@@ -222,6 +224,12 @@ class FieldEntry(object):
 
         verbose: bool
             Set verbosity
+
+        Returns
+        -------
+
+        d: dict
+            dict containing field properties prepared for use in jinja templates
         """
 
         if self.ifdef:

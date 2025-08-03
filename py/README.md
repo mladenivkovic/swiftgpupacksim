@@ -5,7 +5,15 @@ particle structs.
 
 Documentation to be updated as script grows.
 
-For now, run `./generate_hydro_part.py input/default.yml`
+For now, run e.g. `./generate_hydro_part.py input/SPHENIX.yml`.
+Use
+
+```
+py generate_hydro_part.py --help
+```
+
+to see all available cmdline options.
+
 
 Dependencies:
 - pyyaml
@@ -26,7 +34,8 @@ The general specification requirement is as follows:
 ```
 part_struct1_name:          # name of struct (e.g. 'part', 'density', 'force'...)
   field1_name:              # name of particle field (e.g. 'x', 'm', 'h'...)
-    type: DATA_TYPE         # Optional: field data type. E.g. float, double, int, long long, ...
+    type: DATA_TYPE         # Optional: C data type of the field. E.g. float,
+                            # double, int, long long, timebin_t...
                             # If not provided, defaults to 'float'.
     size: N                 # Optional. If > 1, field is assumed to be fixed size array.
     doc: documentation text # Optional. Documents particle data field.
@@ -140,10 +149,10 @@ This also works with structs as elements of the union.
 You may want to hide some particle fields behind a macro guard. To do so, use
 the ``ifdef: MACRO_NAME`` keyword.
 
-However, to have functional getters and setters API, we need to provide a return
-value for the getters. By default, the values will be set to the max value of
-the data type (e.g. ``FLT_MAX``, ``INT_MAX``, etc.). If you want to modify that
-value, provide the ``ifdef_return_val`` parameter.
+However, to have functional getters and setters API when the macros aren't set,
+we need to provide a return value for the getters. By default, the values will
+be set to the max value of the data type (e.g. ``FLT_MAX``, ``INT_MAX``, etc.).
+If you want to modify that value, provide the ``ifdef_return_val`` parameter.
 
 Example:
 
@@ -161,8 +170,6 @@ part:
 
 this results in:
 
-
-TODO
 ```
 # ... header and definitions...
 
