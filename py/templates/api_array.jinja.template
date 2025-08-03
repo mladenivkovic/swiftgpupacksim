@@ -1,9 +1,31 @@
 {# deliberately empty line #}
 /**
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %},
+ * for read and write access. For read-only access, use
+ * part_get_const_{{NAME}}() instead.
+ */
+static __attribute__((always_inline)) INLINE {{TYPE}}*
+  part_get_{{NAME}}(struct part *restrict p) {
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
+{%- if HAS_PARENT_STRUCT %}
+  return p->_{{PARENT_STRUCT}}._{{NAME}};
+{%- else %}
+  return p->_{{NAME}};
+{%- endif %}
+{%- if HAS_IFDEF %}
+#else
+  return NULL;
+#endif
+{%- endif %}
+}
+
+/**
+ * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %},
  * for read-only access.
  */
-static __attribute__((always_inline)) INLINE const {{TYPE}}* 
+static __attribute__((always_inline)) INLINE const {{TYPE}}*
   part_get_const_{{NAME}}(const struct part *restrict p) {
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -14,9 +36,9 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
   return p->_{{NAME}};
 {%- endif %}
 {%- if HAS_IFDEF %}
-#else 
+#else
   return NULL;
-#endif 
+#endif
 {%- endif %}
 }
 
@@ -35,9 +57,9 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
   return p->_{{NAME}}[ind];
 {%- endif %}
 {%- if HAS_IFDEF %}
-#else 
+#else
   return {{IFDEF_RETURN_VAL}};
-#endif 
+#endif
 {%- endif %}
 }
 
@@ -45,7 +67,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  * @brief set all values of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %},
  * from an array.
  */
-static __attribute__((always_inline)) INLINE void 
+static __attribute__((always_inline)) INLINE void
   part_set_{{NAME}}(struct part *restrict p, const {{TYPE}} {{NAME}}[{{SIZE}}]) {
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -58,14 +80,14 @@ static __attribute__((always_inline)) INLINE void
 {%- endif %}
 {%- endfor %}
 {%- if HAS_IFDEF %}
-#endif 
+#endif
 {%- endif %}
 }
 
 /**
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}, by index.
  */
-static __attribute__((always_inline)) INLINE void 
+static __attribute__((always_inline)) INLINE void
   part_set_{{NAME}}_ind(struct part *restrict p, const size_t i, const {{TYPE}} {{NAME}}) {
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -76,7 +98,7 @@ static __attribute__((always_inline)) INLINE void
   p->_{{NAME}}[i] = {{NAME}};
 {%- endif %}
 {%- if HAS_IFDEF %}
-#endif 
+#endif
 {%- endif %}
 }
 {# deliberately empty line #}
