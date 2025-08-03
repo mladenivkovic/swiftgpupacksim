@@ -16,8 +16,8 @@ VPATH=$(SRCDIR):$(SRCDIR)/cuda:$(SRCDIR)/swift_placeholders
 INCLUDES+=-I. -I$(SRCDIR) -I$(SRCDIR)/cuda -I$(SRCDIR)/swift_placeholders
 
 $(warning dev mode -  adding -Wno-unused-parameter)
-# CFLAGS += -Wno-unused-parameter
-# CFLAGS_DEBUG += -Wno-unused-parameter
+CFLAGS += -Wno-unused-parameter
+CFLAGS_DEBUG += -Wno-unused-parameter
 
 ifneq ("$(wildcard debug.mk)","")
 include debug.mk
