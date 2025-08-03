@@ -53,20 +53,21 @@ def check_output_directory(outdir: Union[str, list], verbose: bool = True):
 
     return outdir
 
+
 def get_git_hash() -> str:
     """
     Get the git hash of the latest commit.
     If git is unavailable or command fails for any reason, return current time instead.
     """
 
-    git_hash_cmd="git rev-parse --verify HEAD"
+    git_hash_cmd = "git rev-parse --verify HEAD"
     try:
         githash = subprocess.run(
-                git_hash_cmd,
-                shell=True,
-                check=True,
-                capture_output=True,
-            )
+            git_hash_cmd,
+            shell=True,
+            check=True,
+            capture_output=True,
+        )
         gitstdout = githash.stdout
         if isinstance(gitstdout, bytes):
             gitstdout = gitstdout.decode("utf8")
@@ -78,5 +79,3 @@ def get_git_hash() -> str:
         hashstr = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
 
     return hashstr
-
-
