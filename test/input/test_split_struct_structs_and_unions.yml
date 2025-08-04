@@ -1,0 +1,112 @@
+# Test (recursive) struct and generation with split top-level structs
+
+part:
+    st1:
+        type: struct
+        contents: 
+            a:
+            b:
+                size: 3
+            c:
+                type: long long
+                ifdef: DEBUG
+                ifdef_return_val: 0
+
+    st2:
+        type: struct
+        contents:
+            d:
+                type: double
+            nested1:
+                type: struct
+                contents:
+                    gps:
+                        type: struct gpart*
+                    ts:
+                        type: timebin_t
+
+    union1:
+        type: union
+        contents:
+            au:
+            bu:
+                ifdef: DEBUG
+            cu:
+                ifdef: NODEBUG
+
+    union2:
+        type: union
+        contents:
+            gpu:
+                type: struct gp*
+
+            ppu:
+                type: struct
+                contents:
+                    du:
+                    eu:
+
+    # union3:
+    #     type: union
+    #     ifdef: DEBUG # ILLEGAL
+    #     contents:
+    #         fu:
+    #         gu:
+    #         hu:
+    #     size: 3 # ILLEGAL
+ 
+part2:
+    st3:
+        type: struct
+        contents: 
+            a2:
+            b2:
+                size: 3
+            c2:
+                type: long long
+                ifdef: DEBUG
+                ifdef_return_val: 0
+
+    st4:
+        type: struct
+        contents:
+            d2:
+                type: double
+            nested12:
+                type: struct
+                contents:
+                    gps2:
+                        type: struct gpart*
+                    ts2:
+                        type: timebin_t
+
+    union3:
+        type: union
+        contents:
+            au2:
+            bu2:
+                ifdef: DEBUG
+            cu2:
+                ifdef: NODEBUG
+
+    union4:
+        type: union
+        contents:
+            gpu2:
+                type: struct gp*
+
+            ppu2:
+                type: struct
+                contents:
+                    du2:
+                    eu2:
+
+    # union3:
+    #     type: union
+    #     ifdef: DEBUG # ILLEGAL
+    #     contents:
+    #         fu2:
+    #         gu2:
+    #         hu2:
+    #     size: 3 # ILLEGAL
+ 
