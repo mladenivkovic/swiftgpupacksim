@@ -25,6 +25,7 @@ struct gpart{
 
 
 struct part {
+
   /*! offset/index of particle in cell particle data array */
   size_t _cell_offset;
 
@@ -67,6 +68,7 @@ struct part {
 };
 
 struct part2 {
+
   /*! my integer */
   int _my_int2;
 
@@ -99,6 +101,114 @@ struct part2 {
 
   /*! pointer to integer array */
   int* _my_pointer2;
+
+};
+
+struct part3 {
+
+#ifdef DEBUG
+  /*! my integer */
+  int _my_int3;
+#endif
+
+#ifdef DEBUG
+  /*! my long */
+  long _my_long3;
+#endif
+
+#ifdef DEBUG
+  /*! my long long */
+  long long _my_longlong3;
+#endif
+
+#ifdef DEBUG
+  /*! my float */
+  float _my_float3;
+#endif
+
+#ifdef DEBUG
+  /*! my double */
+  double _my_dble3;
+#endif
+
+#ifdef DEBUG
+  /*! my_char */
+  char _my_char3;
+#endif
+
+#ifdef DEBUG
+  /*! my integertime */
+  integertime_t _my_integertime3;
+#endif
+
+#ifdef DEBUG
+  /*! my timebin */
+  timebin_t _my_timebin3;
+#endif
+
+#ifdef DEBUG
+  /*! pointer to externally defined struct */
+  struct gpart* _my_pointer_struct3;
+#endif
+
+#ifdef DEBUG
+  /*! pointer to integer array */
+  int* _my_pointer3;
+#endif
+
+};
+
+struct part4 {
+
+#ifdef NODEBUG
+  /*! my integer */
+  int _my_int4;
+#endif
+
+#ifdef NODEBUG
+  /*! my long */
+  long _my_long4;
+#endif
+
+#ifdef NODEBUG
+  /*! my long long */
+  long long _my_longlong4;
+#endif
+
+#ifdef NODEBUG
+  /*! my float */
+  float _my_float4;
+#endif
+
+#ifdef NODEBUG
+  /*! my double */
+  double _my_dble4;
+#endif
+
+#ifdef NODEBUG
+  /*! my_char */
+  char _my_char4;
+#endif
+
+#ifdef NODEBUG
+  /*! my integertime */
+  integertime_t _my_integertime4;
+#endif
+
+#ifdef NODEBUG
+  /*! my timebin */
+  timebin_t _my_timebin4;
+#endif
+
+#ifdef NODEBUG
+  /*! pointer to externally defined struct */
+  struct gpart* _my_pointer_struct4;
+#endif
+
+#ifdef NODEBUG
+  /*! pointer to integer array */
+  int* _my_pointer4;
+#endif
 
 };
 
@@ -952,6 +1062,1077 @@ static __attribute__((always_inline)) INLINE void
   part2_s->_my_pointer2 = my_pointer2;
 }
 
+
+
+
+/**
+ * @brief get my_int3, my integer.
+ */
+static __attribute__((always_inline)) INLINE int
+  part_get_my_int3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_int3;
+#else
+  return INT_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_int3, my integer.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_int3. If you need read-only access to my_int3, use part_get_const_my_int3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE int*
+  part_get_my_int3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_int3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_int3,
+ * my integer.
+ * If you need write access to my_int3, use part_get_my_int3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const int*
+  part_get_const_my_int3_p(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_int3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_int3, my integer.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_int3(struct part *restrict p, const int my_int3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_int3 = my_int3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_long3, my long.
+ */
+static __attribute__((always_inline)) INLINE long
+  part_get_my_long3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_long3;
+#else
+  return LONG_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_long3, my long.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_long3. If you need read-only access to my_long3, use part_get_const_my_long3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE long*
+  part_get_my_long3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_long3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_long3,
+ * my long.
+ * If you need write access to my_long3, use part_get_my_long3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const long*
+  part_get_const_my_long3_p(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_long3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_long3, my long.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_long3(struct part *restrict p, const long my_long3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_long3 = my_long3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_longlong3, my long long.
+ */
+static __attribute__((always_inline)) INLINE long long
+  part_get_my_longlong3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_longlong3;
+#else
+  return LLONG_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_longlong3, my long long.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_longlong3. If you need read-only access to my_longlong3, use part_get_const_my_longlong3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE long long*
+  part_get_my_longlong3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_longlong3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_longlong3,
+ * my long long.
+ * If you need write access to my_longlong3, use part_get_my_longlong3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const long long*
+  part_get_const_my_longlong3_p(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_longlong3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_longlong3, my long long.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_longlong3(struct part *restrict p, const long long my_longlong3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_longlong3 = my_longlong3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_float3, my float.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_my_float3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_float3;
+#else
+  return FLT_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_float3, my float.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_float3. If you need read-only access to my_float3, use part_get_const_my_float3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_my_float3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_float3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_float3,
+ * my float.
+ * If you need write access to my_float3, use part_get_my_float3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_my_float3_p(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_float3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_float3, my float.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_float3(struct part *restrict p, const float my_float3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_float3 = my_float3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_dble3, my double.
+ */
+static __attribute__((always_inline)) INLINE double
+  part_get_my_dble3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_dble3;
+#else
+  return DBL_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_dble3, my double.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_dble3. If you need read-only access to my_dble3, use part_get_const_my_dble3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE double*
+  part_get_my_dble3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_dble3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_dble3,
+ * my double.
+ * If you need write access to my_dble3, use part_get_my_dble3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const double*
+  part_get_const_my_dble3_p(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_dble3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_dble3, my double.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_dble3(struct part *restrict p, const double my_dble3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_dble3 = my_dble3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_char3, my_char.
+ */
+static __attribute__((always_inline)) INLINE char
+  part_get_my_char3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_char3;
+#else
+  return CHAR_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_char3, my_char.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_char3. If you need read-only access to my_char3, use part_get_const_my_char3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE char*
+  part_get_my_char3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_char3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_char3,
+ * my_char.
+ * If you need write access to my_char3, use part_get_my_char3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const char*
+  part_get_const_my_char3_p(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_char3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_char3, my_char.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_char3(struct part *restrict p, const char my_char3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_char3 = my_char3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_integertime3, my integertime.
+ */
+static __attribute__((always_inline)) INLINE integertime_t
+  part_get_my_integertime3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_integertime3;
+#else
+  return LLONG_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_integertime3, my integertime.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_integertime3. If you need read-only access to my_integertime3, use part_get_const_my_integertime3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE integertime_t*
+  part_get_my_integertime3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_integertime3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_integertime3,
+ * my integertime.
+ * If you need write access to my_integertime3, use part_get_my_integertime3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const integertime_t*
+  part_get_const_my_integertime3_p(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_integertime3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_integertime3, my integertime.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_integertime3(struct part *restrict p, const integertime_t my_integertime3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_integertime3 = my_integertime3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_timebin3, my timebin.
+ */
+static __attribute__((always_inline)) INLINE timebin_t
+  part_get_my_timebin3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_timebin3;
+#else
+  return CHAR_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_timebin3, my timebin.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_timebin3. If you need read-only access to my_timebin3, use part_get_const_my_timebin3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE timebin_t*
+  part_get_my_timebin3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_timebin3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_timebin3,
+ * my timebin.
+ * If you need write access to my_timebin3, use part_get_my_timebin3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const timebin_t*
+  part_get_const_my_timebin3_p(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_timebin3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_timebin3, my timebin.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_timebin3(struct part *restrict p, const timebin_t my_timebin3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_timebin3 = my_timebin3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_pointer_struct3, pointer to externally defined struct.
+ */
+static __attribute__((always_inline)) INLINE struct gpart*
+  part_get_my_pointer_struct3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_pointer_struct3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_pointer_struct3, pointer to externally defined struct.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_pointer_struct3. If you need read-only access to my_pointer_struct3, use part_get_const_my_pointer_struct3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE struct gpart**
+  part_get_my_pointer_struct3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_pointer_struct3;
+#else
+  return NULL;
+#endif
+}/**
+ * @brief set the value of my_pointer_struct3, pointer to externally defined struct.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_pointer_struct3(struct part *restrict p,  struct gpart* my_pointer_struct3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_pointer_struct3 = my_pointer_struct3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_pointer3, pointer to integer array.
+ */
+static __attribute__((always_inline)) INLINE int*
+  part_get_my_pointer3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_pointer3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_pointer3, pointer to integer array.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_pointer3. If you need read-only access to my_pointer3, use part_get_const_my_pointer3_p() instead.
+ */
+static __attribute__((always_inline)) INLINE int**
+  part_get_my_pointer3_p(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return &part3_s->_my_pointer3;
+#else
+  return NULL;
+#endif
+}/**
+ * @brief set the value of my_pointer3, pointer to integer array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_pointer3(struct part *restrict p,  int* my_pointer3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_pointer3 = my_pointer3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_int4, my integer.
+ */
+static __attribute__((always_inline)) INLINE int
+  part_get_my_int4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_int4;
+#else
+  return INT_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_int4, my integer.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_int4. If you need read-only access to my_int4, use part_get_const_my_int4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE int*
+  part_get_my_int4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_int4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_int4,
+ * my integer.
+ * If you need write access to my_int4, use part_get_my_int4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const int*
+  part_get_const_my_int4_p(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_int4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_int4, my integer.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_int4(struct part *restrict p, const int my_int4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_int4 = my_int4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_long4, my long.
+ */
+static __attribute__((always_inline)) INLINE long
+  part_get_my_long4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_long4;
+#else
+  return LONG_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_long4, my long.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_long4. If you need read-only access to my_long4, use part_get_const_my_long4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE long*
+  part_get_my_long4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_long4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_long4,
+ * my long.
+ * If you need write access to my_long4, use part_get_my_long4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const long*
+  part_get_const_my_long4_p(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_long4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_long4, my long.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_long4(struct part *restrict p, const long my_long4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_long4 = my_long4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_longlong4, my long long.
+ */
+static __attribute__((always_inline)) INLINE long long
+  part_get_my_longlong4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_longlong4;
+#else
+  return LLONG_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_longlong4, my long long.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_longlong4. If you need read-only access to my_longlong4, use part_get_const_my_longlong4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE long long*
+  part_get_my_longlong4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_longlong4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_longlong4,
+ * my long long.
+ * If you need write access to my_longlong4, use part_get_my_longlong4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const long long*
+  part_get_const_my_longlong4_p(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_longlong4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_longlong4, my long long.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_longlong4(struct part *restrict p, const long long my_longlong4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_longlong4 = my_longlong4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_float4, my float.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_my_float4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_float4;
+#else
+  return FLT_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_float4, my float.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_float4. If you need read-only access to my_float4, use part_get_const_my_float4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_my_float4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_float4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_float4,
+ * my float.
+ * If you need write access to my_float4, use part_get_my_float4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_my_float4_p(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_float4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_float4, my float.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_float4(struct part *restrict p, const float my_float4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_float4 = my_float4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_dble4, my double.
+ */
+static __attribute__((always_inline)) INLINE double
+  part_get_my_dble4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_dble4;
+#else
+  return DBL_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_dble4, my double.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_dble4. If you need read-only access to my_dble4, use part_get_const_my_dble4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE double*
+  part_get_my_dble4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_dble4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_dble4,
+ * my double.
+ * If you need write access to my_dble4, use part_get_my_dble4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const double*
+  part_get_const_my_dble4_p(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_dble4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_dble4, my double.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_dble4(struct part *restrict p, const double my_dble4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_dble4 = my_dble4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_char4, my_char.
+ */
+static __attribute__((always_inline)) INLINE char
+  part_get_my_char4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_char4;
+#else
+  return CHAR_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_char4, my_char.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_char4. If you need read-only access to my_char4, use part_get_const_my_char4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE char*
+  part_get_my_char4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_char4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_char4,
+ * my_char.
+ * If you need write access to my_char4, use part_get_my_char4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const char*
+  part_get_const_my_char4_p(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_char4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_char4, my_char.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_char4(struct part *restrict p, const char my_char4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_char4 = my_char4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_integertime4, my integertime.
+ */
+static __attribute__((always_inline)) INLINE integertime_t
+  part_get_my_integertime4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_integertime4;
+#else
+  return LLONG_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_integertime4, my integertime.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_integertime4. If you need read-only access to my_integertime4, use part_get_const_my_integertime4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE integertime_t*
+  part_get_my_integertime4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_integertime4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_integertime4,
+ * my integertime.
+ * If you need write access to my_integertime4, use part_get_my_integertime4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const integertime_t*
+  part_get_const_my_integertime4_p(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_integertime4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_integertime4, my integertime.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_integertime4(struct part *restrict p, const integertime_t my_integertime4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_integertime4 = my_integertime4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_timebin4, my timebin.
+ */
+static __attribute__((always_inline)) INLINE timebin_t
+  part_get_my_timebin4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_timebin4;
+#else
+  return CHAR_MAX;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_timebin4, my timebin.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_timebin4. If you need read-only access to my_timebin4, use part_get_const_my_timebin4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE timebin_t*
+  part_get_my_timebin4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_timebin4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get read-only access to pointer to my_timebin4,
+ * my timebin.
+ * If you need write access to my_timebin4, use part_get_my_timebin4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const timebin_t*
+  part_get_const_my_timebin4_p(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_timebin4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief set the value of my_timebin4, my timebin.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_timebin4(struct part *restrict p, const timebin_t my_timebin4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_timebin4 = my_timebin4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_pointer_struct4, pointer to externally defined struct.
+ */
+static __attribute__((always_inline)) INLINE struct gpart*
+  part_get_my_pointer_struct4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_pointer_struct4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_pointer_struct4, pointer to externally defined struct.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_pointer_struct4. If you need read-only access to my_pointer_struct4, use part_get_const_my_pointer_struct4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE struct gpart**
+  part_get_my_pointer_struct4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_pointer_struct4;
+#else
+  return NULL;
+#endif
+}/**
+ * @brief set the value of my_pointer_struct4, pointer to externally defined struct.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_pointer_struct4(struct part *restrict p,  struct gpart* my_pointer_struct4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_pointer_struct4 = my_pointer_struct4;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_pointer4, pointer to integer array.
+ */
+static __attribute__((always_inline)) INLINE int*
+  part_get_my_pointer4(const struct part *restrict p) {
+#ifdef NODEBUG
+  const struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return part4_s->_my_pointer4;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get a pointer to my_pointer4, pointer to integer array.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_pointer4. If you need read-only access to my_pointer4, use part_get_const_my_pointer4_p() instead.
+ */
+static __attribute__((always_inline)) INLINE int**
+  part_get_my_pointer4_p(struct part *restrict p) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  return &part4_s->_my_pointer4;
+#else
+  return NULL;
+#endif
+}/**
+ * @brief set the value of my_pointer4, pointer to integer array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_pointer4(struct part *restrict p,  int* my_pointer4) {
+#ifdef NODEBUG
+  struct part4* part4_s = p->_cell_part_data->_part4 + p->_cell_offset;
+  part4_s->_my_pointer4 = my_pointer4;
+#endif
+}
 
 
 

@@ -6,6 +6,8 @@
 #include <limits.h>
 #include <stddef.h>
 
+#include "hydro_part_data_struct.h"
+
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
 #define DEBUG
@@ -23,6 +25,7 @@ struct gpart{
 
 
 struct part {
+
   /*! my integer */
   int _my_int_arr[4];
 
@@ -52,6 +55,7 @@ struct part {
 
 };
 
+
 /**
  * @brief get my_int_arr, my integer,
  * for read and write access. For read-only access, use
@@ -63,8 +67,7 @@ static __attribute__((always_inline)) INLINE int*
 }
 
 /**
- * @brief get my_int_arr, my integer,
- * for read-only access.
+ * @brief get my_int_arr, my integer, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_my_int_arr(const struct part *restrict p) {
@@ -72,8 +75,7 @@ static __attribute__((always_inline)) INLINE const int*
 }
 
 /**
- * @brief get my_int_arr, my integer,
- * by index.
+ * @brief get my_int_arr, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE int
   part_get_my_int_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -114,8 +116,7 @@ static __attribute__((always_inline)) INLINE long*
 }
 
 /**
- * @brief get my_long_arr, my long,
- * for read-only access.
+ * @brief get my_long_arr, my long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long*
   part_get_const_my_long_arr(const struct part *restrict p) {
@@ -123,8 +124,7 @@ static __attribute__((always_inline)) INLINE const long*
 }
 
 /**
- * @brief get my_long_arr, my long,
- * by index.
+ * @brief get my_long_arr, my long, by index.
  */
 static __attribute__((always_inline)) INLINE long
   part_get_my_long_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -165,8 +165,7 @@ static __attribute__((always_inline)) INLINE long long*
 }
 
 /**
- * @brief get my_longlong_arr, my long long,
- * for read-only access.
+ * @brief get my_longlong_arr, my long long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long long*
   part_get_const_my_longlong_arr(const struct part *restrict p) {
@@ -174,8 +173,7 @@ static __attribute__((always_inline)) INLINE const long long*
 }
 
 /**
- * @brief get my_longlong_arr, my long long,
- * by index.
+ * @brief get my_longlong_arr, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE long long
   part_get_my_longlong_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -216,8 +214,7 @@ static __attribute__((always_inline)) INLINE float*
 }
 
 /**
- * @brief get my_float_arr, my float,
- * for read-only access.
+ * @brief get my_float_arr, my float, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_my_float_arr(const struct part *restrict p) {
@@ -225,8 +222,7 @@ static __attribute__((always_inline)) INLINE const float*
 }
 
 /**
- * @brief get my_float_arr, my float,
- * by index.
+ * @brief get my_float_arr, my float, by index.
  */
 static __attribute__((always_inline)) INLINE float
   part_get_my_float_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -267,8 +263,7 @@ static __attribute__((always_inline)) INLINE double*
 }
 
 /**
- * @brief get my_dble_arr, my double,
- * for read-only access.
+ * @brief get my_dble_arr, my double, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_my_dble_arr(const struct part *restrict p) {
@@ -276,8 +271,7 @@ static __attribute__((always_inline)) INLINE const double*
 }
 
 /**
- * @brief get my_dble_arr, my double,
- * by index.
+ * @brief get my_dble_arr, my double, by index.
  */
 static __attribute__((always_inline)) INLINE double
   part_get_my_dble_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -318,8 +312,7 @@ static __attribute__((always_inline)) INLINE char*
 }
 
 /**
- * @brief get my_char_arr, my_char,
- * for read-only access.
+ * @brief get my_char_arr, my_char, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const char*
   part_get_const_my_char_arr(const struct part *restrict p) {
@@ -327,8 +320,7 @@ static __attribute__((always_inline)) INLINE const char*
 }
 
 /**
- * @brief get my_char_arr, my_char,
- * by index.
+ * @brief get my_char_arr, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE char
   part_get_my_char_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -369,8 +361,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
 }
 
 /**
- * @brief get my_integertime_arr, my integertime,
- * for read-only access.
+ * @brief get my_integertime_arr, my integertime, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
   part_get_const_my_integertime_arr(const struct part *restrict p) {
@@ -378,8 +369,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
 }
 
 /**
- * @brief get my_integertime_arr, my integertime,
- * by index.
+ * @brief get my_integertime_arr, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE integertime_t
   part_get_my_integertime_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -420,8 +410,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
 }
 
 /**
- * @brief get my_timebin_arr, my timebin,
- * for read-only access.
+ * @brief get my_timebin_arr, my timebin, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_my_timebin_arr(const struct part *restrict p) {
@@ -429,8 +418,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
 }
 
 /**
- * @brief get my_timebin_arr, my timebin,
- * by index.
+ * @brief get my_timebin_arr, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_my_timebin_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -471,8 +459,7 @@ static __attribute__((always_inline)) INLINE struct my_struct*
 }
 
 /**
- * @brief get my_external_struct_arr, some externally defined struct,
- * for read-only access.
+ * @brief get my_external_struct_arr, some externally defined struct, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const struct my_struct*
   part_get_const_my_external_struct_arr(const struct part *restrict p) {
@@ -480,8 +467,7 @@ static __attribute__((always_inline)) INLINE const struct my_struct*
 }
 
 /**
- * @brief get my_external_struct_arr, some externally defined struct,
- * by index.
+ * @brief get my_external_struct_arr, some externally defined struct, by index.
  */
 static __attribute__((always_inline)) INLINE struct my_struct
   part_get_my_external_struct_arr_ind(const struct part *restrict p, const size_t ind) {
@@ -507,7 +493,6 @@ static __attribute__((always_inline)) INLINE void
   part_set_my_external_struct_arr_ind(struct part *restrict p, const size_t i, const struct my_struct my_external_struct_arr) {
   p->_my_external_struct_arr[i] = my_external_struct_arr;
 }
-
 
 
 
