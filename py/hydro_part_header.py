@@ -56,8 +56,8 @@ def generate_hydro_part_header(
 
     # fake having field props for the auxiliary fields
     main_part_struct_aux_fields_props = [
-            ("cell_offset", {"type": "size_t", "doc": "offset of particle in cell particle data array"}),
-            ("cell_part_data", {"type": "struct hydro_part_data*", "doc": "pointer to cell particle data array struct"})
+            ("cell_offset", {"type": "size_t", "doc": "offset/index of particle in cell particle data array"}),
+            ("cell_part_data", {"type": "struct hydro_part_data*", "doc": "pointer to particle data array struct of the cell this particle is located in"})
     ]
 
     if not have_part_struct:

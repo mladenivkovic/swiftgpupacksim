@@ -56,6 +56,15 @@ part_struct2_name:
     ... # etc etc
 ```
 
+**IMPORTANT**:
+
+- No duplicate names.
+  - If there are several top level/root particle data structs with identical
+    names, the yaml reader will only keep the last one.
+  - If there are several field with identical names, even if they are stored in
+    different top level/root particle data structs, this will cause name clashes
+    with the generated API.
+
 
 
 ### Structs

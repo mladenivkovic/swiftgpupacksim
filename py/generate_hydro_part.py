@@ -4,7 +4,7 @@ import argparse
 import os
 import yaml
 
-from utils import verify_file_exists, check_output_directory, print_separator
+from utils import verify_file_exists, check_output_directory, print_separator, validate_yml_contents
 from hydro_part_header import generate_hydro_part_header
 from hydro_part_data_struct import generate_hydro_part_data_struct
 
@@ -69,6 +69,7 @@ if __name__ == "__main__":
     input_fp = open(input_file, "r")
     particle_fields_d = yaml.safe_load(input_fp)
     input_fp.close()
+    validate_yml_contents(particle_fields_d)
 
     hydro_part_header = generate_hydro_part_header(
         particle_fields_d, swift_header=swift_header, testing=testing, verbose=verbose
