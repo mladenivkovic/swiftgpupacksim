@@ -35,16 +35,20 @@ function DIFF(){
 # rm -f hydro_part.h
 
 
-# echo "running ifdefs"
+# echo "running test_ifdefs"
 # python3 ../py/generate_hydro_part.py --test ./input/test_ifdefs.yml
 # COMPILE_AND_RUN
 # DIFF hydro_part.h output/test_ifdefs.h
 # rm -f hydro_part.h
 
-echo "running ifdefs"
-python3 ../py/generate_hydro_part.py --test ./input/test_struct.yml
+# echo "running test_struct"
+# python3 ../py/generate_hydro_part.py --test ./input/test_struct.yml
+# COMPILE_AND_RUN
+# DIFF hydro_part.h output/test_struct.h
+# rm -f hydro_part.h
+
+echo "running test_union"
+python3 ../py/generate_hydro_part.py --test ./input/test_union.yml
 COMPILE_AND_RUN
-DIFF hydro_part.h output/test_struct.h
+DIFF hydro_part.h output/test_union.h
 rm -f hydro_part.h
-
-

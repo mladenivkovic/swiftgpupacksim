@@ -65,7 +65,8 @@ part:
       alpha_diff: 
         doc: Thermal diffusion coefficient
 
-  union:
+  union1:
+    type: union
     doc: Store density/force specific stuff
     contents:
       density:
