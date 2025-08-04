@@ -1,3 +1,5 @@
+# Test all permitted data types (scalars)
+
 part:
     my_int:
         type: int
