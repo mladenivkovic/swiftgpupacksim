@@ -58,8 +58,6 @@ class FieldEntry(object):
 
     # jinja environment used to load and generate templates
     jinja_env = init_jinja_env()
-    # used to give unions unique identifier in dicts
-    union_count = 0
 
     def __init__(
         self,
@@ -116,11 +114,7 @@ class FieldEntry(object):
         """
 
         if self.name == "union":
-            # Change the internal name of the union so it has a unique key in
-            # the dict that we'll create
-            self.name = "union" + str(self.union_count)
-            self.union_count += 1
-            self.type = "union"
+            raise ValueError("SWITCH TO NEW SYNTAX WITH UNION AS TYPE")
 
         if self.verbose:
             print(f"Found field '{self.name}'")
@@ -208,7 +202,6 @@ class FieldEntry(object):
                 )
                 self.sub_entries.append(new_entry)
 
-        #  if self.type == "struct" or self.type.startswith("struct "):
         if self.type == "struct":
             if self.ifdef != None:
                 # we usually use empty structs instead in SWIFT, i.e. their
@@ -218,6 +211,14 @@ class FieldEntry(object):
                 raise NotImplementedError(
                     f"'{self.type} {self.name}': structs hidden behind macro guards not implemented"
                 )
+
+        if self.type == "union":
+            if self.ifdef != None:
+                raise NotImplementedError(
+                    f"'{self.type} {self.name}': Union hidden behind macro guards not implemented. Use 'ifdef' on its members, instead."
+                )
+            if self.size != 1:
+                raise ValueError(f"'{self.type} {self.name}': fixed-size arrays of unions are illegal. You requested size[{self.size}]")
 
         return
 
