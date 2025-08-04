@@ -1,13 +1,6 @@
 # Test particle data split into several structs
 
-
-density:
-    doc: particle data needed for density interactions
-    d:
-    e:
-    c:
-
-part2:
+part:
     my_int:
         type: int
         doc: my integer
@@ -48,6 +41,51 @@ part2:
         doc: pointer to externally defined struct
 
     my_pointer:
+        type: int*
+        doc: pointer to integer array
+
+
+part2:
+    my_int2:
+        type: int
+        doc: my integer
+
+    my_long2:
+        type: long
+        doc: my long
+
+    my_longlong2:
+        type: long long
+        doc: my long long
+    
+    my_float2:
+        doc: my float
+
+    my_dble2:
+        type: double
+        doc: my double
+
+    my_char2:
+        type: char
+        doc: my_char
+
+    my_integertime2:
+        type: integertime_t
+        doc: my integertime
+
+    my_timebin2:
+        type: timebin_t
+        doc: my timebin
+
+    my_external_struct2:
+        type: struct my_struct
+        doc: some externally defined struct
+
+    my_pointer_struct2:
+        type: struct gpart*
+        doc: pointer to externally defined struct
+
+    my_pointer2:
         type: int*
         doc: pointer to integer array
 
