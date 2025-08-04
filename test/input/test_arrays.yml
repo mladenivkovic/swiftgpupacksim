@@ -1,3 +1,5 @@
+# Test fixed-size array generation.
+
 part:
     my_int_arr:
         type: int
