@@ -2,3 +2,4 @@
 debug.mk
 swiftgpupacksim
 hydro_part.h
+hydro_part_data_struct.h

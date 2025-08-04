@@ -27,6 +27,7 @@ _allowed_field_data_types = [
     "float",
     "double",
     "char",
+    "size_t",
     "integertime_t",
     "timebin_t",
     "struct",
@@ -42,6 +43,7 @@ _field_data_type_default_return_vals = {
     "float": "FLT_MAX",
     "double": "DBL_MAX",
     "char": "CHAR_MAX",
+    "size_t": "SIZE_MAX",
     "integertime_t": "LLONG_MAX",
     "timebin_t": "CHAR_MAX",
     "struct": None,
@@ -53,6 +55,8 @@ _prohibited_field_names = [
         "doc",
         "documentation",
         "union",
+        "cell_offset",
+        "cell_part_data",
         ]
 
 class FieldEntry(object):
@@ -68,7 +72,9 @@ class FieldEntry(object):
         self,
         field_name: str,
         field_props: Union[dict, None],
+        root_struct: str,
         verbose=False,
+        allow_prohibited=False,
         recursion_level=0,
     ):
         """
@@ -82,8 +88,14 @@ class FieldEntry(object):
             a dict of the read-in yaml file specifications for this
             field. None if none were found.
 
+        root_struct: str
+            name of "root" or "top level" struct this field is assigned to
+
         verbose: bool
             If true, be talkative about what we find.
+
+        allow_prohibited: bool
+            Allow the creation of prohibited/reserved field names.
 
         recursion_level: int
             Current recursion level. Used when handling structs
@@ -96,10 +108,11 @@ class FieldEntry(object):
         if recursion_level > 20:
             raise ValueError("We recursed 20 times, this seems excessive.")
 
-        if field_name in _prohibited_field_names:
+        if not allow_prohibited and field_name in _prohibited_field_names:
             raise ValueError(f"Using prohibited field name {field_name}")
 
         self.name = field_name
+        self.root_struct = root_struct
         self.props = field_props
         self.verbose = verbose
         self.recursion_level = recursion_level
@@ -141,6 +154,7 @@ class FieldEntry(object):
 
         # We have props to sort through.
         # First, validate that we have no unknown fields.
+        print("self.props:" , self.props)
         for key in self.props.keys():
             if key not in _allowed_field_descriptors:
                 print(f"WARNING: Field '{self.name}':", file=sys.stderr)
@@ -205,6 +219,7 @@ class FieldEntry(object):
                 new_entry = FieldEntry(
                     key,
                     contents[key],
+                    self.root_struct,
                     verbose=self.verbose,
                     recursion_level=self.recursion_level + 1,
                 )
@@ -299,6 +314,7 @@ class FieldEntry(object):
             "IFDEF": self.ifdef,
             "IFDEF_RETURN_VAL": self.ifdef_return_val,
             "PARENT_STRUCT": parent_struct,
+            "ROOT_STRUCT": self.root_struct,
             "IS_POINTER": is_pointer,
             "HAS_DOC": self.documentation is not None,
             "HAS_IFDEF": self.ifdef is not None,
@@ -306,6 +322,7 @@ class FieldEntry(object):
             "IS_ARRAY": self.size > 1,
             "IS_UNION": self.type == "union",
             "IS_INTERNAL_STRUCT": self.type == "struct",
+            "IS_IN_SPLIT_STRUCT": self.root_struct != "part",
         }
 
         if verbose:

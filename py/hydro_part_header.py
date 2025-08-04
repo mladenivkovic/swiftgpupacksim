@@ -54,19 +54,54 @@ def generate_hydro_part_header(
     # declaration C-code snippets for each struct containing particle data
     part_struct_d = {}
 
-    # TODO: add cell and offset fields
-    # TODO: document them as prohibited/reserved
+    # fake having field props for the auxiliary fields
+    main_part_struct_aux_fields_props = [
+            ("cell_offset", {"type": "size_t", "doc": "offset of particle in cell particle data array"}),
+            ("cell_part_data", {"type": "struct hydro_part_data*", "doc": "pointer to cell particle data array struct"})
+    ]
 
     if not have_part_struct:
-        raise NotImplementedError("Implement addition of part struct as first")
+        # Add 'struct part' manually.
 
+        declarations = []
+        apis = []
+
+        # First, generate required fields and getters for other particle data structs.
+        for field_data in main_part_struct_aux_fields_props:
+            field_name = field_data[0]
+            field_props = field_data[1]
+            # parse the field specification
+            field_entry = FieldEntry(field_name, field_props, "part", verbose=verbose, allow_prohibited=True)
+            # get the declaration C-code
+            decl = field_entry.generate_declaration(verbose=verbose)
+            declarations.append(decl)
+            # get the API C-code
+            #  api = field_entry.generate_API(verbose=verbose)
+            #  apis.append(api)
+        # store the parsed data
+        part_struct_d["part"] = {"API": apis, "DECLARATIONS": declarations}
+
+
+
+    # Now go through all the structs provided in the yml file
     for struct_name in part_d.keys():
 
         declarations = []
         apis = []
 
-        #  if struct_name == "part" and len(part_keylist) > 1:
-            # Generate getters for other structs
+        # First, generate required fields and getters for other particle data structs.
+        if struct_name == "part" and len(part_keylist) > 1:
+            for field_data in main_part_struct_aux_fields_props:
+                field_name = field_data[0]
+                field_props = field_data[1]
+                # parse the field specification
+                field_entry = FieldEntry(field_name, field_props, "part", verbose=verbose, allow_prohibited=True)
+                # get the declaration C-code
+                decl = field_entry.generate_declaration(verbose=verbose)
+                declarations.append(decl)
+                # get the API C-code
+                #  api = field_entry.generate_API(verbose=verbose)
+                #  apis.append(api)
 
 
         for field in list(part_d[struct_name].keys()):
@@ -76,7 +111,7 @@ def generate_hydro_part_header(
                 continue
             # parse the field specification
             field_props = part_d[struct_name][field]
-            field_entry = FieldEntry(field, field_props, verbose)
+            field_entry = FieldEntry(field, field_props, struct_name, verbose=verbose)
             # get the declaration C-code
             decl = field_entry.generate_declaration(verbose=verbose)
             declarations.append(decl)

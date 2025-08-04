@@ -219,6 +219,8 @@ fields. These are:
 - ``doc``
 - ``documentation``
 - ``union``
+- ``cell_offset``
+- ``cell_part_data``
 
 
 
