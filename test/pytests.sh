@@ -35,3 +35,9 @@ DIFF hydro_part.h output/test_arrays.h
 rm -f hydro_part.h
 
 
+echo "running ifdefs"
+python3 ../py/generate_hydro_part.py --test ./input/test_ifdefs.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_ifdefs.h
+rm -f hydro_part.h
+

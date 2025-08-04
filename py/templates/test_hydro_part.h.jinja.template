@@ -8,6 +8,7 @@
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
+#define DEBUG
 typedef unsigned long long integertime_t;
 typedef char timebin_t;
 

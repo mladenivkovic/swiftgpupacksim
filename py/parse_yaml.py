@@ -46,6 +46,7 @@ _field_data_type_default_return_vals = {
     "timebin_t": "CHAR_MAX",
     "struct": None,
     "union": None,
+    "pointer": "NULL",
 }
 
 
@@ -195,8 +196,9 @@ class FieldEntry(object):
                 contents = self.props["contents"]
             except KeyError:
                 raise KeyError(
-                    f"'{self.type}' definition within parent struct needs 'contents' specification."
+                    f"'{self.type} {self.name}' definition within parent struct needs 'contents' specification."
                 )
+            # recursively read in sub-components of this struct or union
             for key in contents.keys():
                 new_entry = FieldEntry(
                     key,
@@ -205,6 +207,15 @@ class FieldEntry(object):
                     recursion_level=self.recursion_level + 1,
                 )
                 self.sub_entries.append(new_entry)
+
+        #  if self.type == "struct" or self.type.startswith("struct "):
+        if self.type == "struct":
+            if self.ifdef != None:
+                # we usually use empty structs instead in SWIFT, i.e. their
+                # contents are hidden behind macro guards. The problem we face
+                # here is to decide how to define a default return value for
+                # the getters.
+                raise NotImplementedError(f"'{self.type} {self.name}': structs hidden behind macro guards not implemented")
 
         return
 
@@ -237,20 +248,24 @@ class FieldEntry(object):
             dict containing field properties prepared for use in jinja templates
         """
 
+        is_pointer = False
+        if "*" in self.type:
+            # don't make pointers const
+            is_pointer = True
+
         if self.ifdef:
             # do we use the default return value?
             if self.ifdef_return_val is None:
-                self.ifdef_return_val = _field_data_type_default_return_vals[self.type]
+                if is_pointer:
+                    self.ifdef_return_val = _field_data_type_default_return_vals["pointer"]
+                else:
+                    self.ifdef_return_val = _field_data_type_default_return_vals[self.type]
             # if still None, something is wrong.
             if self.ifdef_return_val is None:
                 raise ValueError(
                     "No return value available for field with IFDEF."
                     + f"name: {self.name}, type: {self.type}"
                 )
-        is_pointer = False
-        if "*" in self.type:
-            # don't make pointers const
-            is_pointer = True
 
         d = {
             "NAME": self.name,

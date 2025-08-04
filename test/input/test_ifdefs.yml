@@ -1,0 +1,124 @@
+part:
+    my_int:
+        type: int
+        doc: my integer
+        ifdef: DEBUG
+
+    my_long:
+        type: long
+        doc: my long
+        ifdef: DEBUG
+
+    my_longlong:
+        type: long long
+        doc: my long long
+        ifdef: DEBUG
+    
+    my_float:
+        doc: my float
+        ifdef: DEBUG
+
+    my_dble:
+        type: double
+        doc: my double
+        ifdef: DEBUG
+
+    my_char:
+        type: char
+        doc: my_char
+        ifdef: DEBUG
+
+    my_integertime:
+        type: integertime_t
+        doc: my integertime
+        ifdef: DEBUG
+
+    my_timebin:
+        type: timebin_t
+        doc: my timebin
+        ifdef: DEBUG
+
+    # Not implemented yet
+    # my_external_struct:
+    #     type: struct my_struct
+    #     doc: some externally defined struct
+    #     ifdef: DEBUG
+
+    my_pointer_struct:
+        type: struct gpart*
+        doc: pointer to externally defined struct
+        ifdef: DEBUG
+
+    my_pointer:
+        type: int*
+        doc: pointer to integer array
+        ifdef: DEBUG
+
+    my_int_arr:
+        type: int
+        doc: my integer
+        size: 4
+        ifdef: DEBUG
+
+    my_long_arr:
+        type: long
+        doc: my long
+        size: 4
+        ifdef: DEBUG
+
+    my_longlong_arr:
+        type: long long
+        doc: my long long
+        size: 4
+        ifdef: DEBUG
+    
+    my_float_arr:
+        doc: my float
+        size: 4
+        ifdef: DEBUG
+
+    my_dble_arr:
+        type: double
+        doc: my double
+        size: 4
+        ifdef: DEBUG
+
+    my_char_arr:
+        type: char
+        doc: my_char
+        size: 4
+        ifdef: DEBUG
+
+    my_integertime_arr:
+        type: integertime_t
+        doc: my integertime
+        size: 4
+        ifdef: DEBUG
+
+    my_timebin_arr:
+        type: timebin_t
+        doc: my timebin
+        size: 4
+        ifdef: DEBUG
+
+    # Not implemented yet
+    # my_external_struct_arr:
+    #     type: struct my_struct
+    #     doc: some externally defined struct
+    #     size: 4
+    #     ifdef: DEBUG
+
+    # Not implemented yet
+    # my_pointer_struct_arr:
+    #     type: struct gpart*
+    #     doc: pointer to externally defined struct
+    #     size: 4
+    #     ifdef: DEBUG
+
+    # Not implemented yet
+    # my_pointer_arr:
+    #     type: int*
+    #     doc: pointer to integer array
+    #     size: 4
+    #     ifdef: DEBUG
+
