@@ -1,0 +1,11 @@
+# Test particle data split into several structs WITHOUT a `struct part` defined
+
+density:
+    doc: particle data needed for density interactions
+    d:
+    e:
+
+force:
+    doc: particle data needed for force interactions
+    g:
+    h:

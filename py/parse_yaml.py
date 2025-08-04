@@ -154,7 +154,6 @@ class FieldEntry(object):
 
         # We have props to sort through.
         # First, validate that we have no unknown fields.
-        print("self.props:" , self.props)
         for key in self.props.keys():
             if key not in _allowed_field_descriptors:
                 print(f"WARNING: Field '{self.name}':", file=sys.stderr)
