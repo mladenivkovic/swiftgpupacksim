@@ -82,3 +82,36 @@ def get_git_hash() -> str:
 
 def print_separator(msg: str=""):
     print("----------------------------------------------------------------", msg)
+    return
+
+def validate_yml_contents(contents_d: dict) -> None:
+    """
+    Run through the read-in data from the yml file, passed as the dict
+    `contents_d`, and validate that there is no issues:
+
+    (- no top level struct defined twice)
+    - no fields with same name defined twice
+    """
+
+    # This doesn't really work, since the yaml reader just overwrites them.
+    #  struct_names = []
+    #  for key in list(contents_d.keys()):
+    #
+    #      print(key)
+    #      if key in struct_names:
+    #          raise ValueError(f"particle data struct {key} defined more than once in your input yml file.")
+    #      struct_names.append(key)
+
+    field_names = []
+    for key in list(contents_d.keys()):
+
+        struct_fields = contents_d[key]
+        for field in list(struct_fields.keys()):
+            if field in field_names:
+                raise ValueError(f"data field '{field}' defined more than once in your input yml file.")
+            field_names.append(field)
+
+    return
+
+
+
