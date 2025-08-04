@@ -215,7 +215,9 @@ class FieldEntry(object):
                 # contents are hidden behind macro guards. The problem we face
                 # here is to decide how to define a default return value for
                 # the getters.
-                raise NotImplementedError(f"'{self.type} {self.name}': structs hidden behind macro guards not implemented")
+                raise NotImplementedError(
+                    f"'{self.type} {self.name}': structs hidden behind macro guards not implemented"
+                )
 
         return
 
@@ -257,9 +259,13 @@ class FieldEntry(object):
             # do we use the default return value?
             if self.ifdef_return_val is None:
                 if is_pointer:
-                    self.ifdef_return_val = _field_data_type_default_return_vals["pointer"]
+                    self.ifdef_return_val = _field_data_type_default_return_vals[
+                        "pointer"
+                    ]
                 else:
-                    self.ifdef_return_val = _field_data_type_default_return_vals[self.type]
+                    self.ifdef_return_val = _field_data_type_default_return_vals[
+                        self.type
+                    ]
             # if still None, something is wrong.
             if self.ifdef_return_val is None:
                 raise ValueError(
@@ -379,8 +385,8 @@ class FieldEntry(object):
             if params_dict["IS_ARRAY"]:
                 if params_dict["IS_POINTER"]:
                     raise NotImplementedError(
-                        f"Field {self.type} {self.name}[{self.size}]:" +
-                        "arrays of pointers is untested, could contain errors."
+                        f"Field {self.type} {self.name}[{self.size}]:"
+                        + "arrays of pointers is untested, could contain errors."
                     )
                 templ = self.jinja_env.get_template("api_array.jinja.template")
             else:
