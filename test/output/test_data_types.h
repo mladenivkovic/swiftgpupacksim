@@ -6,6 +6,8 @@
 #include <limits.h>
 #include <stddef.h>
 
+#include "hydro_part_data_struct.h"
+
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
 #define DEBUG
@@ -23,6 +25,7 @@ struct gpart{
 
 
 struct part {
+
   /*! my integer */
   int _my_int;
 
@@ -58,6 +61,7 @@ struct part {
 
 };
 
+
 /**
  * @brief get my_int, my integer.
  */
@@ -76,7 +80,6 @@ static __attribute__((always_inline)) INLINE int*
   return &p->_my_int;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_int,
  * my integer.
@@ -86,7 +89,6 @@ static __attribute__((always_inline)) INLINE const int*
   part_get_const_my_int_p(const struct part *restrict p) {
   return &p->_my_int;
 }
-
 
 /**
  * @brief set the value of my_int, my integer.
@@ -117,7 +119,6 @@ static __attribute__((always_inline)) INLINE long*
   return &p->_my_long;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_long,
  * my long.
@@ -127,7 +128,6 @@ static __attribute__((always_inline)) INLINE const long*
   part_get_const_my_long_p(const struct part *restrict p) {
   return &p->_my_long;
 }
-
 
 /**
  * @brief set the value of my_long, my long.
@@ -158,7 +158,6 @@ static __attribute__((always_inline)) INLINE long long*
   return &p->_my_longlong;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_longlong,
  * my long long.
@@ -168,7 +167,6 @@ static __attribute__((always_inline)) INLINE const long long*
   part_get_const_my_longlong_p(const struct part *restrict p) {
   return &p->_my_longlong;
 }
-
 
 /**
  * @brief set the value of my_longlong, my long long.
@@ -199,7 +197,6 @@ static __attribute__((always_inline)) INLINE float*
   return &p->_my_float;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_float,
  * my float.
@@ -209,7 +206,6 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_my_float_p(const struct part *restrict p) {
   return &p->_my_float;
 }
-
 
 /**
  * @brief set the value of my_float, my float.
@@ -240,7 +236,6 @@ static __attribute__((always_inline)) INLINE double*
   return &p->_my_dble;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_dble,
  * my double.
@@ -250,7 +245,6 @@ static __attribute__((always_inline)) INLINE const double*
   part_get_const_my_dble_p(const struct part *restrict p) {
   return &p->_my_dble;
 }
-
 
 /**
  * @brief set the value of my_dble, my double.
@@ -281,7 +275,6 @@ static __attribute__((always_inline)) INLINE char*
   return &p->_my_char;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_char,
  * my_char.
@@ -291,7 +284,6 @@ static __attribute__((always_inline)) INLINE const char*
   part_get_const_my_char_p(const struct part *restrict p) {
   return &p->_my_char;
 }
-
 
 /**
  * @brief set the value of my_char, my_char.
@@ -322,7 +314,6 @@ static __attribute__((always_inline)) INLINE integertime_t*
   return &p->_my_integertime;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_integertime,
  * my integertime.
@@ -332,7 +323,6 @@ static __attribute__((always_inline)) INLINE const integertime_t*
   part_get_const_my_integertime_p(const struct part *restrict p) {
   return &p->_my_integertime;
 }
-
 
 /**
  * @brief set the value of my_integertime, my integertime.
@@ -363,7 +353,6 @@ static __attribute__((always_inline)) INLINE timebin_t*
   return &p->_my_timebin;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_timebin,
  * my timebin.
@@ -373,7 +362,6 @@ static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_my_timebin_p(const struct part *restrict p) {
   return &p->_my_timebin;
 }
-
 
 /**
  * @brief set the value of my_timebin, my timebin.
@@ -404,7 +392,6 @@ static __attribute__((always_inline)) INLINE struct my_struct*
   return &p->_my_external_struct;
 }
 
-
 /**
  * @brief get read-only access to pointer to my_external_struct,
  * some externally defined struct.
@@ -414,7 +401,6 @@ static __attribute__((always_inline)) INLINE const struct my_struct*
   part_get_const_my_external_struct_p(const struct part *restrict p) {
   return &p->_my_external_struct;
 }
-
 
 /**
  * @brief set the value of my_external_struct, some externally defined struct.
@@ -443,9 +429,7 @@ static __attribute__((always_inline)) INLINE struct gpart*
 static __attribute__((always_inline)) INLINE struct gpart**
   part_get_my_pointer_struct_p(struct part *restrict p) {
   return &p->_my_pointer_struct;
-}
-
-/**
+}/**
  * @brief set the value of my_pointer_struct, pointer to externally defined struct.
  */
 static __attribute__((always_inline)) INLINE void
@@ -472,16 +456,13 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE int**
   part_get_my_pointer_p(struct part *restrict p) {
   return &p->_my_pointer;
-}
-
-/**
+}/**
  * @brief set the value of my_pointer, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE void
   part_set_my_pointer(struct part *restrict p,  int* my_pointer) {
   p->_my_pointer = my_pointer;
 }
-
 
 
 

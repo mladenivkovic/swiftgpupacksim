@@ -89,3 +89,115 @@ part2:
         type: int*
         doc: pointer to integer array
 
+part3:
+    my_int3:
+        type: int
+        doc: my integer
+        ifdef: DEBUG
+
+    my_long3:
+        type: long
+        doc: my long
+        ifdef: DEBUG
+
+    my_longlong3:
+        type: long long
+        doc: my long long
+        ifdef: DEBUG
+    
+    my_float3:
+        doc: my float
+        ifdef: DEBUG
+
+    my_dble3:
+        type: double
+        doc: my double
+        ifdef: DEBUG
+
+    my_char3:
+        type: char
+        doc: my_char
+        ifdef: DEBUG
+
+    my_integertime3:
+        type: integertime_t
+        doc: my integertime
+        ifdef: DEBUG
+
+    my_timebin3:
+        type: timebin_t
+        doc: my timebin
+        ifdef: DEBUG
+
+    # Not implemented yet with macro guards
+    # my_external_struct3:
+    #     type: struct my_struct
+    #     doc: some externally defined struct
+    #     ifdef: DEBUG
+    
+    my_pointer_struct3:
+        type: struct gpart*
+        doc: pointer to externally defined struct
+        ifdef: DEBUG
+
+    my_pointer3:
+        type: int*
+        doc: pointer to integer array
+        ifdef: DEBUG
+
+part4:
+    my_int4:
+        type: int
+        doc: my integer
+        ifdef: NODEBUG
+
+    my_long4:
+        type: long
+        doc: my long
+        ifdef: NODEBUG
+
+    my_longlong4:
+        type: long long
+        doc: my long long
+        ifdef: NODEBUG
+    
+    my_float4:
+        doc: my float
+        ifdef: NODEBUG
+
+    my_dble4:
+        type: double
+        doc: my double
+        ifdef: NODEBUG
+
+    my_char4:
+        type: char
+        doc: my_char
+        ifdef: NODEBUG
+
+    my_integertime4:
+        type: integertime_t
+        doc: my integertime
+        ifdef: NODEBUG
+
+    my_timebin4:
+        type: timebin_t
+        doc: my timebin
+        ifdef: NODEBUG
+
+    # Not implemented yet with macro guards
+    # my_external_struct4:
+    #     type: struct my_struct
+    #     doc: some externally defined struct
+    #     ifdef: NODEBUG
+
+    my_pointer_struct4:
+        type: struct gpart*
+        doc: pointer to externally defined struct
+        ifdef: NODEBUG
+
+    my_pointer4:
+        type: int*
+        doc: pointer to integer array
+        ifdef: NODEBUG
+

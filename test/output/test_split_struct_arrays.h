@@ -1,0 +1,1626 @@
+
+#ifndef SWIFT_HYDRO_PART_TEST_H
+#define SWIFT_HYDRO_PART_TEST_H
+
+#include <float.h>
+#include <limits.h>
+#include <stddef.h>
+
+#include "hydro_part_data_struct.h"
+
+/* workaround for unit tests to produce compilable headers */
+#define INLINE inline
+#define DEBUG
+typedef unsigned long long integertime_t;
+typedef char timebin_t;
+
+struct my_struct{};
+struct gpart{
+  double x[3];
+  float m;
+};
+
+
+
+
+
+struct part {
+
+  /*! offset/index of particle in cell particle data array */
+  size_t _cell_offset;
+
+  /*! pointer to particle data array struct of the cell this particle is located in */
+  struct hydro_part_data* _cell_part_data;
+
+  /*! my integer */
+  int _my_int_arr[4];
+
+  /*! my long */
+  long _my_long_arr[4];
+
+  /*! my long long */
+  long long _my_longlong_arr[4];
+
+  /*! my float */
+  float _my_float_arr[4];
+
+  /*! my double */
+  double _my_dble_arr[4];
+
+  /*! my_char */
+  char _my_char_arr[4];
+
+  /*! my integertime */
+  integertime_t _my_integertime_arr[4];
+
+  /*! my timebin */
+  timebin_t _my_timebin_arr[4];
+
+  /*! some externally defined struct */
+  struct my_struct _my_external_struct_arr[4];
+
+};
+
+struct part2 {
+
+  /*! my integer */
+  int _my_int_arr2[4];
+
+  /*! my long */
+  long _my_long_arr2[4];
+
+  /*! my long long */
+  long long _my_longlong_arr2[4];
+
+  /*! my float */
+  float _my_float_arr2[4];
+
+  /*! my double */
+  double _my_dble_arr2[4];
+
+  /*! my_char */
+  char _my_char_arr2[4];
+
+  /*! my integertime */
+  integertime_t _my_integertime_arr2[4];
+
+  /*! my timebin */
+  timebin_t _my_timebin_arr2[4];
+
+  /*! some externally defined struct */
+  struct my_struct _my_external_struct_arr2[4];
+
+};
+
+struct part3 {
+
+#ifdef DEBUG
+  /*! my integer */
+  int _my_int_arr3[4];
+#endif
+
+#ifdef DEBUG
+  /*! my long */
+  long _my_long_arr3[4];
+#endif
+
+#ifdef DEBUG
+  /*! my long long */
+  long long _my_longlong_arr3[4];
+#endif
+
+#ifdef DEBUG
+  /*! my float */
+  float _my_float_arr3[4];
+#endif
+
+#ifdef DEBUG
+  /*! my double */
+  double _my_dble_arr3[4];
+#endif
+
+#ifdef DEBUG
+  /*! my_char */
+  char _my_char_arr3[4];
+#endif
+
+#ifdef DEBUG
+  /*! my integertime */
+  integertime_t _my_integertime_arr3[4];
+#endif
+
+#ifdef DEBUG
+  /*! my timebin */
+  timebin_t _my_timebin_arr3[4];
+#endif
+
+};
+
+
+/**
+ * @brief get my_int_arr, my integer,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_int_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE int*
+  part_get_my_int_arr(struct part *restrict p) {
+  return p->_my_int_arr;
+}
+
+/**
+ * @brief get my_int_arr, my integer, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const int*
+  part_get_const_my_int_arr(const struct part *restrict p) {
+  return p->_my_int_arr;
+}
+
+/**
+ * @brief get my_int_arr, my integer, by index.
+ */
+static __attribute__((always_inline)) INLINE int
+  part_get_my_int_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_int_arr[ind];
+}
+
+/**
+ * @brief set all values of my_int_arr, my integer,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_int_arr(struct part *restrict p, const int my_int_arr[4]) {
+  p->_my_int_arr[0] = my_int_arr[0];
+  p->_my_int_arr[1] = my_int_arr[1];
+  p->_my_int_arr[2] = my_int_arr[2];
+  p->_my_int_arr[3] = my_int_arr[3];
+}
+
+/**
+ * @brief set the value of my_int_arr, my integer, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_int_arr_ind(struct part *restrict p, const size_t i, const int my_int_arr) {
+  p->_my_int_arr[i] = my_int_arr;
+}
+
+
+
+
+/**
+ * @brief get my_long_arr, my long,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_long_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE long*
+  part_get_my_long_arr(struct part *restrict p) {
+  return p->_my_long_arr;
+}
+
+/**
+ * @brief get my_long_arr, my long, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const long*
+  part_get_const_my_long_arr(const struct part *restrict p) {
+  return p->_my_long_arr;
+}
+
+/**
+ * @brief get my_long_arr, my long, by index.
+ */
+static __attribute__((always_inline)) INLINE long
+  part_get_my_long_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_long_arr[ind];
+}
+
+/**
+ * @brief set all values of my_long_arr, my long,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_long_arr(struct part *restrict p, const long my_long_arr[4]) {
+  p->_my_long_arr[0] = my_long_arr[0];
+  p->_my_long_arr[1] = my_long_arr[1];
+  p->_my_long_arr[2] = my_long_arr[2];
+  p->_my_long_arr[3] = my_long_arr[3];
+}
+
+/**
+ * @brief set the value of my_long_arr, my long, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_long_arr_ind(struct part *restrict p, const size_t i, const long my_long_arr) {
+  p->_my_long_arr[i] = my_long_arr;
+}
+
+
+
+
+/**
+ * @brief get my_longlong_arr, my long long,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_longlong_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE long long*
+  part_get_my_longlong_arr(struct part *restrict p) {
+  return p->_my_longlong_arr;
+}
+
+/**
+ * @brief get my_longlong_arr, my long long, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const long long*
+  part_get_const_my_longlong_arr(const struct part *restrict p) {
+  return p->_my_longlong_arr;
+}
+
+/**
+ * @brief get my_longlong_arr, my long long, by index.
+ */
+static __attribute__((always_inline)) INLINE long long
+  part_get_my_longlong_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_longlong_arr[ind];
+}
+
+/**
+ * @brief set all values of my_longlong_arr, my long long,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_longlong_arr(struct part *restrict p, const long long my_longlong_arr[4]) {
+  p->_my_longlong_arr[0] = my_longlong_arr[0];
+  p->_my_longlong_arr[1] = my_longlong_arr[1];
+  p->_my_longlong_arr[2] = my_longlong_arr[2];
+  p->_my_longlong_arr[3] = my_longlong_arr[3];
+}
+
+/**
+ * @brief set the value of my_longlong_arr, my long long, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_longlong_arr_ind(struct part *restrict p, const size_t i, const long long my_longlong_arr) {
+  p->_my_longlong_arr[i] = my_longlong_arr;
+}
+
+
+
+
+/**
+ * @brief get my_float_arr, my float,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_float_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_my_float_arr(struct part *restrict p) {
+  return p->_my_float_arr;
+}
+
+/**
+ * @brief get my_float_arr, my float, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_my_float_arr(const struct part *restrict p) {
+  return p->_my_float_arr;
+}
+
+/**
+ * @brief get my_float_arr, my float, by index.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_my_float_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_float_arr[ind];
+}
+
+/**
+ * @brief set all values of my_float_arr, my float,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_float_arr(struct part *restrict p, const float my_float_arr[4]) {
+  p->_my_float_arr[0] = my_float_arr[0];
+  p->_my_float_arr[1] = my_float_arr[1];
+  p->_my_float_arr[2] = my_float_arr[2];
+  p->_my_float_arr[3] = my_float_arr[3];
+}
+
+/**
+ * @brief set the value of my_float_arr, my float, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_float_arr_ind(struct part *restrict p, const size_t i, const float my_float_arr) {
+  p->_my_float_arr[i] = my_float_arr;
+}
+
+
+
+
+/**
+ * @brief get my_dble_arr, my double,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_dble_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE double*
+  part_get_my_dble_arr(struct part *restrict p) {
+  return p->_my_dble_arr;
+}
+
+/**
+ * @brief get my_dble_arr, my double, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const double*
+  part_get_const_my_dble_arr(const struct part *restrict p) {
+  return p->_my_dble_arr;
+}
+
+/**
+ * @brief get my_dble_arr, my double, by index.
+ */
+static __attribute__((always_inline)) INLINE double
+  part_get_my_dble_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_dble_arr[ind];
+}
+
+/**
+ * @brief set all values of my_dble_arr, my double,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_dble_arr(struct part *restrict p, const double my_dble_arr[4]) {
+  p->_my_dble_arr[0] = my_dble_arr[0];
+  p->_my_dble_arr[1] = my_dble_arr[1];
+  p->_my_dble_arr[2] = my_dble_arr[2];
+  p->_my_dble_arr[3] = my_dble_arr[3];
+}
+
+/**
+ * @brief set the value of my_dble_arr, my double, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_dble_arr_ind(struct part *restrict p, const size_t i, const double my_dble_arr) {
+  p->_my_dble_arr[i] = my_dble_arr;
+}
+
+
+
+
+/**
+ * @brief get my_char_arr, my_char,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_char_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE char*
+  part_get_my_char_arr(struct part *restrict p) {
+  return p->_my_char_arr;
+}
+
+/**
+ * @brief get my_char_arr, my_char, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const char*
+  part_get_const_my_char_arr(const struct part *restrict p) {
+  return p->_my_char_arr;
+}
+
+/**
+ * @brief get my_char_arr, my_char, by index.
+ */
+static __attribute__((always_inline)) INLINE char
+  part_get_my_char_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_char_arr[ind];
+}
+
+/**
+ * @brief set all values of my_char_arr, my_char,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_char_arr(struct part *restrict p, const char my_char_arr[4]) {
+  p->_my_char_arr[0] = my_char_arr[0];
+  p->_my_char_arr[1] = my_char_arr[1];
+  p->_my_char_arr[2] = my_char_arr[2];
+  p->_my_char_arr[3] = my_char_arr[3];
+}
+
+/**
+ * @brief set the value of my_char_arr, my_char, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_char_arr_ind(struct part *restrict p, const size_t i, const char my_char_arr) {
+  p->_my_char_arr[i] = my_char_arr;
+}
+
+
+
+
+/**
+ * @brief get my_integertime_arr, my integertime,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_integertime_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE integertime_t*
+  part_get_my_integertime_arr(struct part *restrict p) {
+  return p->_my_integertime_arr;
+}
+
+/**
+ * @brief get my_integertime_arr, my integertime, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const integertime_t*
+  part_get_const_my_integertime_arr(const struct part *restrict p) {
+  return p->_my_integertime_arr;
+}
+
+/**
+ * @brief get my_integertime_arr, my integertime, by index.
+ */
+static __attribute__((always_inline)) INLINE integertime_t
+  part_get_my_integertime_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_integertime_arr[ind];
+}
+
+/**
+ * @brief set all values of my_integertime_arr, my integertime,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_integertime_arr(struct part *restrict p, const integertime_t my_integertime_arr[4]) {
+  p->_my_integertime_arr[0] = my_integertime_arr[0];
+  p->_my_integertime_arr[1] = my_integertime_arr[1];
+  p->_my_integertime_arr[2] = my_integertime_arr[2];
+  p->_my_integertime_arr[3] = my_integertime_arr[3];
+}
+
+/**
+ * @brief set the value of my_integertime_arr, my integertime, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_integertime_arr_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime_arr) {
+  p->_my_integertime_arr[i] = my_integertime_arr;
+}
+
+
+
+
+/**
+ * @brief get my_timebin_arr, my timebin,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_timebin_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE timebin_t*
+  part_get_my_timebin_arr(struct part *restrict p) {
+  return p->_my_timebin_arr;
+}
+
+/**
+ * @brief get my_timebin_arr, my timebin, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const timebin_t*
+  part_get_const_my_timebin_arr(const struct part *restrict p) {
+  return p->_my_timebin_arr;
+}
+
+/**
+ * @brief get my_timebin_arr, my timebin, by index.
+ */
+static __attribute__((always_inline)) INLINE timebin_t
+  part_get_my_timebin_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_timebin_arr[ind];
+}
+
+/**
+ * @brief set all values of my_timebin_arr, my timebin,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_timebin_arr(struct part *restrict p, const timebin_t my_timebin_arr[4]) {
+  p->_my_timebin_arr[0] = my_timebin_arr[0];
+  p->_my_timebin_arr[1] = my_timebin_arr[1];
+  p->_my_timebin_arr[2] = my_timebin_arr[2];
+  p->_my_timebin_arr[3] = my_timebin_arr[3];
+}
+
+/**
+ * @brief set the value of my_timebin_arr, my timebin, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_timebin_arr_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin_arr) {
+  p->_my_timebin_arr[i] = my_timebin_arr;
+}
+
+
+
+
+/**
+ * @brief get my_external_struct_arr, some externally defined struct,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_external_struct_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE struct my_struct*
+  part_get_my_external_struct_arr(struct part *restrict p) {
+  return p->_my_external_struct_arr;
+}
+
+/**
+ * @brief get my_external_struct_arr, some externally defined struct, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const struct my_struct*
+  part_get_const_my_external_struct_arr(const struct part *restrict p) {
+  return p->_my_external_struct_arr;
+}
+
+/**
+ * @brief get my_external_struct_arr, some externally defined struct, by index.
+ */
+static __attribute__((always_inline)) INLINE struct my_struct
+  part_get_my_external_struct_arr_ind(const struct part *restrict p, const size_t ind) {
+  return p->_my_external_struct_arr[ind];
+}
+
+/**
+ * @brief set all values of my_external_struct_arr, some externally defined struct,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_external_struct_arr(struct part *restrict p, const struct my_struct my_external_struct_arr[4]) {
+  p->_my_external_struct_arr[0] = my_external_struct_arr[0];
+  p->_my_external_struct_arr[1] = my_external_struct_arr[1];
+  p->_my_external_struct_arr[2] = my_external_struct_arr[2];
+  p->_my_external_struct_arr[3] = my_external_struct_arr[3];
+}
+
+/**
+ * @brief set the value of my_external_struct_arr, some externally defined struct, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_external_struct_arr_ind(struct part *restrict p, const size_t i, const struct my_struct my_external_struct_arr) {
+  p->_my_external_struct_arr[i] = my_external_struct_arr;
+}
+
+
+
+
+/**
+ * @brief get my_int_arr2, my integer,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_int_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE int*
+  part_get_my_int_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_int_arr2;
+}
+
+/**
+ * @brief get my_int_arr2, my integer, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const int*
+  part_get_const_my_int_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_int_arr2;
+}
+
+/**
+ * @brief get my_int_arr2, my integer, by index.
+ */
+static __attribute__((always_inline)) INLINE int
+  part_get_my_int_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_int_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_int_arr2, my integer,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_int_arr2(struct part *restrict p, const int my_int_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_int_arr2[0] = my_int_arr2[0];
+  part2_s->_my_int_arr2[1] = my_int_arr2[1];
+  part2_s->_my_int_arr2[2] = my_int_arr2[2];
+  part2_s->_my_int_arr2[3] = my_int_arr2[3];
+}
+
+/**
+ * @brief set the value of my_int_arr2, my integer, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_int_arr2_ind(struct part *restrict p, const size_t i, const int my_int_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_int_arr2[i] = my_int_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_long_arr2, my long,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_long_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE long*
+  part_get_my_long_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_long_arr2;
+}
+
+/**
+ * @brief get my_long_arr2, my long, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const long*
+  part_get_const_my_long_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_long_arr2;
+}
+
+/**
+ * @brief get my_long_arr2, my long, by index.
+ */
+static __attribute__((always_inline)) INLINE long
+  part_get_my_long_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_long_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_long_arr2, my long,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_long_arr2(struct part *restrict p, const long my_long_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_long_arr2[0] = my_long_arr2[0];
+  part2_s->_my_long_arr2[1] = my_long_arr2[1];
+  part2_s->_my_long_arr2[2] = my_long_arr2[2];
+  part2_s->_my_long_arr2[3] = my_long_arr2[3];
+}
+
+/**
+ * @brief set the value of my_long_arr2, my long, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_long_arr2_ind(struct part *restrict p, const size_t i, const long my_long_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_long_arr2[i] = my_long_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_longlong_arr2, my long long,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_longlong_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE long long*
+  part_get_my_longlong_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_longlong_arr2;
+}
+
+/**
+ * @brief get my_longlong_arr2, my long long, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const long long*
+  part_get_const_my_longlong_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_longlong_arr2;
+}
+
+/**
+ * @brief get my_longlong_arr2, my long long, by index.
+ */
+static __attribute__((always_inline)) INLINE long long
+  part_get_my_longlong_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_longlong_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_longlong_arr2, my long long,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_longlong_arr2(struct part *restrict p, const long long my_longlong_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_longlong_arr2[0] = my_longlong_arr2[0];
+  part2_s->_my_longlong_arr2[1] = my_longlong_arr2[1];
+  part2_s->_my_longlong_arr2[2] = my_longlong_arr2[2];
+  part2_s->_my_longlong_arr2[3] = my_longlong_arr2[3];
+}
+
+/**
+ * @brief set the value of my_longlong_arr2, my long long, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_longlong_arr2_ind(struct part *restrict p, const size_t i, const long long my_longlong_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_longlong_arr2[i] = my_longlong_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_float_arr2, my float,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_float_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_my_float_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_float_arr2;
+}
+
+/**
+ * @brief get my_float_arr2, my float, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_my_float_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_float_arr2;
+}
+
+/**
+ * @brief get my_float_arr2, my float, by index.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_my_float_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_float_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_float_arr2, my float,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_float_arr2(struct part *restrict p, const float my_float_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_float_arr2[0] = my_float_arr2[0];
+  part2_s->_my_float_arr2[1] = my_float_arr2[1];
+  part2_s->_my_float_arr2[2] = my_float_arr2[2];
+  part2_s->_my_float_arr2[3] = my_float_arr2[3];
+}
+
+/**
+ * @brief set the value of my_float_arr2, my float, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_float_arr2_ind(struct part *restrict p, const size_t i, const float my_float_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_float_arr2[i] = my_float_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_dble_arr2, my double,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_dble_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE double*
+  part_get_my_dble_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_dble_arr2;
+}
+
+/**
+ * @brief get my_dble_arr2, my double, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const double*
+  part_get_const_my_dble_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_dble_arr2;
+}
+
+/**
+ * @brief get my_dble_arr2, my double, by index.
+ */
+static __attribute__((always_inline)) INLINE double
+  part_get_my_dble_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_dble_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_dble_arr2, my double,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_dble_arr2(struct part *restrict p, const double my_dble_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_dble_arr2[0] = my_dble_arr2[0];
+  part2_s->_my_dble_arr2[1] = my_dble_arr2[1];
+  part2_s->_my_dble_arr2[2] = my_dble_arr2[2];
+  part2_s->_my_dble_arr2[3] = my_dble_arr2[3];
+}
+
+/**
+ * @brief set the value of my_dble_arr2, my double, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_dble_arr2_ind(struct part *restrict p, const size_t i, const double my_dble_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_dble_arr2[i] = my_dble_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_char_arr2, my_char,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_char_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE char*
+  part_get_my_char_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_char_arr2;
+}
+
+/**
+ * @brief get my_char_arr2, my_char, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const char*
+  part_get_const_my_char_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_char_arr2;
+}
+
+/**
+ * @brief get my_char_arr2, my_char, by index.
+ */
+static __attribute__((always_inline)) INLINE char
+  part_get_my_char_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_char_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_char_arr2, my_char,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_char_arr2(struct part *restrict p, const char my_char_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_char_arr2[0] = my_char_arr2[0];
+  part2_s->_my_char_arr2[1] = my_char_arr2[1];
+  part2_s->_my_char_arr2[2] = my_char_arr2[2];
+  part2_s->_my_char_arr2[3] = my_char_arr2[3];
+}
+
+/**
+ * @brief set the value of my_char_arr2, my_char, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_char_arr2_ind(struct part *restrict p, const size_t i, const char my_char_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_char_arr2[i] = my_char_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_integertime_arr2, my integertime,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_integertime_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE integertime_t*
+  part_get_my_integertime_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_integertime_arr2;
+}
+
+/**
+ * @brief get my_integertime_arr2, my integertime, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const integertime_t*
+  part_get_const_my_integertime_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_integertime_arr2;
+}
+
+/**
+ * @brief get my_integertime_arr2, my integertime, by index.
+ */
+static __attribute__((always_inline)) INLINE integertime_t
+  part_get_my_integertime_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_integertime_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_integertime_arr2, my integertime,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_integertime_arr2(struct part *restrict p, const integertime_t my_integertime_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_integertime_arr2[0] = my_integertime_arr2[0];
+  part2_s->_my_integertime_arr2[1] = my_integertime_arr2[1];
+  part2_s->_my_integertime_arr2[2] = my_integertime_arr2[2];
+  part2_s->_my_integertime_arr2[3] = my_integertime_arr2[3];
+}
+
+/**
+ * @brief set the value of my_integertime_arr2, my integertime, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_integertime_arr2_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_integertime_arr2[i] = my_integertime_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_timebin_arr2, my timebin,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_timebin_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE timebin_t*
+  part_get_my_timebin_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_timebin_arr2;
+}
+
+/**
+ * @brief get my_timebin_arr2, my timebin, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const timebin_t*
+  part_get_const_my_timebin_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_timebin_arr2;
+}
+
+/**
+ * @brief get my_timebin_arr2, my timebin, by index.
+ */
+static __attribute__((always_inline)) INLINE timebin_t
+  part_get_my_timebin_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_timebin_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_timebin_arr2, my timebin,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_timebin_arr2(struct part *restrict p, const timebin_t my_timebin_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_timebin_arr2[0] = my_timebin_arr2[0];
+  part2_s->_my_timebin_arr2[1] = my_timebin_arr2[1];
+  part2_s->_my_timebin_arr2[2] = my_timebin_arr2[2];
+  part2_s->_my_timebin_arr2[3] = my_timebin_arr2[3];
+}
+
+/**
+ * @brief set the value of my_timebin_arr2, my timebin, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_timebin_arr2_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_timebin_arr2[i] = my_timebin_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_external_struct_arr2, some externally defined struct,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_external_struct_arr2() instead.
+ */
+static __attribute__((always_inline)) INLINE struct my_struct*
+  part_get_my_external_struct_arr2(struct part *restrict p) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_external_struct_arr2;
+}
+
+/**
+ * @brief get my_external_struct_arr2, some externally defined struct, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const struct my_struct*
+  part_get_const_my_external_struct_arr2(const struct part *restrict p) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_external_struct_arr2;
+}
+
+/**
+ * @brief get my_external_struct_arr2, some externally defined struct, by index.
+ */
+static __attribute__((always_inline)) INLINE struct my_struct
+  part_get_my_external_struct_arr2_ind(const struct part *restrict p, const size_t ind) {
+  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  return part2_s->_my_external_struct_arr2[ind];
+}
+
+/**
+ * @brief set all values of my_external_struct_arr2, some externally defined struct,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_external_struct_arr2(struct part *restrict p, const struct my_struct my_external_struct_arr2[4]) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_external_struct_arr2[0] = my_external_struct_arr2[0];
+  part2_s->_my_external_struct_arr2[1] = my_external_struct_arr2[1];
+  part2_s->_my_external_struct_arr2[2] = my_external_struct_arr2[2];
+  part2_s->_my_external_struct_arr2[3] = my_external_struct_arr2[3];
+}
+
+/**
+ * @brief set the value of my_external_struct_arr2, some externally defined struct, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_external_struct_arr2_ind(struct part *restrict p, const size_t i, const struct my_struct my_external_struct_arr2) {
+  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  part2_s->_my_external_struct_arr2[i] = my_external_struct_arr2;
+}
+
+
+
+
+/**
+ * @brief get my_int_arr3, my integer,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_int_arr3() instead.
+ */
+static __attribute__((always_inline)) INLINE int*
+  part_get_my_int_arr3(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_int_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_int_arr3, my integer, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const int*
+  part_get_const_my_int_arr3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_int_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_int_arr3, my integer, by index.
+ */
+static __attribute__((always_inline)) INLINE int
+  part_get_my_int_arr3_ind(const struct part *restrict p, const size_t ind) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_int_arr3[ind];
+#else
+  return INT_MAX;
+#endif
+}
+
+/**
+ * @brief set all values of my_int_arr3, my integer,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_int_arr3(struct part *restrict p, const int my_int_arr3[4]) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_int_arr3[0] = my_int_arr3[0];
+  part3_s->_my_int_arr3[1] = my_int_arr3[1];
+  part3_s->_my_int_arr3[2] = my_int_arr3[2];
+  part3_s->_my_int_arr3[3] = my_int_arr3[3];
+#endif
+}
+
+/**
+ * @brief set the value of my_int_arr3, my integer, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_int_arr3_ind(struct part *restrict p, const size_t i, const int my_int_arr3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_int_arr3[i] = my_int_arr3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_long_arr3, my long,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_long_arr3() instead.
+ */
+static __attribute__((always_inline)) INLINE long*
+  part_get_my_long_arr3(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_long_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_long_arr3, my long, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const long*
+  part_get_const_my_long_arr3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_long_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_long_arr3, my long, by index.
+ */
+static __attribute__((always_inline)) INLINE long
+  part_get_my_long_arr3_ind(const struct part *restrict p, const size_t ind) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_long_arr3[ind];
+#else
+  return LONG_MAX;
+#endif
+}
+
+/**
+ * @brief set all values of my_long_arr3, my long,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_long_arr3(struct part *restrict p, const long my_long_arr3[4]) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_long_arr3[0] = my_long_arr3[0];
+  part3_s->_my_long_arr3[1] = my_long_arr3[1];
+  part3_s->_my_long_arr3[2] = my_long_arr3[2];
+  part3_s->_my_long_arr3[3] = my_long_arr3[3];
+#endif
+}
+
+/**
+ * @brief set the value of my_long_arr3, my long, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_long_arr3_ind(struct part *restrict p, const size_t i, const long my_long_arr3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_long_arr3[i] = my_long_arr3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_longlong_arr3, my long long,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_longlong_arr3() instead.
+ */
+static __attribute__((always_inline)) INLINE long long*
+  part_get_my_longlong_arr3(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_longlong_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_longlong_arr3, my long long, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const long long*
+  part_get_const_my_longlong_arr3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_longlong_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_longlong_arr3, my long long, by index.
+ */
+static __attribute__((always_inline)) INLINE long long
+  part_get_my_longlong_arr3_ind(const struct part *restrict p, const size_t ind) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_longlong_arr3[ind];
+#else
+  return LLONG_MAX;
+#endif
+}
+
+/**
+ * @brief set all values of my_longlong_arr3, my long long,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_longlong_arr3(struct part *restrict p, const long long my_longlong_arr3[4]) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_longlong_arr3[0] = my_longlong_arr3[0];
+  part3_s->_my_longlong_arr3[1] = my_longlong_arr3[1];
+  part3_s->_my_longlong_arr3[2] = my_longlong_arr3[2];
+  part3_s->_my_longlong_arr3[3] = my_longlong_arr3[3];
+#endif
+}
+
+/**
+ * @brief set the value of my_longlong_arr3, my long long, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_longlong_arr3_ind(struct part *restrict p, const size_t i, const long long my_longlong_arr3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_longlong_arr3[i] = my_longlong_arr3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_float_arr3, my float,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_float_arr3() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_my_float_arr3(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_float_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_float_arr3, my float, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_my_float_arr3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_float_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_float_arr3, my float, by index.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_my_float_arr3_ind(const struct part *restrict p, const size_t ind) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_float_arr3[ind];
+#else
+  return FLT_MAX;
+#endif
+}
+
+/**
+ * @brief set all values of my_float_arr3, my float,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_float_arr3(struct part *restrict p, const float my_float_arr3[4]) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_float_arr3[0] = my_float_arr3[0];
+  part3_s->_my_float_arr3[1] = my_float_arr3[1];
+  part3_s->_my_float_arr3[2] = my_float_arr3[2];
+  part3_s->_my_float_arr3[3] = my_float_arr3[3];
+#endif
+}
+
+/**
+ * @brief set the value of my_float_arr3, my float, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_float_arr3_ind(struct part *restrict p, const size_t i, const float my_float_arr3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_float_arr3[i] = my_float_arr3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_dble_arr3, my double,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_dble_arr3() instead.
+ */
+static __attribute__((always_inline)) INLINE double*
+  part_get_my_dble_arr3(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_dble_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_dble_arr3, my double, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const double*
+  part_get_const_my_dble_arr3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_dble_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_dble_arr3, my double, by index.
+ */
+static __attribute__((always_inline)) INLINE double
+  part_get_my_dble_arr3_ind(const struct part *restrict p, const size_t ind) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_dble_arr3[ind];
+#else
+  return DBL_MAX;
+#endif
+}
+
+/**
+ * @brief set all values of my_dble_arr3, my double,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_dble_arr3(struct part *restrict p, const double my_dble_arr3[4]) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_dble_arr3[0] = my_dble_arr3[0];
+  part3_s->_my_dble_arr3[1] = my_dble_arr3[1];
+  part3_s->_my_dble_arr3[2] = my_dble_arr3[2];
+  part3_s->_my_dble_arr3[3] = my_dble_arr3[3];
+#endif
+}
+
+/**
+ * @brief set the value of my_dble_arr3, my double, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_dble_arr3_ind(struct part *restrict p, const size_t i, const double my_dble_arr3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_dble_arr3[i] = my_dble_arr3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_char_arr3, my_char,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_char_arr3() instead.
+ */
+static __attribute__((always_inline)) INLINE char*
+  part_get_my_char_arr3(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_char_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_char_arr3, my_char, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const char*
+  part_get_const_my_char_arr3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_char_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_char_arr3, my_char, by index.
+ */
+static __attribute__((always_inline)) INLINE char
+  part_get_my_char_arr3_ind(const struct part *restrict p, const size_t ind) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_char_arr3[ind];
+#else
+  return CHAR_MAX;
+#endif
+}
+
+/**
+ * @brief set all values of my_char_arr3, my_char,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_char_arr3(struct part *restrict p, const char my_char_arr3[4]) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_char_arr3[0] = my_char_arr3[0];
+  part3_s->_my_char_arr3[1] = my_char_arr3[1];
+  part3_s->_my_char_arr3[2] = my_char_arr3[2];
+  part3_s->_my_char_arr3[3] = my_char_arr3[3];
+#endif
+}
+
+/**
+ * @brief set the value of my_char_arr3, my_char, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_char_arr3_ind(struct part *restrict p, const size_t i, const char my_char_arr3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_char_arr3[i] = my_char_arr3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_integertime_arr3, my integertime,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_integertime_arr3() instead.
+ */
+static __attribute__((always_inline)) INLINE integertime_t*
+  part_get_my_integertime_arr3(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_integertime_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_integertime_arr3, my integertime, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const integertime_t*
+  part_get_const_my_integertime_arr3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_integertime_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_integertime_arr3, my integertime, by index.
+ */
+static __attribute__((always_inline)) INLINE integertime_t
+  part_get_my_integertime_arr3_ind(const struct part *restrict p, const size_t ind) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_integertime_arr3[ind];
+#else
+  return LLONG_MAX;
+#endif
+}
+
+/**
+ * @brief set all values of my_integertime_arr3, my integertime,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_integertime_arr3(struct part *restrict p, const integertime_t my_integertime_arr3[4]) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_integertime_arr3[0] = my_integertime_arr3[0];
+  part3_s->_my_integertime_arr3[1] = my_integertime_arr3[1];
+  part3_s->_my_integertime_arr3[2] = my_integertime_arr3[2];
+  part3_s->_my_integertime_arr3[3] = my_integertime_arr3[3];
+#endif
+}
+
+/**
+ * @brief set the value of my_integertime_arr3, my integertime, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_integertime_arr3_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime_arr3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_integertime_arr3[i] = my_integertime_arr3;
+#endif
+}
+
+
+
+
+/**
+ * @brief get my_timebin_arr3, my timebin,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_timebin_arr3() instead.
+ */
+static __attribute__((always_inline)) INLINE timebin_t*
+  part_get_my_timebin_arr3(struct part *restrict p) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_timebin_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_timebin_arr3, my timebin, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const timebin_t*
+  part_get_const_my_timebin_arr3(const struct part *restrict p) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_timebin_arr3;
+#else
+  return NULL;
+#endif
+}
+
+/**
+ * @brief get my_timebin_arr3, my timebin, by index.
+ */
+static __attribute__((always_inline)) INLINE timebin_t
+  part_get_my_timebin_arr3_ind(const struct part *restrict p, const size_t ind) {
+#ifdef DEBUG
+  const struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  return part3_s->_my_timebin_arr3[ind];
+#else
+  return CHAR_MAX;
+#endif
+}
+
+/**
+ * @brief set all values of my_timebin_arr3, my timebin,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_timebin_arr3(struct part *restrict p, const timebin_t my_timebin_arr3[4]) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_timebin_arr3[0] = my_timebin_arr3[0];
+  part3_s->_my_timebin_arr3[1] = my_timebin_arr3[1];
+  part3_s->_my_timebin_arr3[2] = my_timebin_arr3[2];
+  part3_s->_my_timebin_arr3[3] = my_timebin_arr3[3];
+#endif
+}
+
+/**
+ * @brief set the value of my_timebin_arr3, my timebin, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_timebin_arr3_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin_arr3) {
+#ifdef DEBUG
+  struct part3* part3_s = p->_cell_part_data->_part3 + p->_cell_offset;
+  part3_s->_my_timebin_arr3[i] = my_timebin_arr3;
+#endif
+}
+
+
+
+#endif /* SWIFT_HYDRO_PART_TEST_H */

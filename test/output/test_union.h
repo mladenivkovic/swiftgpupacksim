@@ -6,6 +6,8 @@
 #include <limits.h>
 #include <stddef.h>
 
+#include "hydro_part_data_struct.h"
+
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
 #define DEBUG
@@ -23,6 +25,7 @@ struct gpart{
 
 
 struct part {
+
   union {
 
     float _a;
@@ -53,6 +56,7 @@ struct part {
 
 };
 
+
 /**
  * @brief get a.
  */
@@ -71,7 +75,6 @@ static __attribute__((always_inline)) INLINE float*
   return &p->_a;
 }
 
-
 /**
  * @brief get read-only access to pointer to a.
  * If you need write access to a, use part_get_a_p() instead.
@@ -80,7 +83,6 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_a_p(const struct part *restrict p) {
   return &p->_a;
 }
-
 
 /**
  * @brief set the value of a.
@@ -117,7 +119,6 @@ static __attribute__((always_inline)) INLINE float*
 #endif
 }
 
-
 /**
  * @brief get read-only access to pointer to b.
  * If you need write access to b, use part_get_b_p() instead.
@@ -130,7 +131,6 @@ static __attribute__((always_inline)) INLINE const float*
   return NULL;
 #endif
 }
-
 
 /**
  * @brief set the value of b.
@@ -169,7 +169,6 @@ static __attribute__((always_inline)) INLINE float*
 #endif
 }
 
-
 /**
  * @brief get read-only access to pointer to c.
  * If you need write access to c, use part_get_c_p() instead.
@@ -182,7 +181,6 @@ static __attribute__((always_inline)) INLINE const float*
   return NULL;
 #endif
 }
-
 
 /**
  * @brief set the value of c.
@@ -213,9 +211,7 @@ static __attribute__((always_inline)) INLINE struct gp*
 static __attribute__((always_inline)) INLINE struct gp**
   part_get_gp_p(struct part *restrict p) {
   return &p->_gp;
-}
-
-/**
+}/**
  * @brief set the value of gp.
  */
 static __attribute__((always_inline)) INLINE void
@@ -242,7 +238,6 @@ static __attribute__((always_inline)) INLINE float*
   return &p->_pp._d;
 }
 
-
 /**
  * @brief get read-only access to pointer to d.
  * If you need write access to d, use part_get_d_p() instead.
@@ -251,7 +246,6 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_d_p(const struct part *restrict p) {
   return &p->_pp._d;
 }
-
 
 /**
  * @brief set the value of d.
@@ -280,7 +274,6 @@ static __attribute__((always_inline)) INLINE float*
   return &p->_pp._e;
 }
 
-
 /**
  * @brief get read-only access to pointer to e.
  * If you need write access to e, use part_get_e_p() instead.
@@ -290,7 +283,6 @@ static __attribute__((always_inline)) INLINE const float*
   return &p->_pp._e;
 }
 
-
 /**
  * @brief set the value of e.
  */
@@ -298,7 +290,6 @@ static __attribute__((always_inline)) INLINE void
   part_set_e(struct part *restrict p, const float e) {
   p->_pp._e = e;
 }
-
 
 
 
