@@ -369,9 +369,6 @@ class FieldEntry(object):
                     if parent_struct is not None:
                         # Append struct recursively
                         parent = parent_struct + "._" + self.name
-                        raise RuntimeWarning(
-                            "API for structs within structs is untested, may contain errors."
-                        )
                     else:
                         parent = self.name
                     api_entry = entry.generate_API(

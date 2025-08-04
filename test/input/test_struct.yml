@@ -1,0 +1,24 @@
+part:
+    st1:
+        type: struct
+        contents: 
+            a:
+            b:
+                size: 3
+            c:
+                type: long long
+                ifdef: DEBUG
+                ifdef_return_val: 0
+
+    st2:
+        type: struct
+        contents:
+            d:
+                type: double
+            nested1:
+                type: struct
+                contents:
+                    gp:
+                        type: struct gpart*
+                    t:
+                        type: timebin_t

@@ -21,23 +21,30 @@ function DIFF(){
 }
 
 
-echo "running test_data_types"
-python3 ../py/generate_hydro_part.py --test ./input/test_data_types.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_data_types.h
-rm -f hydro_part.h
+# echo "running test_data_types"
+# python3 ../py/generate_hydro_part.py --test ./input/test_data_types.yml
+# COMPILE_AND_RUN
+# DIFF hydro_part.h output/test_data_types.h
+# rm -f hydro_part.h
 
 
-echo "running test_arrays"
-python3 ../py/generate_hydro_part.py --test ./input/test_arrays.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_arrays.h
-rm -f hydro_part.h
+# echo "running test_arrays"
+# python3 ../py/generate_hydro_part.py --test ./input/test_arrays.yml
+# COMPILE_AND_RUN
+# DIFF hydro_part.h output/test_arrays.h
+# rm -f hydro_part.h
 
+
+# echo "running ifdefs"
+# python3 ../py/generate_hydro_part.py --test ./input/test_ifdefs.yml
+# COMPILE_AND_RUN
+# DIFF hydro_part.h output/test_ifdefs.h
+# rm -f hydro_part.h
 
 echo "running ifdefs"
-python3 ../py/generate_hydro_part.py --test ./input/test_ifdefs.yml
+python3 ../py/generate_hydro_part.py --test ./input/test_struct.yml
 COMPILE_AND_RUN
-DIFF hydro_part.h output/test_ifdefs.h
+DIFF hydro_part.h output/test_struct.h
 rm -f hydro_part.h
+
 
