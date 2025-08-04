@@ -1,3 +1,5 @@
+# Test #ifdef macro guards
+
 part:
     my_int:
         type: int
