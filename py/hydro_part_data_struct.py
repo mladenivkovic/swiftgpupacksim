@@ -43,14 +43,21 @@ def generate_hydro_part_data_struct(
         if key == "part":
             have_part_struct = True
             if i != 0:
-                raise ValueError("You're defining a particle data struct 'part', but it isn't in first position.\n"
-                                 +f"Put it at the top of your .yml file. Current position: {i+1}")
+                raise ValueError(
+                    "You're defining a particle data struct 'part', but it isn't in first position.\n"
+                    + f"Put it at the top of your .yml file. Current position: {i+1}"
+                )
 
     if not have_part_struct:
         # 'part' not provided in yml file. Add a 'struct part' in first place
         keylist = ["part"]
         keylist += part_keylist
-        part_struct_d = {"part": {"DOC": "the main particle data struct", "HAS_DOC": True,}}
+        part_struct_d = {
+            "part": {
+                "DOC": "the main particle data struct",
+                "HAS_DOC": True,
+            }
+        }
     else:
         keylist = part_keylist
         part_struct_d = {}
@@ -75,8 +82,10 @@ def generate_hydro_part_data_struct(
         except KeyError:
             pass
 
-        part_struct_d[struct_name] = {"DOC": documentation, "HAS_DOC": documentation is not None}
-
+        part_struct_d[struct_name] = {
+            "DOC": documentation,
+            "HAS_DOC": documentation is not None,
+        }
 
     if verbose:
         print("--", part_struct_d)
