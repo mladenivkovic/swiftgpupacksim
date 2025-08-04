@@ -1,3 +1,5 @@
+# Test (recursive) struct generation
+
 part:
     st1:
         type: struct
