@@ -107,6 +107,9 @@ def validate_yml_contents(contents_d: dict) -> None:
 
         struct_fields = contents_d[key]
         for field in list(struct_fields.keys()):
+            if field in ["doc", "documentation"]:
+                # These are allowed to exist multiple times.
+                continue
             if field in field_names:
                 raise ValueError(f"data field '{field}' defined more than once in your input yml file.")
             field_names.append(field)
