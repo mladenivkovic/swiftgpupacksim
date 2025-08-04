@@ -6,14 +6,28 @@
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}*
   part_get_{{NAME}}(struct part *restrict p) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- if HAS_PARENT_STRUCT %}
+  return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return {{ROOT_STRUCT}}_s->_{{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
   return p->_{{PARENT_STRUCT}}._{{NAME}};
-{%- else %}
+  {%- else %}
   return p->_{{NAME}};
+  {%- endif %}
 {%- endif %}
+
 {%- if HAS_IFDEF %}
 #else
   return NULL;
@@ -27,14 +41,28 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
  */
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
   part_get_const_{{NAME}}(const struct part *restrict p) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- if HAS_PARENT_STRUCT %}
+  return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return {{ROOT_STRUCT}}_s->_{{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
   return p->_{{PARENT_STRUCT}}._{{NAME}};
-{%- else %}
+  {%- else %}
   return p->_{{NAME}};
+  {%- endif %}
 {%- endif %}
+
 {%- if HAS_IFDEF %}
 #else
   return NULL;
@@ -48,14 +76,28 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}
   part_get_{{NAME}}_ind(const struct part *restrict p, const size_t ind) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- if HAS_PARENT_STRUCT %}
+  return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[ind];
+  {%- else %}
+  return {{ROOT_STRUCT}}_s->_{{NAME}}[ind];
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
   return p->_{{PARENT_STRUCT}}._{{NAME}}[ind];
-{%- else %}
+  {%- else %}
   return p->_{{NAME}}[ind];
+  {%- endif %}
 {%- endif %}
+
 {%- if HAS_IFDEF %}
 #else
   return {{IFDEF_RETURN_VAL}};
@@ -69,16 +111,32 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  */
 static __attribute__((always_inline)) INLINE void
   part_set_{{NAME}}(struct part *restrict p, const {{TYPE}} {{NAME}}[{{SIZE}}]) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- for i in range(SIZE) %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- for i in range(SIZE) %}
+    {%- if HAS_PARENT_STRUCT %}
+  {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+    {%- else %}
+  {{ROOT_STRUCT}}_s->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+    {%- endif -%}
+  {%- endfor %}
+
+{%- else -%}
+
+  {%- for i in range(SIZE) %}
+    {%- if HAS_PARENT_STRUCT %}
   p->_{{PARENT_STRUCT}}._{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
-{%- else %}
+    {%- else %}
   p->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+    {%- endif %}
+  {%- endfor %}
 {%- endif %}
-{%- endfor %}
+
 {%- if HAS_IFDEF %}
 #endif
 {%- endif %}
@@ -89,14 +147,28 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_{{NAME}}_ind(struct part *restrict p, const size_t i, const {{TYPE}} {{NAME}}) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- if HAS_PARENT_STRUCT %}
+  {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[i] = {{NAME}};
+  {%- else %}
+  {{ROOT_STRUCT}}_s->_{{NAME}}[i] = {{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
   p->_{{PARENT_STRUCT}}._{{NAME}}[i] = {{NAME}};
-{%- else %}
+  {%- else %}
   p->_{{NAME}}[i] = {{NAME}};
+  {%- endif %}
 {%- endif %}
+
 {%- if HAS_IFDEF %}
 #endif
 {%- endif %}
