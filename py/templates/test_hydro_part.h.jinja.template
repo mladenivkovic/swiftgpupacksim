@@ -27,7 +27,7 @@ struct {{STRUCT_NAME}} {
     {{DECL}}
 {%- endfor -%}
 };
-{%- endfor -%}
+{% endfor -%}
 {# ------------------------- GENERATE GETTERS AND SETTERS  -------------------------- #}
 {%- for STRUCT_NAME in STRUCT_NAMES -%}
 {%- for API in STRUCT_CONTENTS[STRUCT_NAME]["API"] %}

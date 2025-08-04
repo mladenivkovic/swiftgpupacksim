@@ -79,3 +79,6 @@ def get_git_hash() -> str:
         hashstr = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
 
     return hashstr
+
+def print_separator(msg: str=""):
+    print("----------------------------------------------------------------", msg)
