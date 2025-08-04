@@ -70,22 +70,28 @@ if __name__ == "__main__":
     particle_fields_d = yaml.safe_load(input_fp)
     input_fp.close()
 
-    #  hydro_part_header = generate_hydro_part_header(
-    #      particle_fields_d, swift_header=swift_header, testing=testing, verbose=verbose
-    #  )
+    hydro_part_header = generate_hydro_part_header(
+        particle_fields_d, swift_header=swift_header, testing=testing, verbose=verbose
+    )
 
     hydro_part_data_struct = generate_hydro_part_data_struct(
         particle_fields_d, swift_header=swift_header, verbose=verbose
     )
 
     if dry_run:
-        #  print_separator("hydro_part_header")
-        #  print(hydro_part_header)
-        print_separator("hydro_part_data_struct")
-        print(hydro_part_data_struct)
+        print_separator("hydro_part_header")
+        print(hydro_part_header)
+        #  print_separator("hydro_part_data_struct")
+        #  print(hydro_part_data_struct)
     else:
         outfile = os.path.join(outdir, "hydro_part.h")
         fp = open(outfile, "w")
         fp.write(hydro_part_header)
+        fp.close()
+        print("Written", outfile)
+
+        outfile = os.path.join(outdir, "hydro_part_data_struct.h")
+        fp = open(outfile, "w")
+        fp.write(hydro_part_data_struct)
         fp.close()
         print("Written", outfile)

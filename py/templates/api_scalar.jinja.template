@@ -4,14 +4,28 @@
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}
   part_get_{{NAME}}(const struct part *restrict p) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- if HAS_PARENT_STRUCT %}
+  return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return {{ROOT_STRUCT}}_s->_{{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
   return p->_{{PARENT_STRUCT}}._{{NAME}};
-{%- else %}
+  {%- else %}
   return p->_{{NAME}};
+  {%- endif %}
 {%- endif %}
+
 {%- if HAS_IFDEF %}
 #else
   return {{IFDEF_RETURN_VAL}};
@@ -26,21 +40,35 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}*
   part_get_{{NAME}}_p(struct part *restrict p) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- if HAS_PARENT_STRUCT %}
+  return &{{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return &{{ROOT_STRUCT}}_s->_{{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
   return &p->_{{PARENT_STRUCT}}._{{NAME}};
-{%- else %}
+  {%- else %}
   return &p->_{{NAME}};
+  {%- endif %}
 {%- endif %}
+
 {%- if HAS_IFDEF %}
 #else
   return NULL;
 #endif
 {%- endif %}
 }
-{% if not IS_POINTER %}
+{%- if not IS_POINTER %}
 
 /**
  * @brief get read-only access to pointer to {{NAME}}{% if not HAS_DOC %}.{% else %},
@@ -49,14 +77,28 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
  */
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
   part_get_const_{{NAME}}_p(const struct part *restrict p) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- if HAS_PARENT_STRUCT %}
+  return &{{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return &{{ROOT_STRUCT}}_s->_{{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
   return &p->_{{PARENT_STRUCT}}._{{NAME}};
-{%- else %}
+  {%- else %}
   return &p->_{{NAME}};
+  {%- endif %}
 {%- endif %}
+
 {%- if HAS_IFDEF %}
 #else
   return NULL;
@@ -64,20 +106,34 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 {%- endif %}
 }
 
-{% endif %}
+{% endif -%}
 /**
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
 static __attribute__((always_inline)) INLINE void
   part_set_{{NAME}}(struct part *restrict p, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
+
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
-{%- if HAS_PARENT_STRUCT %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  {%- if HAS_PARENT_STRUCT %}
+  {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}} = {{NAME}};
+  {%- else %}
+  {{ROOT_STRUCT}}_s->_{{NAME}} = {{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
   p->_{{PARENT_STRUCT}}._{{NAME}} = {{NAME}};
-{%- else %}
+  {%- else %}
   p->_{{NAME}} = {{NAME}};
+  {%- endif %}
 {%- endif %}
+
 {%- if HAS_IFDEF %}
 #endif
 {%- endif %}
