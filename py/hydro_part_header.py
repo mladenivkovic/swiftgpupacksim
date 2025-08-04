@@ -5,7 +5,10 @@ from templates import jinja_generate_hydro_part_h
 
 
 def generate_hydro_part_header(
-        part_d: dict, swift_header: bool = True, testing: bool = False, verbose: bool = False
+    part_d: dict,
+    swift_header: bool = True,
+    testing: bool = False,
+    verbose: bool = False,
 ) -> str:
     """
     Generate a hydro_part.h with a single struct part.
