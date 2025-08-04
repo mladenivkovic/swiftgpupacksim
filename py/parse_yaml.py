@@ -224,12 +224,14 @@ class FieldEntry(object):
                 )
                 self.sub_entries.append(new_entry)
 
-        if self.type == "struct":
+        if self.type == "struct" or (self.type.startswith("struct ") and "*" not in self.type):
             if self.ifdef != None:
                 # we usually use empty structs instead in SWIFT, i.e. their
                 # contents are hidden behind macro guards. The problem we face
                 # here is to decide how to define a default return value for
                 # the getters.
+                # So structs can't be hidden behind a macro, but a pointer to a
+                # struct can.
                 raise NotImplementedError(
                     f"'{self.type} {self.name}': structs hidden behind macro guards not implemented"
                 )
