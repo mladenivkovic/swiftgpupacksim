@@ -1,0 +1,30 @@
+part:
+    union1:
+        type: union
+        contents:
+            a:
+            b:
+                ifdef: DEBUG
+            c:
+                ifdef: NODEBUG
+
+    union2:
+        type: union
+        contents:
+            gp:
+                type: struct gp*
+
+            pp:
+                type: struct
+                contents:
+                    d:
+                    e:
+
+    # union3:
+    #     type: union
+    #     ifdef: DEBUG # ILLEGAL
+    #     contents:
+    #         f:
+    #         g:
+    #         h:
+    #     size: 3 # ILLEGAL

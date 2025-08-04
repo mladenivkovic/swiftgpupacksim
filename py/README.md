@@ -127,7 +127,8 @@ syntax:
 
 ```
 parent_struct:         # such as part, xpart, ...
-  union:
+  name_placeholder:
+    type: union
     contents:
       a:
         type: int
@@ -136,6 +137,11 @@ parent_struct:         # such as part, xpart, ...
         type: double
         documentation: "the second field of union"
 ```
+
+The `name_placeholder` name will be unused in the resulting header file.
+However, we need a unique identifier for the yaml syntax - otherwise, the
+content will be overwritten by the last element with that name and the others
+discarded. So just make sure you give them a unique identifier.
 
 This also works with structs as elements of the union.
 
