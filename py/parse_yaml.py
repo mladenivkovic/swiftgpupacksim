@@ -218,7 +218,9 @@ class FieldEntry(object):
                     f"'{self.type} {self.name}': Union hidden behind macro guards not implemented. Use 'ifdef' on its members, instead."
                 )
             if self.size != 1:
-                raise ValueError(f"'{self.type} {self.name}': fixed-size arrays of unions are illegal. You requested size[{self.size}]")
+                raise ValueError(
+                    f"'{self.type} {self.name}': fixed-size arrays of unions are illegal. You requested size[{self.size}]"
+                )
 
         return
 
