@@ -80,9 +80,11 @@ def get_git_hash() -> str:
 
     return hashstr
 
-def print_separator(msg: str=""):
+
+def print_separator(msg: str = ""):
     print("----------------------------------------------------------------", msg)
     return
+
 
 def validate_yml_contents(contents_d: dict) -> None:
     """
@@ -111,10 +113,9 @@ def validate_yml_contents(contents_d: dict) -> None:
                 # These are allowed to exist multiple times.
                 continue
             if field in field_names:
-                raise ValueError(f"data field '{field}' defined more than once in your input yml file.")
+                raise ValueError(
+                    f"data field '{field}' defined more than once in your input yml file."
+                )
             field_names.append(field)
 
     return
-
-
-

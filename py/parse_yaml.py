@@ -52,12 +52,13 @@ _field_data_type_default_return_vals = {
 }
 
 _prohibited_field_names = [
-        "doc",
-        "documentation",
-        "union",
-        "cell_offset",
-        "cell_part_data",
-        ]
+    "doc",
+    "documentation",
+    "union",
+    "cell_offset",
+    "cell_part_data",
+]
+
 
 class FieldEntry(object):
     """
@@ -224,7 +225,9 @@ class FieldEntry(object):
                 )
                 self.sub_entries.append(new_entry)
 
-        if self.type == "struct" or (self.type.startswith("struct ") and "*" not in self.type):
+        if self.type == "struct" or (
+            self.type.startswith("struct ") and "*" not in self.type
+        ):
             if self.ifdef != None:
                 # we usually use empty structs instead in SWIFT, i.e. their
                 # contents are hidden behind macro guards. The problem we face
