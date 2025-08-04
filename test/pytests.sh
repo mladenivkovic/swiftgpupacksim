@@ -70,9 +70,14 @@ COMPILE_AND_RUN
 DIFF hydro_part.h output/test_split_struct_nopart.h
 rm -f ./hydro_part.h ./hydro_part_data_struct.h
 
-echo "running test_split_struct_nopart"
+echo "running test_split_struct_arrays"
 python3 ../py/generate_hydro_part.py --test ./input/test_split_struct_arrays.yml
 COMPILE_AND_RUN
 DIFF hydro_part.h output/test_split_struct_arrays.h
 rm -f ./hydro_part.h ./hydro_part_data_struct.h
 
+echo "running test_split_struct_structs_and_unions"
+python3 ../py/generate_hydro_part.py --test ./input/test_split_struct_structs_and_unions.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_split_struct_structs_and_unions.h
+rm -f ./hydro_part.h ./hydro_part_data_struct.h
