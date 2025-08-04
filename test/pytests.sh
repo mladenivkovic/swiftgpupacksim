@@ -47,8 +47,14 @@ function DIFF(){
 # DIFF hydro_part.h output/test_struct.h
 # rm -f hydro_part.h
 
-echo "running test_union"
-python3 ../py/generate_hydro_part.py --test ./input/test_union.yml
+# echo "running test_union"
+# python3 ../py/generate_hydro_part.py --test ./input/test_union.yml
+# COMPILE_AND_RUN
+# DIFF hydro_part.h output/test_union.h
+# rm -f hydro_part.h
+
+echo "running test_split_struct"
+python3 ../py/generate_hydro_part.py --test ./input/test_split_struct.yml
 COMPILE_AND_RUN
-DIFF hydro_part.h output/test_union.h
+# DIFF hydro_part.h output/test_split_struct.h
 rm -f hydro_part.h

@@ -209,3 +209,34 @@ static __attribute__((always_inline)) INLINE float
 ```
 
 **WARNING**: This currently doesn't work for structs or unions.
+
+
+### Reserved names
+
+To ensure functionality, some names are reserved and cannot be used as names for
+fields. These are:
+
+- ``doc``
+- ``documentation``
+- ``union``
+
+
+
+### Split Particle Data Over Multiple Structs
+
+You may want to split the particle data such that they are contained within
+multiple structs instead of a single one. To do so, some restrictions apply:
+
+- All functions that actually do something in SWIFT will access the data via a
+  ``struct part p``. This is the single access point to all particle data.
+- You *may* define a struct which is named ``part``
+  - If you do, it *must* be the first defined struct.
+  - If you do, the script will also automatically generate getter functions to
+    all other structs holding particle data as defined in the yaml file.
+- You *may* not define a struct which is named ``part``.
+  - If you don't, one will be generated for you.
+  - If you don't, the script will also automatically generate getter functions to
+    all other structs holding particle data as defined in the yaml file.
+
+
+
