@@ -11,7 +11,7 @@ def generate_hydro_part_header(
     verbose: bool = False,
 ) -> str:
     """
-    Generate a hydro_part.h with a single struct part.
+    Generate a hydro_part.h.
 
     Parameters
     ----------
@@ -37,21 +37,43 @@ def generate_hydro_part_header(
     """
 
     if verbose:
-        print("Generating single particle struct")
+        print("Generating particle struct header")
 
-    if len(part_d.keys()) > 1:
-        raise NotImplementedError("Split structs not implemented yet")
+    part_keylist = list(part_d.keys())
+    have_part_struct = False
+    if len(part_keylist) > 1:
+        # if 'part' is defined, it must be first.
+        for i, key in enumerate(part_keylist):
+            if key == "part":
+                have_part_struct = True
+                if i != 0:
+                    raise ValueError("You're defining a particle data struct 'part', but it isn't in first position.\n"
+                                     +f"Put it at the top of your .yml file. Current position: {i+1}")
 
     # Create an empty dict we'll fill out with C-code for the API and
     # declaration C-code snippets for each struct containing particle data
     part_struct_d = {}
+
+    # TODO: add cell and offset fields
+    # TODO: document them as prohibited/reserved
+
+    if not have_part_struct:
+        raise NotImplementedError("Implement addition of part struct as first")
 
     for struct_name in part_d.keys():
 
         declarations = []
         apis = []
 
+        #  if struct_name == "part" and len(part_keylist) > 1:
+            # Generate getters for other structs
+
+
         for field in list(part_d[struct_name].keys()):
+            if FieldEntry.prohibited_name(field):
+                if verbose:
+                    print(f"-- Found prohibited field name {field}, skipping it.")
+                continue
             # parse the field specification
             field_props = part_d[struct_name][field]
             field_entry = FieldEntry(field, field_props, verbose)

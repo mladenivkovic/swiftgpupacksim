@@ -49,6 +49,11 @@ _field_data_type_default_return_vals = {
     "pointer": "NULL",
 }
 
+_prohibited_field_names = [
+        "doc",
+        "documentation",
+        "union",
+        ]
 
 class FieldEntry(object):
     """
@@ -90,6 +95,9 @@ class FieldEntry(object):
 
         if recursion_level > 20:
             raise ValueError("We recursed 20 times, this seems excessive.")
+
+        if field_name in _prohibited_field_names:
+            raise ValueError(f"Using prohibited field name {field_name}")
 
         self.name = field_name
         self.props = field_props
@@ -223,6 +231,12 @@ class FieldEntry(object):
                 )
 
         return
+
+    def prohibited_name(field_name: str) -> bool:
+        """
+        Check whether a field name is prohibited/reserved.
+        """
+        return field_name in _prohibited_field_names
 
     def _get_field_dict(
         self,
