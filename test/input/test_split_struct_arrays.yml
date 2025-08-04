@@ -1,0 +1,187 @@
+# Test fixed-size array generation with split structs.
+
+part:
+    my_int_arr:
+        type: int
+        doc: my integer
+        size: 4
+
+    my_long_arr:
+        type: long
+        doc: my long
+        size: 4
+
+    my_longlong_arr:
+        type: long long
+        doc: my long long
+        size: 4
+    
+    my_float_arr:
+        doc: my float
+        size: 4
+
+    my_dble_arr:
+        type: double
+        doc: my double
+        size: 4
+
+    my_char_arr:
+        type: char
+        doc: my_char
+        size: 4
+
+    my_integertime_arr:
+        type: integertime_t
+        doc: my integertime
+        size: 4
+
+    my_timebin_arr:
+        type: timebin_t
+        doc: my timebin
+        size: 4
+
+    my_external_struct_arr:
+        type: struct my_struct
+        doc: some externally defined struct
+        size: 4
+
+    # Not implemented yet
+    # my_pointer_struct_arr:
+    #     type: struct gpart*
+    #     doc: pointer to externally defined struct
+    #     size: 4
+
+    # Not implemented yet
+    # my_pointer_arr:
+    #     type: int*
+    #     doc: pointer to integer array
+    #     size: 4
+
+
+part2:
+    my_int_arr2:
+        type: int
+        doc: my integer
+        size: 4
+
+    my_long_arr2:
+        type: long
+        doc: my long
+        size: 4
+
+    my_longlong_arr2:
+        type: long long
+        doc: my long long
+        size: 4
+    
+    my_float_arr2:
+        doc: my float
+        size: 4
+
+    my_dble_arr2:
+        type: double
+        doc: my double
+        size: 4
+
+    my_char_arr2:
+        type: char
+        doc: my_char
+        size: 4
+
+    my_integertime_arr2:
+        type: integertime_t
+        doc: my integertime
+        size: 4
+
+    my_timebin_arr2:
+        type: timebin_t
+        doc: my timebin
+        size: 4
+
+    my_external_struct_arr2:
+        type: struct my_struct
+        doc: some externally defined struct
+        size: 4
+
+    # Not implemented yet
+    # my_pointer_struct_arr2:
+    #     type: struct gpart*
+    #     doc: pointer to externally defined struct
+    #     size: 4
+
+    # Not implemented yet
+    # my_pointer_arr2:
+    #     type: int*
+    #     doc: pointer to integer array
+    #     size: 4
+
+
+part3:
+    my_int_arr3:
+        type: int
+        doc: my integer
+        size: 4
+        ifdef: DEBUG
+
+    my_long_arr3:
+        type: long
+        doc: my long
+        size: 4
+        ifdef: DEBUG
+
+    my_longlong_arr3:
+        type: long long
+        doc: my long long
+        size: 4
+        ifdef: DEBUG
+    
+    my_float_arr3:
+        doc: my float
+        size: 4
+        ifdef: DEBUG
+
+    my_dble_arr3:
+        type: double
+        doc: my double
+        size: 4
+        ifdef: DEBUG
+
+    my_char_arr3:
+        type: char
+        doc: my_char
+        size: 4
+        ifdef: DEBUG
+
+    my_integertime_arr3:
+        type: integertime_t
+        doc: my integertime
+        size: 4
+        ifdef: DEBUG
+
+    my_timebin_arr3:
+        type: timebin_t
+        doc: my timebin
+        size: 4
+        ifdef: DEBUG
+
+    # Not implemented yet with macros
+    # my_external_struct_arr3:
+    #     type: struct my_struct
+    #     doc: some externally defined struct
+    #     size: 4
+    #     ifdef: DEBUG
+
+    # Not implemented yet
+    # my_pointer_struct_arr3:
+    #     type: struct gpart*
+    #     doc: pointer to externally defined struct
+    #     size: 4
+    #     ifdef: DEBUG
+
+    # Not implemented yet
+    # my_pointer_arr3:
+    #     type: int*
+    #     doc: pointer to integer array
+    #     size: 4
+    #     ifdef: DEBUG
+
