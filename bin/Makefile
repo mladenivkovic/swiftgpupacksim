@@ -37,7 +37,6 @@ io.o: io.c
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 gpu_offload_data.o: swift_placeholders/cuda/gpu_offload_data.c
-	echo CALLED THIS
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 task.o: swift_placeholders/task.c
@@ -57,14 +56,6 @@ gpu_pack_metadata.o: swift_placeholders/gpu_pack_metadata.c
 
 engine.o: swift_placeholders/engine.c
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
-
-#         $(NVCC) $(NVCC_FLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -c $@ $<
-
-
-
-
-# %.o: %.c
-#         $(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LD_LIBRARY_PATH) $(LIBS) -o $@ -c $<
 
 
 
