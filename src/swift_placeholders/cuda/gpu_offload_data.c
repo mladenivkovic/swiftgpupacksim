@@ -58,25 +58,33 @@ void gpu_data_buffers_init(struct gpu_offload_data *buf,
   struct gpu_pack_metadata *md = &(buf->md);
   gpu_pack_metadata_init(md, params);
 
+#if defined(CONFIG_LOCAL_HP_ICX) || defined(CONFIG_LOCAL_HP_GCC)
+  /* Hack to get a working test version on my own machine. */
+  buf->parts_send_d = malloc(part_buffer_size * send_struct_size);
+  swift_assert(buf->parts_send_d != NULL);
+
+  buf->parts_recv_d = malloc(part_buffer_size * recv_struct_size);
+  swift_assert(buf->parts_recv_d != NULL);
+#else
   /* Now allocate arrays */
   cudaError_t cu_error = cudaSuccess;
 
   /* Now allocate memory for Buffer and GPU particle arrays */
-  cu_error = cudaMalloc((void **)&buf->d_parts_send_d,
-                        part_buffer_size * send_struct_size);
-  swift_assert(cu_error == cudaSuccess);
-
-  cu_error = cudaMalloc((void **)&buf->d_parts_recv_d,
-                        part_buffer_size * recv_struct_size);
-  swift_assert(cu_error == cudaSuccess);
-
-  /* cu_error = cudaMallocHost((void **)&buf->parts_send_d, */
-  /*                           part_buffer_size * send_struct_size); */
+  /* cu_error = cudaMalloc((void **)&buf->d_parts_send_d, */
+  /*                       part_buffer_size * send_struct_size); */
   /* swift_assert(cu_error == cudaSuccess); */
 
-  /* cu_error = cudaMallocHost((void **)&buf->parts_recv_d, */
-  /*                           part_buffer_size * recv_struct_size); */
+  /* cu_error = cudaMalloc((void **)&buf->d_parts_recv_d, */
+  /*                       part_buffer_size * recv_struct_size); */
   /* swift_assert(cu_error == cudaSuccess); */
+  cu_error = cudaMallocHost((void **)&buf->parts_send_d,
+                            part_buffer_size * send_struct_size);
+  swift_assert(cu_error == cudaSuccess);
+
+  cu_error = cudaMallocHost((void **)&buf->parts_recv_d,
+                            part_buffer_size * recv_struct_size);
+  swift_assert(cu_error == cudaSuccess);
+#endif
 
   /* Create space for cuda events */
   /* buf->event_end = (cudaEvent_t *)malloc(n_bundles * sizeof(cudaEvent_t)); */
@@ -136,6 +144,10 @@ void gpu_data_buffers_free(struct gpu_offload_data *buf) {
   struct gpu_pack_metadata *md = &(buf->md);
   gpu_pack_metadata_free(md);
 
+#if defined(CONFIG_LOCAL_HP_ICX) || defined(CONFIG_LOCAL_HP_GCC)
+  free(buf->parts_send_d);
+  free(buf->parts_recv_d);
+#else
   cudaError_t cu_error = cudaErrorMemoryAllocation;
 
   /* cu_error = cudaFree(buf->d_parts_send_d); */
@@ -149,6 +161,7 @@ void gpu_data_buffers_free(struct gpu_offload_data *buf) {
 
   cu_error = cudaFreeHost(buf->parts_recv_d);
   swift_assert(cu_error == cudaSuccess);
+#endif
 
   /* free((void *)buf->event_end); */
 }

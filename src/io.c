@@ -121,8 +121,7 @@ void io_read_logged_params(struct parameters* params) {
  */
 void io_read_logged_events_file(const char* filename,
                                 struct packing_data** packing_sequence,
-                                size_t* n_elements,
-                                const struct parameters* params) {
+                                int* n_elements, const struct parameters* params) {
 
   if (*packing_sequence != NULL)
     error("packing_sequence array is already allocated.");
@@ -170,36 +169,22 @@ void io_read_logged_events_file(const char* filename,
       continue;
     }
 
-    enum task_types task_type = task_type_none;
-    long long ci_offset = -1;
-    long long cj_offset = -1;
-    int ci_count = -1;
-    int cj_count = -1;
-    double timing = -1;
+    struct packing_data data;
+    init_pack_data(&data);
 
     /* Now get the actual data. */
-    io_util_parse_measurement_data_line(tempbuff, &task_type, &ci_offset,
-                                        &cj_offset, &ci_count, &cj_count,
-                                        &timing);
+    io_util_parse_measurement_data_line(tempbuff, &data);
+
 #ifdef SWIFT_DEBUG_CHECKS
-    swift_assert(task_type != task_type_none);
-    swift_assert(ci_offset != -1);
-    swift_assert(ci_count != -1);
-    swift_assert(timing != -1);
-    if (task_type == task_type_force_pair ||
-        task_type == task_type_gradient_pair ||
-        task_type == task_type_density_pair) {
-      swift_assert(cj_offset != -1);
-      swift_assert(cj_offset != -1);
-    }
+    swift_assert(data.task_type != task_type_none);
+    swift_assert(data.task_subtype != task_subtype_none);
+    swift_assert(data.part_offset != -1);
+    swift_assert(data.count != -1);
+    swift_assert(data.pack_index != -1);
+    swift_assert(data.timing != -1);
 #endif
 
-    (*packing_sequence)[i].task_type = task_type;
-    (*packing_sequence)[i].ci_offset = ci_offset;
-    (*packing_sequence)[i].cj_offset = cj_offset;
-    (*packing_sequence)[i].ci_count = ci_count;
-    (*packing_sequence)[i].cj_count = cj_count;
-    (*packing_sequence)[i].timing = timing;
+    (*packing_sequence)[i] = data;
 
     i++;
   }
@@ -245,13 +230,14 @@ int io_util_check_dir_exists(const char* dirname) {
     /* Directory exists. */
     closedir(dir);
     return 1;
-  } else if (ENOENT == errno) {
+  }
+  if (ENOENT == errno) {
     /* Directory does not exist. */
     return 0;
-  } else {
-    /* opendir() failed for some other reason. */
-    error("Error in opendir()");
   }
+  /* opendir() failed for some other reason. */
+  error("Error in opendir()");
+  return -1;
 }
 
 
@@ -426,6 +412,7 @@ int io_util_line_is_measurement_data(const char* line) {
   if (io_util_line_is_empty(line)) return 0;
   if (io_util_line_is_comment(line)) return 0;
 
+  /* Count number of delimiters in line. */
   const char delim = ',';
   int count = 0;
   int i = 0;
@@ -457,16 +444,12 @@ int io_util_line_is_measurement_data(const char* line) {
  * Get the measurements out of a line of measurement data
  * into appropriate data types.
  */
-void io_util_parse_measurement_data_line(const char* line,
-                                         enum task_types* task_type,
-                                         long long* ci_offset,
-                                         long long* cj_offset, int* ci_count,
-                                         int* cj_count, double* timing) {
+void io_util_parse_measurement_data_line(const char* line, struct packing_data* data) {
 
   char tempbuff[64];
   int prev_delim = 0;
 
-  /* Task type */
+  /* Task subtype */
   for (int i = 0; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -475,26 +458,20 @@ void io_util_parse_measurement_data_line(const char* line,
       io_util_remove_whitespace(tempbuff);
       prev_delim = i + 1;
 
-      if (strcmp(tempbuff, "density_self") == 0) {
-        *task_type = task_type_density_self;
-      } else if (strcmp(tempbuff, "density_pair") == 0) {
-        *task_type = task_type_density_pair;
-      } else if (strcmp(tempbuff, "gradient_self") == 0) {
-        *task_type = task_type_gradient_self;
-      } else if (strcmp(tempbuff, "gradient_pair") == 0) {
-        *task_type = task_type_gradient_pair;
-      } else if (strcmp(tempbuff, "force_self") == 0) {
-        *task_type = task_type_force_self;
-      } else if (strcmp(tempbuff, "force_pair") == 0) {
-        *task_type = task_type_force_pair;
+      if (strcmp(tempbuff, "d") == 0) {
+        data->task_subtype = task_subtype_density;
+      } else if (strcmp(tempbuff, "g") == 0) {
+        data->task_subtype = task_subtype_gradient;
+      } else if (strcmp(tempbuff, "f") == 0) {
+        data->task_subtype = task_subtype_force;
       } else {
-        error("Unknown read-in task type '%s'", tempbuff);
+        error("Unknown read-in task subtype '%s'", tempbuff);
       }
       break;
     }
   }
 
-  /* Cell i offset */
+  /* Task type */
   for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -503,12 +480,34 @@ void io_util_parse_measurement_data_line(const char* line,
       io_util_remove_whitespace(tempbuff);
       prev_delim = i + 1;
 
-      *ci_offset = atoll(tempbuff);
+      if (strcmp(tempbuff, "p") == 0) {
+        data->task_type = task_type_pack;
+      } else if (strcmp(tempbuff, "u") == 0) {
+        data->task_type = task_type_unpack;
+      } else {
+        error("Unknown read-in task type '%s'", tempbuff);
+      }
+
       break;
     }
   }
 
-  /* Cell j offset */
+
+  /* Cell offset */
+  for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
+    if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
+    if (line[i] == ',') {
+      strncpy(tempbuff, line + prev_delim, i - prev_delim);
+      tempbuff[i - prev_delim] = '\0';
+      io_util_remove_whitespace(tempbuff);
+      prev_delim = i + 1;
+
+      data->part_offset = atoi(tempbuff);
+      break;
+    }
+  }
+
+  /* cell count */
   for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -516,13 +515,13 @@ void io_util_parse_measurement_data_line(const char* line,
       tempbuff[i - prev_delim] = '\0';
       io_util_remove_whitespace(tempbuff);
 
-      *cj_offset = atoll(tempbuff);
+      data->count = atoi(tempbuff);
       prev_delim = i + 1;
       break;
     }
   }
 
-  /* cell i count */
+  /* pack index */
   for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
     if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
     if (line[i] == ',') {
@@ -530,21 +529,7 @@ void io_util_parse_measurement_data_line(const char* line,
       tempbuff[i - prev_delim] = '\0';
       io_util_remove_whitespace(tempbuff);
 
-      *ci_count = atoi(tempbuff);
-      prev_delim = i + 1;
-      break;
-    }
-  }
-
-  /* cell j count */
-  for (int i = prev_delim; i < IO_MAX_LINE_SIZE; i++) {
-    if (line[i] == '\0' || line[i] == '\n') error("Ended too early?");
-    if (line[i] == ',') {
-      strncpy(tempbuff, line + prev_delim, i - prev_delim);
-      tempbuff[i - prev_delim] = '\0';
-      io_util_remove_whitespace(tempbuff);
-
-      *cj_count = atoi(tempbuff);
+      data->pack_index = atoi(tempbuff);
       prev_delim = i + 1;
       break;
     }
@@ -557,7 +542,7 @@ void io_util_parse_measurement_data_line(const char* line,
       strncpy(tempbuff, line + prev_delim, i - prev_delim);
       io_util_remove_whitespace(tempbuff);
 
-      *timing = atof(tempbuff);
+      data->timing = atof(tempbuff);
       prev_delim = i + 1;
       break;
     }

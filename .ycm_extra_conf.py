@@ -83,6 +83,8 @@ include = [
     os.path.join(DIR_OF_THIS_SCRIPT, "src/cuda"),
     "-I",
     os.path.join(DIR_OF_THIS_SCRIPT, "src/swift_placeholders"),
+    "-I",
+    os.path.join(DIR_OF_THIS_SCRIPT, "src/swift_placeholders/cuda"),
 ]
 
 try:
@@ -104,7 +106,7 @@ def Settings(**kwargs):
     if kwargs["language"] == "cfamily":
 
         #  all_defines = _parse_config_h()
-        all_defines = []
+        all_defines = ["-DWITH_CUDA"]
         all_includes = include
 
         # add current directory of the file
