@@ -12,41 +12,10 @@
 /* Local includes. */
 #include "cell_hydro.h"
 #include "cell_other_physics.h"
+#include "hydro_part_generated.h"
 #include "task.h"
 
 struct cell {
-
-  /*Marks a cell for GPU execution A. Nasar */
-
-  int unpacker_cell;
-
-  /*Marks a cell as having done its pack task 0->not 1-> yes*/
-  int pack_done;
-  /*Marks a cell as having done its pack task 0->not 1-> yes*/
-  int pack_done_g;
-  /*Marks a cell as having done its pack task 0->not 1-> yes*/
-  int pack_done_f;
-
-  /*Has the task run on the GPU? 0->No, 1-> Yes*/
-  int gpu_done;
-  /*Has the task run on the GPU? 0->No, 1-> Yes*/
-  int gpu_done_g;
-  /*Has the task run on the GPU? 0->No, 1-> Yes*/
-  int gpu_done_f;
-
-  /*Has the task run on the GPU? 0->No, 1-> Yes*/
-  int unpack_done;
-  /*Has the task run on the GPU? 0->No, 1-> Yes*/
-  int unpack_done_g;
-  /*Has the task run on the GPU? 0->No, 1-> Yes*/
-  int unpack_done_f;
-
-  /*Has the pair task run on the GPU? 0->No, 1-> Yes*/
-  int gpu_done_pair;
-  /*Has the pair task run on the GPU? 0->No, 1-> Yes*/
-  int gpu_done_pair_g;
-  /*Has the pair task run on the GPU? 0->No, 1-> Yes*/
-  int gpu_done_pair_f;
 
   /*! The cell location on the grid (corner nearest to the origin). */
   double loc[3];
@@ -209,12 +178,12 @@ struct cell {
 /**
  * Minimalistic cell initialisation for this benchmark
  */
-static __attribute__((always_inline)) INLINE void init_cell(struct cell *c) {
+static __attribute__((always_inline)) INLINE void init_cell(struct cell *c, int count, struct part* all_parts, int offset) {
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;
   c->loc[2] = 1.;
 
-  c->hydro.count = 0;
-  c->hydro.parts = 0;
+  c->hydro.count = count;
+  c->hydro.parts = all_parts + offset;
 }

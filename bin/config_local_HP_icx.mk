@@ -7,10 +7,8 @@ CFLAGS = -fno-lto -I//opt/cuda/include -O3 -ansi-alias -mavx512vbmi -pthread  -W
 CFLAGS_DEBUG = -g -O0  -fno-lto -I//opt/cuda/include -debug inline-debug-info -O3 -ansi-alias -mavx512vbmi -pthread  -Wall -Wextra -Wshadow -Wstrict-prototypes
 
 INCLUDES=
-LD_LIBRARY_PATH=
-LIBS=
+LD_LIBRARY_PATH=-L/opt/cuda/lib
+LIBS=-pthread -lcudart -lm
 SANITIZE_FLAGS=-fsanitize=address
-DEFINES=-DCONFIG_LOCAL_HP_ICX
+DEFINES=-DCONFIG_LOCAL_HP_ICX -DWITH_CUDA
 
-CFLAGS += -Wno-unused-parameter
-CFLAGS_DEBUG += -Wno-unused-parameter

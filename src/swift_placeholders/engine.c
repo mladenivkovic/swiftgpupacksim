@@ -7,5 +7,6 @@
  * time.
  * */
 void engine_init(struct engine* e){
-  error("ToDo");
+  e->max_active_bin = num_time_bins;
+  e->ti_current = 0;
 }
