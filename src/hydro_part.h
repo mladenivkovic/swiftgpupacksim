@@ -115,4 +115,3 @@ static __attribute__((always_inline)) INLINE void part_set_rt_min_ngb_time_bin(
 }
 
 #endif
-

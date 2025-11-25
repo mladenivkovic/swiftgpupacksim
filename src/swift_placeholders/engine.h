@@ -74,7 +74,6 @@ struct collectgroup1 {
 };
 
 
-
 #define PARSER_MAX_LINE_SIZE 256
 #define num_snapshot_triggers_part 0
 #define num_snapshot_triggers_spart 0
@@ -635,6 +634,6 @@ struct engine {
 };
 
 
-void engine_init(struct engine* e);
+void engine_init(struct engine *e);
 
 #endif

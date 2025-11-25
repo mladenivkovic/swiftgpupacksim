@@ -1,7 +1,7 @@
 #pragma once
 
-#include "hydro_part_generated.h"
 #include "error.h"
+#include "hydro_part_generated.h"
 #include "inline.h"
 #include "parameters.h"
 
@@ -34,7 +34,7 @@ static __attribute__((always_inline)) INLINE void init_parts(
 #endif
 
   message("size of part is %lu bytes", sizeof(struct part));
-  message("size of alloc'd part is %.3g Mb",
+  message("size of alloc'd parts is %.3g Mb",
           (params->nr_parts * sizeof(struct part)) / (1024. * 1024.));
 }
 

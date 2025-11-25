@@ -29,4 +29,5 @@ void io_util_remove_trailing_comments(char* line);
 int io_util_split_name_colon_value_present(const char* line, char* varname,
                                            char* varvalue);
 int io_util_line_is_measurement_data(const char* line);
-void io_util_parse_measurement_data_line(const char* line, struct packing_data* data);
+void io_util_parse_measurement_data_line(const char* line,
+                                         struct packing_data* data);

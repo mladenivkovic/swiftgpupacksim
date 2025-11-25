@@ -121,7 +121,8 @@ void io_read_logged_params(struct parameters* params) {
  */
 void io_read_logged_events_file(const char* filename,
                                 struct packing_data** packing_sequence,
-                                int* n_elements, const struct parameters* params) {
+                                int* n_elements,
+                                const struct parameters* params) {
 
   if (*packing_sequence != NULL)
     error("packing_sequence array is already allocated.");
@@ -444,7 +445,8 @@ int io_util_line_is_measurement_data(const char* line) {
  * Get the measurements out of a line of measurement data
  * into appropriate data types.
  */
-void io_util_parse_measurement_data_line(const char* line, struct packing_data* data) {
+void io_util_parse_measurement_data_line(const char* line,
+                                         struct packing_data* data) {
 
   char tempbuff[64];
   int prev_delim = 0;

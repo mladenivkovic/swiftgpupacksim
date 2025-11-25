@@ -2,9 +2,9 @@
 #define SWIFT_ACTIVE_H
 
 #include "../config.h"
-#include "timeline.h"
-#include "parts.h"
 #include "engine.h"
+#include "parts.h"
+#include "timeline.h"
 
 
 /**

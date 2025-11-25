@@ -41,5 +41,3 @@ extern const char *taskID_names[];
  * @brief Names of the task sub-types.
  */
 extern const char *subtaskID_names[];
-
-

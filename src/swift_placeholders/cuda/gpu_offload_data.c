@@ -29,8 +29,8 @@
 extern "C" {
 #endif
 
-#include "gpu_offload_data.h"
 #include "../error.h"
+#include "gpu_offload_data.h"
 
 #include <cuda.h>
 #include <cuda_runtime.h>

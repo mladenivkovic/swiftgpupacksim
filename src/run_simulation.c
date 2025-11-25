@@ -2,14 +2,11 @@
 
 #include "io.h"
 #include "parts.h"
-
-
 #include "swift_placeholders/cuda/gpu_offload_data.h"
 #include "swift_placeholders/cuda/gpu_part_pack_functions.h"
 #include "swift_placeholders/engine.h"
 #include "swift_placeholders/gpu_pack_params.h"
 #include "swift_placeholders/timers.h"
-
 
 #include <math.h>
 
@@ -27,14 +24,16 @@
  * @param buf_grad: Particle buffer for gradient tasks
  * @param buf_forc: Particle buffer for force tasks
  * @param engine: the engine
- * @param timers_step: Array to store timers (ticks) for this step of the simulation
+ * @param timers_step: Array to store timers (ticks) for this step of the
+ * simulation
  * @param timers_log_step: Array to store measured times (already converted from
  * ticks during measurement run)
  */
-__attribute__((always_inline)) INLINE static void replay_event(const struct packing_data *event,
-    struct part_arrays* part_data, struct gpu_offload_data* buf_dens,
-    struct gpu_offload_data* buf_grad, struct gpu_offload_data* buf_forc,
-    const struct engine* e, ticks timers_step[timer_count], double timings_log_step[timer_count]) {
+__attribute__((always_inline)) INLINE static void replay_event(
+    const struct packing_data* event, struct part_arrays* part_data,
+    struct gpu_offload_data* buf_dens, struct gpu_offload_data* buf_grad,
+    struct gpu_offload_data* buf_forc, const struct engine* e,
+    ticks timers_step[timer_count], double timings_log_step[timer_count]) {
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
@@ -43,10 +42,9 @@ __attribute__((always_inline)) INLINE static void replay_event(const struct pack
   const double shift[3] = {1., 1., 1.};
 
 #ifdef SWIFT_DEBUG_CHECKS
-      if ((event->part_offset + event->count) > part_data->nr_parts)
-        error("Will reach beyond array length: %d %d %d %d", event->part_offset,
-              event->count, event->part_offset + event->count,
-              part_data->nr_parts);
+  if ((event->part_offset + event->count) > part_data->nr_parts)
+    error("Will reach beyond array length: %d %d %d %d", event->part_offset,
+          event->count, event->part_offset + event->count, part_data->nr_parts);
 #endif
 
 
@@ -56,19 +54,20 @@ __attribute__((always_inline)) INLINE static void replay_event(const struct pack
 
     if (subtype == task_subtype_density) {
       TIMER_TIC;
-      gpu_pack_part_density(&ci, buf_dens->parts_send_d, event->pack_index, shift, 0, 0);
+      gpu_pack_part_density(&ci, buf_dens->parts_send_d, event->pack_index,
+                            shift, 0, 0);
       TIMER_TOC_LOCATION(timer_density_pack, timers_step);
       atomic_add_d(&timings_log_step[timer_density_pack], event->timing);
-    }
-    else if (subtype == task_subtype_gradient) {
+    } else if (subtype == task_subtype_gradient) {
       TIMER_TIC;
-      gpu_pack_part_gradient(&ci, buf_grad->parts_send_g, event->pack_index, shift, 0, 0);
+      gpu_pack_part_gradient(&ci, buf_grad->parts_send_g, event->pack_index,
+                             shift, 0, 0);
       TIMER_TOC_LOCATION(timer_gradient_pack, timers_step);
       atomic_add_d(&timings_log_step[timer_gradient_pack], event->timing);
-    }
-    else if (subtype == task_subtype_force) {
+    } else if (subtype == task_subtype_force) {
       TIMER_TIC;
-      gpu_pack_part_force(&ci, buf_grad->parts_send_f, event->pack_index, shift, 0, 0);
+      gpu_pack_part_force(&ci, buf_grad->parts_send_f, event->pack_index, shift,
+                          0, 0);
       TIMER_TOC_LOCATION(timer_force_pack, timers_step);
       atomic_add_d(&timings_log_step[timer_force_pack], event->timing);
     }
@@ -78,24 +77,24 @@ __attribute__((always_inline)) INLINE static void replay_event(const struct pack
       error("Unknown task subtype %d - %s", subtype, subtaskID_names[subtype]);
     }
 #endif
-  }
-  else if (type == task_type_unpack) {
+  } else if (type == task_type_unpack) {
 
     if (subtype == task_subtype_density) {
       TIMER_TIC;
-      gpu_unpack_part_density(&ci, buf_dens->parts_recv_d, event->pack_index, event->count, e);
+      gpu_unpack_part_density(&ci, buf_dens->parts_recv_d, event->pack_index,
+                              event->count, e);
       TIMER_TOC_LOCATION(timer_density_unpack, timers_step);
       atomic_add_d(&timings_log_step[timer_density_unpack], event->timing);
-    }
-    else if (subtype == task_subtype_gradient) {
+    } else if (subtype == task_subtype_gradient) {
       TIMER_TIC;
-      gpu_unpack_part_gradient(&ci, buf_dens->parts_recv_g, event->pack_index, event->count, e);
+      gpu_unpack_part_gradient(&ci, buf_dens->parts_recv_g, event->pack_index,
+                               event->count, e);
       TIMER_TOC_LOCATION(timer_gradient_unpack, timers_step);
       atomic_add_d(&timings_log_step[timer_gradient_unpack], event->timing);
-    }
-    else if (subtype == task_subtype_force) {
+    } else if (subtype == task_subtype_force) {
       TIMER_TIC;
-      gpu_unpack_part_force(&ci, buf_dens->parts_recv_f, event->pack_index, event->count, e);
+      gpu_unpack_part_force(&ci, buf_dens->parts_recv_f, event->pack_index,
+                            event->count, e);
       TIMER_TOC_LOCATION(timer_force_unpack, timers_step);
       atomic_add_d(&timings_log_step[timer_force_unpack], event->timing);
     }
@@ -116,7 +115,7 @@ __attribute__((always_inline)) INLINE static void replay_event(const struct pack
 /**
  * Run the actual thing.
  */
-void run_simulation(struct parameters *params) {
+void run_simulation(struct parameters* params) {
 
   /* Allocate data to work on */
   struct part_arrays part_data;
@@ -146,13 +145,14 @@ void run_simulation(struct parameters *params) {
   struct engine e;
   engine_init(&e);
 
-  /* Get packing params. Only parameter that matters here is particle buffer size. */
+  /* Get packing params. Only parameter that matters here is particle buffer
+   * size. */
   struct gpu_global_pack_params gpu_pack_params;
   gpu_pack_params_set(&gpu_pack_params, /*pack_size=*/1, /*bundle_size=*/1,
-                         /*gpu_recursion_max_depth=*/1,
-                         /*part_buffer_size=*/1000000, /*eta_neighbours=*/1.f,
-                         /*nparts_hydro=*/1, /*n_top_level_cells=*/1, /*nthreads=*/1);
-
+                      /*gpu_recursion_max_depth=*/1,
+                      /*part_buffer_size=*/1000000, /*eta_neighbours=*/1.f,
+                      /*nparts_hydro=*/1, /*n_top_level_cells=*/1,
+                      /*nthreads=*/1);
 
 
   // - init parallel region here
@@ -194,7 +194,7 @@ void run_simulation(struct parameters *params) {
     io_util_construct_log_filename(logfile, thread_id, step, params);
 
     /* Read trace */
-    struct packing_data *packing_sequence = NULL;
+    struct packing_data* packing_sequence = NULL;
     int n_events = 0;
     io_read_logged_events_file(logfile, &packing_sequence, &n_events, params);
 
@@ -211,7 +211,7 @@ void run_simulation(struct parameters *params) {
       struct packing_data event = packing_sequence[i];
 
       replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
-          &gpu_buf_forc, &e, timers_step, timing_log_step);
+                   &gpu_buf_forc, &e, timers_step, timing_log_step);
     }
 
     if (params->print_each_step) print_timers(timers_step, timing_log_step);

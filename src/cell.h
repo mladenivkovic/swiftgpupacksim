@@ -178,7 +178,8 @@ struct cell {
 /**
  * Minimalistic cell initialisation for this benchmark
  */
-static __attribute__((always_inline)) INLINE void init_cell(struct cell *c, int count, struct part* all_parts, int offset) {
+static __attribute__((always_inline)) INLINE void init_cell(
+    struct cell *c, int count, struct part *all_parts, int offset) {
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;

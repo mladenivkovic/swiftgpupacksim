@@ -13,7 +13,8 @@ int main(void) {
   init_params(&params);
 
   int argc1 = 2;
-  char *argv1[] = {"swiftgpupack", "../data/IntelXeonGold5218_Gresho64_1thread"};
+  char *argv1[] = {"swiftgpupack",
+                   "../data/IntelXeonGold5218_Gresho64_1thread"};
   io_parse_cmdlineargs(argc1, argv1, &params);
   swift_assert(strcmp(params.data_root_dir,
                       "../data/IntelXeonGold5218_Gresho64_1thread") == 0);
