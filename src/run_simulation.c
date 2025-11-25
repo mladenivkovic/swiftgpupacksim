@@ -1,5 +1,6 @@
 #include "run_simulation.h"
 
+#include "clocks.h"
 #include "io.h"
 #include "parts.h"
 #include "swift_placeholders/cuda/gpu_offload_data.h"
@@ -8,8 +9,7 @@
 #include "swift_placeholders/gpu_pack_params.h"
 #include "swift_placeholders/timers.h"
 
-#include <math.h>
-
+#include <float.h>
 
 /**
  * Perform the actual work of a single event.
@@ -26,14 +26,20 @@
  * @param engine: the engine
  * @param timers_step: Array to store timers (ticks) for this step of the
  * simulation
- * @param timers_log_step: Array to store measured times (already converted from
- * ticks during measurement run)
+ * @param timings_log_step: Array to store measured times (already converted
+ * from ticks during measurement run)
+ * @param timing_ratio_min: Array to store smallest ratio between simulated and
+ * measured timings
+ * @param timing_ratio_max: Array to store biggest ratio between simulated and
+ * measured timings
  */
 __attribute__((always_inline)) INLINE static void replay_event(
     const struct packing_data* event, struct part_arrays* part_data,
     struct gpu_offload_data* buf_dens, struct gpu_offload_data* buf_grad,
     struct gpu_offload_data* buf_forc, const struct engine* e,
-    ticks timers_step[timer_count], double timings_log_step[timer_count]) {
+    ticks timers_step[timer_count], double timings_log_step[timer_count],
+    double timing_ratio_min[timer_count], double timing_ratio_max[timer_count]
+    ) {
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
@@ -53,23 +59,47 @@ __attribute__((always_inline)) INLINE static void replay_event(
   if (type == task_type_pack) {
 
     if (subtype == task_subtype_density) {
-      TIMER_TIC;
+
+      const ticks tic = getticks();
       gpu_pack_part_density(&ci, buf_dens->parts_send_d, event->pack_index,
                             shift, 0, 0);
-      TIMER_TOC_LOCATION(timer_density_pack, timers_step);
+      const ticks toc = getticks();
+
+      atomic_add(&timers_step[timer_density_pack], toc-tic);
       atomic_add_d(&timings_log_step[timer_density_pack], event->timing);
+
+      const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
+      atomic_min_d(&timing_ratio_min[timer_density_pack], dt);
+      atomic_max_d(&timing_ratio_max[timer_density_pack], dt);
+
     } else if (subtype == task_subtype_gradient) {
-      TIMER_TIC;
+
+      const ticks tic = getticks();
       gpu_pack_part_gradient(&ci, buf_grad->parts_send_g, event->pack_index,
                              shift, 0, 0);
-      TIMER_TOC_LOCATION(timer_gradient_pack, timers_step);
+      const ticks toc = getticks();
+
+      atomic_add(&timers_step[timer_gradient_pack], toc-tic);
       atomic_add_d(&timings_log_step[timer_gradient_pack], event->timing);
+
+      const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
+      atomic_min_d(&timing_ratio_min[timer_gradient_pack], dt);
+      atomic_max_d(&timing_ratio_max[timer_gradient_pack], dt);
+
     } else if (subtype == task_subtype_force) {
-      TIMER_TIC;
-      gpu_pack_part_force(&ci, buf_grad->parts_send_f, event->pack_index, shift,
+
+      const ticks tic = getticks();
+      gpu_pack_part_force(&ci, buf_forc->parts_send_f, event->pack_index, shift,
                           0, 0);
-      TIMER_TOC_LOCATION(timer_force_pack, timers_step);
+      const ticks toc = getticks();
+
+      atomic_add(&timers_step[timer_force_pack], toc-tic);
       atomic_add_d(&timings_log_step[timer_force_pack], event->timing);
+
+      const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
+      atomic_min_d(&timing_ratio_min[timer_force_pack], dt);
+      atomic_max_d(&timing_ratio_max[timer_force_pack], dt);
+
     }
 
 #ifdef SWIFT_DEBUG_CHECKS
@@ -80,23 +110,47 @@ __attribute__((always_inline)) INLINE static void replay_event(
   } else if (type == task_type_unpack) {
 
     if (subtype == task_subtype_density) {
-      TIMER_TIC;
+
+      const ticks tic = getticks();
       gpu_unpack_part_density(&ci, buf_dens->parts_recv_d, event->pack_index,
                               event->count, e);
-      TIMER_TOC_LOCATION(timer_density_unpack, timers_step);
+      const ticks toc = getticks();
+
+      atomic_add(&timers_step[timer_density_unpack], toc-tic);
       atomic_add_d(&timings_log_step[timer_density_unpack], event->timing);
+
+      const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
+      atomic_min_d(&timing_ratio_min[timer_density_unpack], dt);
+      atomic_max_d(&timing_ratio_max[timer_density_unpack], dt);
+
     } else if (subtype == task_subtype_gradient) {
-      TIMER_TIC;
-      gpu_unpack_part_gradient(&ci, buf_dens->parts_recv_g, event->pack_index,
+
+      const ticks tic = getticks();
+      gpu_unpack_part_gradient(&ci, buf_grad->parts_recv_g, event->pack_index,
                                event->count, e);
-      TIMER_TOC_LOCATION(timer_gradient_unpack, timers_step);
+      const ticks toc = getticks();
+
+      atomic_add(&timers_step[timer_gradient_unpack], toc-tic);
       atomic_add_d(&timings_log_step[timer_gradient_unpack], event->timing);
+
+      const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
+      atomic_min_d(&timing_ratio_min[timer_gradient_unpack], dt);
+      atomic_max_d(&timing_ratio_max[timer_gradient_unpack], dt);
+
     } else if (subtype == task_subtype_force) {
-      TIMER_TIC;
-      gpu_unpack_part_force(&ci, buf_dens->parts_recv_f, event->pack_index,
+
+      const ticks tic = getticks();
+      gpu_unpack_part_force(&ci, buf_forc->parts_recv_f, event->pack_index,
                             event->count, e);
-      TIMER_TOC_LOCATION(timer_force_unpack, timers_step);
+      const ticks toc = getticks();
+
+      atomic_add(&timers_step[timer_force_unpack], toc-tic);
       atomic_add_d(&timings_log_step[timer_force_unpack], event->timing);
+
+      const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
+      atomic_min_d(&timing_ratio_min[timer_force_unpack], dt);
+      atomic_max_d(&timing_ratio_max[timer_force_unpack], dt);
+
     }
 #ifdef SWIFT_DEBUG_CHECKS
     else {
@@ -139,6 +193,12 @@ void run_simulation(struct parameters* params) {
   /* Total timings of the logged events (summed over all steps) */
   double timing_log_full[timer_count];
   timing_reset_time(timing_log_full);
+
+  /* Get min/max ratios of individual packing/unpackings too */
+  double timing_ratio_min[timer_count];
+  for (int i = 0; i < timer_count; i++) timing_ratio_min[i] = DBL_MAX;
+  double timing_ratio_max[timer_count];
+  for (int i = 0; i < timer_count; i++) timing_ratio_max[i] = -1.;
 
   /* Pretend we have an engine which has times initialised such that all
    * particles are active all the time. */
@@ -211,10 +271,11 @@ void run_simulation(struct parameters* params) {
       struct packing_data event = packing_sequence[i];
 
       replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
-                   &gpu_buf_forc, &e, timers_step, timing_log_step);
+                   &gpu_buf_forc, &e, timers_step, timing_log_step,
+                   timing_ratio_min, timing_ratio_max);
     }
 
-    if (params->print_each_step) print_timers(timers_step, timing_log_step);
+    if (params->print_each_step) print_timers(timers_step, timing_log_step, timing_ratio_min, timing_ratio_max);
     free(packing_sequence);
 
     // omp single
@@ -236,5 +297,5 @@ void run_simulation(struct parameters* params) {
   clear_parts(&part_data);
 
   message("Finished simulation.");
-  print_timers(timers_full, timing_log_full);
+  print_timers(timers_full, timing_log_full, timing_ratio_min, timing_ratio_max);
 }
