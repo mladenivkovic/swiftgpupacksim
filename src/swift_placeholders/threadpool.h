@@ -1,10 +1,10 @@
 #ifndef THREADPOOL_H
 #define THREADPOOL_H
 
-#include "barrier.h"
-
 #include <pthread.h>
 #include <stddef.h>
+
+#include "barrier.h"
 
 /* Function type for mappings. */
 typedef void (*threadpool_map_function)(void *map_data, int num_elements,
