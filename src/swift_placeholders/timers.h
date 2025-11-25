@@ -38,12 +38,12 @@
  **/
 enum {
   timer_none = 0,
-  timer_density_self,
-  timer_density_pair,
-  timer_gradient_self,
-  timer_gradient_pair,
-  timer_force_self,
-  timer_force_pair,
+  timer_density_pack,
+  timer_density_unpack,
+  timer_gradient_pack,
+  timer_gradient_unpack,
+  timer_force_pack,
+  timer_force_unpack,
   timer_count,
 };
 
