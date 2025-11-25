@@ -91,6 +91,9 @@
 /* Barotropic gas equation of state */
 /* #undef EOS_BAROTROPIC_GAS */
 
+/* Barotropic gas equation of state */
+/* #undef EOS_CONTINUOUS_BAROTROPIC_GAS */
+
 /* Ideal gas equation of state */
 #define EOS_IDEAL_GAS 1
 
@@ -110,7 +113,7 @@
 /* #undef EXTERNAL_POTENTIAL_HERNQUIST */
 
 /* Hernquist external potential following Springel, Di Matteo & Hernquist 2005
- */
+   */
 /* #undef EXTERNAL_POTENTIAL_HERNQUIST_SDMH05 */
 
 /* Isothermal external potential */
@@ -410,7 +413,7 @@
 #define HAVE_PARALLEL_HDF5 1
 
 /* The ParMETIS library is present. */
-#define HAVE_PARMETIS 1
+/* #undef HAVE_PARMETIS */
 
 /* The posix library implements file allocation functions. */
 #define HAVE_POSIX_FALLOCATE 1
@@ -570,7 +573,7 @@
 /* #undef HYDRO_GAMMA_4_3 */
 
 /* Adiabatic index is 5/3 */
-#define HYDRO_GAMMA_5_3 5. / 3.
+#define HYDRO_GAMMA_5_3 5./3.
 
 /* Adiabatic index is 7/5 */
 /* #undef HYDRO_GAMMA_7_5 */
@@ -752,22 +755,10 @@
 /* #undef SWIFT_CELL_GRAPH */
 
 /* Flags passed to configure */
-#define SWIFT_CONFIG_FLAGS                                                     \
-  "--with-parmetis=/home/mivkov/software/spack/opt/spack/linux-icelake/"       \
-  "parmetis-4.0.3-eviqtuzti2n2txavw2rngfsccb23qd43 "                           \
-  "--with-metis=/home/mivkov/software/spack/opt/spack/linux-icelake/"          \
-  "metis-5.1.0-qaawev2dmwyrndn2exuz763mgl3tdrn3 "                              \
-  "--with-gsl=/home/mivkov/software/spack/opt/spack/linux-icelake/"            \
-  "gsl-2.8-iu2hcbkbp2vdjw6vhi5ydc6cx4to6clj "                                  \
-  "--with-fftw=/home/mivkov/software/spack/opt/spack/linux-icelake/"           \
-  "fftw-3.3.10-xeuwcpcqcaaugjundzolbkn5xma6ck3q "                              \
-  "--with-hdf5=/home/mivkov/software/spack/opt/spack/linux-icelake/"           \
-  "hdf5-1.14.5-vxt5asrjjqc5anx4mdrqxvxdy3iyxz4m/bin/h5cc "                     \
-  "--with-cuda=/opt/cuda --enable-option-checking --enable-compiler-warnings " \
-  "--enable-debug --enable-debugging-checks"
+#define SWIFT_CONFIG_FLAGS "--with-metis=/home/mivkov/software/spack/opt/spack/linux-icelake/metis-5.1.0-lwdcrfxtlbxpwnleu5x6isbhj2ksc3iv --with-gsl=/home/mivkov/software/spack/opt/spack/linux-icelake/gsl-2.8-ykkerqgldwnlycqj2xsaowdokadqfu2f --with-fftw=/home/mivkov/software/spack/opt/spack/linux-icelake/fftw-3.3.10-3pm2z77mkd7u2cn7s2myloumscawvtxu --with-hdf5=/home/mivkov/software/spack/opt/spack/linux-icelake/hdf5-1.14.5-ohc3scokdackrwjfjosyijcq3duglx4m/bin/h5cc --with-cuda=/opt/cuda --enable-option-checking --disable-hand-vec"
 
 /* Enable expensive debugging */
-#define SWIFT_DEBUG_CHECKS 1
+/* #undef SWIFT_DEBUG_CHECKS */
 
 /* Enable task debugging */
 /* #undef SWIFT_DEBUG_TASKS */
@@ -776,7 +767,7 @@
 /* #undef SWIFT_DEBUG_THREADPOOL */
 
 /* Enable developer code options */
-#define SWIFT_DEVELOP_MODE 1
+/* #undef SWIFT_DEVELOP_MODE */
 
 /* Enable dumper thread */
 /* #undef SWIFT_DUMPER_THREAD */
@@ -856,24 +847,24 @@
 
 /* Enable extensions on AIX, Interix, z/OS.  */
 #ifndef _ALL_SOURCE
-#define _ALL_SOURCE 1
+# define _ALL_SOURCE 1
 #endif
 /* Enable general extensions on macOS.  */
 #ifndef _DARWIN_C_SOURCE
-#define _DARWIN_C_SOURCE 1
+# define _DARWIN_C_SOURCE 1
 #endif
 /* Enable general extensions on Solaris.  */
 #ifndef __EXTENSIONS__
-#define __EXTENSIONS__ 1
+# define __EXTENSIONS__ 1
 #endif
 /* Enable GNU extensions on systems that have them.  */
 #ifndef _GNU_SOURCE
-#define _GNU_SOURCE 1
+# define _GNU_SOURCE 1
 #endif
 /* Enable X/Open compliant socket functions that do not require linking
    with -lxnet on HP-UX 11.11.  */
 #ifndef _HPUX_ALT_XOPEN_SOCKET_API
-#define _HPUX_ALT_XOPEN_SOCKET_API 1
+# define _HPUX_ALT_XOPEN_SOCKET_API 1
 #endif
 /* Identify the host operating system as Minix.
    This macro does not affect the system headers' behavior.
@@ -884,12 +875,12 @@
 /* Enable general extensions on NetBSD.
    Enable NetBSD compatibility extensions on Minix.  */
 #ifndef _NETBSD_SOURCE
-#define _NETBSD_SOURCE 1
+# define _NETBSD_SOURCE 1
 #endif
 /* Enable OpenBSD compatibility extensions on NetBSD.
    Oddly enough, this does nothing on OpenBSD.  */
 #ifndef _OPENBSD_SOURCE
-#define _OPENBSD_SOURCE 1
+# define _OPENBSD_SOURCE 1
 #endif
 /* Define to 1 if needed for POSIX-compatible behavior.  */
 #ifndef _POSIX_SOURCE
@@ -901,43 +892,43 @@
 #endif
 /* Enable POSIX-compatible threading on Solaris.  */
 #ifndef _POSIX_PTHREAD_SEMANTICS
-#define _POSIX_PTHREAD_SEMANTICS 1
+# define _POSIX_PTHREAD_SEMANTICS 1
 #endif
 /* Enable extensions specified by ISO/IEC TS 18661-5:2014.  */
 #ifndef __STDC_WANT_IEC_60559_ATTRIBS_EXT__
-#define __STDC_WANT_IEC_60559_ATTRIBS_EXT__ 1
+# define __STDC_WANT_IEC_60559_ATTRIBS_EXT__ 1
 #endif
 /* Enable extensions specified by ISO/IEC TS 18661-1:2014.  */
 #ifndef __STDC_WANT_IEC_60559_BFP_EXT__
-#define __STDC_WANT_IEC_60559_BFP_EXT__ 1
+# define __STDC_WANT_IEC_60559_BFP_EXT__ 1
 #endif
 /* Enable extensions specified by ISO/IEC TS 18661-2:2015.  */
 #ifndef __STDC_WANT_IEC_60559_DFP_EXT__
-#define __STDC_WANT_IEC_60559_DFP_EXT__ 1
+# define __STDC_WANT_IEC_60559_DFP_EXT__ 1
 #endif
 /* Enable extensions specified by C23 Annex F.  */
 #ifndef __STDC_WANT_IEC_60559_EXT__
-#define __STDC_WANT_IEC_60559_EXT__ 1
+# define __STDC_WANT_IEC_60559_EXT__ 1
 #endif
 /* Enable extensions specified by ISO/IEC TS 18661-4:2015.  */
 #ifndef __STDC_WANT_IEC_60559_FUNCS_EXT__
-#define __STDC_WANT_IEC_60559_FUNCS_EXT__ 1
+# define __STDC_WANT_IEC_60559_FUNCS_EXT__ 1
 #endif
 /* Enable extensions specified by C23 Annex H and ISO/IEC TS 18661-3:2015.  */
 #ifndef __STDC_WANT_IEC_60559_TYPES_EXT__
-#define __STDC_WANT_IEC_60559_TYPES_EXT__ 1
+# define __STDC_WANT_IEC_60559_TYPES_EXT__ 1
 #endif
 /* Enable extensions specified by ISO/IEC TR 24731-2:2010.  */
 #ifndef __STDC_WANT_LIB_EXT2__
-#define __STDC_WANT_LIB_EXT2__ 1
+# define __STDC_WANT_LIB_EXT2__ 1
 #endif
 /* Enable extensions specified by ISO/IEC 24747:2009.  */
 #ifndef __STDC_WANT_MATH_SPEC_FUNCS__
-#define __STDC_WANT_MATH_SPEC_FUNCS__ 1
+# define __STDC_WANT_MATH_SPEC_FUNCS__ 1
 #endif
 /* Enable extensions on HP NonStop.  */
 #ifndef _TANDEM_SOURCE
-#define _TANDEM_SOURCE 1
+# define _TANDEM_SOURCE 1
 #endif
 /* Enable X/Open extensions.  Define to 500 only if necessary
    to make mbstate_t available.  */
@@ -977,7 +968,7 @@
 /* #undef WITH_STAND_ALONE_FOF */
 
 /* Enable hand-written vectorization */
-#define WITH_VECTORIZATION 1
+/* #undef WITH_VECTORIZATION */
 
 /* Hack for min() and max() using g++ 6+ */
 #define _GLIBCXX_INCLUDE_NEXT_C_HEADERS 1
@@ -1004,6 +995,6 @@
    in the previous line.  This workaround can be removed once
    we assume Oracle Developer Studio 12.5 (2016) or later.  */
 #if defined __SUNPRO_CC && !defined __RESTRICT && !defined __restrict__
-#define _Restrict
-#define __restrict__
+# define _Restrict
+# define __restrict__
 #endif
