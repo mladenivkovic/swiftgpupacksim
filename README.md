@@ -10,6 +10,7 @@ find a better/optimal solution.
 
 The logging/recording of tasks is not included in this repository. For that
 check out the [`log_packing` branch of the GPU repository](https://github.com/abouzied-nasar/SWIFT/tree/log_packing).
+See also the logging format specification in `data/REAMDE.md`.
 
 Some collected data should be available in the `data/` directory of this
 repository.
@@ -73,3 +74,5 @@ The purpose of this mini-benchmark is to try out various particle memory layout
 realisations. To do so, we can generate different realisations of particle
 structs using `python 3` and the `jinja2` templating engine. Consult the
 `py/README.md` for instructions how to use the scripts.
+
+

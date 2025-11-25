@@ -1,0 +1,722 @@
+diff --git a/src/engine.c b/src/engine.c
+index 3efeda6e56..1055f32c56 100644
+--- a/src/engine.c
++++ b/src/engine.c
+@@ -2939,6 +2939,7 @@ int engine_step(struct engine *e) {
+     scheduler_write_dependencies(&e->sched, e->verbose, e->step);
+     scheduler_write_cell_dependencies(&e->sched, e->verbose, e->step);
+   }
++  scheduler_log_run_params(&e->sched, e->nr_threads, e->s->nr_parts, e->step);
+ 
+   /* Write the task levels */
+   if (e->sched.frequency_task_levels != 0 &&
+diff --git a/src/logging_struct.h b/src/logging_struct.h
+new file mode 100644
+index 0000000000..29ee05f8b9
+--- /dev/null
++++ b/src/logging_struct.h
+@@ -0,0 +1,36 @@
++#pragma once
++
++/* Struct to hold data for binary output dump. */
++
++#include <stdio.h>
++
++#include "part.h"
++
++struct logging_entry {
++
++  /*! subtype: d (density), g (gradient), or f (force) */
++  char subtype;
++
++  /*! pack_or_unpack: p for packing operation, u for unpacking */
++  char pack_or_unpack;
++
++  /*! offset of c->hydro.parts array in global parts: space->parts  */
++  long offset;
++
++  /*! nr of particles in the cell */
++  int count;
++
++  /*! timing of operation */
++  double time;
++};
++
++
++struct logging_data {
++
++  volatile int count;
++
++  struct logging_entry* entries;
++
++  struct part* all_parts;
++};
++
+diff --git a/src/runner.h b/src/runner.h
+index cf21eac280..9412e47e08 100644
+--- a/src/runner.h
++++ b/src/runner.h
+@@ -29,6 +29,7 @@
+ /* Local headers. */
+ #include "cache.h"
+ #include "gravity_cache.h"
++#include "logging_struct.h"
+ 
+ struct cell;
+ struct engine;
+diff --git a/src/runner_doiact_functions_hydro_gpu.h b/src/runner_doiact_functions_hydro_gpu.h
+index 53385f98f2..01075fdd83 100644
+--- a/src/runner_doiact_functions_hydro_gpu.h
++++ b/src/runner_doiact_functions_hydro_gpu.h
+@@ -482,7 +482,8 @@ __attribute__((always_inline)) INLINE static void runner_gpu_launch_force(
+ __attribute__((always_inline)) INLINE static void runner_gpu_pack_and_launch(
+     const struct runner *r, struct scheduler *s,
+     struct gpu_offload_data *restrict buf, struct task *t, cudaStream_t *stream,
+-    const float d_a, const float d_H) {
++    const float d_a, const float d_H,
++    struct logging_data* logdata) {
+ 
+   /* Grab handles */
+   struct gpu_pack_metadata *md = &buf->md;
+@@ -638,11 +639,11 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack_and_launch(
+       /* Pack the particle data */
+       /* Note that this increments md->count_parts and md->n_leaves_packed */
+       if (t->subtype == task_subtype_gpu_density) {
+-        runner_gpu_pack_density(r, buf, cii, cjj);
++        runner_gpu_pack_density(r, buf, cii, cjj, logdata);
+       } else if (t->subtype == task_subtype_gpu_gradient) {
+-        runner_gpu_pack_gradient(r, buf, cii, cjj);
++        runner_gpu_pack_gradient(r, buf, cii, cjj, logdata);
+       } else if (t->subtype == task_subtype_gpu_force) {
+-        runner_gpu_pack_force(r, buf, cii, cjj);
++        runner_gpu_pack_force(r, buf, cii, cjj, logdata);
+       }
+ #ifdef SWIFT_DEBUG_CHECKS
+       else {
+@@ -680,7 +681,7 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack_and_launch(
+         runner_gpu_launch_density(r, buf, stream, d_a, d_H);
+ 
+         /* Unpack the results into CPU memory */
+-        runner_gpu_unpack_density(r, s, buf, npacked);
++        runner_gpu_unpack_density(r, s, buf, npacked, logdata);
+ 
+       } else if (t->subtype == task_subtype_gpu_gradient) {
+ 
+@@ -688,7 +689,7 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack_and_launch(
+         runner_gpu_launch_gradient(r, buf, stream, d_a, d_H);
+ 
+         /* Unpack the results into CPU memory */
+-        runner_gpu_unpack_gradient(r, s, buf, npacked);
++        runner_gpu_unpack_gradient(r, s, buf, npacked, logdata);
+ 
+       } else if (t->subtype == task_subtype_gpu_force) {
+ 
+@@ -696,7 +697,7 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack_and_launch(
+         runner_gpu_launch_force(r, buf, stream, d_a, d_H);
+ 
+         /* Unpack the results into CPU memory */
+-        runner_dopair_gpu_unpack_force(r, s, buf, npacked);
++        runner_dopair_gpu_unpack_force(r, s, buf, npacked, logdata);
+ 
+       }
+ #ifdef SWIFT_DEBUG_CHECKS
+@@ -793,7 +794,8 @@ static void runner_doself_gpu_density(const struct runner *r,
+                                       struct scheduler *s,
+                                       struct gpu_offload_data *buf,
+                                       struct task *t, cudaStream_t *stream,
+-                                      const float d_a, const float d_H) {
++                                      const float d_a, const float d_H,
++                                      struct logging_data* logdata) {
+ 
+   /* Reset leaf cell counter for this task before we recurse down */
+   buf->md.task_n_leaves = 0;
+@@ -811,7 +813,7 @@ static void runner_doself_gpu_density(const struct runner *r,
+   if (count < 1) buf->md.launch_leftovers = 1;
+ 
+   /* pack the data and run, if enough data has been gathered */
+-  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H);
++  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H, logdata);
+ }
+ 
+ /**
+@@ -829,7 +831,8 @@ static void runner_doself_gpu_gradient(const struct runner *r,
+                                        struct scheduler *s,
+                                        struct gpu_offload_data *buf,
+                                        struct task *t, cudaStream_t *stream,
+-                                       const float d_a, const float d_H) {
++                                       const float d_a, const float d_H,
++                                       struct logging_data* logdata) {
+ 
+   /* Reset leaf cell counter for this task before we recurse down */
+   buf->md.task_n_leaves = 0;
+@@ -847,7 +850,7 @@ static void runner_doself_gpu_gradient(const struct runner *r,
+   if (count < 1) buf->md.launch_leftovers = 1;
+ 
+   /* pack the data and run, if enough data has been gathered */
+-  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H);
++  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H, logdata);
+ }
+ 
+ /**
+@@ -864,7 +867,8 @@ static void runner_doself_gpu_gradient(const struct runner *r,
+ static void runner_doself_gpu_force(const struct runner *r, struct scheduler *s,
+                                     struct gpu_offload_data *buf,
+                                     struct task *t, cudaStream_t *stream,
+-                                    const float d_a, const float d_H) {
++                                    const float d_a, const float d_H,
++                                    struct logging_data* logdata) {
+ 
+   /* Reset leaf cell counter for this task before we recurse down */
+   buf->md.task_n_leaves = 0;
+@@ -880,7 +884,7 @@ static void runner_doself_gpu_force(const struct runner *r, struct scheduler *s,
+       atomic_dec(&s->queues[qid].gpu_tasks_left[gpu_task_type_hydro_force]) - 1;
+   if (count < 1) buf->md.launch_leftovers = 1;
+   /* pack the data and run, if enough data has been gathered */
+-  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H);
++  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H, logdata);
+ }
+ 
+ /**
+@@ -896,12 +900,13 @@ static void runner_doself_gpu_force(const struct runner *r, struct scheduler *s,
+  * @param d_a the current expansion scale factor
+  * @param d_H the current Hubble constant
+  */
+-static void runner_dopair_gpu_density(const struct runner *r,
++static void runner_dopair_gpu_density(struct runner *r,
+                                       struct scheduler *s, struct cell *ci,
+                                       struct cell *cj,
+                                       struct gpu_offload_data *restrict buf,
+                                       struct task *t, cudaStream_t *stream,
+-                                      const float d_a, const float d_H) {
++                                      const float d_a, const float d_H,
++                                      struct logging_data* logdata) {
+ 
+   /* Reset leaf cell counter for this task before we recurse down */
+   buf->md.task_n_leaves = 0;
+@@ -919,7 +924,7 @@ static void runner_dopair_gpu_density(const struct runner *r,
+   if (count < 1) buf->md.launch_leftovers = 1;
+ 
+   /* pack the data and run, if enough data has been gathered */
+-  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H);
++  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H, logdata);
+ }
+ 
+ /**
+@@ -935,12 +940,13 @@ static void runner_dopair_gpu_density(const struct runner *r,
+  * @param d_a the current expansion scale factor
+  * @param d_H the current Hubble constant
+  */
+-static void runner_dopair_gpu_gradient(const struct runner *r,
++static void runner_dopair_gpu_gradient(struct runner *r,
+                                        struct scheduler *s, struct cell *ci,
+                                        struct cell *cj,
+                                        struct gpu_offload_data *restrict buf,
+                                        struct task *t, cudaStream_t *stream,
+-                                       const float d_a, const float d_H) {
++                                       const float d_a, const float d_H,
++                                       struct logging_data* logdata) {
+ 
+   /* Reset leaf cell counter for this task before we recurse down */
+   buf->md.task_n_leaves = 0;
+@@ -958,7 +964,7 @@ static void runner_dopair_gpu_gradient(const struct runner *r,
+   if (count < 1) buf->md.launch_leftovers = 1;
+ 
+   /* pack the data and run, if enough data has been gathered */
+-  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H);
++  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H, logdata);
+ }
+ 
+ /**
+@@ -974,11 +980,12 @@ static void runner_dopair_gpu_gradient(const struct runner *r,
+  * @param d_a the current expansion scale factor
+  * @param d_H the current Hubble constant
+  */
+-static void runner_dopair_gpu_force(const struct runner *r, struct scheduler *s,
++static void runner_dopair_gpu_force(struct runner *r, struct scheduler *s,
+                                     struct cell *ci, struct cell *cj,
+                                     struct gpu_offload_data *restrict buf,
+                                     struct task *t, cudaStream_t *stream,
+-                                    const float d_a, const float d_H) {
++                                    const float d_a, const float d_H,
++                                    struct logging_data* logdata) {
+ 
+   /* Reset leaf cell counter for this task before we recurse down */
+   buf->md.task_n_leaves = 0;
+@@ -995,7 +1002,7 @@ static void runner_dopair_gpu_force(const struct runner *r, struct scheduler *s,
+   if (count < 1) buf->md.launch_leftovers = 1;
+ 
+   /* pack the data and run, if enough data has been gathered */
+-  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H);
++  runner_gpu_pack_and_launch(r, s, buf, t, stream, d_a, d_H, logdata);
+ }
+ 
+ #ifdef __cplusplus
+diff --git a/src/runner_gpu_pack_functions.h b/src/runner_gpu_pack_functions.h
+index a84e142d75..b576a52575 100644
+--- a/src/runner_gpu_pack_functions.h
++++ b/src/runner_gpu_pack_functions.h
+@@ -27,6 +27,8 @@
+ #include "runner.h"
+ #include "timers.h"
+ 
++#include "logging_struct.h"
++
+ /* Temporary warning during dev works. */
+ #if !(defined(HAVE_CUDA) || defined(HAVE_HIP))
+ #pragma warning "Don't have CUDA nor HIP"
+@@ -55,7 +57,8 @@
+ __attribute__((always_inline)) INLINE static void runner_gpu_pack(
+     const struct runner *r, struct gpu_offload_data *restrict buf,
+     const struct cell *ci, const struct cell *cj,
+-    const enum task_subtypes task_subtype) {
++    const enum task_subtypes task_subtype,
++    struct logging_data* logdata) {
+ 
+   /* Grab handles */
+   const struct engine *e = r->e;
+@@ -101,6 +104,7 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack(
+     const double shift[3] = {0.0, 0.0, 0.0};
+ 
+     /* Pack the data into the CPU-side buffers for offloading. */
++    ticks tic_start = getticks();
+     if (task_subtype == task_subtype_gpu_density) {
+       gpu_pack_part_density(ci, buf->parts_send_d, pack_ind, shift, cis, cie);
+     } else if (task_subtype == task_subtype_gpu_gradient) {
+@@ -113,6 +117,19 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack(
+       error("Unknown task subtype %s", subtaskID_names[task_subtype]);
+     }
+ #endif
++    ticks tic_end = getticks();
++
++    char subtype = '0';
++    if (task_subtype == task_subtype_gpu_density) {
++      subtype = 'd';
++    } else if (task_subtype == task_subtype_gpu_gradient) {
++      subtype = 'g';
++    } else if (task_subtype == task_subtype_gpu_force) {
++      subtype = 'f';
++    }
++    struct logging_entry ent = {subtype, 'p', ci->hydro.parts - logdata->all_parts, ci->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++    logdata->entries[logdata->count] = ent;
++    logdata->count++;
+ 
+   } else { /* This is a pair interaction. */
+ 
+@@ -136,6 +153,7 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack(
+     const int cje = pack_ind + count_ci + count_cj;
+ 
+     /* Pack cell i */
++    ticks tic_start = getticks();
+     if (task_subtype == task_subtype_gpu_density) {
+       gpu_pack_part_density(ci, buf->parts_send_d, pack_ind, shift_i, cjs, cje);
+     } else if (task_subtype == task_subtype_gpu_gradient) {
+@@ -149,6 +167,20 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack(
+       error("Unknown task subtype %s", subtaskID_names[task_subtype]);
+     }
+ #endif
++    ticks tic_end = getticks();
++
++    char subtype2 = '0';
++    if (task_subtype == task_subtype_gpu_density) {
++      subtype2 = 'd';
++    } else if (task_subtype == task_subtype_gpu_gradient) {
++      subtype2 = 'g';
++    } else if (task_subtype == task_subtype_gpu_force) {
++      subtype2 = 'f';
++    }
++    struct logging_entry ent2 = {subtype2, 'p', ci->hydro.parts - logdata->all_parts, ci->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++    logdata->entries[logdata->count] = ent2;
++    logdata->count++;
++
+ 
+     /* Update the packed particles counter */
+     /* Note: md->count_parts will be increased later */
+@@ -157,6 +189,7 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack(
+     /* Do the same for cj */
+     const double shift_j[3] = {cj->loc[0], cj->loc[1], cj->loc[2]};
+ 
++    tic_start = getticks();
+     if (task_subtype == task_subtype_gpu_density) {
+       gpu_pack_part_density(cj, buf->parts_send_d, pack_ind, shift_j, cis, cie);
+     } else if (task_subtype == task_subtype_gpu_gradient) {
+@@ -170,6 +203,19 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack(
+       error("Unknown task subtype %s", subtaskID_names[task_subtype]);
+     }
+ #endif
++    tic_end = getticks();
++
++    char subtype = '0';
++    if (task_subtype == task_subtype_gpu_density) {
++      subtype = 'd';
++    } else if (task_subtype == task_subtype_gpu_gradient) {
++      subtype = 'g';
++    } else if (task_subtype == task_subtype_gpu_force) {
++      subtype = 'f';
++    }
++    struct logging_entry ent = {subtype, 'p', cj->hydro.parts - logdata->all_parts, cj->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++    logdata->entries[logdata->count] = ent;
++    logdata->count++;
+   }
+ 
+   /* Now finish up the bookkeeping. */
+@@ -215,7 +261,8 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack(
+ __attribute__((always_inline)) INLINE static void runner_gpu_unpack(
+     const struct runner *r, struct scheduler *s,
+     struct gpu_offload_data *restrict buf, const int npacked,
+-    const enum task_subtypes task_subtype) {
++    const enum task_subtypes task_subtype,
++    struct logging_data* logdata) {
+ 
+   /* Grab handles */
+   struct gpu_pack_metadata *md = &buf->md;
+@@ -284,6 +331,7 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack(
+ 
+         /* Get the particle data into CPU-side buffers. */
+         if (cell_is_active_hydro(cii, e)) {
++          ticks tic_start = getticks();
+           if (task_subtype == task_subtype_gpu_density) {
+             gpu_unpack_part_density(cii, buf->parts_recv_d, unpack_index,
+                                     count_ci, e);
+@@ -299,12 +347,27 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack(
+             error("Unknown task subtype %s", subtaskID_names[task_subtype]);
+           }
+ #endif
++          ticks tic_end = getticks();
++
++          char subtype = '0';
++          if (task_subtype == task_subtype_gpu_density) {
++            subtype = 'd';
++          } else if (task_subtype == task_subtype_gpu_gradient) {
++            subtype = 'g';
++          } else if (task_subtype == task_subtype_gpu_force) {
++            subtype = 'f';
++          }
++          struct logging_entry ent = {subtype, 'u', cii->hydro.parts - logdata->all_parts, cii->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++          logdata->entries[logdata->count] = ent;
++          logdata->count++;
++
+           unpack_index += count_ci;
+         }
+ 
+         if (cii != cjj) {
+           /* We have a pair interaction. Get the other cell too. */
+           if (cell_is_active_hydro(cjj, e)) {
++            ticks tic_start = getticks();
+             if (task_subtype == task_subtype_gpu_density) {
+               gpu_unpack_part_density(cjj, buf->parts_recv_d, unpack_index,
+                                       count_cj, e);
+@@ -320,8 +383,22 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack(
+               error("Unknown task subtype %s", subtaskID_names[task_subtype]);
+             }
+ #endif
++            ticks tic_end = getticks();
++
++            char subtype = '0';
++            if (task_subtype == task_subtype_gpu_density) {
++              subtype = 'd';
++            } else if (task_subtype == task_subtype_gpu_gradient) {
++              subtype = 'g';
++            } else if (task_subtype == task_subtype_gpu_force) {
++              subtype = 'f';
++            }
++            struct logging_entry ent = {subtype, 'u', cjj->hydro.parts - logdata->all_parts, cjj->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++            logdata->entries[logdata->count] = ent;
++            logdata->count++;
++
++            unpack_index += count_cj;
+           }
+-          unpack_index += count_cj;
+         }
+ 
+       } /* Loop over all leaves of task */
+@@ -364,11 +441,12 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack(
+  */
+ __attribute__((always_inline)) INLINE static void runner_gpu_pack_density(
+     const struct runner *r, struct gpu_offload_data *restrict buf,
+-    const struct cell *ci, const struct cell *cj) {
++    const struct cell *ci, const struct cell *cj,
++    struct logging_data* logdata) {
+ 
+   TIMER_TIC;
+ 
+-  runner_gpu_pack(r, buf, ci, cj, task_subtype_gpu_density);
++  runner_gpu_pack(r, buf, ci, cj, task_subtype_gpu_density, logdata);
+ 
+   TIMER_TOC(timer_gpu_pack_d);
+ }
+@@ -378,11 +456,12 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack_density(
+  */
+ __attribute__((always_inline)) INLINE static void runner_gpu_pack_gradient(
+     const struct runner *r, struct gpu_offload_data *restrict buf,
+-    const struct cell *ci, const struct cell *cj) {
++    const struct cell *ci, const struct cell *cj,
++    struct logging_data* logdata) {
+ 
+   TIMER_TIC;
+ 
+-  runner_gpu_pack(r, buf, ci, cj, task_subtype_gpu_gradient);
++  runner_gpu_pack(r, buf, ci, cj, task_subtype_gpu_gradient, logdata);
+ 
+   TIMER_TOC(timer_gpu_pack_g);
+ }
+@@ -392,11 +471,12 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack_gradient(
+  */
+ __attribute__((always_inline)) INLINE static void runner_gpu_pack_force(
+     const struct runner *r, struct gpu_offload_data *restrict buf,
+-    const struct cell *ci, const struct cell *cj) {
++    const struct cell *ci, const struct cell *cj,
++    struct logging_data* logdata) {
+ 
+   TIMER_TIC;
+ 
+-  runner_gpu_pack(r, buf, ci, cj, task_subtype_gpu_force);
++  runner_gpu_pack(r, buf, ci, cj, task_subtype_gpu_force, logdata);
+ 
+   TIMER_TOC(timer_gpu_pack_f);
+ }
+@@ -413,11 +493,12 @@ __attribute__((always_inline)) INLINE static void runner_gpu_pack_force(
+  */
+ __attribute__((always_inline)) INLINE static void runner_gpu_unpack_density(
+     const struct runner *r, struct scheduler *s,
+-    struct gpu_offload_data *restrict buf, const int npacked) {
++    struct gpu_offload_data *restrict buf, const int npacked,
++    struct logging_data* logdata) {
+ 
+   TIMER_TIC;
+ 
+-  runner_gpu_unpack(r, s, buf, npacked, task_subtype_gpu_density);
++  runner_gpu_unpack(r, s, buf, npacked, task_subtype_gpu_density, logdata);
+ 
+   TIMER_TOC(timer_gpu_unpack_d);
+ }
+@@ -434,11 +515,12 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack_density(
+  */
+ __attribute__((always_inline)) INLINE static void runner_gpu_unpack_gradient(
+     const struct runner *r, struct scheduler *s,
+-    struct gpu_offload_data *restrict buf, const int npacked) {
++    struct gpu_offload_data *restrict buf, const int npacked,
++    struct logging_data* logdata) {
+ 
+   TIMER_TIC;
+ 
+-  runner_gpu_unpack(r, s, buf, npacked, task_subtype_gpu_gradient);
++  runner_gpu_unpack(r, s, buf, npacked, task_subtype_gpu_gradient, logdata);
+ 
+   TIMER_TOC(timer_gpu_unpack_g);
+ }
+@@ -456,11 +538,12 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack_gradient(
+ __attribute__((always_inline)) INLINE static void
+ runner_dopair_gpu_unpack_force(const struct runner *r, struct scheduler *s,
+                                struct gpu_offload_data *restrict buf,
+-                               const int npacked) {
++                               const int npacked,
++                               struct logging_data* logdata) {
+ 
+   TIMER_TIC;
+ 
+-  runner_gpu_unpack(r, s, buf, npacked, task_subtype_gpu_force);
++  runner_gpu_unpack(r, s, buf, npacked, task_subtype_gpu_force, logdata);
+ 
+   TIMER_TOC(timer_gpu_unpack_f);
+ }
+diff --git a/src/runner_main_cuda.c b/src/runner_main_cuda.c
+index 0affb578b1..73c6bc2fd0 100644
+--- a/src/runner_main_cuda.c
++++ b/src/runner_main_cuda.c
+@@ -46,6 +46,7 @@ extern "C" {
+ #endif
+ 
+ /* This object's header. */
++#include "logging_struct.h"
+ #include "runner.h"
+ 
+ /* Local headers. */
+@@ -169,6 +170,10 @@ void *runner_main_cuda(void *data) {
+   struct engine *e = r->e;
+   struct scheduler *sched = &e->sched;
+ 
++  struct space *space = e->s;
++  struct part *all_parts = space->parts;
++
++
+   /* Initialise cuda context for this thread. */
+   gpu_init_thread(e, r->cpuid);
+ 
+@@ -207,6 +212,12 @@ void *runner_main_cuda(void *data) {
+   /* Tell me how much memory we're using. */
+   gpu_print_free_mem(e, r->cpuid);
+ 
++  /* This is just a guess. Increase if necessary. */
++  const int n_logs = 16384;
++  struct logging_data logdata;
++  logdata.count = 0;
++  logdata.entries = malloc(2 * n_logs * sizeof(struct logging_entry));
++
+   /* Main loop. */
+   while (1) {
+ 
+@@ -216,6 +227,25 @@ void *runner_main_cuda(void *data) {
+     /* Can we go home yet? */
+     if (e->step_props & engine_step_prop_done) break;
+ 
++    /* Set up logging */
++    char logfname[80];
++    sprintf(logfname, "log_thread%03d_step%03d.dat", r->id, e->step);
++
++    FILE* logfile = fopen(logfname, "w");
++    if (logfile==NULL) error("Error opening pack trace log file");
++
++    fprintf(logfile, "//subtype: d (density), g (gradient), or f (force)\n");
++    fprintf(logfile, "//pack_or_unpack: p for packing operation, u for unpacking\n");
++    fprintf(logfile, "//c_offset: offset of c->hydro.parts array in global parts array\n");
++    fprintf(logfile, "//count: c->hydro.count\n");
++    fprintf(logfile, "//time: Measured time for operation, in [micro s]\n");
++    fprintf(logfile, "//\n");
++    fprintf(logfile, "//subtype,pack_or_unpack,c_offset,count,time\n");
++
++    logdata.count = 0;
++    logdata.all_parts = all_parts;
++
++
+     gpu_data_buffers_init_step(&gpu_buf_dens);
+     gpu_data_buffers_init_step(&gpu_buf_grad);
+     gpu_data_buffers_init_step(&gpu_buf_forc);
+@@ -236,6 +266,16 @@ void *runner_main_cuda(void *data) {
+     /* Loop while there are tasks... */
+     while (1) {
+ 
++      if (logdata.count > 0) {
++        /* Dump raw data */
++        /* fwrite(logdata.entries, sizeof(struct logging_entry), logdata.count, logfile); */
++        for (int i = 0; i < logdata.count; i++){
++          struct logging_entry ent = logdata.entries[i];
++          fprintf(logfile, "%c,%c,%ld,%d,%.3f\n", ent.subtype, ent.pack_or_unpack, ent.offset, ent.count, ent.time * 1e3);
++        }
++        logdata.count = 0;
++      }
++
+       /* Get qid for bookkeeping of remaining enqueued GPU tasks later. */
+       int qid = r->qid;
+       /* If there's no old task, try to get a new one. */
+@@ -295,17 +335,17 @@ void *runner_main_cuda(void *data) {
+           } else if (t->subtype == task_subtype_gpu_density) {
+ #ifdef GPUOFFLOAD_DENSITY
+             runner_doself_gpu_density(r, sched, &gpu_buf_dens, t, stream, d_a,
+-                                      d_H);
++                                      d_H, &logdata);
+ #endif
+           } else if (t->subtype == task_subtype_gpu_gradient) {
+ #ifdef GPUOFFLOAD_GRADIENT
+             runner_doself_gpu_gradient(r, sched, &gpu_buf_grad, t, stream, d_a,
+-                                       d_H);
++                                       d_H, &logdata);
+ #endif
+           } else if (t->subtype == task_subtype_gpu_force) {
+ #ifdef GPUOFFLOAD_FORCE
+             runner_doself_gpu_force(r, sched, &gpu_buf_forc, t, stream, d_a,
+-                                    d_H);
++                                    d_H, &logdata);
+ #endif
+           }
+ #ifdef EXTRA_HYDRO_LOOP
+@@ -374,17 +414,17 @@ void *runner_main_cuda(void *data) {
+           else if (t->subtype == task_subtype_gpu_density) {
+ #ifdef GPUOFFLOAD_DENSITY
+             runner_dopair_gpu_density(r, sched, ci, cj, &gpu_buf_dens, t,
+-                                      stream, d_a, d_H);
++                                      stream, d_a, d_H, &logdata);
+ #endif
+           } else if (t->subtype == task_subtype_gpu_gradient) {
+ #ifdef GPUOFFLOAD_GRADIENT
+             runner_dopair_gpu_gradient(r, sched, ci, cj, &gpu_buf_grad, t,
+-                                       stream, d_a, d_H);
++                                       stream, d_a, d_H, &logdata);
+ #endif
+           } else if (t->subtype == task_subtype_gpu_force) {
+ #ifdef GPUOFFLOAD_FORCE
+             runner_dopair_gpu_force(r, sched, ci, cj, &gpu_buf_forc, t, stream,
+-                                    d_a, d_H);
++                                    d_a, d_H, &logdata);
+ #endif
+           }
+ 
+@@ -739,6 +779,18 @@ void *runner_main_cuda(void *data) {
+         t = scheduler_done(sched, t);
+       }
+     } /* Loop while there are tasks */
++
++    if (logdata.count > 0) {
++     for (int i = 0; i < logdata.count; i++){
++        struct logging_entry ent = logdata.entries[i];
++        fprintf(logfile, "%c,%c,%ld,%d,%.3f\n", ent.subtype, ent.pack_or_unpack, ent.offset, ent.count, ent.time * 1e3);
++      }
++      /* Raw Dump leftover data */
++      /* fwrite(logdata.entries, sizeof(struct logging_entry), logdata.count, logfile); */
++    }
++
++    fclose(logfile);
++
+   } /* main loop. */
+ 
+   /* Release the bytes back into the wilderness */
+@@ -748,6 +800,9 @@ void *runner_main_cuda(void *data) {
+ 
+   for (int i = 0; i < gpu_pack_params.n_bundles; i++)
+     cudaStreamDestroy(stream[i]);
++
++  free(logdata.entries);
++
+   /* Be kind, rewind. */
+   return NULL;
+ }
+diff --git a/src/scheduler.c b/src/scheduler.c
+index 2e97748602..c8c7f1c898 100644
+--- a/src/scheduler.c
++++ b/src/scheduler.c
+@@ -3351,3 +3351,35 @@ void scheduler_report_task_times(const struct scheduler *s,
+   message("took %.3f %s.", clocks_from_ticks(getticks() - tic),
+           clocks_getunit());
+ }
++
++
++/**
++ * Write log of the run parameters for the reproduction.
++ * This should be called every step, even though not strictly necessary.
++ * Instead, I abuse engine->step to tell me the total number of steps
++ * we've written and logged events for.
++ */
++void scheduler_log_run_params(struct scheduler* s, int nr_threads, size_t nr_parts, int nr_steps){
++
++  FILE* outfile = fopen("log_runtime_params.dat", "w");
++  if (outfile == NULL)
++    error("Error opening file");
++
++  fprintf(outfile, "nr_threads: %d\n", nr_threads);
++  fprintf(outfile, "nr_parts: %ld\n", nr_parts);
++  fprintf(outfile, "nr_steps: %d\n\n", nr_steps);
++
++  fprintf(outfile, "git revision: %s\n", git_revision());
++  fprintf(outfile, "git branch: %s\n", git_branch());
++  fprintf(outfile, "git date: %s\n\n", git_date());
++
++  fprintf(outfile, "config. options: %s\n", configuration_options());
++  fprintf(outfile, "Compiler: %s, Version: %s\n", compiler_name(), compiler_version());
++  fprintf(outfile, "CFLAGS  : %s\n\n", compilation_cflags());
++
++  fclose(outfile);
++
++  system("lscpu >> log_runtime_params.dat");
++
++  message("Written simulation parameter log.");
++}
+diff --git a/src/scheduler.h b/src/scheduler.h
+index 92ae934464..4356dc87fc 100644
+--- a/src/scheduler.h
++++ b/src/scheduler.h
+@@ -315,4 +315,6 @@ void scheduler_dump_queues(struct engine *e);
+ void scheduler_report_task_times(const struct scheduler *s,
+                                  const int nr_threads);
+ 
++void scheduler_log_run_params(struct scheduler* s, int nr_threads, size_t nr_parts, int nr_steps);
++
+ #endif /* SWIFT_SCHEDULER_H */
