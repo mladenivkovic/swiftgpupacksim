@@ -9,7 +9,7 @@ this repositody to re-run the same order using varying memory layouts, hoping to
 find a better/optimal solution.
 
 The logging/recording of tasks is not included in this repository. For that
-check out the [`log_packing` branch of the GPU repository](https://github.com/abouzied-nasar/SWIFT/tree/log_packing).
+check out the [`log_packing`branch of the GPU repository](https://github.com/abouzied-nasar/SWIFT/tree/log_packing).
 See also the logging format specification in `data/REAMDE.md`.
 
 Some collected data should be available in the `data/` directory of this
@@ -20,6 +20,16 @@ repository.
 ## Instructions
 
 The experiment run can be created in the `/bin` directory.
+
+Some experiment data (logs of packing/unpacking operations on actual GPU runs)
+are stored in the `data/` directory. However, they are stored via `git-lfs`.
+
+To access them after cloning this repository, use
+
+```
+git lfs fetch --all
+git lfs checkout
+```
 
 There are some pre-defined compilers & flags for different machines and setups
 stored in the `bin/config_*.mk` files. Select the one you like, or add your own,
@@ -32,7 +42,7 @@ Run the compiled `swiftgpupacksim` executable with the path to the data to be
 read in as the only cmdline arg to execute the simulation, e.g.
 
 ```
-./swiftgpupacksim ../data/IntelXeonGold512_64_1thread
+./swiftgpupacksim ../data/IntelXeonGold512_Gresho64_1thread
 ```
 
 
