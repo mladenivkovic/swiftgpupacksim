@@ -12,10 +12,10 @@ index 3efeda6e56..1055f32c56 100644
    if (e->sched.frequency_task_levels != 0 &&
 diff --git a/src/logging_struct.h b/src/logging_struct.h
 new file mode 100644
-index 0000000000..29ee05f8b9
+index 0000000000..159fb1b6e0
 --- /dev/null
 +++ b/src/logging_struct.h
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,39 @@
 +#pragma once
 +
 +/* Struct to hold data for binary output dump. */
@@ -37,6 +37,9 @@ index 0000000000..29ee05f8b9
 +
 +  /*! nr of particles in the cell */
 +  int count;
++
++  /*! Index in buffer to pack/unpack to */
++  int pack_ind;
 +
 +  /*! timing of operation */
 +  double time;
@@ -252,7 +255,7 @@ index 53385f98f2..01075fdd83 100644
  
  #ifdef __cplusplus
 diff --git a/src/runner_gpu_pack_functions.h b/src/runner_gpu_pack_functions.h
-index a84e142d75..b576a52575 100644
+index a84e142d75..89d34d2145 100644
 --- a/src/runner_gpu_pack_functions.h
 +++ b/src/runner_gpu_pack_functions.h
 @@ -27,6 +27,8 @@
@@ -296,7 +299,7 @@ index a84e142d75..b576a52575 100644
 +    } else if (task_subtype == task_subtype_gpu_force) {
 +      subtype = 'f';
 +    }
-+    struct logging_entry ent = {subtype, 'p', ci->hydro.parts - logdata->all_parts, ci->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++    struct logging_entry ent = {subtype, 'p', ci->hydro.parts - logdata->all_parts, ci->hydro.count, pack_ind, clocks_diff_ticks(tic_end, tic_start) };
 +    logdata->entries[logdata->count] = ent;
 +    logdata->count++;
  
@@ -324,7 +327,7 @@ index a84e142d75..b576a52575 100644
 +    } else if (task_subtype == task_subtype_gpu_force) {
 +      subtype2 = 'f';
 +    }
-+    struct logging_entry ent2 = {subtype2, 'p', ci->hydro.parts - logdata->all_parts, ci->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++    struct logging_entry ent2 = {subtype2, 'p', ci->hydro.parts - logdata->all_parts, ci->hydro.count, pack_ind, clocks_diff_ticks(tic_end, tic_start) };
 +    logdata->entries[logdata->count] = ent2;
 +    logdata->count++;
 +
@@ -353,7 +356,7 @@ index a84e142d75..b576a52575 100644
 +    } else if (task_subtype == task_subtype_gpu_force) {
 +      subtype = 'f';
 +    }
-+    struct logging_entry ent = {subtype, 'p', cj->hydro.parts - logdata->all_parts, cj->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++    struct logging_entry ent = {subtype, 'p', cj->hydro.parts - logdata->all_parts, cj->hydro.count, pack_ind, clocks_diff_ticks(tic_end, tic_start) };
 +    logdata->entries[logdata->count] = ent;
 +    logdata->count++;
    }
@@ -391,7 +394,7 @@ index a84e142d75..b576a52575 100644
 +          } else if (task_subtype == task_subtype_gpu_force) {
 +            subtype = 'f';
 +          }
-+          struct logging_entry ent = {subtype, 'u', cii->hydro.parts - logdata->all_parts, cii->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++          struct logging_entry ent = {subtype, 'u', cii->hydro.parts - logdata->all_parts, cii->hydro.count, unpack_index, clocks_diff_ticks(tic_end, tic_start) };
 +          logdata->entries[logdata->count] = ent;
 +          logdata->count++;
 +
@@ -419,7 +422,7 @@ index a84e142d75..b576a52575 100644
 +            } else if (task_subtype == task_subtype_gpu_force) {
 +              subtype = 'f';
 +            }
-+            struct logging_entry ent = {subtype, 'u', cjj->hydro.parts - logdata->all_parts, cjj->hydro.count, clocks_diff_ticks(tic_end, tic_start) };
++            struct logging_entry ent = {subtype, 'u', cjj->hydro.parts - logdata->all_parts, cjj->hydro.count, unpack_index, clocks_diff_ticks(tic_end, tic_start) };
 +            logdata->entries[logdata->count] = ent;
 +            logdata->count++;
 +
@@ -520,7 +523,7 @@ index a84e142d75..b576a52575 100644
    TIMER_TOC(timer_gpu_unpack_f);
  }
 diff --git a/src/runner_main_cuda.c b/src/runner_main_cuda.c
-index 0affb578b1..73c6bc2fd0 100644
+index 0affb578b1..1b7bb2d3fa 100644
 --- a/src/runner_main_cuda.c
 +++ b/src/runner_main_cuda.c
 @@ -46,6 +46,7 @@ extern "C" {
@@ -555,7 +558,7 @@ index 0affb578b1..73c6bc2fd0 100644
    /* Main loop. */
    while (1) {
  
-@@ -216,6 +227,25 @@ void *runner_main_cuda(void *data) {
+@@ -216,6 +227,26 @@ void *runner_main_cuda(void *data) {
      /* Can we go home yet? */
      if (e->step_props & engine_step_prop_done) break;
  
@@ -570,9 +573,10 @@ index 0affb578b1..73c6bc2fd0 100644
 +    fprintf(logfile, "//pack_or_unpack: p for packing operation, u for unpacking\n");
 +    fprintf(logfile, "//c_offset: offset of c->hydro.parts array in global parts array\n");
 +    fprintf(logfile, "//count: c->hydro.count\n");
++    fprintf(logfile, "//index: index in particle buffer array to write into/read from\n");
 +    fprintf(logfile, "//time: Measured time for operation, in [micro s]\n");
 +    fprintf(logfile, "//\n");
-+    fprintf(logfile, "//subtype,pack_or_unpack,c_offset,count,time\n");
++    fprintf(logfile, "//subtype,pack_or_unpack,c_offset,count,index,time\n");
 +
 +    logdata.count = 0;
 +    logdata.all_parts = all_parts;
@@ -581,7 +585,7 @@ index 0affb578b1..73c6bc2fd0 100644
      gpu_data_buffers_init_step(&gpu_buf_dens);
      gpu_data_buffers_init_step(&gpu_buf_grad);
      gpu_data_buffers_init_step(&gpu_buf_forc);
-@@ -236,6 +266,16 @@ void *runner_main_cuda(void *data) {
+@@ -236,6 +267,16 @@ void *runner_main_cuda(void *data) {
      /* Loop while there are tasks... */
      while (1) {
  
@@ -590,7 +594,7 @@ index 0affb578b1..73c6bc2fd0 100644
 +        /* fwrite(logdata.entries, sizeof(struct logging_entry), logdata.count, logfile); */
 +        for (int i = 0; i < logdata.count; i++){
 +          struct logging_entry ent = logdata.entries[i];
-+          fprintf(logfile, "%c,%c,%ld,%d,%.3f\n", ent.subtype, ent.pack_or_unpack, ent.offset, ent.count, ent.time * 1e3);
++          fprintf(logfile, "%c,%c,%ld,%d,%d,%.3f\n", ent.subtype, ent.pack_or_unpack, ent.offset, ent.count, ent.pack_ind, ent.time * 1e3);
 +        }
 +        logdata.count = 0;
 +      }
@@ -598,7 +602,7 @@ index 0affb578b1..73c6bc2fd0 100644
        /* Get qid for bookkeeping of remaining enqueued GPU tasks later. */
        int qid = r->qid;
        /* If there's no old task, try to get a new one. */
-@@ -295,17 +335,17 @@ void *runner_main_cuda(void *data) {
+@@ -295,17 +336,17 @@ void *runner_main_cuda(void *data) {
            } else if (t->subtype == task_subtype_gpu_density) {
  #ifdef GPUOFFLOAD_DENSITY
              runner_doself_gpu_density(r, sched, &gpu_buf_dens, t, stream, d_a,
@@ -619,7 +623,7 @@ index 0affb578b1..73c6bc2fd0 100644
  #endif
            }
  #ifdef EXTRA_HYDRO_LOOP
-@@ -374,17 +414,17 @@ void *runner_main_cuda(void *data) {
+@@ -374,17 +415,17 @@ void *runner_main_cuda(void *data) {
            else if (t->subtype == task_subtype_gpu_density) {
  #ifdef GPUOFFLOAD_DENSITY
              runner_dopair_gpu_density(r, sched, ci, cj, &gpu_buf_dens, t,
@@ -640,7 +644,7 @@ index 0affb578b1..73c6bc2fd0 100644
  #endif
            }
  
-@@ -739,6 +779,18 @@ void *runner_main_cuda(void *data) {
+@@ -739,6 +780,18 @@ void *runner_main_cuda(void *data) {
          t = scheduler_done(sched, t);
        }
      } /* Loop while there are tasks */
@@ -648,7 +652,7 @@ index 0affb578b1..73c6bc2fd0 100644
 +    if (logdata.count > 0) {
 +     for (int i = 0; i < logdata.count; i++){
 +        struct logging_entry ent = logdata.entries[i];
-+        fprintf(logfile, "%c,%c,%ld,%d,%.3f\n", ent.subtype, ent.pack_or_unpack, ent.offset, ent.count, ent.time * 1e3);
++        fprintf(logfile, "%c,%c,%ld,%d,%d,%.3f\n", ent.subtype, ent.pack_or_unpack, ent.offset, ent.count, ent.pack_ind, ent.time * 1e3);
 +      }
 +      /* Raw Dump leftover data */
 +      /* fwrite(logdata.entries, sizeof(struct logging_entry), logdata.count, logfile); */
@@ -659,7 +663,7 @@ index 0affb578b1..73c6bc2fd0 100644
    } /* main loop. */
  
    /* Release the bytes back into the wilderness */
-@@ -748,6 +800,9 @@ void *runner_main_cuda(void *data) {
+@@ -748,6 +801,9 @@ void *runner_main_cuda(void *data) {
  
    for (int i = 0; i < gpu_pack_params.n_bundles; i++)
      cudaStreamDestroy(stream[i]);
