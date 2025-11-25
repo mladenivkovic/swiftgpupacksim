@@ -31,8 +31,5 @@ struct pressure_floor_part_data {};
 /*! Additional Radiative Transfer Data */
 struct rt_part_data {};
 
-/*! RT sub-cycling time stepping data */
-struct rt_timestepping_data {};
-
 /*! Geometrical quantities used for Finite Volume Particle Method RT. */
 struct fvpm_geometry_struct {};

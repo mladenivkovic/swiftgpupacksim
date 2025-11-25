@@ -105,54 +105,22 @@ void timers_close_file(void) { fclose(timers_file); }
 void print_timers(const ticks timers_arr[timer_count],
                   const double timing_log_arr[timer_count]) {
 
-  printf(
-      "-----------------------------------------------------------------------"
-      "\n");
-  printf(
-      "| Name            | Simulation [ms]   | Measured log [ms] | Ratio     "
-      "|\n");
-  printf(
-      "-----------------------------------------------------------------------"
-      "\n");
+  printf( "-----------------------------------------------------------------------" "\n");
+  printf( "| Name            | Simulation [ms]   | Measured log [ms] | Ratio     " "|\n");
+  printf( "-----------------------------------------------------------------------" "\n");
 
   double dt_sim = 0.;
   double dt_log = 0.;
 
-  dt_sim = clocks_from_ticks(timers_arr[timer_density_self]);
-  dt_log = timing_log_arr[timer_density_self];
-  printf("| %15s | %17.5g | %17.5g |  %8.4f |\n",
-         task_type_names[task_type_density_self], dt_sim, dt_log,
-         dt_sim / dt_log);
+  dt_sim = clocks_from_ticks(timers_arr[timer_density_pack]);
+  dt_log = timing_log_arr[timer_density_unpack];
+  /* TODO: write a function for this, pass different arguments for each measurement. Add min/max deviations */
+  printf("| %7s/%7s | %17.5g | %17.5g |  %8.4f |\n",
+         subtaskID_names[task_subtype_density],
+         taskID_names[task_type_pack],
+         dt_sim, dt_log, dt_sim / dt_log);
+  printf("TODO: Complete this.\n");
 
-  dt_sim = clocks_from_ticks(timers_arr[timer_density_pair]);
-  dt_log = timing_log_arr[timer_density_pair];
-  printf("| %15s | %17.5g | %17.5g |  %8.4f |\n",
-         task_type_names[task_type_density_pair], dt_sim, dt_log,
-         dt_sim / dt_log);
-
-  dt_sim = clocks_from_ticks(timers_arr[timer_gradient_self]);
-  dt_log = timing_log_arr[timer_gradient_self];
-  printf("| %15s | %17.5g | %17.5g |  %8.4f |\n",
-         task_type_names[task_type_gradient_self], dt_sim, dt_log,
-         dt_sim / dt_log);
-
-  dt_sim = clocks_from_ticks(timers_arr[timer_gradient_pair]);
-  dt_log = timing_log_arr[timer_gradient_pair];
-  printf("| %15s | %17.5g | %17.5g |  %8.4f |\n",
-         task_type_names[task_type_gradient_pair], dt_sim, dt_log,
-         dt_sim / dt_log);
-
-  dt_sim = clocks_from_ticks(timers_arr[timer_force_self]);
-  dt_log = timing_log_arr[timer_force_self];
-  printf("| %15s | %17.5g | %17.5g |  %8.4f |\n",
-         task_type_names[task_type_force_self], dt_sim, dt_log,
-         dt_sim / dt_log);
-
-  dt_sim = clocks_from_ticks(timers_arr[timer_force_pair]);
-  dt_log = timing_log_arr[timer_force_pair];
-  printf("| %15s | %17.5g | %17.5g |  %8.4f |\n",
-         task_type_names[task_type_force_pair], dt_sim, dt_log,
-         dt_sim / dt_log);
   printf(
       "-----------------------------------------------------------------------"
       "\n");

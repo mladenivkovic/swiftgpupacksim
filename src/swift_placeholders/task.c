@@ -4,6 +4,6 @@
 
 #include "task.h"
 
-const char *task_type_names[task_type_count] = {
-    "none",          "density_self", "density_pair", "gradient_self",
-    "gradient_pair", "force_self",   "force_pair"};
+const char *taskID_names[task_type_count] = {"none", "pack", "unpack" };
+
+const char *subtaskID_names[task_subtype_count] = {"none", "density", "gradient", "force" };
