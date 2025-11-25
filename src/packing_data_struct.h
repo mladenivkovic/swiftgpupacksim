@@ -30,7 +30,8 @@ struct packing_data {
 } __attribute__((aligned(32)));
 
 
-__attribute__((always_inline)) inline void init_pack_data(struct packing_data *pd) {
+__attribute__((always_inline)) inline void init_pack_data(
+    struct packing_data *pd) {
   pd->task_type = task_type_none;
   pd->task_subtype = task_subtype_none;
   pd->part_offset = -1;
