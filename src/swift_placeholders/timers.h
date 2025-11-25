@@ -23,7 +23,7 @@
 #define SWIFT_TIMERS_H
 
 /* Config parameters. */
-#include "config.h"
+#include "../config.h"
 
 /* Local includes. */
 #include "atomic.h"
@@ -36,7 +36,7 @@
  * If you modify this list, be sure to change timers_names in timers.c as
  * well!
  **/
-enum {
+enum timer_enum {
   timer_none = 0,
   timer_density_pack,
   timer_density_unpack,
@@ -86,6 +86,6 @@ void timers_open_file(int rank);
 void timers_close_file(void);
 void timers_print_file(int step);
 void print_timers(const ticks timers_arr[timer_count],
-                  const double timing_log_arr[timer_count]);
+                  const double timers_log_arr[timer_count]);
 
 #endif /* SWIFT_TIMERS_H */

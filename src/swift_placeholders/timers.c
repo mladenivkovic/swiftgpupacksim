@@ -27,6 +27,7 @@
 
 /* Some standard headers. */
 #include <stdio.h>
+#include <string.h>
 
 /* Local includes. */
 #include "clocks.h"
@@ -100,34 +101,53 @@ void timers_close_file(void) { fclose(timers_file); }
 
 
 /**
- * Print output to screen.
+ * @brief Print a single line of the table for print_timers()
+ */
+void print_single_timer_line(
+    enum task_types type, enum task_subtypes subtype, enum timer_enum timer,
+    const ticks timers_arr[timer_count], const double timers_log_arr[timer_count]
+    ) {
+
+  double dt_sim = clocks_from_ticks(timers_arr[timer]);
+  /* Note that logged time is in microseconds, not milliseconds */
+  double dt_log = timers_log_arr[timer] * 1e-3;
+
+  char taskname[80] = "";
+  strcat(taskname, subtaskID_names[subtype]);
+  strcat(taskname, "/");
+  strcat(taskname, taskID_names[type]);
+
+  printf("| %-20s | %17.5g | %17.5g |  %8.4f |\n",
+      taskname, dt_sim, dt_log, dt_sim / dt_log);
+}
+
+/**
+ * Print output to screen in a nice table.
  */
 void print_timers(const ticks timers_arr[timer_count],
-                  const double timing_log_arr[timer_count]) {
+                  const double timers_log_arr[timer_count]) {
 
   printf(
-      "-----------------------------------------------------------------------"
+      "--------------------------------------"
+      "--------------------------------------"
       "\n");
   printf(
-      "| Name            | Simulation [ms]   | Measured log [ms] | Ratio     "
-      "|\n");
+      "| Name                 | Simulation [ms]   |"
+      " Measured log [ms] | Ratio     |\n");
   printf(
-      "-----------------------------------------------------------------------"
+      "--------------------------------------"
+      "--------------------------------------"
       "\n");
 
-  double dt_sim = 0.;
-  double dt_log = 0.;
-
-  dt_sim = clocks_from_ticks(timers_arr[timer_density_pack]);
-  dt_log = timing_log_arr[timer_density_unpack];
-  /* TODO: write a function for this, pass different arguments for each
-   * measurement. Add min/max deviations */
-  printf("| %7s/%7s | %17.5g | %17.5g |  %8.4f |\n",
-         subtaskID_names[task_subtype_density], taskID_names[task_type_pack],
-         dt_sim, dt_log, dt_sim / dt_log);
-  printf("TODO: Complete this.\n");
+  print_single_timer_line(task_type_pack, task_subtype_density, timer_density_pack, timers_arr, timers_log_arr);
+  print_single_timer_line(task_type_unpack, task_subtype_density, timer_density_unpack, timers_arr, timers_log_arr);
+  print_single_timer_line(task_type_pack, task_subtype_gradient, timer_gradient_pack, timers_arr, timers_log_arr);
+  print_single_timer_line(task_type_unpack, task_subtype_gradient, timer_gradient_unpack, timers_arr, timers_log_arr);
+  print_single_timer_line(task_type_pack, task_subtype_force, timer_force_pack, timers_arr, timers_log_arr);
+  print_single_timer_line(task_type_unpack, task_subtype_force, timer_force_unpack, timers_arr, timers_log_arr);
 
   printf(
-      "-----------------------------------------------------------------------"
+      "--------------------------------------"
+      "--------------------------------------"
       "\n");
 }
