@@ -1,3 +1,12 @@
 nr_threads: 32
 nr_parts: 101
 nr_steps: 3
+
+git revision: v2025.04-708-g1460fa64-dirty
+git branch: log_packing
+git date: 2025-11-25 14:43:51 +0000
+
+config. options: '--with-cuda --enable-option-checking'
+Compiler: LLVM/Clang, Version: 19.0.0
+CFLAGS  : '-fno-lto -ipo -O3 -ansi-alias -xCORE-AVX512 -mavx512dq -Qunused-arguments -pthread -Wall -Wextra -Wno-unused-parameter -Wshadow -Werror -Wstrict-prototypes'
+

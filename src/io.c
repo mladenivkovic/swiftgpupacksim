@@ -74,6 +74,10 @@ void io_read_logged_params(struct parameters* params) {
   char varvalue[IO_MAX_LINE_SIZE];
   char tempbuff[IO_MAX_LINE_SIZE];
 
+  char have_nr_threads = 0;
+  char have_nr_parts = 0;
+  char have_nr_steps = 0;
+
   while (fgets(tempbuff, IO_MAX_LINE_SIZE, pfile)) {
     if (io_util_line_is_comment(tempbuff)) continue;
     io_util_remove_trailing_comments(tempbuff);
@@ -89,13 +93,18 @@ void io_read_logged_params(struct parameters* params) {
 
     if (strcmp(varname, "nr_threads") == 0) {
       params->nr_threads = atoi(varvalue);
+      have_nr_threads = 1;
     } else if (strcmp(varname, "nr_parts") == 0) {
       params->nr_parts = atoll(varvalue);
+      have_nr_parts = 1;
     } else if (strcmp(varname, "nr_steps") == 0) {
       params->nr_steps = atoi(varvalue);
+      have_nr_steps = 1;
     } else {
       message("Unrecognised parameter '%s' in file", varname);
     }
+
+    if (have_nr_threads && have_nr_parts && have_nr_steps) break;
   }
 
   validate_read_params(params);
