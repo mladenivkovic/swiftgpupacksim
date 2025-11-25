@@ -44,14 +44,6 @@
 #include <pthread.h>
 
 /* Does this POSIX implementation provide barriers? */
-#ifdef HAVE_PTHREAD_BARRIERS
-
-#define swift_barrier_t pthread_barrier_t
-#define swift_barrier_wait pthread_barrier_wait
-#define swift_barrier_init pthread_barrier_init
-#define swift_barrier_destroy pthread_barrier_destroy
-
-#else
 
 /* Local headers */
 #include "error.h"
@@ -164,7 +156,5 @@ static INLINE int swift_barrier_destroy(swift_barrier_t *barrier) {
   /* All is good */
   return 0;
 }
-
-#endif /* HAVE_PTHREAD_BARRIERS */
 
 #endif /* SWIFT_BARRIER_H */
