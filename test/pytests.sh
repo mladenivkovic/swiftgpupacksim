@@ -81,3 +81,5 @@ python3 ../py/generate_hydro_part.py --test ./input/test_split_struct_structs_an
 COMPILE_AND_RUN
 DIFF hydro_part.h output/test_split_struct_structs_and_unions.h
 rm -f ./hydro_part.h ./hydro_part_data_struct.h
+
+echo "Python tests passed."
