@@ -1,10 +1,10 @@
 #include "io.h"
 
 #include "help.h"
+#include "swift_placeholders/clocks.h"
 #include "swift_placeholders/error.h"
 #include "swift_placeholders/task.h"
 #include "swift_placeholders/timers.h"
-#include "swift_placeholders/clocks.h"
 
 #include <dirent.h>
 #include <errno.h>
@@ -559,9 +559,10 @@ void io_util_parse_measurement_data_line(const char* line,
  */
 void io_util_print_single_timer_line(
     enum task_types type, enum task_subtypes subtype, enum timer_enum timer,
-    const ticks timers_arr[timer_count], const double timers_log_arr[timer_count],
-                  const double timings_ratio_min[timer_count],
-                  const double timings_ratio_max[timer_count]) {
+    const ticks timers_arr[timer_count],
+    const double timers_log_arr[timer_count],
+    const double timings_ratio_min[timer_count],
+    const double timings_ratio_max[timer_count]) {
 
   double dt_sim = clocks_from_ticks(timers_arr[timer]);
   /* Note that logged time is in microseconds, not milliseconds */
@@ -574,8 +575,8 @@ void io_util_print_single_timer_line(
   strcat(taskname, "/");
   strcat(taskname, taskID_names[type]);
 
-  printf("| %-20s | %17.5g | %17.5g |  %8.4f |  %8.4f |  %8.4f |\n",
-      taskname, dt_sim, dt_log, dt_sim / dt_log, rat_min, rat_max);
+  printf("| %-20s | %17.5g | %17.5g |  %8.4f |  %8.4f |  %8.4f |\n", taskname,
+         dt_sim, dt_log, dt_sim / dt_log, rat_min, rat_max);
 }
 
 /**
@@ -602,12 +603,24 @@ void io_print_timers(const ticks timers_arr[timer_count],
       "------------------------"
       "\n");
 
-  io_util_print_single_timer_line(task_type_pack, task_subtype_density, timer_density_pack, timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(task_type_unpack, task_subtype_density, timer_density_unpack, timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(task_type_pack, task_subtype_gradient, timer_gradient_pack, timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(task_type_unpack, task_subtype_gradient, timer_gradient_unpack, timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(task_type_pack, task_subtype_force, timer_force_pack, timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(task_type_unpack, task_subtype_force, timer_force_unpack, timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_pack, task_subtype_density, timer_density_pack, timers_arr,
+      timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_unpack, task_subtype_density, timer_density_unpack, timers_arr,
+      timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_pack, task_subtype_gradient, timer_gradient_pack, timers_arr,
+      timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_unpack, task_subtype_gradient, timer_gradient_unpack,
+      timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(task_type_pack, task_subtype_force,
+                                  timer_force_pack, timers_arr, timings_log_arr,
+                                  timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_unpack, task_subtype_force, timer_force_unpack, timers_arr,
+      timings_log_arr, timings_ratio_min, timings_ratio_max);
 
   printf(
       "--------------------------------------"

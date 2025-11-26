@@ -27,10 +27,10 @@
  */
 
 #include "swift_placeholders/align.h"
+#include "swift_placeholders/error.h"
 #include "swift_placeholders/hydro_part_placeholder_structs.h"
 #include "swift_placeholders/rt_struct.h"
 #include "swift_placeholders/timestep_limiter_struct.h"
-#include "swift_placeholders/error.h"
 
 #include <stddef.h>
 

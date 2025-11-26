@@ -33,7 +33,6 @@ int io_util_line_is_measurement_data(const char* line);
 void io_util_parse_measurement_data_line(const char* line,
                                          struct packing_data* data);
 void io_print_timers(const ticks timers_arr[timer_count],
-                  const double timings_log_arr[timer_count],
-                  const double timings_ratio_min[timer_count],
-                  const double timings_ratio_max[timer_count]);
-
+                     const double timings_log_arr[timer_count],
+                     const double timings_ratio_min[timer_count],
+                     const double timings_ratio_max[timer_count]);
