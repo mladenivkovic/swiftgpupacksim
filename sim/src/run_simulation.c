@@ -32,8 +32,11 @@
  * measured timings
  * @param timing_ratio_max: Array to store biggest ratio between simulated and
  * measured timings
+ *
+ * @return garbage Some garbage double; Needed to prevent compiler from
+ * optimising out a big loop doing nothing but flushing caches
  */
-__attribute__((always_inline)) INLINE static void replay_event(
+__attribute__((always_inline)) INLINE static double replay_event(
     const struct packing_data* event, struct part_arrays* part_data,
     struct gpu_offload_data* buf_dens, struct gpu_offload_data* buf_grad,
     struct gpu_offload_data* buf_forc, const struct engine* e,
@@ -163,6 +166,20 @@ __attribute__((always_inline)) INLINE static void replay_event(
     error("Unknown task type %d - %s", type, taskID_names[type]);
   }
 #endif
+
+  /* Alloc a few MB of data and fill them with garbage to flush caches. */
+  const int n_garbage = 250000;
+  double* garbage = malloc(n_garbage * sizeof(double));
+  for (int i = 0; i < n_garbage; i++){
+    garbage[i] = (2. * i - 13.) * 4.;
+  }
+  double sum = 0.;
+  for (int i = 0; i < n_garbage; i++){
+    sum += garbage[i];
+  }
+  free(garbage);
+
+  return sum;
 }
 
 
@@ -176,6 +193,10 @@ void run_simulation(struct parameters* params) {
   init_parts(&part_data, params);
 
   message("Starting simulation.");
+
+  /* Get devnull handle to dump garbage in */
+  FILE* devnull = fopen("/dev/null", "w");
+  if (devnull == NULL) error("Oh no :(");
 
   /* Init timers */
   /* Timers for a single step */
@@ -267,13 +288,17 @@ void run_simulation(struct parameters* params) {
     /* This loop corresponds to second `while (1){}` */
     /* loop in runner_main                           */
     /* ----------------------------------------------*/
+    double garbage_sum = 0.;
     for (int i = 0; i < n_events; i++) {
       struct packing_data event = packing_sequence[i];
 
-      replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
+      double garbage = replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
                    &gpu_buf_forc, &e, timers_step, timing_log_step,
                    timing_ratio_min, timing_ratio_max);
+      garbage_sum += garbage;
     }
+    /* Write it into nothingness. */
+    fprintf(devnull, "garbage: %g", garbage_sum);
 
     if (params->print_each_step) print_timers(timers_step, timing_log_step, timing_ratio_min, timing_ratio_max);
     free(packing_sequence);
@@ -295,6 +320,7 @@ void run_simulation(struct parameters* params) {
 
   // Deallocate everything here.
   clear_parts(&part_data);
+  fclose(devnull);
 
   message("Finished simulation.");
   print_timers(timers_full, timing_log_full, timing_ratio_min, timing_ratio_max);
