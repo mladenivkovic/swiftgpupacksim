@@ -1,5 +1,5 @@
 diff --git a/src/engine.c b/src/engine.c
-index 3efeda6e56..1055f32c56 100644
+index 3efeda6e5..1055f32c5 100644
 --- a/src/engine.c
 +++ b/src/engine.c
 @@ -2939,6 +2939,7 @@ int engine_step(struct engine *e) {
@@ -12,7 +12,7 @@ index 3efeda6e56..1055f32c56 100644
    if (e->sched.frequency_task_levels != 0 &&
 diff --git a/src/logging_struct.h b/src/logging_struct.h
 new file mode 100644
-index 0000000000..159fb1b6e0
+index 000000000..159fb1b6e
 --- /dev/null
 +++ b/src/logging_struct.h
 @@ -0,0 +1,39 @@
@@ -56,7 +56,7 @@ index 0000000000..159fb1b6e0
 +};
 +
 diff --git a/src/runner.h b/src/runner.h
-index cf21eac280..9412e47e08 100644
+index cf21eac28..9412e47e0 100644
 --- a/src/runner.h
 +++ b/src/runner.h
 @@ -29,6 +29,7 @@
@@ -68,7 +68,7 @@ index cf21eac280..9412e47e08 100644
  struct cell;
  struct engine;
 diff --git a/src/runner_doiact_functions_hydro_gpu.h b/src/runner_doiact_functions_hydro_gpu.h
-index 53385f98f2..01075fdd83 100644
+index 53385f98f..0c5bf0558 100644
 --- a/src/runner_doiact_functions_hydro_gpu.h
 +++ b/src/runner_doiact_functions_hydro_gpu.h
 @@ -482,7 +482,8 @@ __attribute__((always_inline)) INLINE static void runner_gpu_launch_force(
@@ -180,13 +180,7 @@ index 53385f98f2..01075fdd83 100644
  }
  
  /**
-@@ -896,12 +900,13 @@ static void runner_doself_gpu_force(const struct runner *r, struct scheduler *s,
-  * @param d_a the current expansion scale factor
-  * @param d_H the current Hubble constant
-  */
--static void runner_dopair_gpu_density(const struct runner *r,
-+static void runner_dopair_gpu_density(struct runner *r,
-                                       struct scheduler *s, struct cell *ci,
+@@ -901,7 +905,8 @@ static void runner_dopair_gpu_density(const struct runner *r,
                                        struct cell *cj,
                                        struct gpu_offload_data *restrict buf,
                                        struct task *t, cudaStream_t *stream,
@@ -205,13 +199,7 @@ index 53385f98f2..01075fdd83 100644
  }
  
  /**
-@@ -935,12 +940,13 @@ static void runner_dopair_gpu_density(const struct runner *r,
-  * @param d_a the current expansion scale factor
-  * @param d_H the current Hubble constant
-  */
--static void runner_dopair_gpu_gradient(const struct runner *r,
-+static void runner_dopair_gpu_gradient(struct runner *r,
-                                        struct scheduler *s, struct cell *ci,
+@@ -940,7 +945,8 @@ static void runner_dopair_gpu_gradient(const struct runner *r,
                                         struct cell *cj,
                                         struct gpu_offload_data *restrict buf,
                                         struct task *t, cudaStream_t *stream,
@@ -230,12 +218,7 @@ index 53385f98f2..01075fdd83 100644
  }
  
  /**
-@@ -974,11 +980,12 @@ static void runner_dopair_gpu_gradient(const struct runner *r,
-  * @param d_a the current expansion scale factor
-  * @param d_H the current Hubble constant
-  */
--static void runner_dopair_gpu_force(const struct runner *r, struct scheduler *s,
-+static void runner_dopair_gpu_force(struct runner *r, struct scheduler *s,
+@@ -978,7 +984,8 @@ static void runner_dopair_gpu_force(const struct runner *r, struct scheduler *s,
                                      struct cell *ci, struct cell *cj,
                                      struct gpu_offload_data *restrict buf,
                                      struct task *t, cudaStream_t *stream,
@@ -255,7 +238,7 @@ index 53385f98f2..01075fdd83 100644
  
  #ifdef __cplusplus
 diff --git a/src/runner_gpu_pack_functions.h b/src/runner_gpu_pack_functions.h
-index a84e142d75..89d34d2145 100644
+index a84e142d7..7f80b6255 100644
 --- a/src/runner_gpu_pack_functions.h
 +++ b/src/runner_gpu_pack_functions.h
 @@ -27,6 +27,8 @@
@@ -408,7 +391,7 @@ index a84e142d75..89d34d2145 100644
              if (task_subtype == task_subtype_gpu_density) {
                gpu_unpack_part_density(cjj, buf->parts_recv_d, unpack_index,
                                        count_cj, e);
-@@ -320,8 +383,22 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack(
+@@ -320,6 +383,20 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack(
                error("Unknown task subtype %s", subtaskID_names[task_subtype]);
              }
  #endif
@@ -426,12 +409,9 @@ index a84e142d75..89d34d2145 100644
 +            logdata->entries[logdata->count] = ent;
 +            logdata->count++;
 +
-+            unpack_index += count_cj;
            }
--          unpack_index += count_cj;
+           unpack_index += count_cj;
          }
- 
-       } /* Loop over all leaves of task */
 @@ -364,11 +441,12 @@ __attribute__((always_inline)) INLINE static void runner_gpu_unpack(
   */
  __attribute__((always_inline)) INLINE static void runner_gpu_pack_density(
@@ -523,7 +503,7 @@ index a84e142d75..89d34d2145 100644
    TIMER_TOC(timer_gpu_unpack_f);
  }
 diff --git a/src/runner_main_cuda.c b/src/runner_main_cuda.c
-index 0affb578b1..1b7bb2d3fa 100644
+index 0affb578b..1b7bb2d3f 100644
 --- a/src/runner_main_cuda.c
 +++ b/src/runner_main_cuda.c
 @@ -46,6 +46,7 @@ extern "C" {
@@ -674,7 +654,7 @@ index 0affb578b1..1b7bb2d3fa 100644
    return NULL;
  }
 diff --git a/src/scheduler.c b/src/scheduler.c
-index 2e97748602..c8c7f1c898 100644
+index 2e9774860..c8c7f1c89 100644
 --- a/src/scheduler.c
 +++ b/src/scheduler.c
 @@ -3351,3 +3351,35 @@ void scheduler_report_task_times(const struct scheduler *s,
@@ -714,7 +694,7 @@ index 2e97748602..c8c7f1c898 100644
 +  message("Written simulation parameter log.");
 +}
 diff --git a/src/scheduler.h b/src/scheduler.h
-index 92ae934464..4356dc87fc 100644
+index 92ae93446..4356dc87f 100644
 --- a/src/scheduler.h
 +++ b/src/scheduler.h
 @@ -315,4 +315,6 @@ void scheduler_dump_queues(struct engine *e);
