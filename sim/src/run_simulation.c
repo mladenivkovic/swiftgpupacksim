@@ -45,8 +45,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
     struct gpu_offload_data* buf_forc, const struct engine* e,
     ticks timers_step[timer_count], double timings_log_step[timer_count],
     double timing_ratio_min[timer_count], double timing_ratio_max[timer_count],
-    double* garbage, int n_garbage
-    ) {
+    double* garbage, int n_garbage) {
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
@@ -72,7 +71,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
                             shift, 0, 0);
       const ticks toc = getticks();
 
-      atomic_add(&timers_step[timer_density_pack], toc-tic);
+      atomic_add(&timers_step[timer_density_pack], toc - tic);
       atomic_add_d(&timings_log_step[timer_density_pack], event->timing);
 
       const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
@@ -86,7 +85,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
                              shift, 0, 0);
       const ticks toc = getticks();
 
-      atomic_add(&timers_step[timer_gradient_pack], toc-tic);
+      atomic_add(&timers_step[timer_gradient_pack], toc - tic);
       atomic_add_d(&timings_log_step[timer_gradient_pack], event->timing);
 
       const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
@@ -100,7 +99,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
                           0, 0);
       const ticks toc = getticks();
 
-      atomic_add(&timers_step[timer_force_pack], toc-tic);
+      atomic_add(&timers_step[timer_force_pack], toc - tic);
       atomic_add_d(&timings_log_step[timer_force_pack], event->timing);
 
       const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
@@ -123,7 +122,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
                               event->count, e);
       const ticks toc = getticks();
 
-      atomic_add(&timers_step[timer_density_unpack], toc-tic);
+      atomic_add(&timers_step[timer_density_unpack], toc - tic);
       atomic_add_d(&timings_log_step[timer_density_unpack], event->timing);
 
       const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
@@ -137,7 +136,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
                                event->count, e);
       const ticks toc = getticks();
 
-      atomic_add(&timers_step[timer_gradient_unpack], toc-tic);
+      atomic_add(&timers_step[timer_gradient_unpack], toc - tic);
       atomic_add_d(&timings_log_step[timer_gradient_unpack], event->timing);
 
       const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
@@ -151,7 +150,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
                             event->count, e);
       const ticks toc = getticks();
 
-      atomic_add(&timers_step[timer_force_unpack], toc-tic);
+      atomic_add(&timers_step[timer_force_unpack], toc - tic);
       atomic_add_d(&timings_log_step[timer_force_unpack], event->timing);
 
       const double dt = clocks_diff_ticks(toc, tic) * 1e3 / event->timing;
@@ -171,11 +170,11 @@ __attribute__((always_inline)) INLINE static double replay_event(
   }
 #endif
 
-  for (int i = 0; i < n_garbage; i++){
+  for (int i = 0; i < n_garbage; i++) {
     garbage[i] = (2. * i - 13.) * 4.;
   }
   double sum = 0.;
-  for (int i = 0; i < n_garbage; i++){
+  for (int i = 0; i < n_garbage; i++) {
     sum += garbage[i];
   }
   free(garbage);
@@ -296,15 +295,18 @@ void run_simulation(struct parameters* params) {
     for (int i = 0; i < n_events; i++) {
       struct packing_data event = packing_sequence[i];
 
-      double g = replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
-                   &gpu_buf_forc, &e, timers_step, timing_log_step,
-                   timing_ratio_min, timing_ratio_max, garbage, n_garbage);
+      double g =
+          replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
+                       &gpu_buf_forc, &e, timers_step, timing_log_step,
+                       timing_ratio_min, timing_ratio_max, garbage, n_garbage);
       garbage_sum += g;
     }
     /* Write it into nothingness. */
     fprintf(devnull, "garbage: %g", garbage_sum);
 
-    if (params->print_each_step) io_print_timers(timers_step, timing_log_step, timing_ratio_min, timing_ratio_max);
+    if (params->print_each_step)
+      io_print_timers(timers_step, timing_log_step, timing_ratio_min,
+                      timing_ratio_max);
     free(packing_sequence);
 
     // omp single
@@ -328,5 +330,6 @@ void run_simulation(struct parameters* params) {
   free(garbage);
 
   message("Finished simulation.");
-  io_print_timers(timers_full, timing_log_full, timing_ratio_min, timing_ratio_max);
+  io_print_timers(timers_full, timing_log_full, timing_ratio_min,
+                  timing_ratio_max);
 }

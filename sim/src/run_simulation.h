@@ -7,4 +7,3 @@
 #include "parameters.h"
 
 void run_simulation(struct parameters *params);
-

@@ -98,6 +98,3 @@ void timers_open_file(int rank) {
  * @brief Close the file containing the timer info.
  */
 void timers_close_file(void) { fclose(timers_file); }
-
-
-

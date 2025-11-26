@@ -26,9 +26,8 @@
 #include <pthread.h>
 
 /* Config parameters. */
-#include "cycle.h"
-
 #include "../../config.h"
+#include "cycle.h"
 
 
 /* Local headers. */
