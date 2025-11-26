@@ -40,6 +40,8 @@ reproduce. Run it using
 ./sim/swiftgpupack path/to/experiment/logs
 ```
 
+Some example scripts are given in `/sim/examples`.
+
 Some experiment data (logs of packing/unpacking operations on actual GPU runs)
 are stored in the `data/` directory. However, they are stored via `git-lfs`. To
 access them after cloning this repository, use
