@@ -17,10 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Add the non-standard paths to the included library headers
-AM_CFLAGS = $(NUMA_INCS) -DWITH_CUDA
-
-# Assign a "safe" version number
-AM_LDFLAGS = 
+AM_CFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/swift_placeholders -I$(top_srcdir)/src/swift_placeholders/cuda -DWITH_CUDA $(CFLAGS)
+AM_LDFLAGS = $(LDFLAGS)
 
 # Additional dependencies for shared libraries.
 EXTRA_LIBS = $(NUMA_LIBS) $(PROFILER_LIBS) $(TCMALLOC_LIBS) $(JEMALLOC_LIBS) $(TBBMALLOC_LIBS) 

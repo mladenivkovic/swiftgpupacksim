@@ -48,6 +48,8 @@ AC_PROG_CXX_C_O
 
 # We need this for compilation hints and possibly FFTW.
 AX_OPENMP
+CFLAGS="$CFLAGS $OPENMP_CFLAGS"
+LDFLAGS="$LDFLAGS $OPENMP_CFLAGS"
 
 # If debug is selected then we also define SWIFT_DEVELOP_MODE to control
 # any developer code options.
