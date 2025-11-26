@@ -6,9 +6,6 @@
 
 # Data Format
 
-The logging outputs are written per thread and per simulation step, as noted in
-the filename of the outputs.
-
 ## Run parameter output
 
 Aside from the actual logs (see below), we also need to write out some global
@@ -29,10 +26,14 @@ branch/commit used, the configure and compilation flags, and the output of
 
 ## logs format
 
-Each log entry is a csv line (that turned out to be smaller data than raw binary dump):
+The logging outputs are written per thread and per simulation step, as noted in
+the filename of the outputs.
+
+Each log entry is a csv line (that turned out to be smaller data than raw
+binary dump):
 
 ```
-subtype,pack_or_unpack,c_offset,count,time
+subtype,pack_or_unpack,c_offset,count,index,time
 ```
 
 where
