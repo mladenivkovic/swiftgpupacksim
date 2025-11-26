@@ -26,9 +26,8 @@ SUBDIRS = src tests
 MYFLAGS = -DWITH_CUDA
 
 # Add the source directory and the non-standard paths to the included library headers to CFLAGS
-AM_CFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/swift_placeholders -I$(top_srcdir)/src/swift_placeholders/cuda
-
-AM_LDFLAGS = 
+AM_CFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/swift_placeholders -I$(top_srcdir)/src/swift_placeholders/cuda $(CFLAGS)
+AM_LDFLAGS = $(LDFLAGS)
 
 # Extra libraries.
 EXTRA_LIBS = $(NUMA_LIBS) $(PROFILER_LIBS) $(TCMALLOC_LIBS) $(JEMALLOC_LIBS) $(TBBMALLOC_LIBS) 

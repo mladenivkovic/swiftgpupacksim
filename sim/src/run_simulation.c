@@ -10,6 +10,7 @@
 #include "swift_placeholders/timers.h"
 
 #include <float.h>
+#include <omp.h>
 
 /**
  * Perform the actual work of a single event.
@@ -234,12 +235,14 @@ void run_simulation(struct parameters* params) {
                       /*nthreads=*/1);
 
 
-  // - init parallel region here
-  // - check that we're running on the same nr of threads as
-  //   the original simulation
+#pragma omp parallel num_threads(params->nr_threads)
+{
 
-  // For each thread:
-  int thread_id = 0;
+  /* Double-check nothing's overwriting what we want to do. */
+  int n_threads = omp_get_num_threads();
+  if (n_threads != params->nr_threads) {
+    error("Started a parallel region with %d threads instead of %d", n_threads, params->nr_threads);
+  }
 
   /* Alloc a few MB of data and fill them with garbage to flush caches. */
   const int n_garbage = 250000;
@@ -267,47 +270,54 @@ void run_simulation(struct parameters* params) {
   /* this loop corresponds to the 'Main loop', i.e.   */
   /* the first `while (1){}` in runner_main           */
   /* -------------------------------------------------*/
+#pragma omp barrier
   for (int step = 0; step < params->nr_steps; step++) {
 
-    // omp barrier
+#pragma omp for schedule(static,1)
+    for (int thread_id = 0; thread_id < params->nr_threads; thread_id++) {
 
-    /* Get file to read */
-    char logfile[IO_MAX_FILENAME_SIZE];
-    io_util_construct_log_filename(logfile, thread_id, step, params);
+      /* Get file to read */
+      char logfile[IO_MAX_FILENAME_SIZE];
+      io_util_construct_log_filename(logfile, thread_id, step, params);
 
-    /* Read trace */
-    struct packing_data* packing_sequence = NULL;
-    int n_events = 0;
-    io_read_logged_events_file(logfile, &packing_sequence, &n_events, params);
+      /* Read trace */
+      struct packing_data* packing_sequence = NULL;
+      int n_events = 0;
+      io_read_logged_events_file(logfile, &packing_sequence, &n_events, params);
 
-    if (params->verbose)
-      message("Thread %d step %d found %d events.", thread_id, step, n_events);
+      if (params->verbose)
+        message("Thread %d step %d found %d events.", thread_id, step, n_events);
 
+      /* ----------------------------------------------*/
+      /* Loop over recorded packing tasks.             */
+      /* This loop corresponds to second `while (1){}` */
+      /* loop in runner_main                           */
+      /* ----------------------------------------------*/
+      double garbage_sum = 0.;
+      for (int i = 0; i < n_events; i++) {
+        struct packing_data event = packing_sequence[i];
 
-    /* ----------------------------------------------*/
-    /* Loop over recorded packing tasks.             */
-    /* This loop corresponds to second `while (1){}` */
-    /* loop in runner_main                           */
-    /* ----------------------------------------------*/
-    double garbage_sum = 0.;
-    for (int i = 0; i < n_events; i++) {
-      struct packing_data event = packing_sequence[i];
+        double g =
+            replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
+                         &gpu_buf_forc, &e, timers_step, timing_log_step,
+                         timing_ratio_min, timing_ratio_max, garbage, n_garbage);
+        garbage_sum += g;
+      }
 
-      double g =
-          replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
-                       &gpu_buf_forc, &e, timers_step, timing_log_step,
-                       timing_ratio_min, timing_ratio_max, garbage, n_garbage);
-      garbage_sum += g;
-    }
-    /* Write it into nothingness. */
-    fprintf(devnull, "garbage: %g", garbage_sum);
+      /* Write it into nothingness. */
+      fprintf(devnull, "garbage: %g", garbage_sum);
 
-    if (params->print_each_step)
-      io_print_timers(timers_step, timing_log_step, timing_ratio_min,
-                      timing_ratio_max);
-    free(packing_sequence);
+      free(packing_sequence);
 
-    // omp single
+      if (params->verbose)
+        message("Thread %d finished step %d.", thread_id, step);
+
+    } /* (parallel) loop over thread_ids */
+
+#pragma omp barrier
+#pragma omp master
+{
+  message("Thread %d adding up", omp_get_thread_num());
     for (int i = 0; i < timer_count; i++) {
       timers_full[i] += timers_step[i];
       timers_step[i] = 0;
@@ -315,20 +325,24 @@ void run_simulation(struct parameters* params) {
       timing_log_step[i] = 0.;
     }
 
-    if (params->verbose)
-      message("Thread %d finished step %d.", thread_id, step);
+    if (params->print_each_step)
+      io_print_timers(timers_step, timing_log_step, timing_ratio_min, timing_ratio_max);
+}
 
-    // omp barrier
+#pragma omp barrier
   }
 
-
-  /* Deallocate everything here. */
-  clear_parts(&part_data);
-  fclose(devnull);
+  /* Clean up after yourself */
   free(garbage);
   gpu_data_buffers_free(&gpu_buf_dens);
   gpu_data_buffers_free(&gpu_buf_grad);
   gpu_data_buffers_free(&gpu_buf_forc);
+
+} /* omp parallel */
+
+  /* Clean up after yourself */
+  clear_parts(&part_data);
+  fclose(devnull);
 
   message("Finished simulation.");
   io_print_timers(timers_full, timing_log_full, timing_ratio_min,
