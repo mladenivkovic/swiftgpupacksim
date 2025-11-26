@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Add the non-standard paths to the included library headers
-AM_CFLAGS = $(NUMA_INCS) 
+AM_CFLAGS = $(NUMA_INCS) -DWITH_CUDA
 
 # Assign a "safe" version number
 AM_LDFLAGS = 
@@ -55,8 +55,6 @@ AM_SOURCES += run_simulation.c
 AM_SOURCES += io.c
 
 # Include files for distribution, not installation.
-
-
 nobase_noinst_HEADERS = swift_placeholders/cuda/gpu_part_pack_functions.h
 nobase_noinst_HEADERS += swift_placeholders/cuda/gpu_part_structs.h
 nobase_noinst_HEADERS += swift_placeholders/minmax.h
@@ -91,8 +89,7 @@ nobase_noinst_HEADERS += hydro_part_generated.h
 
 # Sources and flags for regular library
 libswiftgpupacksim_la_SOURCES = $(AM_SOURCES) $(CPU_SOURCES)
-libswiftgpupacksim_la_CFLAGS = $(AM_CFLAGS) $(CUDA_FLAGS)
-libswiftgpupacksim_la_LDFLAGS = $(AM_LDFLAGS) $(EXTRA_LIBS) $(CUDA_LDFLAGS) $(CUDA_LIBS) 
-# libswiftgpupacksim_la_LIBADD =
+libswiftgpupacksim_la_CFLAGS = $(AM_CFLAGS) $(CUDA_FLAGS) $(MYFLAGS)
+libswiftgpupacksim_la_LDFLAGS = $(AM_LDFLAGS) $(EXTRA_LIBS) $(CUDA_LDFLAGS) $(CUDA_LIBS)
 
 

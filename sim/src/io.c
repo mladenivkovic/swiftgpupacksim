@@ -1,8 +1,8 @@
 #include "io.h"
 
-#include "error.h"
 #include "help.h"
-#include "task.h"
+#include "swift_placeholders/error.h"
+#include "swift_placeholders/task.h"
 
 #include <dirent.h>
 #include <errno.h>

@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 /* Config parameters. */
-#include "../../config.h"
+#include "../../../config.h"
 #include "../align.h"
 #include "../timeline.h"
 

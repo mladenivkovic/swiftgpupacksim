@@ -1,8 +1,8 @@
 #pragma once
 
-#include "config.h"
-#include "lock.h"
-#include "timeline.h"
+#include "../config.h"
+#include "swift_placeholders/lock.h"
+#include "swift_placeholders/timeline.h"
 
 
 /**

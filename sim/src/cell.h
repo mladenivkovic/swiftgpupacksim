@@ -5,15 +5,14 @@
  *
  * Contains particles, links to tasks, a multipole object and counters.
  */
-#include "config.h"
+#include "../config.h"
 
 #include <stdint.h>
 
 /* Local includes. */
 #include "cell_hydro.h"
-#include "cell_other_physics.h"
 #include "hydro_part_generated.h"
-#include "task.h"
+#include "swift_placeholders/cell_other_physics.h"
 
 struct cell {
 

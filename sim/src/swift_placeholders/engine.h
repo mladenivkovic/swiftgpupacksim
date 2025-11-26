@@ -1,7 +1,7 @@
 #ifndef SWIFT_ENGINE_H
 #define SWIFT_ENGINE_H
 
-#include "../config.h"
+#include "../../config.h"
 #include "gpu_pack_params.h"
 #include "scheduler.h"
 #include "threadpool.h"

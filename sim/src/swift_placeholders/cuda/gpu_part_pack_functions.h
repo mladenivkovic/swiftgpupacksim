@@ -27,9 +27,9 @@
  */
 
 #include "../active.h"
-#include "../cell.h"
-#include "../hydro_part.h"
+#include "cell.h"
 #include "gpu_part_structs.h"
+#include "hydro_part.h"
 
 #include <math.h>
 

@@ -1,7 +1,7 @@
 #ifndef SWIFT_ACTIVE_H
 #define SWIFT_ACTIVE_H
 
-#include "../config.h"
+#include "../../config.h"
 #include "engine.h"
 #include "parts.h"
 #include "timeline.h"
