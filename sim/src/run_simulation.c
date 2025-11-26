@@ -328,6 +328,9 @@ void run_simulation(struct parameters* params) {
   clear_parts(&part_data);
   fclose(devnull);
   free(garbage);
+  gpu_data_buffers_free(&gpu_buf_dens);
+  gpu_data_buffers_free(&gpu_buf_grad);
+  gpu_data_buffers_free(&gpu_buf_forc);
 
   message("Finished simulation.");
   io_print_timers(timers_full, timing_log_full, timing_ratio_min,
