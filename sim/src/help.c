@@ -16,6 +16,8 @@ void help(void) {
   printf("  -h, --help:             print this help and exit\n");
   printf("  -p, --print-each-step:  print measurements after each simulation");
   printf(" step individually\n");
+  printf("  -s <nr_steps>:          run <nr_steps> steps ");
+  printf("(instead of all available ones)\n");
   printf("  -v, --verbose:          Increase run verbosity\n");
 
   exit(0);

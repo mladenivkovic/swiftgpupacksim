@@ -27,6 +27,11 @@ void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params) {
     } else if (strcmp(arg, "-p") == 0 ||
                strcmp(arg, "--print-each-step") == 0) {
       params->print_each_step = 1;
+    } else if (strcmp(arg, "-s") == 0){
+      if (i == argc-1)
+        error("-s flag needs an additional parameter: nr of steps to run");
+      i++;
+      params->nr_steps = atoi(argv[i]);
     } else {
       /* We may have been given the input file.
        * Check whether directory exists. */
@@ -100,7 +105,16 @@ void io_read_logged_params(struct parameters* params) {
       params->nr_parts = atoll(varvalue);
       have_nr_parts = 1;
     } else if (strcmp(varname, "nr_steps") == 0) {
-      params->nr_steps = atoi(varvalue);
+      int nr_steps = atoi(varvalue);
+      if ( params->nr_steps > 0) {
+        /* We have an attempted cmdline override. */
+        if (params->nr_steps > nr_steps) {
+          warning("Nr stepts to run provided by cmdline flag (%d) > "
+              "steps available (%d). Using available ones.",
+              params->nr_steps, nr_steps);
+          params->nr_steps = nr_steps;
+        }
+      }
       have_nr_steps = 1;
     } else {
       message("Unrecognised parameter '%s' in file", varname);
