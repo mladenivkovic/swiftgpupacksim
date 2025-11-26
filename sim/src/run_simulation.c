@@ -177,8 +177,6 @@ __attribute__((always_inline)) INLINE static double replay_event(
   for (int i = 0; i < n_garbage; i++) {
     sum += garbage[i];
   }
-  free(garbage);
-
   return sum;
 }
 
