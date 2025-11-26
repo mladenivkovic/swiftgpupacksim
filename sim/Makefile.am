@@ -26,7 +26,7 @@ SUBDIRS = src tests
 MYFLAGS = -DWITH_CUDA
 
 # Add the source directory and the non-standard paths to the included library headers to CFLAGS
-AM_CFLAGS = -I$(top_srcdir)/src 
+AM_CFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/swift_placeholders -I$(top_srcdir)/src/swift_placeholders/cuda
 
 AM_LDFLAGS = 
 
@@ -34,12 +34,12 @@ AM_LDFLAGS =
 EXTRA_LIBS = $(NUMA_LIBS) $(PROFILER_LIBS) $(TCMALLOC_LIBS) $(JEMALLOC_LIBS) $(TBBMALLOC_LIBS) 
 
 # Programs.
-bin_PROGRAMS = swiftgpupacksim
+bin_PROGRAMS = swiftgpupack
 
 # Sources for swift
-swiftgpupacksim_SOURCES = swiftgpupacksim.c
-swiftgpupacksim_CFLAGS = $(MYFLAGS) $(AM_CFLAGS) 
-swiftgpupacksim_LDADD =  src/libgpupackswiftsim.la $(EXTRA_LIBS)
+swiftgpupack_SOURCES = swiftgpupacksim.c
+swiftgpupack_CFLAGS = $(AM_CFLAGS) $(CUDA_FLAGS) $(MYFLAGS)
+swiftgpupack_LDADD =  src/libswiftgpupacksim.la $(AM_LDFLAGS) $(EXTRA_LIBS) $(CUDA_LDFLAGS) $(CUDA_LIBS)
 
 # Non-standard files that should be part of the distribution.
 EXTRA_DIST = 

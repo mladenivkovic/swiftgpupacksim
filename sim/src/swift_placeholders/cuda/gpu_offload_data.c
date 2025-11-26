@@ -58,7 +58,7 @@ void gpu_data_buffers_init(struct gpu_offload_data *buf,
   struct gpu_pack_metadata *md = &(buf->md);
   gpu_pack_metadata_init(md, params);
 
-#if defined(CONFIG_LOCAL_HP_ICX) || defined(CONFIG_LOCAL_HP_GCC)
+#if defined(NO_CUDA_ALLOC)
   /* Hack to get a working test version on my own machine. */
   buf->parts_send_d = malloc(part_buffer_size * send_struct_size);
   swift_assert(buf->parts_send_d != NULL);

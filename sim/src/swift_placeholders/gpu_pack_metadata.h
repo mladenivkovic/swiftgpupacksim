@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-#include "../config.h"
+#include "../../config.h"
 #include "gpu_pack_params.h"
 
 #include <stddef.h>

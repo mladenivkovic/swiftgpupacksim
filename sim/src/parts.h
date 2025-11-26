@@ -1,9 +1,9 @@
 #pragma once
 
-#include "error.h"
 #include "hydro_part_generated.h"
-#include "inline.h"
 #include "parameters.h"
+#include "swift_placeholders/error.h"
+#include "swift_placeholders/inline.h"
 
 #include <stdlib.h>
 

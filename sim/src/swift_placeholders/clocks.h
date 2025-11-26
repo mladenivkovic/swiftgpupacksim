@@ -20,11 +20,8 @@
 #define SWIFT_CLOCKS_H
 
 /* Config parameters. */
-#ifdef WITH_CUDA
-#include "../config.h"
-#else
-#include <config.h>
-#endif
+#include "../../config.h"
+
 /* System includes. */
 #include <sys/times.h>
 

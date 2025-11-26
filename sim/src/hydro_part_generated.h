@@ -26,10 +26,11 @@
  *        with added SPHENIX physics (Borrow 2020) (particle definition)
  */
 
-#include "align.h"
-#include "hydro_part_placeholder_structs.h"
-#include "rt_struct.h"
-#include "timestep_limiter_struct.h"
+#include "swift_placeholders/align.h"
+#include "swift_placeholders/hydro_part_placeholder_structs.h"
+#include "swift_placeholders/rt_struct.h"
+#include "swift_placeholders/timestep_limiter_struct.h"
+#include "swift_placeholders/error.h"
 
 #include <stddef.h>
 

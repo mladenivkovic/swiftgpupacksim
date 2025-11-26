@@ -1,8 +1,8 @@
 #include "run_simulation.h"
 
-#include "clocks.h"
 #include "io.h"
 #include "parts.h"
+#include "swift_placeholders/clocks.h"
 #include "swift_placeholders/cuda/gpu_offload_data.h"
 #include "swift_placeholders/cuda/gpu_part_pack_functions.h"
 #include "swift_placeholders/engine.h"

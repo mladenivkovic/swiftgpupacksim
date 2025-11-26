@@ -28,7 +28,7 @@
 /* Config parameters. */
 #include "cycle.h"
 
-#include <config.h>
+#include "../../config.h"
 
 
 /* Local headers. */

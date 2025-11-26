@@ -70,7 +70,6 @@ flags = [
     "-Wno-unused-function",
     "-std=c11",
     "-DHAVE_CUDA=1",  # cheat for the bloody linter
-    "-DCONFIG_LOCAL_HP_ICX=1",
 ]
 
 
@@ -78,13 +77,15 @@ include = [
     "-I",
     DIR_OF_THIS_SCRIPT,  # add config.h
     "-I",
-    os.path.join(DIR_OF_THIS_SCRIPT, "src"),
+    os.path.join(DIR_OF_THIS_SCRIPT, "sim"),
     "-I",
-    os.path.join(DIR_OF_THIS_SCRIPT, "src/cuda"),
+    os.path.join(DIR_OF_THIS_SCRIPT, "sim/src"),
     "-I",
-    os.path.join(DIR_OF_THIS_SCRIPT, "src/swift_placeholders"),
+    os.path.join(DIR_OF_THIS_SCRIPT, "sim/src/cuda"),
     "-I",
-    os.path.join(DIR_OF_THIS_SCRIPT, "src/swift_placeholders/cuda"),
+    os.path.join(DIR_OF_THIS_SCRIPT, "sim/src/swift_placeholders"),
+    "-I",
+    os.path.join(DIR_OF_THIS_SCRIPT, "sim/src/swift_placeholders/cuda"),
 ]
 
 try:

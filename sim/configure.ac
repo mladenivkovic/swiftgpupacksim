@@ -290,14 +290,76 @@ AC_CHECK_LIB(pthread, posix_fallocate,
 
 
 # Check for CUDA
-have_cuda="no"
 AC_ARG_WITH([cuda],
     [AS_HELP_STRING([--with-cuda=PATH],
        [root directory where CUDA is installed @<:@yes/no@:>@]
     )],
     [],
-    [with_cuda="no"]
+    [with_cuda="yes"]
 )
+
+if test "x$with_cuda" != "xyes"; then
+  # we got a path to a cuda installation, use that.
+  # Note: CUDA_*FLAGS get passed to the host compiler.
+  # NVCC_*FLAGS get passed to nvcc.
+  CUDA_CFLAGS="$CUDA_CFLAGS -I$with_cuda/include"
+  CUDA_LDFLAGS="-L$with_cuda/lib -L$with_cuda/lib64"
+  CUDA_LIBS="-lcudadevrt -lcudart"
+  NVCC="$with_cuda/bin/nvcc"
+  NVCC_FLAGS="$NVCC_FLAGS"
+  NVCC_LDFLAGS="$NVCC_LDFLAGS"
+  NVCC_LIBS="$NVCC_LIBS"
+else
+  # Get default installation
+  AC_PATH_PROG([NVCC],[nvcc])
+  echo "Found nvcc = $NVCC"
+  if test -n "$NVCC"; then
+    CUDA_HOME="`dirname $NVCC`/.."
+    CUDA_CFLAGS="$CUDA_CFLAGS -I${CUDA_HOME}/include"
+    CUDA_LDFLAGS="-L${CUDA_HOME}/lib -L${CUDA_HOME}/lib64"
+    CUDA_LIBS="-lcudadevrt -lcudart"
+    NVCC_FLAGS="$NVCC_FLAGS"
+    NVCC_LDFLAGS="$NVCC_LDFLAGS"
+    NVCC_LIBS="$NVCC_LIBS"
+  fi
+fi
+
+# if test "x$have_cuda" != "xno"; then
+AC_DEFINE([HAVE_CUDA], 1, [The CUDA compiler is installed.])
+
+# disable optimization?
+if test "$enable_opt" != "yes"; then
+  # use fast approximation mode for divisions et al.
+  # Don't want numerical output to change our behaviour.
+  NVCC_FLAGS="$NVCC_FLAGS"" -O0 "
+else
+  # Add optimization flags. We have to do this here because nvcc doesn't
+  # have something like --no-use_fast_math.
+  NVCC_FLAGS="$NVCC_FLAGS"" --use_fast_math --extra-device-vectorization"
+  if test "x$with_gpu_debug" == "xno"; then
+    # Add link time optimization if we're not using debug flags.
+    # Can't have -G and -lto simultaneously, that's a nvcc fatal error.
+    # Again because nvcc doesn't have something like --no-lto.
+    NVCC_FLAGS="$NVCC_FLAGS"" --lto"
+  fi
+fi
+
+# add debug symbols?
+if test "x$with_gpu_debug" != "xno"; then
+  NVCC_FLAGS="$NVCC_FLAGS"" -g -G --ftz=true"
+fi
+
+NVCC_FLAGS="$NVCC_FLAGS"" -arch=${with_cuda_arch}"
+# fi
+#
+AC_SUBST(CUDA_CFLAGS)
+AC_SUBST(CUDA_LDFLAGS)
+AC_SUBST(CUDA_LIBS)
+AC_SUBST(NVCC)
+AC_SUBST(NVCC_FLAGS)
+AC_SUBST(NVCC_LDFLAGS)
+AC_SUBST(NVCC_LIBS)
+
 
 # Check for special allocators
 have_special_allocator="no"
