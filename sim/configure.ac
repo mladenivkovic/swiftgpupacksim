@@ -176,6 +176,19 @@ if test "$enable_debugging_checks" = "yes"; then
    AC_DEFINE([SWIFT_DEBUG_CHECKS],1,[Enable expensive debugging])
 fi
 
+# Check if expensive debugging is on.
+AC_ARG_ENABLE([no-cuda-mallochost],
+   [AS_HELP_STRING([--enable-no-cuda-mallochost],
+     [Disable cudaMallocHost calls and use malloc instead @<:@yes/no@:>@]
+   )],
+   [enable_no_cuda_mallochost="$enableval"],
+   [enable_no_cuda_mallochost="no"]
+)
+if test "$enable_no_cuda_mallochost" = "yes"; then
+   AC_DEFINE([NO_CUDA_MALLOCHOST],1,[Disable cudaMallocHost])
+fi
+
+
 # Check whether we have any of the ARM v8.1 tick timers
 AX_ASM_ARM_PMCCNTR
 AX_ASM_ARM_CNTVCT
