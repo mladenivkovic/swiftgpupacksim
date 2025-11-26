@@ -85,9 +85,5 @@ void timing_reset_time(double *time);
 void timers_open_file(int rank);
 void timers_close_file(void);
 void timers_print_file(int step);
-void print_timers(const ticks timers_arr[timer_count],
-                  const double timings_log_arr[timer_count],
-                  const double timings_ratio_min[timer_count],
-                  const double timings_ratio_max[timer_count]);
 
 #endif /* SWIFT_TIMERS_H */
