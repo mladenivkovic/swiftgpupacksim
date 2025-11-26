@@ -114,6 +114,8 @@ void io_read_logged_params(struct parameters* params) {
               params->nr_steps, nr_steps);
           params->nr_steps = nr_steps;
         }
+      } else {
+        params->nr_steps = nr_steps;
       }
       have_nr_steps = 1;
     } else {
