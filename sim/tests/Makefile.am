@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Add the source directory and the non-standard paths to the included library headers to CFLAGS
-AM_CFLAGS = -I$(top_srcdir)/src $(NUMA_INCS) 
+AM_CFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/swift_placeholders -I$(top_srcdir)/src/swift_placeholders/cuda $(NUMA_INCS) 
 
 AM_LDFLAGS = ../src/.libs/libswiftgpupacksim.a $(NUMA_LIBS) $(TCMALLOC_LIBS) $(JEMALLOC_LIBS) $(TBBMALLOC_LIBS) 
 

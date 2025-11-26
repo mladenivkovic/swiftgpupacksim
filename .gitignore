@@ -192,3 +192,8 @@ acs-*.bib
 *.snm
 *.vrb
 
+# tests
+sim/tests/test_cmdlineargs
+sim/tests/test_header_output
+sim/tests/test_read_data_file
+sim/tests/test_read_paramfile
