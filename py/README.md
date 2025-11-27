@@ -61,7 +61,7 @@ part_struct2_name:
 - No duplicate names.
   - If there are several top level/root particle data structs with identical
     names, the yaml reader will only keep the last one.
-  - If there are several field with identical names, even if they are stored in
+  - If there are several fields with identical names, even if they are stored in
     different top level/root particle data structs, this will cause name clashes
     with the generated API.
 
@@ -107,8 +107,8 @@ struct parent_struct {
 
 ```
 
-To use a struct which is defined somewhere else, just add it as a type
-descriptor. Example:
+To use a struct which is defined somewhere else as a data type, just add it as a
+type descriptor. Example:
 
 ```
 parent_struct:         # such as part, xpart, ...
