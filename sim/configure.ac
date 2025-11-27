@@ -51,6 +51,10 @@ AX_OPENMP
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
 LDFLAGS="$LDFLAGS $OPENMP_CFLAGS"
 
+# git for version strings
+AC_PATH_PROG([GIT_CMD], [git])
+AC_SUBST([GIT_CMD])
+
 # If debug is selected then we also define SWIFT_DEVELOP_MODE to control
 # any developer code options.
 if test "x$ax_enable_debug" != "xno"; then
