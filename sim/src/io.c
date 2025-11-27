@@ -57,7 +57,7 @@ void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params) {
 
   if (!params->help && !data_dir_given) {
     warning("No data directory provided, that's a mandatory cmdline arg.");
-    help();
+    help(1);
   }
 }
 

@@ -1,9 +1,9 @@
 #pragma once
 
 /*
- * Print out a help message and exit.
+ * Print out a help message and exit with errorcode.
  */
-void help(void);
+void help(int errorcode);
 
 /*
  * print out the banner image.
