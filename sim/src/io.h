@@ -23,7 +23,8 @@ void io_print_timers(const ticks timers_arr[timer_count],
                      const double timings_log_arr[timer_count],
                      const double timings_ratio_min[timer_count],
                      const double timings_ratio_max[timer_count]);
-void io_write_result(const ticks timers_arr[timer_count], const struct parameters* params);
+void io_write_result(const ticks timers_arr[timer_count],
+                     const struct parameters* params);
 
 void io_util_construct_log_filename(char filename[IO_MAX_FILENAME_SIZE],
                                     int threadid, int step,
@@ -45,8 +46,8 @@ void io_util_print_single_timer_line(
     const double timers_log_arr[timer_count],
     const double timings_ratio_min[timer_count],
     const double timings_ratio_max[timer_count]);
-void io_util_write_single_output_line(
-    enum task_types type, enum task_subtypes subtype, enum timer_enum timer,
-    const ticks timers_arr[timer_count], FILE* outfile_p, int is_last);
-
-
+void io_util_write_single_output_line(enum task_types type,
+                                      enum task_subtypes subtype,
+                                      enum timer_enum timer,
+                                      const ticks timers_arr[timer_count],
+                                      FILE* outfile_p, int is_last);

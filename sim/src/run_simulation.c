@@ -234,112 +234,116 @@ void run_simulation(struct parameters* params) {
 
 
 #pragma omp parallel num_threads(params->nr_threads)
-{
+  {
 
-  /* Double-check nothing's overwriting what we want to do. */
+    /* Double-check nothing's overwriting what we want to do. */
 #ifdef SWIFT_DEBUG_CHECKS
-  int n_threads = omp_get_num_threads();
-  if (n_threads != params->nr_threads) {
-    error("Started a parallel region with %d threads instead of %d", n_threads, params->nr_threads);
-  }
+    int n_threads = omp_get_num_threads();
+    if (n_threads != params->nr_threads) {
+      error("Started a parallel region with %d threads instead of %d",
+            n_threads, params->nr_threads);
+    }
 #endif
 
-  /* Alloc a few MB of data and fill them with garbage to flush caches. */
-  const int n_garbage = params->no_cache_flush ? 0 : 250000;
-  double* garbage = malloc(n_garbage * sizeof(double));
+    /* Alloc a few MB of data and fill them with garbage to flush caches. */
+    const int n_garbage = params->no_cache_flush ? 0 : 250000;
+    double* garbage = malloc(n_garbage * sizeof(double));
 
-  /* Declare and allocate GPU launch control data structures which need to be in
-   * scope */
-  struct gpu_offload_data gpu_buf_dens;
-  struct gpu_offload_data gpu_buf_grad;
-  struct gpu_offload_data gpu_buf_forc;
+    /* Declare and allocate GPU launch control data structures which need to be
+     * in scope */
+    struct gpu_offload_data gpu_buf_dens;
+    struct gpu_offload_data gpu_buf_grad;
+    struct gpu_offload_data gpu_buf_forc;
 
-  gpu_data_buffers_init(&gpu_buf_dens, &gpu_pack_params,
-                        sizeof(struct gpu_part_send_d),
-                        sizeof(struct gpu_part_recv_d));
-  gpu_data_buffers_init(&gpu_buf_grad, &gpu_pack_params,
-                        sizeof(struct gpu_part_send_g),
-                        sizeof(struct gpu_part_recv_g));
-  gpu_data_buffers_init(&gpu_buf_forc, &gpu_pack_params,
-                        sizeof(struct gpu_part_send_f),
-                        sizeof(struct gpu_part_recv_f));
+    gpu_data_buffers_init(&gpu_buf_dens, &gpu_pack_params,
+                          sizeof(struct gpu_part_send_d),
+                          sizeof(struct gpu_part_recv_d));
+    gpu_data_buffers_init(&gpu_buf_grad, &gpu_pack_params,
+                          sizeof(struct gpu_part_send_g),
+                          sizeof(struct gpu_part_recv_g));
+    gpu_data_buffers_init(&gpu_buf_forc, &gpu_pack_params,
+                          sizeof(struct gpu_part_send_f),
+                          sizeof(struct gpu_part_recv_f));
 
 
-  /* -------------------------------------------------*/
-  /* Loop over recorded simulation steps              */
-  /* this loop corresponds to the 'Main loop', i.e.   */
-  /* the first `while (1){}` in runner_main           */
-  /* -------------------------------------------------*/
+    /* -------------------------------------------------*/
+    /* Loop over recorded simulation steps              */
+    /* this loop corresponds to the 'Main loop', i.e.   */
+    /* the first `while (1){}` in runner_main           */
+    /* -------------------------------------------------*/
 #pragma omp barrier
-  for (int step = 0; step < params->nr_steps; step++) {
+    for (int step = 0; step < params->nr_steps; step++) {
 
-    /* Use a single omp thread per thread of the original run */
-#pragma omp for schedule(static,1)
-    for (int thread_id = 0; thread_id < params->nr_threads; thread_id++) {
+      /* Use a single omp thread per thread of the original run */
+#pragma omp for schedule(static, 1)
+      for (int thread_id = 0; thread_id < params->nr_threads; thread_id++) {
 
-      /* Get file to read */
-      char logfile[IO_MAX_FILENAME_SIZE];
-      io_util_construct_log_filename(logfile, thread_id, step, params);
+        /* Get file to read */
+        char logfile[IO_MAX_FILENAME_SIZE];
+        io_util_construct_log_filename(logfile, thread_id, step, params);
 
-      /* Read trace */
-      struct packing_data* packing_sequence = NULL;
-      int n_events = 0;
-      io_read_logged_events_file(logfile, &packing_sequence, &n_events, params);
+        /* Read trace */
+        struct packing_data* packing_sequence = NULL;
+        int n_events = 0;
+        io_read_logged_events_file(logfile, &packing_sequence, &n_events,
+                                   params);
 
-      if (params->verbose)
-        message("Thread %d step %d found %d events.", thread_id, step, n_events);
+        if (params->verbose)
+          message("Thread %d step %d found %d events.", thread_id, step,
+                  n_events);
 
-      /* ----------------------------------------------*/
-      /* Loop over recorded packing tasks.             */
-      /* This loop corresponds to second `while (1){}` */
-      /* loop in runner_main                           */
-      /* ----------------------------------------------*/
-      double garbage_sum = 0.;
-      for (int i = 0; i < n_events; i++) {
-        struct packing_data event = packing_sequence[i];
+        /* ----------------------------------------------*/
+        /* Loop over recorded packing tasks.             */
+        /* This loop corresponds to second `while (1){}` */
+        /* loop in runner_main                           */
+        /* ----------------------------------------------*/
+        double garbage_sum = 0.;
+        for (int i = 0; i < n_events; i++) {
+          struct packing_data event = packing_sequence[i];
 
-        double g =
-            replay_event(&event, &part_data, &gpu_buf_dens, &gpu_buf_grad,
-                         &gpu_buf_forc, &e, timers_step, timing_log_step,
-                         timing_ratio_min, timing_ratio_max, garbage, n_garbage);
-        garbage_sum += g;
-      }
+          double g = replay_event(&event, &part_data, &gpu_buf_dens,
+                                  &gpu_buf_grad, &gpu_buf_forc, &e, timers_step,
+                                  timing_log_step, timing_ratio_min,
+                                  timing_ratio_max, garbage, n_garbage);
+          garbage_sum += g;
+        }
 
-      /* Write it into nothingness. */
-      fprintf(devnull, "garbage: %g", garbage_sum);
+        /* Write it into nothingness. */
+        fprintf(devnull, "garbage: %g", garbage_sum);
 
-      free(packing_sequence);
+        free(packing_sequence);
 
-      if (params->verbose)
-        message("Thread %d finished step %d.", thread_id, step);
+        if (params->verbose)
+          message("Thread %d finished step %d.", thread_id, step);
 
-    } /* (parallel) loop over thread_ids */
+      } /* (parallel) loop over thread_ids */
 
 #pragma omp barrier
 #pragma omp master
-{
-  message("Finished step %d", step);
-    for (int i = 0; i < timer_count; i++) {
-      timers_full[i] += timers_step[i];
-      timers_step[i] = 0;
-      timing_log_full[i] += timing_log_step[i];
-      timing_log_step[i] = 0.;
-    }
+      {
+        message("Finished step %d", step);
+        for (int i = 0; i < timer_count; i++) {
+          timers_full[i] += timers_step[i];
+          timers_step[i] = 0;
+          timing_log_full[i] += timing_log_step[i];
+          timing_log_step[i] = 0.;
+        }
 
-    if (params->print_each_step)
-      io_print_timers(timers_step, timing_log_step, timing_ratio_min, timing_ratio_max);
-}
+        if (params->print_each_step)
+          io_print_timers(timers_step, timing_log_step, timing_ratio_min,
+                          timing_ratio_max);
+      }
 
 #pragma omp barrier
-  }
+    }
 
-  /* Clean up after yourself */
-  free(garbage);
-  gpu_data_buffers_free(&gpu_buf_dens);
-  gpu_data_buffers_free(&gpu_buf_grad);
-  gpu_data_buffers_free(&gpu_buf_forc);
+    /* Clean up after yourself */
+    free(garbage);
+    gpu_data_buffers_free(&gpu_buf_dens);
+    gpu_data_buffers_free(&gpu_buf_grad);
+    gpu_data_buffers_free(&gpu_buf_forc);
 
-} /* omp parallel */
+  } /* omp parallel */
 
   /* Clean up after yourself */
   clear_parts(&part_data);

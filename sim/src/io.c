@@ -27,12 +27,13 @@ void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params) {
     } else if (strcmp(arg, "-p") == 0 ||
                strcmp(arg, "--print-each-step") == 0) {
       params->print_each_step = 1;
-    } else if (strcmp(arg, "-s") == 0){
-      if (i == argc-1)
+    } else if (strcmp(arg, "-s") == 0) {
+      if (i == argc - 1)
         error("-s flag needs an additional parameter: nr of steps to run");
       i++;
       params->nr_steps = atoi(argv[i]);
-    } else if (strcmp(arg, "--noflush")==0 || strcmp(arg, "--no-flush")==0 || strcmp(arg, "-n") == 0) {
+    } else if (strcmp(arg, "--noflush") == 0 ||
+               strcmp(arg, "--no-flush") == 0 || strcmp(arg, "-n") == 0) {
       params->no_cache_flush = 1;
     } else if (arg[0] == '-') {
       message("WARNING: Flag '%s' not recognized", arg);
@@ -113,10 +114,11 @@ void io_read_logged_params(struct parameters* params) {
       have_nr_parts = 1;
     } else if (strcmp(varname, "nr_steps") == 0) {
       int nr_steps = atoi(varvalue);
-      if ( params->nr_steps > 0) {
+      if (params->nr_steps > 0) {
         /* We have an attempted cmdline override. */
         if (params->nr_steps > nr_steps) {
-          warning("Nr stepts to run provided by cmdline flag (%d) > "
+          warning(
+              "Nr stepts to run provided by cmdline flag (%d) > "
               "steps available (%d). Using available ones.",
               params->nr_steps, nr_steps);
           params->nr_steps = nr_steps;
@@ -223,7 +225,8 @@ void io_read_logged_events_file(const char* filename,
 /**
  * @brief Write results into the output file.
  */
-void io_write_result(const ticks timers_arr[timer_count], const struct parameters* params){
+void io_write_result(const ticks timers_arr[timer_count],
+                     const struct parameters* params) {
 
 #if defined(SPHENIX_AOS_PARTICLE)
   char suffix[10] = "aos";
@@ -251,12 +254,19 @@ void io_write_result(const ticks timers_arr[timer_count], const struct parameter
   fprintf(out_fp, "# cache flush: %d\n", !params->no_cache_flush);
   fprintf(out_fp, "# type,subtype,timing[ms]\n");
 
-  io_util_write_single_output_line(task_type_pack, task_subtype_density, timer_density_pack, timers_arr, out_fp, 0);
-  io_util_write_single_output_line(task_type_pack, task_subtype_gradient, timer_gradient_pack, timers_arr, out_fp, 0);
-  io_util_write_single_output_line(task_type_pack, task_subtype_force, timer_force_pack, timers_arr, out_fp, 0);
-  io_util_write_single_output_line(task_type_unpack, task_subtype_density, timer_density_unpack, timers_arr, out_fp, 0);
-  io_util_write_single_output_line(task_type_unpack, task_subtype_gradient, timer_gradient_unpack, timers_arr, out_fp, 0);
-  io_util_write_single_output_line(task_type_unpack, task_subtype_force, timer_force_unpack, timers_arr, out_fp, 1);
+  io_util_write_single_output_line(task_type_pack, task_subtype_density,
+                                   timer_density_pack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_pack, task_subtype_gradient,
+                                   timer_gradient_pack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_pack, task_subtype_force,
+                                   timer_force_pack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_unpack, task_subtype_density,
+                                   timer_density_unpack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_unpack, task_subtype_gradient,
+                                   timer_gradient_unpack, timers_arr, out_fp,
+                                   0);
+  io_util_write_single_output_line(task_type_unpack, task_subtype_force,
+                                   timer_force_unpack, timers_arr, out_fp, 1);
 
   message("Written results to %s", outfname);
   fclose(out_fp);
@@ -702,9 +712,11 @@ void io_util_print_single_timer_line(
  *
  * @param is_last: If this is the last entry, don't add a newline at the end.
  */
-void io_util_write_single_output_line(
-    enum task_types type, enum task_subtypes subtype, enum timer_enum timer,
-    const ticks timers_arr[timer_count], FILE* outfile_p, int is_last) {
+void io_util_write_single_output_line(enum task_types type,
+                                      enum task_subtypes subtype,
+                                      enum timer_enum timer,
+                                      const ticks timers_arr[timer_count],
+                                      FILE* outfile_p, int is_last) {
 
   double dt_sim = clocks_from_ticks(timers_arr[timer]);
 
@@ -713,5 +725,3 @@ void io_util_write_single_output_line(
   fprintf(outfile_p, "%.4g", dt_sim);
   if (!is_last) fprintf(outfile_p, "\n");
 }
-
-
