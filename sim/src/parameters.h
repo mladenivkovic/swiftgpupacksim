@@ -8,26 +8,29 @@
 
 struct parameters {
 
-  // How many threads have we run on?
+  /*! How many threads have we run on? */
   int nr_threads;
 
-  // How many steps do we run on?
+  /*! How many steps do we run on? */
   int nr_steps;
 
-  // Are we verbose?
+  /*! Are we verbose? */
   int verbose;
 
-  // Are we printing out help and quitting?
+  /*! Are we printing out help and quitting? */
   int help;
 
-  // Total number of particles in simulation
+  /*! Total number of particles in simulation */
   size_t nr_parts;
 
-  // Root dir of measurement data
+  /*! Root dir of measurement data */
   char data_root_dir[200];
 
-  // Print measurements each step?
+  /*! Print measurements each step? */
   int print_each_step;
+
+  /*! Skip cache flushing? */
+  int no_cache_flush;
 };
 
 void init_params(struct parameters *params);

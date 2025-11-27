@@ -9,16 +9,18 @@ void help(void) {
   printf("simulate packing/unpacking particle data for GPUs.");
   printf("\n");
   printf("Usage:\n");
-  printf("  ./swiftgpupacksim path/to/measurement/data [-v -h]");
-  printf("\n\n");
-  printf("   Some measurement data should be available in the repository.");
-  printf("\n\n");
+  printf("  ./swiftgpupacksim path/to/measurement/data ");
+  printf("[-h] [-n] [-p] [-s N] [-v]\n\n");
+  printf("   Some example measurement data should be available in the\n");
+  printf("   repository. Check the swiftgpupacksim/data directory.\n\n");
   printf("  -h, --help:             print this help and exit\n");
+  printf("  -n, --noflush:          Do not flush the caches after each op.\n");
+  printf("      --no-flush          (Speeds simulation up significantly.)\n");
   printf("  -p, --print-each-step:  print measurements after each simulation");
   printf(" step individually\n");
   printf("  -s <nr_steps>:          run <nr_steps> steps ");
   printf("(instead of all available ones)\n");
-  printf("  -v, --verbose:          Increase run verbosity\n");
+  printf("  -v, --verbose:          increase run verbosity\n");
 
   exit(0);
 }

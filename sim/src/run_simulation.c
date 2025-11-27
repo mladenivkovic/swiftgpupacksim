@@ -171,11 +171,9 @@ __attribute__((always_inline)) INLINE static double replay_event(
   }
 #endif
 
-  for (int i = 0; i < n_garbage; i++) {
-    garbage[i] = (2. * i - 13.) * 4.;
-  }
   double sum = 0.;
   for (int i = 0; i < n_garbage; i++) {
+    garbage[i] = (2. * i - 13.) * 4.;
     sum += garbage[i];
   }
   return sum;
@@ -193,7 +191,7 @@ void run_simulation(struct parameters* params) {
 
   message("Starting simulation.");
 
-  /* Get devnull handle to dump garbage in */
+  /* Get devnull handle to dump garbage used for cache flushing in */
   FILE* devnull = fopen("/dev/null", "w");
   if (devnull == NULL) error("Oh no :(");
 
@@ -239,13 +237,15 @@ void run_simulation(struct parameters* params) {
 {
 
   /* Double-check nothing's overwriting what we want to do. */
+#ifdef SWIFT_DEBUG_CHECKS
   int n_threads = omp_get_num_threads();
   if (n_threads != params->nr_threads) {
     error("Started a parallel region with %d threads instead of %d", n_threads, params->nr_threads);
   }
+#endif
 
   /* Alloc a few MB of data and fill them with garbage to flush caches. */
-  const int n_garbage = 250000;
+  const int n_garbage = params->no_cache_flush ? 0 : 250000;
   double* garbage = malloc(n_garbage * sizeof(double));
 
   /* Declare and allocate GPU launch control data structures which need to be in
@@ -273,6 +273,7 @@ void run_simulation(struct parameters* params) {
 #pragma omp barrier
   for (int step = 0; step < params->nr_steps; step++) {
 
+    /* Use a single omp thread per thread of the original run */
 #pragma omp for schedule(static,1)
     for (int thread_id = 0; thread_id < params->nr_threads; thread_id++) {
 
@@ -317,7 +318,7 @@ void run_simulation(struct parameters* params) {
 #pragma omp barrier
 #pragma omp master
 {
-  message("Thread %d adding up", omp_get_thread_num());
+  message("Finished step %d adding up", step);
     for (int i = 0; i < timer_count; i++) {
       timers_full[i] += timers_step[i];
       timers_step[i] = 0;

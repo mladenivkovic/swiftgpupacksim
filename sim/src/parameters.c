@@ -16,6 +16,7 @@ void init_params(struct parameters *params) {
   params->help = 0;
 
   params->print_each_step = 0;
+  params->no_cache_flush = 0;
 
   strcpy(params->data_root_dir, "\0");
 }
@@ -59,4 +60,5 @@ void print_params(struct parameters *params) {
   /* printf("\t step:              %6d\n", params->step); */
   /* printf("\t nsteps:            %6d\n", params->nsteps); */
   printf("\t measurement data:  %s\n", params->data_root_dir);
+  printf("\t cache flushing:    %d\n", !params->no_cache_flush);
 }
