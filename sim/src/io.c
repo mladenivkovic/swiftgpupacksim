@@ -221,6 +221,100 @@ void io_read_logged_events_file(const char* filename,
 
 
 /**
+ * @brief Write results into the output file.
+ */
+void io_write_result(const ticks timers_arr[timer_count], const struct parameters* params){
+
+#if defined(SPHENIX_AOS_PARTICLE)
+  char suffix[10] = "aos";
+  char comment[80] = "# Memory layout: AOS\n";
+#elif defined(SPHENIX_SOA_PARTICLE)
+  char suffix[10] = "soa";
+  char comment[80] = "# Memory layout: SOA\n";
+#else
+#pragma error "Unknown particle memory layout"
+#endif
+
+  char outfname[80] = "results_";
+  strcat(outfname, suffix);
+  strcat(outfname, ".csv");
+
+  FILE* out_fp = fopen(outfname, "w");
+  if (out_fp == NULL)
+    error("Something went wrong when opening output file to write");
+
+  fprintf(out_fp, "%s", comment);
+  fprintf(out_fp, "# Reproduced measurements: %s\n", params->data_root_dir);
+  fprintf(out_fp, "# nr_threads: %d\n", params->nr_threads);
+  fprintf(out_fp, "# nr_steps: %d\n", params->nr_steps);
+  fprintf(out_fp, "# nr_parts: %ld\n", params->nr_parts);
+  fprintf(out_fp, "# cache flush: %d\n", !params->no_cache_flush);
+  fprintf(out_fp, "# type,subtype,timing[ms]\n");
+
+  io_util_write_single_output_line(task_type_pack, task_subtype_density, timer_density_pack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_pack, task_subtype_gradient, timer_gradient_pack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_pack, task_subtype_force, timer_force_pack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_unpack, task_subtype_density, timer_density_unpack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_unpack, task_subtype_gradient, timer_gradient_unpack, timers_arr, out_fp, 0);
+  io_util_write_single_output_line(task_type_unpack, task_subtype_force, timer_force_unpack, timers_arr, out_fp, 1);
+
+  message("Written results to %s", outfname);
+  fclose(out_fp);
+}
+
+
+/**
+ * Print output to screen in a nice table.
+ */
+void io_print_timers(const ticks timers_arr[timer_count],
+                     const double timings_log_arr[timer_count],
+                     const double timings_ratio_min[timer_count],
+                     const double timings_ratio_max[timer_count]) {
+
+  printf(
+      "--------------------------------------"
+      "--------------------------------------"
+      "------------------------"
+      "\n");
+  printf(
+      "| Name                 | Simulation [ms]   |"
+      " Measured log [ms] | Ratio     |"
+      " Ratio min | Ratio max |"
+      "\n");
+  printf(
+      "--------------------------------------"
+      "--------------------------------------"
+      "------------------------"
+      "\n");
+
+  io_util_print_single_timer_line(
+      task_type_pack, task_subtype_density, timer_density_pack, timers_arr,
+      timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_unpack, task_subtype_density, timer_density_unpack, timers_arr,
+      timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_pack, task_subtype_gradient, timer_gradient_pack, timers_arr,
+      timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_unpack, task_subtype_gradient, timer_gradient_unpack,
+      timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(task_type_pack, task_subtype_force,
+                                  timer_force_pack, timers_arr, timings_log_arr,
+                                  timings_ratio_min, timings_ratio_max);
+  io_util_print_single_timer_line(
+      task_type_unpack, task_subtype_force, timer_force_unpack, timers_arr,
+      timings_log_arr, timings_ratio_min, timings_ratio_max);
+
+  printf(
+      "--------------------------------------"
+      "--------------------------------------"
+      "------------------------"
+      "\n");
+}
+
+
+/**
  * Get the data measurement file name to read in
  */
 void io_util_construct_log_filename(char filename[IO_MAX_FILENAME_SIZE],
@@ -602,52 +696,22 @@ void io_util_print_single_timer_line(
          dt_sim, dt_log, dt_sim / dt_log, rat_min, rat_max);
 }
 
+
 /**
- * Print output to screen in a nice table.
+ * @brief Write a single line of results into the output file.
+ *
+ * @param is_last: If this is the last entry, don't add a newline at the end.
  */
-void io_print_timers(const ticks timers_arr[timer_count],
-                     const double timings_log_arr[timer_count],
-                     const double timings_ratio_min[timer_count],
-                     const double timings_ratio_max[timer_count]) {
+void io_util_write_single_output_line(
+    enum task_types type, enum task_subtypes subtype, enum timer_enum timer,
+    const ticks timers_arr[timer_count], FILE* outfile_p, int is_last) {
 
-  printf(
-      "--------------------------------------"
-      "--------------------------------------"
-      "------------------------"
-      "\n");
-  printf(
-      "| Name                 | Simulation [ms]   |"
-      " Measured log [ms] | Ratio     |"
-      " Ratio min | Ratio max |"
-      "\n");
-  printf(
-      "--------------------------------------"
-      "--------------------------------------"
-      "------------------------"
-      "\n");
+  double dt_sim = clocks_from_ticks(timers_arr[timer]);
 
-  io_util_print_single_timer_line(
-      task_type_pack, task_subtype_density, timer_density_pack, timers_arr,
-      timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(
-      task_type_unpack, task_subtype_density, timer_density_unpack, timers_arr,
-      timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(
-      task_type_pack, task_subtype_gradient, timer_gradient_pack, timers_arr,
-      timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(
-      task_type_unpack, task_subtype_gradient, timer_gradient_unpack,
-      timers_arr, timings_log_arr, timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(task_type_pack, task_subtype_force,
-                                  timer_force_pack, timers_arr, timings_log_arr,
-                                  timings_ratio_min, timings_ratio_max);
-  io_util_print_single_timer_line(
-      task_type_unpack, task_subtype_force, timer_force_unpack, timers_arr,
-      timings_log_arr, timings_ratio_min, timings_ratio_max);
-
-  printf(
-      "--------------------------------------"
-      "--------------------------------------"
-      "------------------------"
-      "\n");
+  fprintf(outfile_p, "%s,", taskID_names[type]);
+  fprintf(outfile_p, "%s,", subtaskID_names[subtype]);
+  fprintf(outfile_p, "%.4g", dt_sim);
+  if (!is_last) fprintf(outfile_p, "\n");
 }
+
+
