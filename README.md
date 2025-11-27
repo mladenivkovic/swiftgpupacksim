@@ -52,6 +52,34 @@ git lfs checkout
 ```
 
 
+## Selecting a memory layout
+
+To select a specific memory layout, use the
+`--with-particle-memory-layout=<method>` flag in the `./configure` step. See
+`./configure --help` for available options.
+
+
+## Reading the output
+
+A simulation run will produce an output file of the form `results_XXX.csv`,
+where `XXX` is determined by the selected memory layout realisation.
+The contents should be the following:
+
+```
+# Memory layout: XXX
+# Reproduced measurements: path/to/root/dir/of/measurements
+# nr_threads: [INT]
+# nr_steps: [INT]
+# nr_parts: [INT]
+# cache flush: [0,1]
+# type,subtype,timing[ms]
+pack,density,[FLOAT]
+pack,gradient,[FLOAT]
+pack,force,[FLOAT]
+unpack,density,[FLOAT]
+unpack,gradient,[FLOAT]
+unpack,force,[FLOAT]
+```
 
 
 
@@ -71,6 +99,9 @@ Consult `/data/README.md` for a specification of the log file formats.
 
 
 
+## Adding new layout realisations
+
+TODO
 
 ## Particle struct generation
 

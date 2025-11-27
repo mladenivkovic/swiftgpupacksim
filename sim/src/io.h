@@ -8,6 +8,8 @@
 #include "parameters.h"
 #include "swift_placeholders/timers.h"
 
+#include <stdio.h>
+
 #define IO_MAX_LINE_SIZE 256
 #define IO_MAX_FILENAME_SIZE 256
 
@@ -17,6 +19,11 @@ void io_read_logged_events_file(const char* filename,
                                 struct packing_data** packing_sequence,
                                 int* n_elements,
                                 const struct parameters* params);
+void io_print_timers(const ticks timers_arr[timer_count],
+                     const double timings_log_arr[timer_count],
+                     const double timings_ratio_min[timer_count],
+                     const double timings_ratio_max[timer_count]);
+void io_write_result(const ticks timers_arr[timer_count], const struct parameters* params);
 
 void io_util_construct_log_filename(char filename[IO_MAX_FILENAME_SIZE],
                                     int threadid, int step,
@@ -32,7 +39,14 @@ int io_util_split_name_colon_value_present(const char* line, char* varname,
 int io_util_line_is_measurement_data(const char* line);
 void io_util_parse_measurement_data_line(const char* line,
                                          struct packing_data* data);
-void io_print_timers(const ticks timers_arr[timer_count],
-                     const double timings_log_arr[timer_count],
-                     const double timings_ratio_min[timer_count],
-                     const double timings_ratio_max[timer_count]);
+void io_util_print_single_timer_line(
+    enum task_types type, enum task_subtypes subtype, enum timer_enum timer,
+    const ticks timers_arr[timer_count],
+    const double timers_log_arr[timer_count],
+    const double timings_ratio_min[timer_count],
+    const double timings_ratio_max[timer_count]);
+void io_util_write_single_output_line(
+    enum task_types type, enum task_subtypes subtype, enum timer_enum timer,
+    const ticks timers_arr[timer_count], FILE* outfile_p, int is_last);
+
+

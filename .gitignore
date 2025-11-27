@@ -201,3 +201,4 @@ sim/tests/test_read_paramfile
 # outputs
 data/gn001
 data/gn002
+*.csv

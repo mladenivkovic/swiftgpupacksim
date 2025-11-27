@@ -346,6 +346,7 @@ void run_simulation(struct parameters* params) {
   fclose(devnull);
 
   message("Finished simulation.");
+  io_write_result(timers_full, params);
   io_print_timers(timers_full, timing_log_full, timing_ratio_min,
                   timing_ratio_max);
 }
