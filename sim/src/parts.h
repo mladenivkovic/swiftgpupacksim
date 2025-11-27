@@ -4,8 +4,11 @@
 #include "parameters.h"
 #include "swift_placeholders/error.h"
 #include "swift_placeholders/inline.h"
+#include "swift_placeholders/memuse.h"
 
 #include <stdlib.h>
+
+#define part_align 128
 
 /**
  * Struct holding handles to all particle data arrays
@@ -28,6 +31,13 @@ static __attribute__((always_inline)) INLINE void init_parts(
     struct part_arrays* data, const struct parameters* params) {
 
   data->p = (struct part*)calloc(params->nr_parts, sizeof(struct part));
+
+  if (swift_memalign("parts", (void**)&data->p, part_align, params->nr_parts * sizeof(struct part)) != 0)
+    error("Error while allocating memory for SPH particles");
+
+  /* Zero out everything. */
+  memset(data->p, 0, params->nr_parts * sizeof(struct part));
+
 
 #ifdef SWIFT_DEBUG_CHECKS
   data->nr_parts = params->nr_parts;
