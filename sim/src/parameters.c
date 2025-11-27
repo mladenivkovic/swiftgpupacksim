@@ -28,7 +28,7 @@ void init_params(struct parameters *params) {
 void validate_params(struct parameters *params) {
 
   if (params->help) {
-    help();
+    help(0);
   }
   if (params->verbose) {
     message("Starting a verbose run.");
