@@ -1,0 +1,274 @@
+# Hold every single variable in a separate global array.
+
+part_id:
+  id: 
+    type: long long
+    doc:  Particle unique ID
+
+part_gpart:
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
+
+part_x:
+  x:
+    type: double
+    size: 3
+    doc: the particle position
+
+part_v:
+  v:
+    size: 3
+    doc: Particle predicted velocity
+
+part_a_hydro:
+  a_hydro:
+    size: 3
+    doc: Particle acceleration 
+
+part_mass:
+  mass:
+    doc: Particle mass
+
+part_h:
+  h:
+    doc: Particle smoothing length
+
+part_u:
+  u:
+    doc: Particle internal energy
+
+part_u_dt:
+  u_dt:
+    doc: Time derivative of the internal energy
+
+part_rho:
+  rho:
+    doc: Particle density
+
+part_div_v:
+  div_v:
+    doc: Particle velocity divergence
+
+part_div_v_dt:
+  div_v_dt:
+    doc: Time differential of velocity divergence
+
+part_div_v_previous_step:
+  div_v_previous_step:
+    doc: Particle velocity divergence from previous step
+
+part_alpha_av:
+  alpha_av:
+    doc: Artificial viscosity parameter
+  
+part_v_sig:
+  v_sig:
+    doc: Signal velocity
+
+part_laplace_u:
+  laplace_u:
+    doc: del^2 u, a smoothed quantity
+
+part_alpha_diff:
+  alpha_diff: 
+    doc: Thermal diffusion coefficient
+
+part_density_force1:
+  union1:
+    type: union
+    contents:
+      wcount:
+        doc: Neighbour number count
+      f_gradh:
+        doc: "'Grad h' term -- only partial in P-U"
+
+part_density_force2:
+  union2:
+    type: union
+    contents:
+      wcount_dh:
+        doc: Derivative of the neighbour number with respect to h
+      pressure:
+        doc: Particle pressure
+
+
+part_density_force3:
+  union3:
+    type: union
+    contents:
+      rho_dh:
+        doc: Derivative of density with respect to h
+      soundspeed: 
+        doc: Particle soundspeed
+
+
+part_density_force4:
+  union4:
+    type: union
+    contents:
+      rot_v:
+        doc: Particle velocity curl
+        size: 3
+
+      force:
+        type: struct
+        doc: remaining force quantities to fill this union
+        contents:
+          h_dt: 
+            doc: Time derivative of smoothing length 
+          balsara:
+            doc: Balsara switch
+          alpha_visc_max_ngb:
+            doc: Maximal alpha (viscosity) over neighbours
+
+part_additional_structs:
+  adaptive_softening_data:
+    type: struct adaptive_softening_part_data
+    doc: Additional data used for adaptive softening
+
+  mhd_data:
+    type: struct mhd_part_data
+    doc: Additional data used by the MHD scheme
+
+  chemistry_data:
+    type: struct chemistry_part_data 
+    doc: Chemistry information
+
+  cooling_data:
+    type: struct cooling_part_data
+    doc: Cooling information
+
+  feedback_data:
+    type: struct feedback_part_data
+    doc: Additional data used by the feedback
+
+  black_holes_data:
+    type: struct black_holes_part_data
+    doc: Black holes information (eg swallowing ID)
+
+  sink_data:
+    type: struct sink_part_data
+    doc: Sink information (eg swallowing ID)
+
+  pressure_floor_data:
+    type: struct pressure_floor_part_data
+    doc: Additional data used by the pressure floor
+
+  geometry:
+    type: struct fvpm_geometry_struct
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
+
+  rt_data:
+    type: struct rt_part_data
+    doc: Additional Radiative Transfer Data
+
+part_rt_time_data:
+  rt_time_data:
+    type: struct rt_timestepping_data
+    doc: RT sub-cycling time stepping data
+
+part_depth_h:
+  depth_h:
+    doc: Tree-depth at which size / 2 <= h * gamma < size
+    type: char
+
+part_time_bin:
+  time_bin:
+    type: timebin_t
+    doc: Time-step length
+
+part_limiter_data:
+  limiter_data:
+    type: struct timestep_limiter_data
+    doc: Time-step limiter information
+
+part_ti_drift:
+  ti_drift:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS
+
+part_ti_kick:
+  ti_kick:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS
+
+part_debugging:
+  N_density:
+    type: int
+    doc: Integer number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_density_exact:
+    type: int
+    doc: Exact integer number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_gradient:
+    type: int
+    doc: Integer number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_gradient_exact:
+    type: int
+    doc: Exact integer number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_force:
+    type: int
+    doc: Integer number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_force_exact:
+    type: int
+    doc: Exact integer number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  rho_exact:
+    type: float
+    doc: Exact value of the density field obtained via brute-force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_density:
+    type: float
+    doc: Weighted number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_density_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_gradient:
+    type: float
+    doc: Weighted number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_gradient_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_force:
+    type: float
+    doc: Weighted number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_force_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  inhibited_exact:
+    type: char
+    doc: Has this particle interacted with any unhibited neighbour?
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  limited_part:
+    type: char
+    doc: Has this particle been woken up by the limiter?
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+
