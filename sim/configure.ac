@@ -685,71 +685,24 @@ if test "$enable_warn" != "no"; then
 fi
 
 
-# Hydro scheme.
-AC_ARG_WITH([hydro],
-   [AS_HELP_STRING([--with-hydro=<scheme>],
-      [Hydro dynamics to use @<:@gadget2, minimal, pressure-entropy, pressure-energy, pressure-energy-monaghan, phantom, gizmo-mfv, gizmo-mfm, shadowswift, planetary, remix, sphenix, gasoline, anarchy-pu default: sphenix@:>@]
+# Memory layout
+AC_ARG_WITH([particle-memory-layout],
+   [AS_HELP_STRING([--with-particle-memory-layout=<method>],
+      [Particle memory layout to use @<:@aos, soa default: aos@:>@]
    )],
-   [with_hydro="$withval"],
-   [with_hydro="sphenix"]
+   [with_layout="$withval"],
+   [with_layout="aos"]
 )
 
-case "$with_hydro" in
-   none)
-      AC_DEFINE([NONE_SPH], [1], [No hydro])
+case "$with_layout" in
+   aos)
+      AC_DEFINE([SPHENIX_AOS_PARTICLE], [1], [Default AOS particle layout])
    ;;
-   gadget2)
-      AC_DEFINE([GADGET2_SPH], [1], [Gadget-2 SPH])
+   soa)
+      AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])
    ;;
-   minimal)
-      AC_DEFINE([MINIMAL_SPH], [1], [Minimal SPH])
-   ;;
-   pressure-entropy)
-      AC_DEFINE([HOPKINS_PE_SPH], [1], [Pressure-Entropy SPH])
-   ;;
-   pressure-energy)
-      AC_DEFINE([HOPKINS_PU_SPH], [1], [Pressure-Energy SPH])
-   ;;
-   pressure-energy-monaghan)
-      AC_DEFINE([HOPKINS_PU_SPH_MONAGHAN], [1], [Pressure-Energy SPH with M&M Variable A.V.])
-   ;;
-   phantom)
-      AC_DEFINE([PHANTOM_SPH], [1], [Phantom SPH])
-   ;;
-   gizmo-mfv)
-      AC_DEFINE([GIZMO_MFV_SPH], [1], [GIZMO MFV SPH])
-      need_riemann_solver=yes
-      hydro_does_mass_flux=yes
-   ;;
-   gizmo-mfm)
-      AC_DEFINE([GIZMO_MFM_SPH], [1], [GIZMO MFM SPH])
-      need_riemann_solver=yes
-   ;;
-   shadowswift)
-      AC_DEFINE([SHADOWSWIFT], [1], [ShadowSWIFT hydrodynamics])
-      AC_DEFINE([MOVING_MESH_HYDRO], [1], [Moving mesh hydrodynamics])
-      need_moving_mesh=yes
-      need_riemann_solver=yes
-      hydro_does_mass_flux=yes
-   ;;
-   planetary)
-      AC_DEFINE([PLANETARY_SPH], [1], [Planetary SPH])
-   ;;
-   remix)
-      AC_DEFINE([REMIX_SPH], [1], [REMIX SPH])
-   ;;
-   sphenix)
-      AC_DEFINE([SPHENIX_SPH], [1], [SPHENIX SPH])
-   ;;
-   gasoline)
-      AC_DEFINE([GASOLINE_SPH], [1], [Gasoline SPH])
-   ;;
-   anarchy-pu)
-      AC_DEFINE([ANARCHY_PU_SPH], [1], [ANARCHY (PU) SPH])
-   ;;
-
    *)
-      AC_MSG_ERROR([Unknown hydrodynamics scheme: $with_hydro])
+      AC_MSG_ERROR([Unknown particle realisation: $with_layout])
    ;;
 esac
 
@@ -776,15 +729,14 @@ AC_MSG_RESULT([
 
    $PACKAGE_NAME v.$PACKAGE_VERSION
 
-   Compiler             : $CC
-    - vendor            : $ax_cv_c_compiler_vendor
-    - version           : $ax_cv_c_compiler_version
-    - flags             : $CFLAGS
-   Special allocators   : $have_special_allocator
-   Pthread barriers     : $have_pthread_barrier
-   Atomic operations    : $enable_atomics_within_tasks
-   Debugging checks     : $enable_debugging_checks
-   Hydro scheme         : $with_hydro
+   Compiler              : $CC
+    - vendor             : $ax_cv_c_compiler_vendor
+    - version            : $ax_cv_c_compiler_version
+    - flags              : $CFLAGS
+   Special allocators    : $have_special_allocator
+   Pthread barriers      : $have_pthread_barrier
+   Debugging checks      : $enable_debugging_checks
+   Particle memory layout: $with_layout
 
  ------------------------]
 )
