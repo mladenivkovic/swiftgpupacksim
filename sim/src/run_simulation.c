@@ -187,7 +187,7 @@ void run_simulation(struct parameters* params) {
 
   /* Allocate data to work on */
   struct part_arrays part_data;
-  init_parts(&part_data, params);
+  init_part_arrays(&part_data, params);
 
   message("Starting simulation.");
 

@@ -11,7 +11,6 @@
 
 /* Local includes. */
 #include "cell_hydro.h"
-#include "hydro_part_generated.h"
 #include "swift_placeholders/cell_other_physics.h"
 
 struct cell {

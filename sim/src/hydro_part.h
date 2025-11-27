@@ -30,10 +30,19 @@
 /* Config parameters. */
 #include "../config.h"
 
+#if defined(SPHENIX_AOS_PARTICLE)
+#include "realisations/aos/hydro_part.h"
+#elif defined(SPHENIX_SOA_PARTICLE)
+#include "realisations/soa/hydro_part.h"
+#else
+#pragma error "Unknown memory layout realisation"
+#endif
+
+
 /* Import the right hydro particle definition */
-#include "hydro_part_generated.h"
 #include "swift_placeholders/rt_struct.h"
 #include "swift_placeholders/timestep_limiter_struct.h"
+
 
 /* ----------------------------------------
  * Timestep limiter data getters/setters
