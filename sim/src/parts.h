@@ -9,5 +9,3 @@
 #else
 #pragma error "Unknown memory layout realisation"
 #endif
-
-
