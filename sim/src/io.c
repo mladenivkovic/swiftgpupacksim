@@ -32,6 +32,13 @@ void io_parse_cmdlineargs(int argc, char* argv[], struct parameters* params) {
         error("-s flag needs an additional parameter: nr of steps to run");
       i++;
       params->nr_steps = atoi(argv[i]);
+    } else if (strcmp(arg, "--noflush")==0 || strcmp(arg, "--no-flush")==0 || strcmp(arg, "-n") == 0) {
+      params->no_cache_flush = 1;
+    } else if (arg[0] == '-') {
+      message("WARNING: Flag '%s' not recognized", arg);
+#ifdef SWIFT_DEBUG_CHECKS
+      abort();
+#endif
     } else {
       /* We may have been given the input file.
        * Check whether directory exists. */
