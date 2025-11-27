@@ -60,5 +60,5 @@ void print_params(struct parameters *params) {
   /* printf("\t step:              %6d\n", params->step); */
   /* printf("\t nsteps:            %6d\n", params->nsteps); */
   printf("\t measurement data:  %s\n", params->data_root_dir);
-  printf("\t cache flushing:    %d\n", !params->no_cache_flush);
+  printf("\t cache flushing:    %12d\n", !params->no_cache_flush);
 }

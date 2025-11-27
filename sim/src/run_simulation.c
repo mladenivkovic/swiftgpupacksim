@@ -318,7 +318,7 @@ void run_simulation(struct parameters* params) {
 #pragma omp barrier
 #pragma omp master
 {
-  message("Finished step %d adding up", step);
+  message("Finished step %d", step);
     for (int i = 0; i < timer_count; i++) {
       timers_full[i] += timers_step[i];
       timers_step[i] = 0;
