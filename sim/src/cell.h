@@ -173,16 +173,36 @@ struct cell {
 } SWIFT_STRUCT_ALIGN;
 
 
+/* Get hydro particle array */
+static __attribute__((always_inline)) INLINE struct part* cell_get_hydro_parts(struct cell* restrict c){
+  return c->hydro.part_arrs._part;
+}
+
+/* Get const hydro particle array */
+static __attribute__((always_inline)) INLINE const struct part* cell_get_const_hydro_parts(const struct cell* restrict c){
+  return c->hydro.part_arrs._part;
+}
+
 /**
  * Minimalistic cell initialisation for this benchmark
  */
 static __attribute__((always_inline)) INLINE void init_cell(
-    struct cell *c, int count, struct part *all_parts, int offset) {
+    struct cell *c, int count, const struct hydro_part_arrays *all_parts, int offset) {
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;
   c->loc[2] = 1.;
 
   c->hydro.count = count;
-  c->hydro.parts = all_parts + offset;
+  part_arrays_set_pointer_offset(&c->hydro.part_arrs, all_parts, offset);
+
+#ifndef SPHENIX_AOS_PARTICLE
+
+#pragma message "Adding particle offsets"
+  for (int i = 0; i < count; i++) {
+    c->hydro.part_arrs._part[i]._cell_offset = i;
+    c->hydro.part_arrs._part[i]._cell_part_arrays = &c->hydro.part_arrs;
+  }
+#endif
 }
+

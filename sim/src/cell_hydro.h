@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../config.h"
+#include "parts.h"
 #include "swift_placeholders/lock.h"
 #include "swift_placeholders/timeline.h"
 
@@ -17,7 +18,7 @@ struct cell_hydro {
 #endif
 
     /*! Pointer to the #part data. */
-    struct part *parts;
+    struct hydro_part_arrays part_arrs;
 
     /*! Pointer to the #xpart data. */
     struct xpart *xparts;
@@ -171,3 +172,6 @@ struct cell_hydro {
   /*! Nr of #part in this cell. */
   int count;
 };
+
+
+

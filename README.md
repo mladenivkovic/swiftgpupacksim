@@ -51,8 +51,16 @@ git lfs fetch --all
 git lfs checkout
 ```
 
+## Configuration options
 
-## Selecting a memory layout
+### Development options
+
+- `--enable-debug`: Enable debugging symbols
+- `--enable-debugging-checks`: Enable additional debugging checks
+- `--enable-no-cuda-mallochost`: Use `malloc` instead of `cudaMallocHost`
+- `--enable-sanitizer`, `--enable-undefined-sanitizer`: Turn on sanitizers
+
+### Selecting a memory layout
 
 To select a specific memory layout, use the
 `--with-particle-memory-layout=<method>` flag in the `./configure` step. See

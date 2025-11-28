@@ -39,9 +39,6 @@
 #endif
 
 
-/* Import the right hydro particle definition */
-#include "swift_placeholders/rt_struct.h"
-#include "swift_placeholders/timestep_limiter_struct.h"
 
 
 /* ----------------------------------------
