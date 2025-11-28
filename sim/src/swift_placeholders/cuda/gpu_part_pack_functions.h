@@ -48,7 +48,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     const int count, const struct engine *e) {
 
   const struct gpu_part_recv_d *parts_recv = &parts_buffer[unpack_ind];
-  struct part* cp = cell_get_hydro_parts(c);
+  struct part *cp = cell_get_hydro_parts(c);
 
   for (int i = 0; i < count; i++) {
 
@@ -94,7 +94,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     const int count, const struct engine *e) {
 
   const struct gpu_part_recv_g *parts_recv = &parts_buffer[unpack_ind];
-  struct part* cp = cell_get_hydro_parts(c);
+  struct part *cp = cell_get_hydro_parts(c);
 
   for (int i = 0; i < count; i++) {
 
@@ -130,7 +130,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     const int count, const struct engine *e) {
 
   const struct gpu_part_recv_f *parts_recv = &parts_buffer[unpack_ind];
-  struct part* cp = cell_get_hydro_parts(c);
+  struct part *cp = cell_get_hydro_parts(c);
 
   for (int i = 0; i < count; i++) {
 
