@@ -37,7 +37,7 @@
 #include "error.h"
 #include "feedback_struct.h"
 #include "fvpm_geometry_struct.h"
-#include "hydro_part_data_struct.h"
+#include "hydro_part_arrays_struct.h"
 #include "mhd_struct.h"
 #include "particle_splitting_struct.h"
 #include "pressure_floor_struct.h"
@@ -105,8 +105,9 @@ struct xpart {
 
 #include "align.h"
 #include "error.h"
-#include "hydro_part_data_struct.h"
-#include "placeholder_structs.h"
+#include "hydro_part_placeholder_structs.h"
+#include "hydro_part_arrays_struct.h"
+#include "rt_struct.h"
 #include "timestep_limiter_struct.h"
 
 #include <float.h>
@@ -128,5 +129,6 @@ struct {{STRUCT_NAME}} {
 {{API}}
 {% endfor -%}
 {% endfor %}
+
 
 #endif /* SWIFT_HYDRO_PART_{{HEADER_GUARD}}_H */

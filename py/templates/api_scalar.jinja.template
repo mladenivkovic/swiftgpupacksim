@@ -10,7 +10,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
-  const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
   {%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
   {%- else %}
@@ -46,7 +46,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
-  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
   {%- if HAS_PARENT_STRUCT %}
   return &{{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
   {%- else %}
@@ -83,7 +83,7 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
-  const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
   {%- if HAS_PARENT_STRUCT %}
   return &{{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
   {%- else %}
@@ -118,7 +118,7 @@ static __attribute__((always_inline)) INLINE void
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
-  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_data->_{{ROOT_STRUCT}} + p->_cell_offset;
+  struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
   {%- if HAS_PARENT_STRUCT %}
   {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}} = {{NAME}};
   {%- else %}
