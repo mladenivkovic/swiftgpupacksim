@@ -58,7 +58,7 @@ int main(void) {
 
   init_params(&params);
   int argc6 = 6;
-  char *argv6[] = {"swiftgpupack", datadir, "--help","-h", "-v", "--verbose"};
+  char *argv6[] = {"swiftgpupack", datadir, "--help", "-h", "-v", "--verbose"};
   io_parse_cmdlineargs(argc6, argv6, &params);
   swift_assert(strcmp(params.data_root_dir, datadir) == 0);
   swift_assert(params.verbose == 1);
@@ -66,7 +66,7 @@ int main(void) {
 
   init_params(&params);
   int argc7 = 4;
-  char *argv7[] = {"swiftgpupack", datadir, "-s","1234"};
+  char *argv7[] = {"swiftgpupack", datadir, "-s", "1234"};
   io_parse_cmdlineargs(argc7, argv7, &params);
   swift_assert(strcmp(params.data_root_dir, datadir) == 0);
   swift_assert(params.nr_steps == 1234);

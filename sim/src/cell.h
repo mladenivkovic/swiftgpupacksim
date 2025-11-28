@@ -174,12 +174,14 @@ struct cell {
 
 
 /* Get hydro particle array */
-static __attribute__((always_inline)) INLINE struct part* cell_get_hydro_parts(struct cell* restrict c){
+static __attribute__((always_inline)) INLINE struct part *cell_get_hydro_parts(
+    struct cell *restrict c) {
   return c->hydro.part_arrs._part;
 }
 
 /* Get const hydro particle array */
-static __attribute__((always_inline)) INLINE const struct part* cell_get_const_hydro_parts(const struct cell* restrict c){
+static __attribute__((always_inline)) INLINE const struct part *
+cell_get_const_hydro_parts(const struct cell *restrict c) {
   return c->hydro.part_arrs._part;
 }
 
@@ -187,7 +189,8 @@ static __attribute__((always_inline)) INLINE const struct part* cell_get_const_h
  * Minimalistic cell initialisation for this benchmark
  */
 static __attribute__((always_inline)) INLINE void init_cell(
-    struct cell *c, int count, const struct hydro_part_arrays *all_parts, int offset) {
+    struct cell *c, int count, const struct hydro_part_arrays *all_parts,
+    int offset) {
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;
@@ -205,4 +208,3 @@ static __attribute__((always_inline)) INLINE void init_cell(
   }
 #endif
 }
-
