@@ -1,7 +1,6 @@
 #include "run_simulation.h"
 
 #include "io.h"
-#include "parts.h"
 #include "swift_placeholders/clocks.h"
 #include "swift_placeholders/cuda/gpu_offload_data.h"
 #include "swift_placeholders/cuda/gpu_part_pack_functions.h"
@@ -11,6 +10,27 @@
 
 #include <float.h>
 #include <omp.h>
+
+
+/**
+ * Flush the caches by performing meaningless operations on a large array with
+ * size O(MB)
+ *
+ * @param garbage A large array O(MB) to fill out with garbage data to
+ * flush the caches after each op
+ * @param n_garbage: size of garbage array
+ *
+ * @return garbage_sum Some garbage double; Needed to prevent compiler from
+ * optimising out a big loop doing nothing but flushing caches
+ */
+double flush_cache(double* garbage, int n_garbage){
+  double sum = 0.;
+  for (int i = 0; i < n_garbage; i++) {
+    garbage[i] = (2. * i - 13.) * 4.;
+    sum += garbage[i];
+  }
+  return sum;
+}
 
 /**
  * Perform the actual work of a single event.
@@ -53,6 +73,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
   init_cell(&ci, event->count, part_data, event->part_offset);
 
   const double shift[3] = {1., 1., 1.};
+  double sum = flush_cache(garbage, n_garbage);
 
 #ifdef SWIFT_DEBUG_CHECKS
   if ((event->part_offset + event->count) > part_data->nr_parts)
@@ -60,7 +81,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
           event->count, event->part_offset + event->count, part_data->nr_parts);
 #endif
 
-
+  /* Now do the actual work */
   enum task_types type = event->task_type;
   enum task_subtypes subtype = event->task_subtype;
   if (type == task_type_pack) {
@@ -171,11 +192,6 @@ __attribute__((always_inline)) INLINE static double replay_event(
   }
 #endif
 
-  double sum = 0.;
-  for (int i = 0; i < n_garbage; i++) {
-    garbage[i] = (2. * i - 13.) * 4.;
-    sum += garbage[i];
-  }
   return sum;
 }
 
