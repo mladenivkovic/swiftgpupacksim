@@ -66,9 +66,9 @@ def generate_hydro_part_header(
             },
         ),
         (
-            "cell_part_data",
+            "cell_part_arrays",
             {
-                "type": "struct hydro_part_data*",
+                "type": "struct hydro_part_arrays*",
                 "doc": "pointer to particle data array struct of the cell this particle is located in",
             },
         ),

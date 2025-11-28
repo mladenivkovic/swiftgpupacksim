@@ -11,7 +11,7 @@ from utils import (
     validate_yml_contents,
 )
 from hydro_part_header import generate_hydro_part_header
-from hydro_part_data_struct import generate_hydro_part_data_struct
+from parts_header import generate_parts_header, generate_hydro_part_arrays_struct_header
 
 
 parser = argparse.ArgumentParser(description="Generate the hydro_part.h file.")
@@ -80,15 +80,21 @@ if __name__ == "__main__":
         particle_fields_d, swift_header=swift_header, testing=testing, verbose=verbose
     )
 
-    hydro_part_data_struct = generate_hydro_part_data_struct(
+    parts_header = generate_parts_header(
+        particle_fields_d, swift_header=swift_header, verbose=verbose
+    )
+
+    hydro_part_arrays_struct_header = generate_hydro_part_arrays_struct_header(
         particle_fields_d, swift_header=swift_header, verbose=verbose
     )
 
     if dry_run:
         print_separator("hydro_part_header")
         print(hydro_part_header)
-        #  print_separator("hydro_part_data_struct")
-        #  print(hydro_part_data_struct)
+        print_separator("parts_header")
+        print(parts_header)
+        print_separator("hydro_part_arrays_struct_header")
+        print(hydro_part_arrays_struct_header)
     else:
         outfile = os.path.join(outdir, "hydro_part.h")
         fp = open(outfile, "w")
@@ -96,8 +102,14 @@ if __name__ == "__main__":
         fp.close()
         print("Written", outfile)
 
-        outfile = os.path.join(outdir, "hydro_part_data_struct.h")
+        outfile = os.path.join(outdir, "parts.h")
         fp = open(outfile, "w")
-        fp.write(hydro_part_data_struct)
+        fp.write(parts_header)
+        fp.close()
+        print("Written", outfile)
+
+        outfile = os.path.join(outdir, "hydro_part_arrays_struct.h")
+        fp = open(outfile, "w")
+        fp.write(hydro_part_arrays_struct_header)
         fp.close()
         print("Written", outfile)

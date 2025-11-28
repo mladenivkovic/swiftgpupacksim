@@ -8,6 +8,7 @@ Documentation to be updated as script grows.
 For now, run e.g. `./generate_hydro_part.py input/SPHENIX.yml`.
 Use
 
+
 ```
 py generate_hydro_part.py --help
 ```
@@ -19,6 +20,14 @@ Dependencies:
 - pyyaml
 - jinja2
 
+
+## Outputs
+
+- `hydro_part.h`: Header containing a particle struct and its getters/setters
+- `part_arrays.h`: Header containing a struct holding all particle data,
+  intended for use in cells
+- `parts.h`: Header containing generated allocation/freeing of particle array
+  data
 
 
 ## Yaml syntax
