@@ -48,10 +48,11 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     const int count, const struct engine *e) {
 
   const struct gpu_part_recv_d *parts_recv = &parts_buffer[unpack_ind];
+  struct part* cp = cell_get_hydro_parts(c);
 
   for (int i = 0; i < count; i++) {
 
-    struct part *p = &c->hydro.parts[i];
+    struct part *p = &cp[i];
     if (!part_is_active(p, e)) continue;
 
     struct gpu_part_recv_d pr = parts_recv[i];
@@ -93,10 +94,11 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     const int count, const struct engine *e) {
 
   const struct gpu_part_recv_g *parts_recv = &parts_buffer[unpack_ind];
+  struct part* cp = cell_get_hydro_parts(c);
 
   for (int i = 0; i < count; i++) {
 
-    struct part *p = &c->hydro.parts[i];
+    struct part *p = &cp[i];
     if (!part_is_active(p, e)) continue;
 
     struct gpu_part_recv_g pr = parts_recv[i];
@@ -128,10 +130,11 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     const int count, const struct engine *e) {
 
   const struct gpu_part_recv_f *parts_recv = &parts_buffer[unpack_ind];
+  struct part* cp = cell_get_hydro_parts(c);
 
   for (int i = 0; i < count; i++) {
 
-    struct part *restrict p = &c->hydro.parts[i];
+    struct part *restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
 
     struct gpu_part_recv_f pr = parts_recv[i];
@@ -172,7 +175,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 
   /* Grab handles */
   const int count = c->hydro.count;
-  const struct part *parts = c->hydro.parts;
+  const struct part *parts = cell_get_const_hydro_parts(c);
   struct gpu_part_send_d *ps = &parts_buffer[pack_ind];
 
   for (int i = 0; i < count; i++) {
@@ -216,7 +219,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
   /* Grab handles */
   const int count = ci->hydro.count;
-  const struct part *parts = ci->hydro.parts;
+  const struct part *parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_g *ps = &parts_buffer[pack_ind];
 
   for (int i = 0; i < count; i++) {
@@ -264,7 +267,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     const double shift[3], const int cjstart, const int cjend) {
 
   const int count = ci->hydro.count;
-  const struct part *parts = ci->hydro.parts;
+  const struct part *parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_f *ps = &parts_buffer[pack_ind];
 
   for (int i = 0; i < count; i++) {

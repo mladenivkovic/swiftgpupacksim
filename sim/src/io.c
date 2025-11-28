@@ -722,6 +722,6 @@ void io_util_write_single_output_line(enum task_types type,
 
   fprintf(outfile_p, "%s,", taskID_names[type]);
   fprintf(outfile_p, "%s,", subtaskID_names[subtype]);
-  fprintf(outfile_p, "%.4g", dt_sim);
+  fprintf(outfile_p, "%.6g", dt_sim);
   if (!is_last) fprintf(outfile_p, "\n");
 }

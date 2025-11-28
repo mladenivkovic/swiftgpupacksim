@@ -41,7 +41,7 @@
  * optimising out a big loop doing nothing but flushing caches
  */
 __attribute__((always_inline)) INLINE static double replay_event(
-    const struct packing_data* event, struct part_arrays* part_data,
+    const struct packing_data* event, struct hydro_part_arrays* part_data,
     struct gpu_offload_data* buf_dens, struct gpu_offload_data* buf_grad,
     struct gpu_offload_data* buf_forc, const struct engine* e,
     ticks timers_step[timer_count], double timings_log_step[timer_count],
@@ -50,7 +50,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
-  init_cell(&ci, event->count, part_data->p, event->part_offset);
+  init_cell(&ci, event->count, part_data, event->part_offset);
 
   const double shift[3] = {1., 1., 1.};
 
@@ -186,8 +186,8 @@ __attribute__((always_inline)) INLINE static double replay_event(
 void run_simulation(struct parameters* params) {
 
   /* Allocate data to work on */
-  struct part_arrays part_data;
-  init_part_arrays(&part_data, params);
+  struct hydro_part_arrays part_data;
+  init_part_arrays(&part_data, params->nr_parts);
 
   message("Starting simulation.");
 
