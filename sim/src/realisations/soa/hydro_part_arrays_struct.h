@@ -43,8 +43,7 @@ struct part_debugging;
  * Struct holding handles to all particle data arrays
  */
 struct hydro_part_arrays {
-
-  /*! the main particle data struct */ 
+ 
   struct part *_part;
  
   struct part_id *_part_id;
