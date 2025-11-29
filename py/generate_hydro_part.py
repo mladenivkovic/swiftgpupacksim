@@ -11,7 +11,11 @@ from utils import (
     validate_yml_contents,
     add_auxiliary_fields,
 )
-from headers import generate_hydro_part_header, generate_parts_header, generate_hydro_part_arrays_struct_header
+from headers import (
+    generate_hydro_part_header,
+    generate_parts_header,
+    generate_hydro_part_arrays_struct_header,
+)
 
 
 parser = argparse.ArgumentParser(description="Generate the hydro_part.h file.")
@@ -82,7 +86,9 @@ if __name__ == "__main__":
     input_fp = open(input_file, "r")
     particle_fields_d = yaml.safe_load(input_fp)
     input_fp.close()
-    particle_fields_d = add_auxiliary_fields(particle_fields_d, id_checks=id_checks, verbose=verbose)
+    particle_fields_d = add_auxiliary_fields(
+        particle_fields_d, id_checks=id_checks, verbose=verbose
+    )
     validate_yml_contents(particle_fields_d)
 
     if (len(particle_fields_d.keys()) == 1) and id_checks:
@@ -90,11 +96,18 @@ if __name__ == "__main__":
         id_checks = False
 
     hydro_part_header = generate_hydro_part_header(
-        particle_fields_d, swift_header=swift_header, id_checks=id_checks, testing=testing, verbose=verbose
+        particle_fields_d,
+        swift_header=swift_header,
+        id_checks=id_checks,
+        testing=testing,
+        verbose=verbose,
     )
 
     parts_header = generate_parts_header(
-        particle_fields_d, swift_header=swift_header, id_checks=id_checks, verbose=verbose
+        particle_fields_d,
+        swift_header=swift_header,
+        id_checks=id_checks,
+        verbose=verbose,
     )
 
     hydro_part_arrays_struct_header = generate_hydro_part_arrays_struct_header(

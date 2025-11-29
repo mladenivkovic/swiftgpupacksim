@@ -92,7 +92,7 @@ def jinja_generate_parts_h(
     part_structs_d: dict,
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
-    id_checks: bool=True,
+    id_checks: bool = True,
     verbose: bool = False,
 ) -> str:
     """
