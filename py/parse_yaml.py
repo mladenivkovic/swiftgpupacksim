@@ -55,9 +55,12 @@ _prohibited_field_names = [
     "doc",
     "documentation",
     "union",
-    "cell_offset",
-    "cell_part_data",
 ]
+
+# field names to skip creating getters and setters
+_fields_without_api = [
+    "accessor_id"
+    ]
 
 
 class FieldEntry(object):
@@ -390,6 +393,12 @@ class FieldEntry(object):
         api: str
             generated API C-code as a string
         """
+
+
+        if self.name in _fields_without_api:
+            if verbose:
+                print(f"-- Skipping API for {self.type} {self.name}")
+            return ""
 
         if verbose:
             print(f"-- Generating API for {self.type} {self.name}")
