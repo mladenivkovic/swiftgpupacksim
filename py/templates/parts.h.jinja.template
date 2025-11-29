@@ -68,7 +68,7 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
    * we're accessing the correct split struct. Note: ID = 0 is forbidden! */
   for (long long i = 1; i <= nr_parts; i++) {
 {% for STRUCT_NAME in STRUCT_NAMES %}
-    parr->_{{STRUCT_NAME}}->_accessor_id = i;
+    parr->_{{STRUCT_NAME}}[i]._accessor_id = i;
 {% endfor %}
   }
 #endif
