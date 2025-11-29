@@ -41,6 +41,7 @@ double flush_cache(double* garbage, int n_garbage) {
  * @param event: Recorded/logged event in measurement run to be reproduced in
  * this function
  * @param part_data: Struct holding pointers to all particle data
+ * @param part_locks: Array of OpenMP lock types to lock particles individually
  * @param buf_dens: Particle buffer for density tasks
  * @param buf_grad: Particle buffer for gradient tasks
  * @param buf_forc: Particle buffer for force tasks
@@ -62,15 +63,21 @@ double flush_cache(double* garbage, int n_garbage) {
  */
 __attribute__((always_inline)) INLINE static double replay_event(
     const struct packing_data* event, struct hydro_part_arrays* part_data,
-    struct gpu_offload_data* buf_dens, struct gpu_offload_data* buf_grad,
-    struct gpu_offload_data* buf_forc, const struct engine* e,
-    ticks timers_step[timer_count], double timings_log_step[timer_count],
-    double timing_ratio_min[timer_count], double timing_ratio_max[timer_count],
-    double* garbage, int n_garbage) {
+    omp_lock_t* part_locks,
+    struct gpu_offload_data* buf_dens,
+    struct gpu_offload_data* buf_grad,
+    struct gpu_offload_data* buf_forc,
+    const struct engine* e,
+    ticks timers_step[timer_count],
+    double timings_log_step[timer_count],
+    double timing_ratio_min[timer_count],
+    double timing_ratio_max[timer_count],
+    double* garbage,
+    int n_garbage) {
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
-  init_cell(&ci, event->count, part_data, event->part_offset);
+  init_cell(&ci, event->count, part_data, event->part_offset, part_locks);
 
   const double shift[3] = {1., 1., 1.};
   double sum = flush_cache(garbage, n_garbage);
@@ -192,6 +199,9 @@ __attribute__((always_inline)) INLINE static double replay_event(
   }
 #endif
 
+  /* Clean up after yourself and release the locks */
+  destroy_cell(&ci, event->count, event->part_offset, part_locks);
+
   return sum;
 }
 
@@ -204,6 +214,11 @@ void run_simulation(struct parameters* params) {
   /* Allocate data to work on */
   struct hydro_part_arrays part_data;
   init_part_arrays(&part_data, params->nr_parts);
+
+  /* Initialise particle locks */
+  omp_lock_t* part_locks = malloc(params->nr_parts * sizeof(omp_lock_t));
+  for (size_t i = 0; i < params->nr_parts; i++)
+    omp_init_lock(&part_locks[i]);
 
   message("Starting simulation.");
 
@@ -317,7 +332,7 @@ void run_simulation(struct parameters* params) {
         for (int i = 0; i < n_events; i++) {
           struct packing_data event = packing_sequence[i];
 
-          double g = replay_event(&event, &part_data, &gpu_buf_dens,
+          double g = replay_event(&event, &part_data, part_locks, &gpu_buf_dens,
                                   &gpu_buf_grad, &gpu_buf_forc, &e, timers_step,
                                   timing_log_step, timing_ratio_min,
                                   timing_ratio_max, garbage, n_garbage);
@@ -364,6 +379,7 @@ void run_simulation(struct parameters* params) {
   /* Clean up after yourself */
   clear_parts(&part_data);
   fclose(devnull);
+  free(part_locks);
 
   message("Finished simulation.");
   io_write_result(timers_full, params);
