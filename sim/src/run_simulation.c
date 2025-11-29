@@ -63,17 +63,11 @@ double flush_cache(double* garbage, int n_garbage) {
  */
 __attribute__((always_inline)) INLINE static double replay_event(
     const struct packing_data* event, struct hydro_part_arrays* part_data,
-    omp_lock_t* part_locks,
-    struct gpu_offload_data* buf_dens,
-    struct gpu_offload_data* buf_grad,
-    struct gpu_offload_data* buf_forc,
-    const struct engine* e,
-    ticks timers_step[timer_count],
-    double timings_log_step[timer_count],
-    double timing_ratio_min[timer_count],
-    double timing_ratio_max[timer_count],
-    double* garbage,
-    int n_garbage) {
+    omp_lock_t* part_locks, struct gpu_offload_data* buf_dens,
+    struct gpu_offload_data* buf_grad, struct gpu_offload_data* buf_forc,
+    const struct engine* e, ticks timers_step[timer_count],
+    double timings_log_step[timer_count], double timing_ratio_min[timer_count],
+    double timing_ratio_max[timer_count], double* garbage, int n_garbage) {
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
@@ -217,8 +211,7 @@ void run_simulation(struct parameters* params) {
 
   /* Initialise particle locks */
   omp_lock_t* part_locks = malloc(params->nr_parts * sizeof(omp_lock_t));
-  for (size_t i = 0; i < params->nr_parts; i++)
-    omp_init_lock(&part_locks[i]);
+  for (size_t i = 0; i < params->nr_parts; i++) omp_init_lock(&part_locks[i]);
 
   message("Starting simulation.");
 
