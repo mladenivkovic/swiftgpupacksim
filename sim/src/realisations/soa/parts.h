@@ -179,6 +179,74 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
   parr->nr_parts = nr_parts;
 #endif
 
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Give all particles a unique debugging ID which will be used to verify that
+   * we're accessing the correct split struct. Note: ID = 0 is forbidden! */
+  for (long long i = 1; i <= nr_parts; i++) {
+
+    parr->_part->_accessor_id = i;
+
+    parr->_part_id->_accessor_id = i;
+
+    parr->_part_gpart->_accessor_id = i;
+
+    parr->_part_x->_accessor_id = i;
+
+    parr->_part_v->_accessor_id = i;
+
+    parr->_part_a_hydro->_accessor_id = i;
+
+    parr->_part_mass->_accessor_id = i;
+
+    parr->_part_h->_accessor_id = i;
+
+    parr->_part_u->_accessor_id = i;
+
+    parr->_part_u_dt->_accessor_id = i;
+
+    parr->_part_rho->_accessor_id = i;
+
+    parr->_part_div_v->_accessor_id = i;
+
+    parr->_part_div_v_dt->_accessor_id = i;
+
+    parr->_part_div_v_previous_step->_accessor_id = i;
+
+    parr->_part_alpha_av->_accessor_id = i;
+
+    parr->_part_v_sig->_accessor_id = i;
+
+    parr->_part_laplace_u->_accessor_id = i;
+
+    parr->_part_alpha_diff->_accessor_id = i;
+
+    parr->_part_density_force1->_accessor_id = i;
+
+    parr->_part_density_force2->_accessor_id = i;
+
+    parr->_part_density_force3->_accessor_id = i;
+
+    parr->_part_density_force4->_accessor_id = i;
+
+    parr->_part_additional_structs->_accessor_id = i;
+
+    parr->_part_rt_time_data->_accessor_id = i;
+
+    parr->_part_depth_h->_accessor_id = i;
+
+    parr->_part_time_bin->_accessor_id = i;
+
+    parr->_part_limiter_data->_accessor_id = i;
+
+    parr->_part_ti_drift->_accessor_id = i;
+
+    parr->_part_ti_kick->_accessor_id = i;
+
+    parr->_part_debugging->_accessor_id = i;
+
+  }
+#endif
+  /* We're done. Print out some information to screen */
   size_t total = 0;
   total+=sizeof(struct part);
   total+=sizeof(struct part_id);
@@ -216,7 +284,7 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
 }
 
 /**
- * Free the bytes from their prison of labour.
+ * @brief Free the bytes from their prison of labour.
  */
 static __attribute__((always_inline)) INLINE void clear_parts(struct hydro_part_arrays* parr) {
 
@@ -253,7 +321,9 @@ static __attribute__((always_inline)) INLINE void clear_parts(struct hydro_part_
 }
 
 /**
- * Put this here so
+ * @brief Initialise a hydro_part_arrays struct `dest` as an offset of a different
+ * hydro_part_arrays struct `src`. Intended to initilise cell particle array data
+ * as offsets to the global particle array.
  */
 __attribute__((always_inline)) INLINE static void part_arrays_set_pointer_offset(
   struct hydro_part_arrays* dest, const struct hydro_part_arrays* src, ptrdiff_t offset

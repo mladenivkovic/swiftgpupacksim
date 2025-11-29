@@ -95,8 +95,7 @@ if __name__ == "__main__":
     )
 
     parts_header = generate_parts_header(
-        #  particle_fields_d, swift_header=swift_header, debug_id_checks=id_checks, verbose=verbose
-        particle_fields_d, swift_header=swift_header, verbose=verbose
+        particle_fields_d, swift_header=swift_header, id_checks=id_checks, verbose=verbose
     )
 
     hydro_part_arrays_struct_header = generate_hydro_part_arrays_struct_header(

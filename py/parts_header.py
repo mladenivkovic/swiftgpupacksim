@@ -2,11 +2,13 @@
 
 from parse_yaml import FieldEntry
 from templates import jinja_generate_parts_h, jinja_generate_hydro_part_arrays_struct_h
+from utils import check_part_struct_first_in_list
 
 
 def generate_parts_header(
     part_d: dict,
     swift_header: bool = True,
+    id_checks: bool=True,
     verbose: bool = False,
 ) -> str:
     """
@@ -24,6 +26,9 @@ def generate_parts_header(
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
 
+    id_checks: bool
+        If True, add initialisation of particle accessor_id variables
+
     verbose: bool
         if True, be talkative
 
@@ -35,37 +40,17 @@ def generate_parts_header(
     """
 
     if verbose:
-        print("Generating particle_data struct header")
+        print("Generating parts.h")
 
-    part_keylist = list(part_d.keys())
-    have_part_struct = False
-
-    # if 'part' is defined, it must be first.
-    for i, key in enumerate(part_keylist):
-        if key == "part":
-            have_part_struct = True
-            if i != 0:
-                raise ValueError(
-                    "You're defining a particle data struct 'part', but it isn't in first position.\n"
-                    + f"Put it at the top of your .yml file. Current position: {i+1}"
-                )
-
+    have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
-        # 'part' not provided in yml file. Add a 'struct part' in first place
-        keylist = ["part"]
-        keylist += part_keylist
-        part_struct_d = {
-            "part": {
-                "DOC": "the main particle data struct",
-                "HAS_DOC": True,
-            }
-        }
-    else:
-        keylist = part_keylist
-        part_struct_d = {}
+        raise ValueError("Part struct should've been added beforehand. Call this only after generating hydro_part.h")
 
-    # Now grab all the others
-    for struct_name in part_keylist:
+    # Prep the dict for jinja for each struct
+    part_struct_d = {}
+
+    # ... and fill out its contents
+    for struct_name in part_d.keys():
 
         props = part_d[struct_name]
 
@@ -129,37 +114,17 @@ def generate_hydro_part_arrays_struct_header(
     """
 
     if verbose:
-        print("Generating particle_data struct header")
+        print("Generating hydro_part_arrays_struct.h header")
 
-    part_keylist = list(part_d.keys())
-    have_part_struct = False
-
-    # if 'part' is defined, it must be first.
-    for i, key in enumerate(part_keylist):
-        if key == "part":
-            have_part_struct = True
-            if i != 0:
-                raise ValueError(
-                    "You're defining a particle data struct 'part', but it isn't in first position.\n"
-                    + f"Put it at the top of your .yml file. Current position: {i+1}"
-                )
-
+    have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
-        # 'part' not provided in yml file. Add a 'struct part' in first place
-        keylist = ["part"]
-        keylist += part_keylist
-        part_struct_d = {
-            "part": {
-                "DOC": "the main particle data struct",
-                "HAS_DOC": True,
-            }
-        }
-    else:
-        keylist = part_keylist
-        part_struct_d = {}
+        raise ValueError("Part struct should've been added beforehand. Call this only after generating hydro_part.h")
 
-    # Now grab all the others
-    for struct_name in part_keylist:
+    # Prep the dict for jinja for each struct
+    part_struct_d = {}
+
+    # ... and fill out its contents
+    for struct_name in part_d.keys():
 
         props = part_d[struct_name]
 
