@@ -176,7 +176,7 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
 
 
 #ifdef SWIFT_DEBUG_CHECKS
-  data->nr_parts = nr_parts;
+  parr->nr_parts = nr_parts;
 #endif
 
   size_t total = 0;
