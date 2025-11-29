@@ -21,11 +21,19 @@
 #ifndef SWIFT_ERROR_H
 #define SWIFT_ERROR_H
 
+#include "inline.h"
+
 /* Some standard headers. */
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 
-#define swift_abort(errcode) abort()
+__attribute__((always_inline)) INLINE static void omp_abort(void){
+#pragma omp error at(execution) severity(fatal) message("aborting omp")
+}
+
+/* #define swift_abort(errcode) abort() */
+#define swift_abort(errcode) omp_abort();
 
 /**
  * @brief Error macro. Prints the message given in argument and aborts.
