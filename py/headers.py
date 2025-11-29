@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 from parse_yaml import FieldEntry
-from templates import jinja_generate_hydro_part_h, jinja_generate_parts_h, jinja_generate_hydro_part_arrays_struct_h
+from templates import (
+    jinja_generate_hydro_part_h,
+    jinja_generate_parts_h,
+    jinja_generate_hydro_part_arrays_struct_h,
+)
 from utils import check_part_struct_first_in_list
 
 
@@ -82,10 +86,11 @@ def generate_hydro_part_header(
 
     return header_file
 
+
 def generate_parts_header(
     part_d: dict,
     swift_header: bool = True,
-    id_checks: bool=True,
+    id_checks: bool = True,
     verbose: bool = False,
 ) -> str:
     """
@@ -121,7 +126,9 @@ def generate_parts_header(
 
     have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
-        raise ValueError("Part struct should've been added beforehand. Call this only after generating hydro_part.h")
+        raise ValueError(
+            "Part struct should've been added beforehand. Call this only after generating hydro_part.h"
+        )
 
     # Prep the dict for jinja for each struct
     part_struct_d = {}
@@ -195,7 +202,9 @@ def generate_hydro_part_arrays_struct_header(
 
     have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
-        raise ValueError("Part struct should've been added beforehand. Call this only after generating hydro_part.h")
+        raise ValueError(
+            "Part struct should've been added beforehand. Call this only after generating hydro_part.h"
+        )
 
     # Prep the dict for jinja for each struct
     part_struct_d = {}

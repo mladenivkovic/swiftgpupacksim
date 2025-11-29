@@ -10,8 +10,10 @@ import datetime
 # NB: You'll have to manually exception-handle them in the generation. This is
 # not handled here.
 _permitted_duplicate_field_names = [
-    "doc", "documentation", "accessor_id",
-    ]
+    "doc",
+    "documentation",
+    "accessor_id",
+]
 
 
 def verify_file_exists(fname: str, message: str = ""):
@@ -122,8 +124,8 @@ def validate_yml_contents(contents_d: dict) -> None:
                 continue
             if field in field_names:
                 raise ValueError(
-                    f"data field '{field}' defined more than once in your input yml file."+
-                    "This will create multiply defined getters and setters."
+                    f"data field '{field}' defined more than once in your input yml file."
+                    + "This will create multiply defined getters and setters."
                 )
             field_names.append(field)
 
@@ -162,7 +164,9 @@ def check_part_struct_first_in_list(contents_d: dict) -> bool:
     return have_part_struct
 
 
-def add_auxiliary_fields(contents_d: dict, id_checks: bool=True, verbose: bool=False) -> dict:
+def add_auxiliary_fields(
+    contents_d: dict, id_checks: bool = True, verbose: bool = False
+) -> dict:
     """
     Run through the read in contents (passed as contents_d) and add auxiliary
     fields, if necessary:
@@ -193,33 +197,31 @@ def add_auxiliary_fields(contents_d: dict, id_checks: bool=True, verbose: bool=F
 
     # fake having field props for the auxiliary fields
     main_part_struct_aux_fields_props = {
-            "cell_offset":
-            {
-                "type": "size_t",
-                "doc": "offset/index of particle in cell particle data array",
-            },
-            "cell_part_arrays":
-            {
-                "type": "struct hydro_part_arrays*",
-                "doc": "pointer to particle data array struct of the cell this particle is located in",
-            }
-        }
+        "cell_offset": {
+            "type": "size_t",
+            "doc": "offset/index of particle in cell particle data array",
+        },
+        "cell_part_arrays": {
+            "type": "struct hydro_part_arrays*",
+            "doc": "pointer to particle data array struct of the cell this particle is located in",
+        },
+    }
 
     debug_id_props_name = "accessor_id"
     debug_id_props = {
-            debug_id_props_name: {
-                "type": "long long",
-                "doc": "This particle's accessor ID, identical for all structs associated with this particle.",
-                "ifdef": "SWIFT_DEBUG_CHECKS",
-                }
+        debug_id_props_name: {
+            "type": "long long",
+            "doc": "This particle's accessor ID, identical for all structs associated with this particle.",
+            "ifdef": "SWIFT_DEBUG_CHECKS",
         }
+    }
 
     updated_contents_d = {}
 
     if not have_part_struct:
         # Add 'struct part' manually. Contents will be filled below.
 
-        if (verbose):
+        if verbose:
             print("-- Didn't find struct `part`, adding it.")
 
         updated_contents_d["part"] = main_part_struct_aux_fields_props
@@ -236,18 +238,21 @@ def add_auxiliary_fields(contents_d: dict, id_checks: bool=True, verbose: bool=F
             updated_contents_d["part"][key] = main_part_struct_aux_fields_props[key]
 
     if id_checks:
-        if len(list(updated_contents_d.keys()))== 1:
-            if (verbose):
-                print("-- Found only one struct for particle data, not adding accessor_id checks")
+        if len(list(updated_contents_d.keys())) == 1:
+            if verbose:
+                print(
+                    "-- Found only one struct for particle data, not adding accessor_id checks"
+                )
         else:
             # Add struct ID for debugging checks to each struct
             for key in updated_contents_d.keys():
-                updated_contents_d[key][debug_id_props_name] = debug_id_props[debug_id_props_name]
+                updated_contents_d[key][debug_id_props_name] = debug_id_props[
+                    debug_id_props_name
+                ]
 
-                if (verbose):
-                    print(f"-- Adding debug check field {debug_id_props_name} to struct {key}")
+                if verbose:
+                    print(
+                        f"-- Adding debug check field {debug_id_props_name} to struct {key}"
+                    )
 
     return updated_contents_d
-
-
-

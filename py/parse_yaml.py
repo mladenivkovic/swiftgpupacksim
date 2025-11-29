@@ -58,9 +58,7 @@ _prohibited_field_names = [
 ]
 
 # field names to skip creating getters and setters
-_fields_without_api = [
-    "accessor_id"
-    ]
+_fields_without_api = ["accessor_id"]
 
 
 class FieldEntry(object):
@@ -378,7 +376,10 @@ class FieldEntry(object):
         return decl
 
     def generate_API(
-        self, parent_struct: Union[str, None] = None, id_checks: bool = True, verbose: bool = False
+        self,
+        parent_struct: Union[str, None] = None,
+        id_checks: bool = True,
+        verbose: bool = False,
     ) -> str:
         """
         Generate the getters and setters C code.
@@ -403,7 +404,6 @@ class FieldEntry(object):
             generated API C-code as a string
         """
 
-
         if self.name in _fields_without_api:
             if verbose:
                 print(f"-- Skipping API for {self.type} {self.name}")
@@ -412,7 +412,9 @@ class FieldEntry(object):
         if verbose:
             print(f"-- Generating API for {self.type} {self.name}")
 
-        params_dict = self._get_field_dict(parent_struct=parent_struct, id_checks=id_checks, verbose=verbose)
+        params_dict = self._get_field_dict(
+            parent_struct=parent_struct, id_checks=id_checks, verbose=verbose
+        )
 
         if params_dict["IS_INTERNAL_STRUCT"] or params_dict["IS_UNION"]:
             api_sub_entries = []

@@ -23,7 +23,7 @@
  * @return garbage_sum Some garbage double; Needed to prevent compiler from
  * optimising out a big loop doing nothing but flushing caches
  */
-double flush_cache(double* garbage, int n_garbage){
+double flush_cache(double* garbage, int n_garbage) {
   double sum = 0.;
   for (int i = 0; i < n_garbage; i++) {
     garbage[i] = (2. * i - 13.) * 4.;
