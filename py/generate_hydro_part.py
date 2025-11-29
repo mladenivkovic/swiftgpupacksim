@@ -9,6 +9,7 @@ from utils import (
     check_output_directory,
     print_separator,
     validate_yml_contents,
+    add_auxiliary_fields,
 )
 from hydro_part_header import generate_hydro_part_header
 from parts_header import generate_parts_header, generate_hydro_part_arrays_struct_header
@@ -58,7 +59,14 @@ parser.add_argument(
     default=False,
     help="Use minimalistic templates for unit tests",
 )
-
+parser.add_argument(
+    "-n",
+    "--no-id-checks",
+    dest="no_id_checks",
+    action="store_true",
+    default=False,
+    help="Do not generate particle struct ID debugging checks",
+)
 
 if __name__ == "__main__":
 
@@ -69,11 +77,13 @@ if __name__ == "__main__":
     dry_run = args.dry_run
     input_file = args.input_file
     testing = args.testing
+    id_checks = not args.no_id_checks
     verify_file_exists(input_file)
 
     input_fp = open(input_file, "r")
     particle_fields_d = yaml.safe_load(input_fp)
     input_fp.close()
+    particle_fields_d = add_auxiliary_fields(particle_fields_d, id_checks=id_checks, verbose=verbose)
     validate_yml_contents(particle_fields_d)
 
     hydro_part_header = generate_hydro_part_header(
@@ -81,6 +91,7 @@ if __name__ == "__main__":
     )
 
     parts_header = generate_parts_header(
+        #  particle_fields_d, swift_header=swift_header, debug_id_checks=id_checks, verbose=verbose
         particle_fields_d, swift_header=swift_header, verbose=verbose
     )
 
