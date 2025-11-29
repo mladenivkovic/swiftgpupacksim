@@ -50,9 +50,9 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
   if (swift_memalign("parts_{{STRUCT_NAME}}", (void**)&parr->_{{STRUCT_NAME}}, part_align, nr_parts * sizeof(struct {{STRUCT_NAME}})) != 0)
     error("Error while allocating memory for SPH particles");
 {% if HEADER_FOR_SWIFT %}
-  bzero(parr->_{{STRUCT_NAME}}, 0, nr_parts * sizeof(struct part));
+  bzero(parr->_{{STRUCT_NAME}}, 0, nr_parts * sizeof(struct {{STRUCT_NAME}}));
 {%- else %}
-  memset(parr->_{{STRUCT_NAME}}, 0, nr_parts * sizeof(struct part));
+  memset(parr->_{{STRUCT_NAME}}, 0, nr_parts * sizeof(struct {{STRUCT_NAME}}));
 {%- endif %}
 {% endfor %}
 {% if not HEADER_FOR_SWIFT %}
