@@ -150,16 +150,15 @@ def check_part_struct_first_in_list(contents_d: dict) -> bool:
     part_keylist = list(contents_d.keys())
     have_part_struct = False
 
-    if len(part_keylist) > 1:
-        # if 'part' is defined, it must be first.
-        for i, key in enumerate(part_keylist):
-            if key == "part":
-                have_part_struct = True
-                if i != 0:
-                    raise ValueError(
-                        "You're defining a particle data struct 'part', but it isn't in first position.\n"
-                        + f"Put it at the top of your .yml file. Current position: {i+1}"
-                    )
+    # if 'part' is defined, it must be first.
+    for i, key in enumerate(part_keylist):
+        if key == "part":
+            have_part_struct = True
+            if i != 0:
+                raise ValueError(
+                    "You're defining a particle data struct 'part', but it isn't in first position.\n"
+                    + f"Put it at the top of your .yml file. Current position: {i+1}"
+                )
 
     return have_part_struct
 
@@ -194,6 +193,9 @@ def add_auxiliary_fields(
     """
 
     have_part_struct = check_part_struct_first_in_list(contents_d)
+    if len(list(contents_d.keys())) == 1:
+        # we only have a single part struct, no need to add accessors
+        return contents_d
 
     # fake having field props for the auxiliary fields
     main_part_struct_aux_fields_props = {
