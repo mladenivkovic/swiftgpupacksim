@@ -68,8 +68,8 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
    * we're accessing the correct split struct. Note: ID = 0 is forbidden! */
   for (long long i = 1; i <= nr_parts; i++) {
 {% for STRUCT_NAME in STRUCT_NAMES %}
-    parr->_{{STRUCT_NAME}}[i]._accessor_id = i;
-{% endfor %}
+    parr->_{{STRUCT_NAME}}[i-1]._accessor_id = i;
+{%- endfor %}
   }
 #endif
 
@@ -102,8 +102,9 @@ static __attribute__((always_inline)) INLINE void clear_parts(struct hydro_part_
 __attribute__((always_inline)) INLINE static void part_arrays_set_pointer_offset(
   struct hydro_part_arrays* dest, const struct hydro_part_arrays* src, ptrdiff_t offset
   ){
+{# dest->_{{STRUCT_NAME}} = src->_{{STRUCT_NAME}} + offset; #}
 {% for STRUCT_NAME in STRUCT_NAMES %}
-  dest->_{{STRUCT_NAME}} = src->_{{STRUCT_NAME}} + offset;
+  dest->_{{STRUCT_NAME}} = &src->_{{STRUCT_NAME}}[offset];
 {%- endfor %}
 }
 

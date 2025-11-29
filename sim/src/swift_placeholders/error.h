@@ -29,6 +29,10 @@
 #include <omp.h>
 
 __attribute__((always_inline)) INLINE static void omp_abort(void){
+  int threadid = omp_get_thread_num();
+  int in_parallel = omp_in_parallel();
+  fprintf(stderr,"aborting omp thread=%d in_parallel=%d\n", threadid, in_parallel);
+  fflush(stderr);
 #pragma omp error at(execution) severity(fatal) message("aborting omp")
 }
 
