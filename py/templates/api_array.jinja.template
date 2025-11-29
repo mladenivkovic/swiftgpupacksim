@@ -19,7 +19,8 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
   {%- endif %}
 
@@ -63,7 +64,8 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
   {%- endif %}
 
@@ -107,7 +109,8 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
     {%- endif %}
 
@@ -152,7 +155,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
     {%- endif %}
 
@@ -198,7 +202,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
     {%- endif %}
 
