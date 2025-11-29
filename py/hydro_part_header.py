@@ -69,7 +69,7 @@ def generate_hydro_part_header(
             decl = field_entry.generate_declaration(verbose=verbose)
             declarations.append(decl)
             # get the API C-code
-            api = field_entry.generate_API(verbose=verbose)
+            api = field_entry.generate_API(verbose=verbose, id_checks=id_checks)
             apis.append(api)
 
         # store the parsed data

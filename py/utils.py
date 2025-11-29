@@ -210,7 +210,7 @@ def add_auxiliary_fields(contents_d: dict, id_checks: bool=True, verbose: bool=F
             debug_id_props_name: {
                 "type": "long long",
                 "doc": "This particle's accessor ID, identical for all structs associated with this particle.",
-                "ifdef": "SWIFT_DEBUGGING_CHECKS",
+                "ifdef": "SWIFT_DEBUG_CHECKS",
                 }
         }
 
@@ -237,8 +237,8 @@ def add_auxiliary_fields(contents_d: dict, id_checks: bool=True, verbose: bool=F
 
     if id_checks:
         if len(list(updated_contents_d.keys()))== 1:
-            #  if (verbose):
-            print("-- Found only one struct for particle data, not adding accessor_id checks")
+            if (verbose):
+                print("-- Found only one struct for particle data, not adding accessor_id checks")
         else:
             # Add struct ID for debugging checks to each struct
             for key in updated_contents_d.keys():

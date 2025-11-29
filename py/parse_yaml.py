@@ -264,6 +264,7 @@ class FieldEntry(object):
         self,
         parent_struct: Union[str, None] = None,
         indent_level: int = 0,
+        id_checks: bool = True,
         verbose: bool = False,
     ) -> dict:
         """
@@ -278,6 +279,9 @@ class FieldEntry(object):
         indent_level: int
             Increment the indent level of the declaration. Each indent_level
             indents the line by 2 whitespaces.
+
+        id_checks: bool
+            If True, add debugging checks whether the struct's accessor IDs align
 
         verbose: bool
             Set verbosity
@@ -330,7 +334,10 @@ class FieldEntry(object):
             "IS_UNION": self.type == "union",
             "IS_INTERNAL_STRUCT": self.type == "struct",
             "IS_IN_SPLIT_STRUCT": self.root_struct != "part",
+            "DEBUG_ID_CHECKS": id_checks,
+            "DEBUG_ID_CHECKS_MACRO_GUARD": not (self.ifdef == "SWIFT_DEBUG_CHECKS"),
         }
+        print(self.ifdef, self.ifdef == "SWIFT_DEBUG_CHECKS")
 
         if verbose:
             print("----", d)
@@ -372,7 +379,7 @@ class FieldEntry(object):
         return decl
 
     def generate_API(
-        self, parent_struct: Union[str, None] = None, verbose: bool = False
+        self, parent_struct: Union[str, None] = None, id_checks: bool = True, verbose: bool = False
     ) -> str:
         """
         Generate the getters and setters C code.
@@ -383,6 +390,9 @@ class FieldEntry(object):
         parent_struct: str or None
             If not None, this denoted that field is a sub-field contained within
             the given parent struct.
+
+        id_checks: bool
+            If True, add debugging checks whether the struct's accessor IDs align
 
         verbose: bool
             Set verbosity level
@@ -403,14 +413,14 @@ class FieldEntry(object):
         if verbose:
             print(f"-- Generating API for {self.type} {self.name}")
 
-        params_dict = self._get_field_dict(parent_struct=parent_struct, verbose=verbose)
+        params_dict = self._get_field_dict(parent_struct=parent_struct, id_checks=id_checks, verbose=verbose)
 
         if params_dict["IS_INTERNAL_STRUCT"] or params_dict["IS_UNION"]:
             api_sub_entries = []
             for entry in self.sub_entries:
                 if params_dict["IS_UNION"]:
                     # we don't need any modification to the accessors.
-                    api_entry = entry.generate_API(verbose=verbose)
+                    api_entry = entry.generate_API(id_checks=id_checks, verbose=verbose)
                 else:
                     parent = parent_struct
                     if parent_struct is not None:
@@ -419,7 +429,7 @@ class FieldEntry(object):
                     else:
                         parent = self.name
                     api_entry = entry.generate_API(
-                        parent_struct=parent, verbose=verbose
+                        parent_struct=parent, id_checks=id_checks, verbose=verbose
                     )
 
                 api_sub_entries.append(api_entry)

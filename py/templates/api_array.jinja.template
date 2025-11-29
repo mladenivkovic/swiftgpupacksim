@@ -13,6 +13,16 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 
 {%- if IS_IN_SPLIT_STRUCT %}
   struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+  
+  {%- if DEBUG_ID_CHECKS %}
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+  {%- endif %}
+
   {%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
   {%- else %}
@@ -47,6 +57,16 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 
 {%- if IS_IN_SPLIT_STRUCT %}
   const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+  
+  {%- if DEBUG_ID_CHECKS %}
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+  {%- endif %}
+
   {%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
   {%- else %}
@@ -81,7 +101,17 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 
 {%- if IS_IN_SPLIT_STRUCT %}
   const struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
-  {%- if HAS_PARENT_STRUCT %}
+ 
+    {%- if DEBUG_ID_CHECKS %}
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+    {%- endif %}
+
+ {%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[ind];
   {%- else %}
   return {{ROOT_STRUCT}}_s->_{{NAME}}[ind];
@@ -116,6 +146,16 @@ static __attribute__((always_inline)) INLINE void
 
 {%- if IS_IN_SPLIT_STRUCT %}
   struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+
+    {%- if DEBUG_ID_CHECKS %}
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+    {%- endif %}
+
   {%- for i in range(SIZE) %}
     {%- if HAS_PARENT_STRUCT %}
   {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
@@ -152,6 +192,16 @@ static __attribute__((always_inline)) INLINE void
 
 {%- if IS_IN_SPLIT_STRUCT %}
   struct {{ROOT_STRUCT}}* {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+
+    {%- if DEBUG_ID_CHECKS %}
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  swift_assert({{ROOT_STRUCT}}_s->_accessor_id == p->_accessor_id);
+{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+    {%- endif %}
+
   {%- if HAS_PARENT_STRUCT %}
   {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[i] = {{NAME}};
   {%- else %}
