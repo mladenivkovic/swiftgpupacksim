@@ -61,7 +61,7 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
 #endif
 
 
-{%- if DEBUG_ID_CHECKS == True %}
+{%- if DEBUG_ID_CHECKS %}
 
 #ifdef SWIFT_DEBUG_CHECKS
   /* Give all particles a unique debugging ID which will be used to verify that

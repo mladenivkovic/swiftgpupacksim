@@ -33,7 +33,7 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
 #ifdef SWIFT_DEBUG_CHECKS
   parr->nr_parts = nr_parts;
 #endif
-
+  /* We're done. Print out some information to screen */
   size_t total = 0;
   total+=sizeof(struct part);
 
@@ -42,7 +42,7 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
 }
 
 /**
- * Free the bytes from their prison of labour.
+ * @brief Free the bytes from their prison of labour.
  */
 static __attribute__((always_inline)) INLINE void clear_parts(struct hydro_part_arrays* parr) {
 
@@ -50,13 +50,16 @@ static __attribute__((always_inline)) INLINE void clear_parts(struct hydro_part_
 }
 
 /**
- * Put this here so
+ * @brief Initialise a hydro_part_arrays struct `dest` as an offset of a different
+ * hydro_part_arrays struct `src`. Intended to initilise cell particle array data
+ * as offsets to the global particle array.
  */
 __attribute__((always_inline)) INLINE static void part_arrays_set_pointer_offset(
   struct hydro_part_arrays* dest, const struct hydro_part_arrays* src, ptrdiff_t offset
   ){
 
-  dest->_part = src->_part + offset;
+
+  dest->_part = &src->_part[offset];
 }
 
 

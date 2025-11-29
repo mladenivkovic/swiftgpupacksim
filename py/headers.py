@@ -163,7 +163,7 @@ def generate_parts_header(
 
     #  generate the file from template
     header_file = jinja_generate_parts_h(
-        part_struct_d, swift_header=swift_header, verbose=verbose
+        part_struct_d, swift_header=swift_header, id_checks=id_checks, verbose=verbose
     )
 
     return header_file
