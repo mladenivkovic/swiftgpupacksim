@@ -337,7 +337,6 @@ class FieldEntry(object):
             "DEBUG_ID_CHECKS": id_checks,
             "DEBUG_ID_CHECKS_MACRO_GUARD": not (self.ifdef == "SWIFT_DEBUG_CHECKS"),
         }
-        print(self.ifdef, self.ifdef == "SWIFT_DEBUG_CHECKS")
 
         if verbose:
             print("----", d)

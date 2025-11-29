@@ -92,6 +92,7 @@ def jinja_generate_parts_h(
     part_structs_d: dict,
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
+    id_checks: bool=True,
     verbose: bool = False,
 ) -> str:
     """
@@ -112,6 +113,9 @@ def jinja_generate_parts_h(
 
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
+
+    id_checks: bool
+        If True, add initialisation of particle accessor_id variables
 
     verbose: bool
         if True, be talkative
@@ -135,6 +139,7 @@ def jinja_generate_parts_h(
     d["TEMPLATE_FILENAME"] = templ_full_fname
     d["HEADER_FOR_SWIFT"] = swift_header
     d["HEADER_GUARD"] = get_git_hash()
+    d["DEBUG_ID_CHECKS"] = id_checks
 
     header_template = templ.render(d)
 
