@@ -12,6 +12,7 @@
 /* Local includes. */
 #include "cell_hydro.h"
 #include "swift_placeholders/cell_other_physics.h"
+#include "swift_placeholders/task.h"
 
 struct cell {
 
@@ -190,7 +191,7 @@ cell_get_const_hydro_parts(const struct cell *restrict c) {
  */
 static __attribute__((always_inline)) INLINE void init_cell(
     struct cell *c, int count, const struct hydro_part_arrays *all_parts,
-    int offset) {
+    int offset, omp_lock_t* part_locks) {
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;
@@ -198,6 +199,11 @@ static __attribute__((always_inline)) INLINE void init_cell(
 
   c->hydro.count = count;
   part_arrays_set_pointer_offset(&c->hydro.part_arrs, all_parts, offset);
+
+  /* Before we write into particles, lock them. */
+  for (int i = 0; i < count; i++){
+    omp_set_lock(&part_locks[offset + i]);
+  }
 
 #if defined (SPHENIX_AOS_PARTICLE)
 #elif defined(SPHENIX_SOA_PARTICLE)
@@ -209,3 +215,15 @@ static __attribute__((always_inline)) INLINE void init_cell(
 #pragma error "particle handling for this memory layout not implemented"
 #endif
 }
+
+/**
+ * Clean up after yourself. In particular, release the locks.
+ */
+static __attribute__((always_inline)) INLINE void destroy_cell(
+    struct cell *c, int count, int offset, omp_lock_t* part_locks) {
+
+  for (int i = 0; i < count; i++){
+    omp_unset_lock(&part_locks[offset + i]);
+  }
+}
+
