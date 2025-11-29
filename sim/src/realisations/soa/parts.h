@@ -184,66 +184,36 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
    * we're accessing the correct split struct. Note: ID = 0 is forbidden! */
   for (long long i = 1; i <= nr_parts; i++) {
 
-    parr->_part->_accessor_id = i;
-
-    parr->_part_id->_accessor_id = i;
-
-    parr->_part_gpart->_accessor_id = i;
-
-    parr->_part_x->_accessor_id = i;
-
-    parr->_part_v->_accessor_id = i;
-
-    parr->_part_a_hydro->_accessor_id = i;
-
-    parr->_part_mass->_accessor_id = i;
-
-    parr->_part_h->_accessor_id = i;
-
-    parr->_part_u->_accessor_id = i;
-
-    parr->_part_u_dt->_accessor_id = i;
-
-    parr->_part_rho->_accessor_id = i;
-
-    parr->_part_div_v->_accessor_id = i;
-
-    parr->_part_div_v_dt->_accessor_id = i;
-
-    parr->_part_div_v_previous_step->_accessor_id = i;
-
-    parr->_part_alpha_av->_accessor_id = i;
-
-    parr->_part_v_sig->_accessor_id = i;
-
-    parr->_part_laplace_u->_accessor_id = i;
-
-    parr->_part_alpha_diff->_accessor_id = i;
-
-    parr->_part_density_force1->_accessor_id = i;
-
-    parr->_part_density_force2->_accessor_id = i;
-
-    parr->_part_density_force3->_accessor_id = i;
-
-    parr->_part_density_force4->_accessor_id = i;
-
-    parr->_part_additional_structs->_accessor_id = i;
-
-    parr->_part_rt_time_data->_accessor_id = i;
-
-    parr->_part_depth_h->_accessor_id = i;
-
-    parr->_part_time_bin->_accessor_id = i;
-
-    parr->_part_limiter_data->_accessor_id = i;
-
-    parr->_part_ti_drift->_accessor_id = i;
-
-    parr->_part_ti_kick->_accessor_id = i;
-
-    parr->_part_debugging->_accessor_id = i;
-
+    parr->_part[i-1]._accessor_id = i;
+    parr->_part_id[i-1]._accessor_id = i;
+    parr->_part_gpart[i-1]._accessor_id = i;
+    parr->_part_x[i-1]._accessor_id = i;
+    parr->_part_v[i-1]._accessor_id = i;
+    parr->_part_a_hydro[i-1]._accessor_id = i;
+    parr->_part_mass[i-1]._accessor_id = i;
+    parr->_part_h[i-1]._accessor_id = i;
+    parr->_part_u[i-1]._accessor_id = i;
+    parr->_part_u_dt[i-1]._accessor_id = i;
+    parr->_part_rho[i-1]._accessor_id = i;
+    parr->_part_div_v[i-1]._accessor_id = i;
+    parr->_part_div_v_dt[i-1]._accessor_id = i;
+    parr->_part_div_v_previous_step[i-1]._accessor_id = i;
+    parr->_part_alpha_av[i-1]._accessor_id = i;
+    parr->_part_v_sig[i-1]._accessor_id = i;
+    parr->_part_laplace_u[i-1]._accessor_id = i;
+    parr->_part_alpha_diff[i-1]._accessor_id = i;
+    parr->_part_density_force1[i-1]._accessor_id = i;
+    parr->_part_density_force2[i-1]._accessor_id = i;
+    parr->_part_density_force3[i-1]._accessor_id = i;
+    parr->_part_density_force4[i-1]._accessor_id = i;
+    parr->_part_additional_structs[i-1]._accessor_id = i;
+    parr->_part_rt_time_data[i-1]._accessor_id = i;
+    parr->_part_depth_h[i-1]._accessor_id = i;
+    parr->_part_time_bin[i-1]._accessor_id = i;
+    parr->_part_limiter_data[i-1]._accessor_id = i;
+    parr->_part_ti_drift[i-1]._accessor_id = i;
+    parr->_part_ti_kick[i-1]._accessor_id = i;
+    parr->_part_debugging[i-1]._accessor_id = i;
   }
 #endif
   /* We're done. Print out some information to screen */
@@ -329,36 +299,37 @@ __attribute__((always_inline)) INLINE static void part_arrays_set_pointer_offset
   struct hydro_part_arrays* dest, const struct hydro_part_arrays* src, ptrdiff_t offset
   ){
 
-  dest->_part = src->_part + offset;
-  dest->_part_id = src->_part_id + offset;
-  dest->_part_gpart = src->_part_gpart + offset;
-  dest->_part_x = src->_part_x + offset;
-  dest->_part_v = src->_part_v + offset;
-  dest->_part_a_hydro = src->_part_a_hydro + offset;
-  dest->_part_mass = src->_part_mass + offset;
-  dest->_part_h = src->_part_h + offset;
-  dest->_part_u = src->_part_u + offset;
-  dest->_part_u_dt = src->_part_u_dt + offset;
-  dest->_part_rho = src->_part_rho + offset;
-  dest->_part_div_v = src->_part_div_v + offset;
-  dest->_part_div_v_dt = src->_part_div_v_dt + offset;
-  dest->_part_div_v_previous_step = src->_part_div_v_previous_step + offset;
-  dest->_part_alpha_av = src->_part_alpha_av + offset;
-  dest->_part_v_sig = src->_part_v_sig + offset;
-  dest->_part_laplace_u = src->_part_laplace_u + offset;
-  dest->_part_alpha_diff = src->_part_alpha_diff + offset;
-  dest->_part_density_force1 = src->_part_density_force1 + offset;
-  dest->_part_density_force2 = src->_part_density_force2 + offset;
-  dest->_part_density_force3 = src->_part_density_force3 + offset;
-  dest->_part_density_force4 = src->_part_density_force4 + offset;
-  dest->_part_additional_structs = src->_part_additional_structs + offset;
-  dest->_part_rt_time_data = src->_part_rt_time_data + offset;
-  dest->_part_depth_h = src->_part_depth_h + offset;
-  dest->_part_time_bin = src->_part_time_bin + offset;
-  dest->_part_limiter_data = src->_part_limiter_data + offset;
-  dest->_part_ti_drift = src->_part_ti_drift + offset;
-  dest->_part_ti_kick = src->_part_ti_kick + offset;
-  dest->_part_debugging = src->_part_debugging + offset;
+
+  dest->_part = &src->_part[offset];
+  dest->_part_id = &src->_part_id[offset];
+  dest->_part_gpart = &src->_part_gpart[offset];
+  dest->_part_x = &src->_part_x[offset];
+  dest->_part_v = &src->_part_v[offset];
+  dest->_part_a_hydro = &src->_part_a_hydro[offset];
+  dest->_part_mass = &src->_part_mass[offset];
+  dest->_part_h = &src->_part_h[offset];
+  dest->_part_u = &src->_part_u[offset];
+  dest->_part_u_dt = &src->_part_u_dt[offset];
+  dest->_part_rho = &src->_part_rho[offset];
+  dest->_part_div_v = &src->_part_div_v[offset];
+  dest->_part_div_v_dt = &src->_part_div_v_dt[offset];
+  dest->_part_div_v_previous_step = &src->_part_div_v_previous_step[offset];
+  dest->_part_alpha_av = &src->_part_alpha_av[offset];
+  dest->_part_v_sig = &src->_part_v_sig[offset];
+  dest->_part_laplace_u = &src->_part_laplace_u[offset];
+  dest->_part_alpha_diff = &src->_part_alpha_diff[offset];
+  dest->_part_density_force1 = &src->_part_density_force1[offset];
+  dest->_part_density_force2 = &src->_part_density_force2[offset];
+  dest->_part_density_force3 = &src->_part_density_force3[offset];
+  dest->_part_density_force4 = &src->_part_density_force4[offset];
+  dest->_part_additional_structs = &src->_part_additional_structs[offset];
+  dest->_part_rt_time_data = &src->_part_rt_time_data[offset];
+  dest->_part_depth_h = &src->_part_depth_h[offset];
+  dest->_part_time_bin = &src->_part_time_bin[offset];
+  dest->_part_limiter_data = &src->_part_limiter_data[offset];
+  dest->_part_ti_drift = &src->_part_ti_drift[offset];
+  dest->_part_ti_kick = &src->_part_ti_kick[offset];
+  dest->_part_debugging = &src->_part_debugging[offset];
 }
 
 

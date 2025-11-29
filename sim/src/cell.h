@@ -199,12 +199,13 @@ static __attribute__((always_inline)) INLINE void init_cell(
   c->hydro.count = count;
   part_arrays_set_pointer_offset(&c->hydro.part_arrs, all_parts, offset);
 
-#ifndef SPHENIX_AOS_PARTICLE
-
-#pragma message "Adding particle offsets"
+#if defined (SPHENIX_AOS_PARTICLE)
+#elif defined(SPHENIX_SOA_PARTICLE)
   for (int i = 0; i < count; i++) {
     c->hydro.part_arrs._part[i]._cell_offset = i;
     c->hydro.part_arrs._part[i]._cell_part_arrays = &c->hydro.part_arrs;
   }
+#else
+#pragma error "particle handling for this memory layout not implemented"
 #endif
 }

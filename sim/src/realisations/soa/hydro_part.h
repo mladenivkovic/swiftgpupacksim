@@ -4,8 +4,8 @@
   */
 
 
-#ifndef SWIFT_HYDRO_PART_b7b8e6d0fd55ed83b40f7c9c87dcc8036a15891b_H
-#define SWIFT_HYDRO_PART_b7b8e6d0fd55ed83b40f7c9c87dcc8036a15891b_H
+#ifndef SWIFT_HYDRO_PART_0934a4857839b29d15cf70ea928740238d9a853f_H
+#define SWIFT_HYDRO_PART_0934a4857839b29d15cf70ea928740238d9a853f_H
 
  
 
@@ -575,7 +575,8 @@ static __attribute__((always_inline)) INLINE long long
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_id_s->_accessor_id == p->_accessor_id);
+  if(part_id_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_id_s->_accessor_id, p->_accessor_id);
 #endif
   return part_id_s->_id;
 }
@@ -592,7 +593,8 @@ static __attribute__((always_inline)) INLINE long long*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_id_s->_accessor_id == p->_accessor_id);
+  if(part_id_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_id_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_id_s->_id;
 }
@@ -609,7 +611,8 @@ static __attribute__((always_inline)) INLINE const long long*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_id_s->_accessor_id == p->_accessor_id);
+  if(part_id_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_id_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_id_s->_id;
 }
@@ -624,7 +627,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_id_s->_accessor_id == p->_accessor_id);
+  if(part_id_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_id_s->_accessor_id, p->_accessor_id);
 #endif
   part_id_s->_id = id;
 }
@@ -644,7 +648,8 @@ static __attribute__((always_inline)) INLINE struct gpart*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_gpart_s->_accessor_id == p->_accessor_id);
+  if(part_gpart_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_gpart_s->_accessor_id, p->_accessor_id);
 #endif
   return part_gpart_s->_gpart;
 }
@@ -661,7 +666,8 @@ static __attribute__((always_inline)) INLINE struct gpart**
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_gpart_s->_accessor_id == p->_accessor_id);
+  if(part_gpart_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_gpart_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_gpart_s->_gpart;
 }/**
@@ -674,7 +680,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_gpart_s->_accessor_id == p->_accessor_id);
+  if(part_gpart_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_gpart_s->_accessor_id, p->_accessor_id);
 #endif
   part_gpart_s->_gpart = gpart;
 }
@@ -696,7 +703,8 @@ static __attribute__((always_inline)) INLINE double*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_x_s->_accessor_id == p->_accessor_id);
+  if(part_x_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_x_s->_accessor_id, p->_accessor_id);
 #endif
   return part_x_s->_x;
 }
@@ -711,7 +719,8 @@ static __attribute__((always_inline)) INLINE const double*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_x_s->_accessor_id == p->_accessor_id);
+  if(part_x_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_x_s->_accessor_id, p->_accessor_id);
 #endif
   return part_x_s->_x;
 }
@@ -726,7 +735,8 @@ static __attribute__((always_inline)) INLINE double
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_x_s->_accessor_id == p->_accessor_id);
+  if(part_x_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_x_s->_accessor_id, p->_accessor_id);
 #endif
   return part_x_s->_x[ind];
 }
@@ -742,7 +752,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_x_s->_accessor_id == p->_accessor_id);
+  if(part_x_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_x_s->_accessor_id, p->_accessor_id);
 #endif
   part_x_s->_x[0] = x[0];
   part_x_s->_x[1] = x[1];
@@ -759,7 +770,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_x_s->_accessor_id == p->_accessor_id);
+  if(part_x_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_x_s->_accessor_id, p->_accessor_id);
 #endif
   part_x_s->_x[i] = x;
 }
@@ -781,7 +793,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_s->_accessor_id == p->_accessor_id);
+  if(part_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_s->_accessor_id, p->_accessor_id);
 #endif
   return part_v_s->_v;
 }
@@ -796,7 +809,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_s->_accessor_id == p->_accessor_id);
+  if(part_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_s->_accessor_id, p->_accessor_id);
 #endif
   return part_v_s->_v;
 }
@@ -811,7 +825,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_s->_accessor_id == p->_accessor_id);
+  if(part_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_s->_accessor_id, p->_accessor_id);
 #endif
   return part_v_s->_v[ind];
 }
@@ -827,7 +842,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_s->_accessor_id == p->_accessor_id);
+  if(part_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_s->_accessor_id, p->_accessor_id);
 #endif
   part_v_s->_v[0] = v[0];
   part_v_s->_v[1] = v[1];
@@ -844,7 +860,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_s->_accessor_id == p->_accessor_id);
+  if(part_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_s->_accessor_id, p->_accessor_id);
 #endif
   part_v_s->_v[i] = v;
 }
@@ -866,7 +883,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_a_hydro_s->_accessor_id == p->_accessor_id);
+  if(part_a_hydro_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_a_hydro_s->_accessor_id, p->_accessor_id);
 #endif
   return part_a_hydro_s->_a_hydro;
 }
@@ -881,7 +899,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_a_hydro_s->_accessor_id == p->_accessor_id);
+  if(part_a_hydro_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_a_hydro_s->_accessor_id, p->_accessor_id);
 #endif
   return part_a_hydro_s->_a_hydro;
 }
@@ -896,7 +915,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_a_hydro_s->_accessor_id == p->_accessor_id);
+  if(part_a_hydro_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_a_hydro_s->_accessor_id, p->_accessor_id);
 #endif
   return part_a_hydro_s->_a_hydro[ind];
 }
@@ -912,7 +932,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_a_hydro_s->_accessor_id == p->_accessor_id);
+  if(part_a_hydro_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_a_hydro_s->_accessor_id, p->_accessor_id);
 #endif
   part_a_hydro_s->_a_hydro[0] = a_hydro[0];
   part_a_hydro_s->_a_hydro[1] = a_hydro[1];
@@ -929,7 +950,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_a_hydro_s->_accessor_id == p->_accessor_id);
+  if(part_a_hydro_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_a_hydro_s->_accessor_id, p->_accessor_id);
 #endif
   part_a_hydro_s->_a_hydro[i] = a_hydro;
 }
@@ -949,7 +971,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_mass_s->_accessor_id == p->_accessor_id);
+  if(part_mass_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_mass_s->_accessor_id, p->_accessor_id);
 #endif
   return part_mass_s->_mass;
 }
@@ -966,7 +989,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_mass_s->_accessor_id == p->_accessor_id);
+  if(part_mass_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_mass_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_mass_s->_mass;
 }
@@ -983,7 +1007,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_mass_s->_accessor_id == p->_accessor_id);
+  if(part_mass_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_mass_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_mass_s->_mass;
 }
@@ -998,7 +1023,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_mass_s->_accessor_id == p->_accessor_id);
+  if(part_mass_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_mass_s->_accessor_id, p->_accessor_id);
 #endif
   part_mass_s->_mass = mass;
 }
@@ -1018,7 +1044,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_h_s->_accessor_id == p->_accessor_id);
+  if(part_h_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_h_s->_accessor_id, p->_accessor_id);
 #endif
   return part_h_s->_h;
 }
@@ -1035,7 +1062,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_h_s->_accessor_id == p->_accessor_id);
+  if(part_h_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_h_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_h_s->_h;
 }
@@ -1052,7 +1080,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_h_s->_accessor_id == p->_accessor_id);
+  if(part_h_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_h_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_h_s->_h;
 }
@@ -1067,7 +1096,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_h_s->_accessor_id == p->_accessor_id);
+  if(part_h_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_h_s->_accessor_id, p->_accessor_id);
 #endif
   part_h_s->_h = h;
 }
@@ -1087,7 +1117,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_u_s->_accessor_id == p->_accessor_id);
+  if(part_u_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_u_s->_accessor_id, p->_accessor_id);
 #endif
   return part_u_s->_u;
 }
@@ -1104,7 +1135,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_u_s->_accessor_id == p->_accessor_id);
+  if(part_u_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_u_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_u_s->_u;
 }
@@ -1121,7 +1153,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_u_s->_accessor_id == p->_accessor_id);
+  if(part_u_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_u_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_u_s->_u;
 }
@@ -1136,7 +1169,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_u_s->_accessor_id == p->_accessor_id);
+  if(part_u_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_u_s->_accessor_id, p->_accessor_id);
 #endif
   part_u_s->_u = u;
 }
@@ -1156,7 +1190,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_u_dt_s->_accessor_id == p->_accessor_id);
+  if(part_u_dt_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_u_dt_s->_accessor_id, p->_accessor_id);
 #endif
   return part_u_dt_s->_u_dt;
 }
@@ -1173,7 +1208,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_u_dt_s->_accessor_id == p->_accessor_id);
+  if(part_u_dt_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_u_dt_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_u_dt_s->_u_dt;
 }
@@ -1190,7 +1226,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_u_dt_s->_accessor_id == p->_accessor_id);
+  if(part_u_dt_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_u_dt_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_u_dt_s->_u_dt;
 }
@@ -1205,7 +1242,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_u_dt_s->_accessor_id == p->_accessor_id);
+  if(part_u_dt_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_u_dt_s->_accessor_id, p->_accessor_id);
 #endif
   part_u_dt_s->_u_dt = u_dt;
 }
@@ -1225,7 +1263,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_rho_s->_accessor_id == p->_accessor_id);
+  if(part_rho_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_rho_s->_accessor_id, p->_accessor_id);
 #endif
   return part_rho_s->_rho;
 }
@@ -1242,7 +1281,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_rho_s->_accessor_id == p->_accessor_id);
+  if(part_rho_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_rho_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_rho_s->_rho;
 }
@@ -1259,7 +1299,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_rho_s->_accessor_id == p->_accessor_id);
+  if(part_rho_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_rho_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_rho_s->_rho;
 }
@@ -1274,7 +1315,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_rho_s->_accessor_id == p->_accessor_id);
+  if(part_rho_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_rho_s->_accessor_id, p->_accessor_id);
 #endif
   part_rho_s->_rho = rho;
 }
@@ -1294,7 +1336,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_s->_accessor_id, p->_accessor_id);
 #endif
   return part_div_v_s->_div_v;
 }
@@ -1311,7 +1354,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_div_v_s->_div_v;
 }
@@ -1328,7 +1372,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_div_v_s->_div_v;
 }
@@ -1343,7 +1388,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_s->_accessor_id, p->_accessor_id);
 #endif
   part_div_v_s->_div_v = div_v;
 }
@@ -1363,7 +1409,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_dt_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_dt_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_dt_s->_accessor_id, p->_accessor_id);
 #endif
   return part_div_v_dt_s->_div_v_dt;
 }
@@ -1380,7 +1427,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_dt_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_dt_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_dt_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_div_v_dt_s->_div_v_dt;
 }
@@ -1397,7 +1445,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_dt_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_dt_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_dt_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_div_v_dt_s->_div_v_dt;
 }
@@ -1412,7 +1461,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_dt_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_dt_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_dt_s->_accessor_id, p->_accessor_id);
 #endif
   part_div_v_dt_s->_div_v_dt = div_v_dt;
 }
@@ -1432,7 +1482,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_previous_step_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_previous_step_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_previous_step_s->_accessor_id, p->_accessor_id);
 #endif
   return part_div_v_previous_step_s->_div_v_previous_step;
 }
@@ -1449,7 +1500,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_previous_step_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_previous_step_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_previous_step_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_div_v_previous_step_s->_div_v_previous_step;
 }
@@ -1466,7 +1518,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_previous_step_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_previous_step_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_previous_step_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_div_v_previous_step_s->_div_v_previous_step;
 }
@@ -1481,7 +1534,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_div_v_previous_step_s->_accessor_id == p->_accessor_id);
+  if(part_div_v_previous_step_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_div_v_previous_step_s->_accessor_id, p->_accessor_id);
 #endif
   part_div_v_previous_step_s->_div_v_previous_step = div_v_previous_step;
 }
@@ -1501,7 +1555,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_alpha_av_s->_accessor_id == p->_accessor_id);
+  if(part_alpha_av_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_alpha_av_s->_accessor_id, p->_accessor_id);
 #endif
   return part_alpha_av_s->_alpha_av;
 }
@@ -1518,7 +1573,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_alpha_av_s->_accessor_id == p->_accessor_id);
+  if(part_alpha_av_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_alpha_av_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_alpha_av_s->_alpha_av;
 }
@@ -1535,7 +1591,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_alpha_av_s->_accessor_id == p->_accessor_id);
+  if(part_alpha_av_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_alpha_av_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_alpha_av_s->_alpha_av;
 }
@@ -1550,7 +1607,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_alpha_av_s->_accessor_id == p->_accessor_id);
+  if(part_alpha_av_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_alpha_av_s->_accessor_id, p->_accessor_id);
 #endif
   part_alpha_av_s->_alpha_av = alpha_av;
 }
@@ -1570,7 +1628,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_sig_s->_accessor_id == p->_accessor_id);
+  if(part_v_sig_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_sig_s->_accessor_id, p->_accessor_id);
 #endif
   return part_v_sig_s->_v_sig;
 }
@@ -1587,7 +1646,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_sig_s->_accessor_id == p->_accessor_id);
+  if(part_v_sig_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_sig_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_v_sig_s->_v_sig;
 }
@@ -1604,7 +1664,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_sig_s->_accessor_id == p->_accessor_id);
+  if(part_v_sig_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_sig_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_v_sig_s->_v_sig;
 }
@@ -1619,7 +1680,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_v_sig_s->_accessor_id == p->_accessor_id);
+  if(part_v_sig_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_v_sig_s->_accessor_id, p->_accessor_id);
 #endif
   part_v_sig_s->_v_sig = v_sig;
 }
@@ -1639,7 +1701,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_laplace_u_s->_accessor_id == p->_accessor_id);
+  if(part_laplace_u_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_laplace_u_s->_accessor_id, p->_accessor_id);
 #endif
   return part_laplace_u_s->_laplace_u;
 }
@@ -1656,7 +1719,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_laplace_u_s->_accessor_id == p->_accessor_id);
+  if(part_laplace_u_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_laplace_u_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_laplace_u_s->_laplace_u;
 }
@@ -1673,7 +1737,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_laplace_u_s->_accessor_id == p->_accessor_id);
+  if(part_laplace_u_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_laplace_u_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_laplace_u_s->_laplace_u;
 }
@@ -1688,7 +1753,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_laplace_u_s->_accessor_id == p->_accessor_id);
+  if(part_laplace_u_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_laplace_u_s->_accessor_id, p->_accessor_id);
 #endif
   part_laplace_u_s->_laplace_u = laplace_u;
 }
@@ -1708,7 +1774,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_alpha_diff_s->_accessor_id == p->_accessor_id);
+  if(part_alpha_diff_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_alpha_diff_s->_accessor_id, p->_accessor_id);
 #endif
   return part_alpha_diff_s->_alpha_diff;
 }
@@ -1725,7 +1792,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_alpha_diff_s->_accessor_id == p->_accessor_id);
+  if(part_alpha_diff_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_alpha_diff_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_alpha_diff_s->_alpha_diff;
 }
@@ -1742,7 +1810,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_alpha_diff_s->_accessor_id == p->_accessor_id);
+  if(part_alpha_diff_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_alpha_diff_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_alpha_diff_s->_alpha_diff;
 }
@@ -1757,7 +1826,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_alpha_diff_s->_accessor_id == p->_accessor_id);
+  if(part_alpha_diff_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_alpha_diff_s->_accessor_id, p->_accessor_id);
 #endif
   part_alpha_diff_s->_alpha_diff = alpha_diff;
 }
@@ -1777,7 +1847,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force1_s->_accessor_id == p->_accessor_id);
+  if(part_density_force1_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force1_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force1_s->_wcount;
 }
@@ -1794,7 +1865,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force1_s->_accessor_id == p->_accessor_id);
+  if(part_density_force1_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force1_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force1_s->_wcount;
 }
@@ -1811,7 +1883,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force1_s->_accessor_id == p->_accessor_id);
+  if(part_density_force1_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force1_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force1_s->_wcount;
 }
@@ -1826,7 +1899,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force1_s->_accessor_id == p->_accessor_id);
+  if(part_density_force1_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force1_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force1_s->_wcount = wcount;
 }
@@ -1842,7 +1916,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force1_s->_accessor_id == p->_accessor_id);
+  if(part_density_force1_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force1_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force1_s->_f_gradh;
 }
@@ -1859,7 +1934,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force1_s->_accessor_id == p->_accessor_id);
+  if(part_density_force1_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force1_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force1_s->_f_gradh;
 }
@@ -1876,7 +1952,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force1_s->_accessor_id == p->_accessor_id);
+  if(part_density_force1_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force1_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force1_s->_f_gradh;
 }
@@ -1891,7 +1968,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force1_s->_accessor_id == p->_accessor_id);
+  if(part_density_force1_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force1_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force1_s->_f_gradh = f_gradh;
 }
@@ -1911,7 +1989,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force2_s->_accessor_id == p->_accessor_id);
+  if(part_density_force2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force2_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force2_s->_wcount_dh;
 }
@@ -1928,7 +2007,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force2_s->_accessor_id == p->_accessor_id);
+  if(part_density_force2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force2_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force2_s->_wcount_dh;
 }
@@ -1945,7 +2025,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force2_s->_accessor_id == p->_accessor_id);
+  if(part_density_force2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force2_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force2_s->_wcount_dh;
 }
@@ -1960,7 +2041,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force2_s->_accessor_id == p->_accessor_id);
+  if(part_density_force2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force2_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force2_s->_wcount_dh = wcount_dh;
 }
@@ -1976,7 +2058,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force2_s->_accessor_id == p->_accessor_id);
+  if(part_density_force2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force2_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force2_s->_pressure;
 }
@@ -1993,7 +2076,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force2_s->_accessor_id == p->_accessor_id);
+  if(part_density_force2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force2_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force2_s->_pressure;
 }
@@ -2010,7 +2094,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force2_s->_accessor_id == p->_accessor_id);
+  if(part_density_force2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force2_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force2_s->_pressure;
 }
@@ -2025,7 +2110,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force2_s->_accessor_id == p->_accessor_id);
+  if(part_density_force2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force2_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force2_s->_pressure = pressure;
 }
@@ -2045,7 +2131,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force3_s->_accessor_id == p->_accessor_id);
+  if(part_density_force3_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force3_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force3_s->_rho_dh;
 }
@@ -2062,7 +2149,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force3_s->_accessor_id == p->_accessor_id);
+  if(part_density_force3_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force3_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force3_s->_rho_dh;
 }
@@ -2079,7 +2167,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force3_s->_accessor_id == p->_accessor_id);
+  if(part_density_force3_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force3_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force3_s->_rho_dh;
 }
@@ -2094,7 +2183,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force3_s->_accessor_id == p->_accessor_id);
+  if(part_density_force3_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force3_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force3_s->_rho_dh = rho_dh;
 }
@@ -2110,7 +2200,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force3_s->_accessor_id == p->_accessor_id);
+  if(part_density_force3_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force3_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force3_s->_soundspeed;
 }
@@ -2127,7 +2218,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force3_s->_accessor_id == p->_accessor_id);
+  if(part_density_force3_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force3_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force3_s->_soundspeed;
 }
@@ -2144,7 +2236,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force3_s->_accessor_id == p->_accessor_id);
+  if(part_density_force3_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force3_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force3_s->_soundspeed;
 }
@@ -2159,7 +2252,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force3_s->_accessor_id == p->_accessor_id);
+  if(part_density_force3_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force3_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force3_s->_soundspeed = soundspeed;
 }
@@ -2181,7 +2275,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force4_s->_rot_v;
 }
@@ -2196,7 +2291,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force4_s->_rot_v;
 }
@@ -2211,7 +2307,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force4_s->_rot_v[ind];
 }
@@ -2227,7 +2324,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force4_s->_rot_v[0] = rot_v[0];
   part_density_force4_s->_rot_v[1] = rot_v[1];
@@ -2244,7 +2342,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force4_s->_rot_v[i] = rot_v;
 }
@@ -2260,7 +2359,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force4_s->_force._h_dt;
 }
@@ -2277,7 +2377,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force4_s->_force._h_dt;
 }
@@ -2294,7 +2395,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force4_s->_force._h_dt;
 }
@@ -2309,7 +2411,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force4_s->_force._h_dt = h_dt;
 }
@@ -2325,7 +2428,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force4_s->_force._balsara;
 }
@@ -2342,7 +2446,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force4_s->_force._balsara;
 }
@@ -2359,7 +2464,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force4_s->_force._balsara;
 }
@@ -2374,7 +2480,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force4_s->_force._balsara = balsara;
 }
@@ -2390,7 +2497,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return part_density_force4_s->_force._alpha_visc_max_ngb;
 }
@@ -2407,7 +2515,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force4_s->_force._alpha_visc_max_ngb;
 }
@@ -2424,7 +2533,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_density_force4_s->_force._alpha_visc_max_ngb;
 }
@@ -2439,7 +2549,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_density_force4_s->_accessor_id == p->_accessor_id);
+  if(part_density_force4_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_density_force4_s->_accessor_id, p->_accessor_id);
 #endif
   part_density_force4_s->_force._alpha_visc_max_ngb = alpha_visc_max_ngb;
 }
@@ -2459,7 +2570,8 @@ static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_adaptive_softening_data;
 }
@@ -2476,7 +2588,8 @@ static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_adaptive_softening_data;
 }
@@ -2493,7 +2606,8 @@ static __attribute__((always_inline)) INLINE const struct adaptive_softening_par
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_adaptive_softening_data;
 }
@@ -2508,7 +2622,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_adaptive_softening_data = adaptive_softening_data;
 }
@@ -2526,7 +2641,8 @@ static __attribute__((always_inline)) INLINE struct mhd_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_mhd_data;
 }
@@ -2543,7 +2659,8 @@ static __attribute__((always_inline)) INLINE struct mhd_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_mhd_data;
 }
@@ -2560,7 +2677,8 @@ static __attribute__((always_inline)) INLINE const struct mhd_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_mhd_data;
 }
@@ -2575,7 +2693,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_mhd_data = mhd_data;
 }
@@ -2593,7 +2712,8 @@ static __attribute__((always_inline)) INLINE struct chemistry_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_chemistry_data;
 }
@@ -2610,7 +2730,8 @@ static __attribute__((always_inline)) INLINE struct chemistry_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_chemistry_data;
 }
@@ -2627,7 +2748,8 @@ static __attribute__((always_inline)) INLINE const struct chemistry_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_chemistry_data;
 }
@@ -2642,7 +2764,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_chemistry_data = chemistry_data;
 }
@@ -2660,7 +2783,8 @@ static __attribute__((always_inline)) INLINE struct cooling_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_cooling_data;
 }
@@ -2677,7 +2801,8 @@ static __attribute__((always_inline)) INLINE struct cooling_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_cooling_data;
 }
@@ -2694,7 +2819,8 @@ static __attribute__((always_inline)) INLINE const struct cooling_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_cooling_data;
 }
@@ -2709,7 +2835,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_cooling_data = cooling_data;
 }
@@ -2727,7 +2854,8 @@ static __attribute__((always_inline)) INLINE struct feedback_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_feedback_data;
 }
@@ -2744,7 +2872,8 @@ static __attribute__((always_inline)) INLINE struct feedback_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_feedback_data;
 }
@@ -2761,7 +2890,8 @@ static __attribute__((always_inline)) INLINE const struct feedback_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_feedback_data;
 }
@@ -2776,7 +2906,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_feedback_data = feedback_data;
 }
@@ -2794,7 +2925,8 @@ static __attribute__((always_inline)) INLINE struct black_holes_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_black_holes_data;
 }
@@ -2811,7 +2943,8 @@ static __attribute__((always_inline)) INLINE struct black_holes_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_black_holes_data;
 }
@@ -2828,7 +2961,8 @@ static __attribute__((always_inline)) INLINE const struct black_holes_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_black_holes_data;
 }
@@ -2843,7 +2977,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_black_holes_data = black_holes_data;
 }
@@ -2861,7 +2996,8 @@ static __attribute__((always_inline)) INLINE struct sink_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_sink_data;
 }
@@ -2878,7 +3014,8 @@ static __attribute__((always_inline)) INLINE struct sink_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_sink_data;
 }
@@ -2895,7 +3032,8 @@ static __attribute__((always_inline)) INLINE const struct sink_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_sink_data;
 }
@@ -2910,7 +3048,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_sink_data = sink_data;
 }
@@ -2928,7 +3067,8 @@ static __attribute__((always_inline)) INLINE struct pressure_floor_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_pressure_floor_data;
 }
@@ -2945,7 +3085,8 @@ static __attribute__((always_inline)) INLINE struct pressure_floor_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_pressure_floor_data;
 }
@@ -2962,7 +3103,8 @@ static __attribute__((always_inline)) INLINE const struct pressure_floor_part_da
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_pressure_floor_data;
 }
@@ -2977,7 +3119,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_pressure_floor_data = pressure_floor_data;
 }
@@ -2995,7 +3138,8 @@ static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_geometry;
 }
@@ -3012,7 +3156,8 @@ static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_geometry;
 }
@@ -3029,7 +3174,8 @@ static __attribute__((always_inline)) INLINE const struct fvpm_geometry_struct*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_geometry;
 }
@@ -3044,7 +3190,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_geometry = geometry;
 }
@@ -3062,7 +3209,8 @@ static __attribute__((always_inline)) INLINE struct rt_part_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return part_additional_structs_s->_rt_data;
 }
@@ -3079,7 +3227,8 @@ static __attribute__((always_inline)) INLINE struct rt_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_rt_data;
 }
@@ -3096,7 +3245,8 @@ static __attribute__((always_inline)) INLINE const struct rt_part_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_additional_structs_s->_rt_data;
 }
@@ -3111,7 +3261,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_additional_structs_s->_accessor_id == p->_accessor_id);
+  if(part_additional_structs_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_additional_structs_s->_accessor_id, p->_accessor_id);
 #endif
   part_additional_structs_s->_rt_data = rt_data;
 }
@@ -3131,7 +3282,8 @@ static __attribute__((always_inline)) INLINE struct rt_timestepping_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_rt_time_data_s->_accessor_id == p->_accessor_id);
+  if(part_rt_time_data_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_rt_time_data_s->_accessor_id, p->_accessor_id);
 #endif
   return part_rt_time_data_s->_rt_time_data;
 }
@@ -3148,7 +3300,8 @@ static __attribute__((always_inline)) INLINE struct rt_timestepping_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_rt_time_data_s->_accessor_id == p->_accessor_id);
+  if(part_rt_time_data_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_rt_time_data_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_rt_time_data_s->_rt_time_data;
 }
@@ -3165,7 +3318,8 @@ static __attribute__((always_inline)) INLINE const struct rt_timestepping_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_rt_time_data_s->_accessor_id == p->_accessor_id);
+  if(part_rt_time_data_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_rt_time_data_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_rt_time_data_s->_rt_time_data;
 }
@@ -3180,7 +3334,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_rt_time_data_s->_accessor_id == p->_accessor_id);
+  if(part_rt_time_data_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_rt_time_data_s->_accessor_id, p->_accessor_id);
 #endif
   part_rt_time_data_s->_rt_time_data = rt_time_data;
 }
@@ -3200,7 +3355,8 @@ static __attribute__((always_inline)) INLINE char
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_depth_h_s->_accessor_id == p->_accessor_id);
+  if(part_depth_h_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_depth_h_s->_accessor_id, p->_accessor_id);
 #endif
   return part_depth_h_s->_depth_h;
 }
@@ -3217,7 +3373,8 @@ static __attribute__((always_inline)) INLINE char*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_depth_h_s->_accessor_id == p->_accessor_id);
+  if(part_depth_h_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_depth_h_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_depth_h_s->_depth_h;
 }
@@ -3234,7 +3391,8 @@ static __attribute__((always_inline)) INLINE const char*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_depth_h_s->_accessor_id == p->_accessor_id);
+  if(part_depth_h_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_depth_h_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_depth_h_s->_depth_h;
 }
@@ -3249,7 +3407,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_depth_h_s->_accessor_id == p->_accessor_id);
+  if(part_depth_h_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_depth_h_s->_accessor_id, p->_accessor_id);
 #endif
   part_depth_h_s->_depth_h = depth_h;
 }
@@ -3269,7 +3428,8 @@ static __attribute__((always_inline)) INLINE timebin_t
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_time_bin_s->_accessor_id == p->_accessor_id);
+  if(part_time_bin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_time_bin_s->_accessor_id, p->_accessor_id);
 #endif
   return part_time_bin_s->_time_bin;
 }
@@ -3286,7 +3446,8 @@ static __attribute__((always_inline)) INLINE timebin_t*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_time_bin_s->_accessor_id == p->_accessor_id);
+  if(part_time_bin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_time_bin_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_time_bin_s->_time_bin;
 }
@@ -3303,7 +3464,8 @@ static __attribute__((always_inline)) INLINE const timebin_t*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_time_bin_s->_accessor_id == p->_accessor_id);
+  if(part_time_bin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_time_bin_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_time_bin_s->_time_bin;
 }
@@ -3318,7 +3480,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_time_bin_s->_accessor_id == p->_accessor_id);
+  if(part_time_bin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_time_bin_s->_accessor_id, p->_accessor_id);
 #endif
   part_time_bin_s->_time_bin = time_bin;
 }
@@ -3338,7 +3501,8 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_limiter_data_s->_accessor_id == p->_accessor_id);
+  if(part_limiter_data_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_limiter_data_s->_accessor_id, p->_accessor_id);
 #endif
   return part_limiter_data_s->_limiter_data;
 }
@@ -3355,7 +3519,8 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_limiter_data_s->_accessor_id == p->_accessor_id);
+  if(part_limiter_data_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_limiter_data_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_limiter_data_s->_limiter_data;
 }
@@ -3372,7 +3537,8 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_limiter_data_s->_accessor_id == p->_accessor_id);
+  if(part_limiter_data_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_limiter_data_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_limiter_data_s->_limiter_data;
 }
@@ -3387,7 +3553,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_limiter_data_s->_accessor_id == p->_accessor_id);
+  if(part_limiter_data_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_limiter_data_s->_accessor_id, p->_accessor_id);
 #endif
   part_limiter_data_s->_limiter_data = limiter_data;
 }
@@ -3408,7 +3575,8 @@ static __attribute__((always_inline)) INLINE integertime_t
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_ti_drift_s->_accessor_id == p->_accessor_id);
+  if(part_ti_drift_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_ti_drift_s->_accessor_id, p->_accessor_id);
 
   return part_ti_drift_s->_ti_drift;
 #else
@@ -3429,7 +3597,8 @@ static __attribute__((always_inline)) INLINE integertime_t*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_ti_drift_s->_accessor_id == p->_accessor_id);
+  if(part_ti_drift_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_ti_drift_s->_accessor_id, p->_accessor_id);
 
   return &part_ti_drift_s->_ti_drift;
 #else
@@ -3450,7 +3619,8 @@ static __attribute__((always_inline)) INLINE const integertime_t*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_ti_drift_s->_accessor_id == p->_accessor_id);
+  if(part_ti_drift_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_ti_drift_s->_accessor_id, p->_accessor_id);
 
   return &part_ti_drift_s->_ti_drift;
 #else
@@ -3469,7 +3639,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_ti_drift_s->_accessor_id == p->_accessor_id);
+  if(part_ti_drift_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_ti_drift_s->_accessor_id, p->_accessor_id);
 
   part_ti_drift_s->_ti_drift = ti_drift;
 #endif
@@ -3491,7 +3662,8 @@ static __attribute__((always_inline)) INLINE integertime_t
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_ti_kick_s->_accessor_id == p->_accessor_id);
+  if(part_ti_kick_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_ti_kick_s->_accessor_id, p->_accessor_id);
 
   return part_ti_kick_s->_ti_kick;
 #else
@@ -3512,7 +3684,8 @@ static __attribute__((always_inline)) INLINE integertime_t*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_ti_kick_s->_accessor_id == p->_accessor_id);
+  if(part_ti_kick_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_ti_kick_s->_accessor_id, p->_accessor_id);
 
   return &part_ti_kick_s->_ti_kick;
 #else
@@ -3533,7 +3706,8 @@ static __attribute__((always_inline)) INLINE const integertime_t*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_ti_kick_s->_accessor_id == p->_accessor_id);
+  if(part_ti_kick_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_ti_kick_s->_accessor_id, p->_accessor_id);
 
   return &part_ti_kick_s->_ti_kick;
 #else
@@ -3552,7 +3726,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_ti_kick_s->_accessor_id == p->_accessor_id);
+  if(part_ti_kick_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_ti_kick_s->_accessor_id, p->_accessor_id);
 
   part_ti_kick_s->_ti_kick = ti_kick;
 #endif
@@ -3574,7 +3749,8 @@ static __attribute__((always_inline)) INLINE int
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_N_density;
 #else
@@ -3595,7 +3771,8 @@ static __attribute__((always_inline)) INLINE int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_density;
 #else
@@ -3616,7 +3793,8 @@ static __attribute__((always_inline)) INLINE const int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_density;
 #else
@@ -3635,7 +3813,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_N_density = N_density;
 #endif
@@ -3655,7 +3834,8 @@ static __attribute__((always_inline)) INLINE int
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_N_density_exact;
 #else
@@ -3676,7 +3856,8 @@ static __attribute__((always_inline)) INLINE int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_density_exact;
 #else
@@ -3697,7 +3878,8 @@ static __attribute__((always_inline)) INLINE const int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_density_exact;
 #else
@@ -3716,7 +3898,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_N_density_exact = N_density_exact;
 #endif
@@ -3736,7 +3919,8 @@ static __attribute__((always_inline)) INLINE int
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_N_gradient;
 #else
@@ -3757,7 +3941,8 @@ static __attribute__((always_inline)) INLINE int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_gradient;
 #else
@@ -3778,7 +3963,8 @@ static __attribute__((always_inline)) INLINE const int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_gradient;
 #else
@@ -3797,7 +3983,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_N_gradient = N_gradient;
 #endif
@@ -3817,7 +4004,8 @@ static __attribute__((always_inline)) INLINE int
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_N_gradient_exact;
 #else
@@ -3838,7 +4026,8 @@ static __attribute__((always_inline)) INLINE int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_gradient_exact;
 #else
@@ -3859,7 +4048,8 @@ static __attribute__((always_inline)) INLINE const int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_gradient_exact;
 #else
@@ -3878,7 +4068,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_N_gradient_exact = N_gradient_exact;
 #endif
@@ -3898,7 +4089,8 @@ static __attribute__((always_inline)) INLINE int
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_N_force;
 #else
@@ -3919,7 +4111,8 @@ static __attribute__((always_inline)) INLINE int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_force;
 #else
@@ -3940,7 +4133,8 @@ static __attribute__((always_inline)) INLINE const int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_force;
 #else
@@ -3959,7 +4153,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_N_force = N_force;
 #endif
@@ -3979,7 +4174,8 @@ static __attribute__((always_inline)) INLINE int
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_N_force_exact;
 #else
@@ -4000,7 +4196,8 @@ static __attribute__((always_inline)) INLINE int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_force_exact;
 #else
@@ -4021,7 +4218,8 @@ static __attribute__((always_inline)) INLINE const int*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_N_force_exact;
 #else
@@ -4040,7 +4238,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_N_force_exact = N_force_exact;
 #endif
@@ -4060,7 +4259,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_rho_exact;
 #else
@@ -4081,7 +4281,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_rho_exact;
 #else
@@ -4102,7 +4303,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_rho_exact;
 #else
@@ -4121,7 +4323,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_rho_exact = rho_exact;
 #endif
@@ -4141,7 +4344,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_n_density;
 #else
@@ -4162,7 +4366,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_density;
 #else
@@ -4183,7 +4388,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_density;
 #else
@@ -4202,7 +4408,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_n_density = n_density;
 #endif
@@ -4222,7 +4429,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_n_density_exact;
 #else
@@ -4243,7 +4451,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_density_exact;
 #else
@@ -4264,7 +4473,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_density_exact;
 #else
@@ -4283,7 +4493,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_n_density_exact = n_density_exact;
 #endif
@@ -4303,7 +4514,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_n_gradient;
 #else
@@ -4324,7 +4536,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_gradient;
 #else
@@ -4345,7 +4558,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_gradient;
 #else
@@ -4364,7 +4578,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_n_gradient = n_gradient;
 #endif
@@ -4384,7 +4599,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_n_gradient_exact;
 #else
@@ -4405,7 +4621,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_gradient_exact;
 #else
@@ -4426,7 +4643,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_gradient_exact;
 #else
@@ -4445,7 +4663,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_n_gradient_exact = n_gradient_exact;
 #endif
@@ -4465,7 +4684,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_n_force;
 #else
@@ -4486,7 +4706,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_force;
 #else
@@ -4507,7 +4728,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_force;
 #else
@@ -4526,7 +4748,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_n_force = n_force;
 #endif
@@ -4546,7 +4769,8 @@ static __attribute__((always_inline)) INLINE float
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_n_force_exact;
 #else
@@ -4567,7 +4791,8 @@ static __attribute__((always_inline)) INLINE float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_force_exact;
 #else
@@ -4588,7 +4813,8 @@ static __attribute__((always_inline)) INLINE const float*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_n_force_exact;
 #else
@@ -4607,7 +4833,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_n_force_exact = n_force_exact;
 #endif
@@ -4627,7 +4854,8 @@ static __attribute__((always_inline)) INLINE char
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_inhibited_exact;
 #else
@@ -4648,7 +4876,8 @@ static __attribute__((always_inline)) INLINE char*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_inhibited_exact;
 #else
@@ -4669,7 +4898,8 @@ static __attribute__((always_inline)) INLINE const char*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_inhibited_exact;
 #else
@@ -4688,7 +4918,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_inhibited_exact = inhibited_exact;
 #endif
@@ -4708,7 +4939,8 @@ static __attribute__((always_inline)) INLINE char
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return part_debugging_s->_limited_part;
 #else
@@ -4729,7 +4961,8 @@ static __attribute__((always_inline)) INLINE char*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_limited_part;
 #else
@@ -4750,7 +4983,8 @@ static __attribute__((always_inline)) INLINE const char*
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   return &part_debugging_s->_limited_part;
 #else
@@ -4769,7 +5003,8 @@ static __attribute__((always_inline)) INLINE void
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  swift_assert(part_debugging_s->_accessor_id == p->_accessor_id);
+  if(part_debugging_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part_debugging_s->_accessor_id, p->_accessor_id);
 #endif
   part_debugging_s->_limited_part = limited_part;
 #endif
@@ -4781,4 +5016,4 @@ static __attribute__((always_inline)) INLINE void
 
 
 
-#endif /* SWIFT_HYDRO_PART_b7b8e6d0fd55ed83b40f7c9c87dcc8036a15891b_H */
+#endif /* SWIFT_HYDRO_PART_0934a4857839b29d15cf70ea928740238d9a853f_H */
