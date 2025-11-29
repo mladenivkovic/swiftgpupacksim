@@ -32,147 +32,147 @@ static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_
   if (swift_memalign("parts_part_id", (void**)&parr->_part_id, part_align, nr_parts * sizeof(struct part_id)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_id, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_id, 0, nr_parts * sizeof(struct part_id));
 
   if (swift_memalign("parts_part_gpart", (void**)&parr->_part_gpart, part_align, nr_parts * sizeof(struct part_gpart)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_gpart, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_gpart, 0, nr_parts * sizeof(struct part_gpart));
 
   if (swift_memalign("parts_part_x", (void**)&parr->_part_x, part_align, nr_parts * sizeof(struct part_x)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_x, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_x, 0, nr_parts * sizeof(struct part_x));
 
   if (swift_memalign("parts_part_v", (void**)&parr->_part_v, part_align, nr_parts * sizeof(struct part_v)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_v, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_v, 0, nr_parts * sizeof(struct part_v));
 
   if (swift_memalign("parts_part_a_hydro", (void**)&parr->_part_a_hydro, part_align, nr_parts * sizeof(struct part_a_hydro)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_a_hydro, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_a_hydro, 0, nr_parts * sizeof(struct part_a_hydro));
 
   if (swift_memalign("parts_part_mass", (void**)&parr->_part_mass, part_align, nr_parts * sizeof(struct part_mass)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_mass, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_mass, 0, nr_parts * sizeof(struct part_mass));
 
   if (swift_memalign("parts_part_h", (void**)&parr->_part_h, part_align, nr_parts * sizeof(struct part_h)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_h, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_h, 0, nr_parts * sizeof(struct part_h));
 
   if (swift_memalign("parts_part_u", (void**)&parr->_part_u, part_align, nr_parts * sizeof(struct part_u)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_u, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_u, 0, nr_parts * sizeof(struct part_u));
 
   if (swift_memalign("parts_part_u_dt", (void**)&parr->_part_u_dt, part_align, nr_parts * sizeof(struct part_u_dt)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_u_dt, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_u_dt, 0, nr_parts * sizeof(struct part_u_dt));
 
   if (swift_memalign("parts_part_rho", (void**)&parr->_part_rho, part_align, nr_parts * sizeof(struct part_rho)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_rho, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_rho, 0, nr_parts * sizeof(struct part_rho));
 
   if (swift_memalign("parts_part_div_v", (void**)&parr->_part_div_v, part_align, nr_parts * sizeof(struct part_div_v)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_div_v, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_div_v, 0, nr_parts * sizeof(struct part_div_v));
 
   if (swift_memalign("parts_part_div_v_dt", (void**)&parr->_part_div_v_dt, part_align, nr_parts * sizeof(struct part_div_v_dt)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_div_v_dt, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_div_v_dt, 0, nr_parts * sizeof(struct part_div_v_dt));
 
   if (swift_memalign("parts_part_div_v_previous_step", (void**)&parr->_part_div_v_previous_step, part_align, nr_parts * sizeof(struct part_div_v_previous_step)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_div_v_previous_step, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_div_v_previous_step, 0, nr_parts * sizeof(struct part_div_v_previous_step));
 
   if (swift_memalign("parts_part_alpha_av", (void**)&parr->_part_alpha_av, part_align, nr_parts * sizeof(struct part_alpha_av)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_alpha_av, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_alpha_av, 0, nr_parts * sizeof(struct part_alpha_av));
 
   if (swift_memalign("parts_part_v_sig", (void**)&parr->_part_v_sig, part_align, nr_parts * sizeof(struct part_v_sig)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_v_sig, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_v_sig, 0, nr_parts * sizeof(struct part_v_sig));
 
   if (swift_memalign("parts_part_laplace_u", (void**)&parr->_part_laplace_u, part_align, nr_parts * sizeof(struct part_laplace_u)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_laplace_u, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_laplace_u, 0, nr_parts * sizeof(struct part_laplace_u));
 
   if (swift_memalign("parts_part_alpha_diff", (void**)&parr->_part_alpha_diff, part_align, nr_parts * sizeof(struct part_alpha_diff)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_alpha_diff, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_alpha_diff, 0, nr_parts * sizeof(struct part_alpha_diff));
 
   if (swift_memalign("parts_part_density_force1", (void**)&parr->_part_density_force1, part_align, nr_parts * sizeof(struct part_density_force1)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_density_force1, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_density_force1, 0, nr_parts * sizeof(struct part_density_force1));
 
   if (swift_memalign("parts_part_density_force2", (void**)&parr->_part_density_force2, part_align, nr_parts * sizeof(struct part_density_force2)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_density_force2, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_density_force2, 0, nr_parts * sizeof(struct part_density_force2));
 
   if (swift_memalign("parts_part_density_force3", (void**)&parr->_part_density_force3, part_align, nr_parts * sizeof(struct part_density_force3)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_density_force3, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_density_force3, 0, nr_parts * sizeof(struct part_density_force3));
 
   if (swift_memalign("parts_part_density_force4", (void**)&parr->_part_density_force4, part_align, nr_parts * sizeof(struct part_density_force4)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_density_force4, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_density_force4, 0, nr_parts * sizeof(struct part_density_force4));
 
   if (swift_memalign("parts_part_additional_structs", (void**)&parr->_part_additional_structs, part_align, nr_parts * sizeof(struct part_additional_structs)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_additional_structs, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_additional_structs, 0, nr_parts * sizeof(struct part_additional_structs));
 
   if (swift_memalign("parts_part_rt_time_data", (void**)&parr->_part_rt_time_data, part_align, nr_parts * sizeof(struct part_rt_time_data)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_rt_time_data, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_rt_time_data, 0, nr_parts * sizeof(struct part_rt_time_data));
 
   if (swift_memalign("parts_part_depth_h", (void**)&parr->_part_depth_h, part_align, nr_parts * sizeof(struct part_depth_h)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_depth_h, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_depth_h, 0, nr_parts * sizeof(struct part_depth_h));
 
   if (swift_memalign("parts_part_time_bin", (void**)&parr->_part_time_bin, part_align, nr_parts * sizeof(struct part_time_bin)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_time_bin, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_time_bin, 0, nr_parts * sizeof(struct part_time_bin));
 
   if (swift_memalign("parts_part_limiter_data", (void**)&parr->_part_limiter_data, part_align, nr_parts * sizeof(struct part_limiter_data)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_limiter_data, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_limiter_data, 0, nr_parts * sizeof(struct part_limiter_data));
 
   if (swift_memalign("parts_part_ti_drift", (void**)&parr->_part_ti_drift, part_align, nr_parts * sizeof(struct part_ti_drift)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_ti_drift, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_ti_drift, 0, nr_parts * sizeof(struct part_ti_drift));
 
   if (swift_memalign("parts_part_ti_kick", (void**)&parr->_part_ti_kick, part_align, nr_parts * sizeof(struct part_ti_kick)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_ti_kick, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_ti_kick, 0, nr_parts * sizeof(struct part_ti_kick));
 
   if (swift_memalign("parts_part_debugging", (void**)&parr->_part_debugging, part_align, nr_parts * sizeof(struct part_debugging)) != 0)
     error("Error while allocating memory for SPH particles");
 
-  memset(parr->_part_debugging, 0, nr_parts * sizeof(struct part));
+  memset(parr->_part_debugging, 0, nr_parts * sizeof(struct part_debugging));
 
 
 #ifdef SWIFT_DEBUG_CHECKS
