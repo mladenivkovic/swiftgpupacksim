@@ -11,8 +11,7 @@ from utils import (
     validate_yml_contents,
     add_auxiliary_fields,
 )
-from hydro_part_header import generate_hydro_part_header
-from parts_header import generate_parts_header, generate_hydro_part_arrays_struct_header
+from headers import generate_hydro_part_header, generate_parts_header, generate_hydro_part_arrays_struct_header
 
 
 parser = argparse.ArgumentParser(description="Generate the hydro_part.h file.")
