@@ -12,7 +12,7 @@ def get_filelist(srcdir:str) -> list:
     filelist = []
     for f in ls:
         if f.startswith("results_") and f.endswith(".csv"):
-            filelist.append(f)
+            filelist.append(os.path.join(srcdir, f))
 
     if len(filelist) == 0:
         raise ValueError(f"Found no results_*.csv files in {srcdir}")

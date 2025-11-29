@@ -12,11 +12,11 @@ from resultdata import ResultData
 
 
 parser = argparse.ArgumentParser(
-    description="Plot results of a single dir."
+    description="Plot results of a single dir. This script will look for all results_*csv files in that dir and plot them in a single plot."
 )
 parser.add_argument("result_dir")
 parser.add_argument(
-    "-v", "--verbose", dest="verbose", action="store_true"
+    "-v", "--verbose", dest="verbose", action="store_true", help="increase verbosity"
 )
 
 
