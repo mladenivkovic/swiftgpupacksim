@@ -23,14 +23,24 @@ struct parameters {
   /*! Total number of particles in simulation */
   size_t nr_parts;
 
-  /*! Root dir of measurement data */
-  char data_root_dir[200];
-
   /*! Print measurements each step? */
   int print_each_step;
 
   /*! Skip cache flushing? */
   int no_cache_flush;
+
+  /*! Struct alignment */
+  int struct_align;
+
+  /*! Particle array alignment */
+  int part_align;
+
+  /*! Currently used memory layout */
+  char memory_layout[40];
+
+  /*! Root dir of measurement data */
+  char data_root_dir[200];
+
 };
 
 void init_params(struct parameters *params);

@@ -18,6 +18,22 @@ void init_params(struct parameters *params) {
   params->print_each_step = 0;
   params->no_cache_flush = 0;
 
+  params->struct_align = SWIFT_STRUCT_ALIGNMENT;
+  params->part_align = SWIFT_PART_ALIGNMENT;
+
+#if defined(SPHENIX_AOS_PARTICLE)
+  char layout[20] = "aos";
+#elif defined(SPHENIX_SOA_PARTICLE)
+#if defined(MODIFIED_PARTICLE_ACCESS)
+  char layout[20] = "soa-modified";
+#else
+  char layout[20] = "soa";
+#endif
+#else
+#pragma error "Unknown particle memory layout"
+#endif
+  strcpy(params->memory_layout, layout);
+
   strcpy(params->data_root_dir, "\0");
 }
 
@@ -57,8 +73,10 @@ void print_params(struct parameters *params) {
   printf("\t nr_threads:        %12d\n", params->nr_threads);
   printf("\t nr_parts:          %12lu\n", params->nr_parts);
   printf("\t nr_steps:          %12d\n", params->nr_steps);
-  /* printf("\t step:              %6d\n", params->step); */
-  /* printf("\t nsteps:            %6d\n", params->nsteps); */
-  printf("\t measurement data:  %s\n", params->data_root_dir);
   printf("\t cache flushing:    %12d\n", !params->no_cache_flush);
+  printf("\t struct alignment:  %12d\n", params->struct_align);
+  printf("\t part array align:  %12d\n", params->part_align);
+  printf("\t memory layout:     %s\n", params->memory_layout);
+  printf("\t measurement data:  %s\n", params->data_root_dir);
 }
+

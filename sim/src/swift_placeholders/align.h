@@ -19,10 +19,13 @@
 #ifndef SWIFT_ALIGN_H
 #define SWIFT_ALIGN_H
 
+#include "../config.h"
+
 /**
  * @brief The default struct alignment in SWIFT.
  */
-#define SWIFT_STRUCT_ALIGNMENT 32
+/* Moved into config.h */
+/* #define SWIFT_STRUCT_ALIGNMENT 32 */
 
 /**
  * @brief Defines alignment of structures

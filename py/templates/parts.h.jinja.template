@@ -40,14 +40,12 @@
 
 {% endif %}
 
-#define part_align 128
-
 /**
  * Allocate particle data array(s).
  */
 static __attribute__((always_inline)) INLINE void init_part_arrays(struct hydro_part_arrays* parr, int nr_parts) {
 {% for STRUCT_NAME in STRUCT_NAMES %}
-  if (swift_memalign("parts_{{STRUCT_NAME}}", (void**)&parr->_{{STRUCT_NAME}}, part_align, nr_parts * sizeof(struct {{STRUCT_NAME}})) != 0)
+  if (swift_memalign("parts_{{STRUCT_NAME}}", (void**)&parr->_{{STRUCT_NAME}}, SWIFT_PART_ALIGNMENT, nr_parts * sizeof(struct {{STRUCT_NAME}})) != 0)
     error("Error while allocating memory for SPH particles");
 {% if HEADER_FOR_SWIFT %}
   bzero(parr->_{{STRUCT_NAME}}, 0, nr_parts * sizeof(struct {{STRUCT_NAME}}));
