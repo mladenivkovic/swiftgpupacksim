@@ -229,11 +229,16 @@ void io_write_result(const ticks timers_arr[timer_count],
                      const struct parameters* params) {
 
 #if defined(SPHENIX_AOS_PARTICLE)
-  char suffix[10] = "aos";
+  char suffix[20] = "aos";
   char comment[80] = "# Memory layout: AOS\n";
 #elif defined(SPHENIX_SOA_PARTICLE)
-  char suffix[10] = "soa";
+#if defined(MODIFIED_PARTICLE_ACCESS)
+  char suffix[20] = "soa-modified";
+  char comment[80] = "# Memory layout: SOA with modified particle access\n";
+#else
+  char suffix[20] = "soa";
   char comment[80] = "# Memory layout: SOA\n";
+#endif
 #else
 #pragma error "Unknown particle memory layout"
 #endif
