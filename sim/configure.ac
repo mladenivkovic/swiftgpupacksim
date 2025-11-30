@@ -692,7 +692,7 @@ fi
 # Memory layout
 AC_ARG_WITH([particle-memory-layout],
    [AS_HELP_STRING([--with-particle-memory-layout=<method>],
-      [Particle memory layout to use @<:@aos, soa default: aos@:>@]
+      [Particle memory layout to use @<:@aos, soa, soa-modified, default: aos@:>@]
    )],
    [with_layout="$withval"],
    [with_layout="aos"]
@@ -704,6 +704,10 @@ case "$with_layout" in
    ;;
    soa)
       AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])
+   ;;
+   soa-modified)
+      AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])
+      AC_DEFINE([MODIFIED_PARTICLE_ACCESS], [1], [Modify particle loops])
    ;;
    *)
       AC_MSG_ERROR([Unknown particle realisation: $with_layout])

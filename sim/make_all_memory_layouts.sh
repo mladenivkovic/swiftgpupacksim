@@ -17,7 +17,7 @@ if [ $# -gt 0 ]; then
   esac
 fi
 
-for layout in aos soa; do
+for layout in aos soa soa-modified; do
   ./configure --with-particle-memory-layout="$layout" $EXTRA_CONFFLAGS
   make clean
   make -j
