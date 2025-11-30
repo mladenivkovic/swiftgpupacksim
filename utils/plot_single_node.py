@@ -28,6 +28,7 @@ parser.add_argument(
 )
 
 
+markers = ["o", "v", "s", "p", "P", "*"]
 
 if __name__ == "__main__":
 
@@ -61,28 +62,31 @@ if __name__ == "__main__":
     ax3 = fig.add_subplot(2,2,3)
     ax4 = fig.add_subplot(2,2,4)
 
-
+    # loop over all experiments
     for i in range(len(flushlist)):
 
         flushdir = flushlist[i]
         noflushdir = noflushlist[i]
         ax = fig.axes[i]
 
-
         title = os.path.basename(flushdir)
 
+        # do both flush + no flush
         for j,srcdir in enumerate([flushdir, noflushdir]):
 
-            #  color = "C"+str(i)
-            marker = "o"
+            #  marker = "o"
+            marker = markers[j]
             label_suffix = ""
+            linestyle="-"
 
             if j == 1:
-                marker = "x"
+                #  marker = "x"
                 label_suffix=" no cache flush"
+                linestyle="--"
                 if not srcdir.endswith("_noflush"):
                     raise ValueError(f"Expected noflush dir case, got {srcdir}")
 
+            # read in data
             filelist = get_filelist(srcdir)
 
             resultlist = []
@@ -102,10 +106,13 @@ if __name__ == "__main__":
 
             aos_timings = resultlist[aos_index].timings
 
-            for res in resultlist:
+            for k,res in enumerate(resultlist):
+
+                color = "C"+str(k)
+                marker = markers[k]
 
                 relative_times = res.timings / aos_timings
-                ax.plot(res.tasks, relative_times, label=res.layout + label_suffix, marker=marker)
+                ax.plot(res.tasks, relative_times, label=res.layout + label_suffix, marker=marker, linestyle=linestyle, color=color)
 
         ax.set_title(title)
         ax.tick_params(axis='x', labelrotation=45)
