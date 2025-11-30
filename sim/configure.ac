@@ -715,6 +715,73 @@ case "$with_layout" in
 esac
 
 
+# Struct alignment
+AC_ARG_WITH([stuct-align],
+   [AS_HELP_STRING([--with-struct-align=<value>],
+      [SWIFT_STRUCT_ALIGNMENT to use @<:@1, 2, 4, 8, 16, 32, 64 default: 32@:>@]
+   )],
+   [with_struct_align="$withval"],
+   [with_struct_align="32"]
+)
+
+case "$with_struct_align" in
+   1)
+      AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [1], [Struct alignment])
+   ;;
+   2)
+      AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [2], [Struct alignment])
+   ;;
+   4)
+      AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [4], [Struct alignment])
+   ;;
+   8)
+      AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [8], [Struct alignment])
+   ;;
+   16)
+      AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [16], [Struct alignment])
+   ;;
+   32)
+      AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [32], [Struct alignment])
+   ;;
+   64)
+      AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [64], [Struct alignment])
+   ;;
+   *)
+      AC_MSG_ERROR([Unknown struct alignment: $with_struct_align])
+   ;;
+esac
+
+# Struct alignment
+AC_ARG_WITH([part-align],
+   [AS_HELP_STRING([--with-part-align=<value>],
+      [SWIFT_PART_ALIGNMENT to use @<:@1, 32, 64, 128, 256, default: 128@:>@]
+   )],
+   [with_part_align="$withval"],
+   [with_part_align="128"]
+)
+
+case "$with_part_align" in
+   1)
+      AC_DEFINE([SWIFT_PART_ALIGNMENT], [1], [Particle array alignment])
+   ;;
+   32)
+      AC_DEFINE([SWIFT_PART_ALIGNMENT], [32], [Particle array alignment])
+   ;;
+   64)
+      AC_DEFINE([SWIFT_PART_ALIGNMENT], [64], [Particle array alignment])
+   ;;
+   128)
+      AC_DEFINE([SWIFT_PART_ALIGNMENT], [128], [Particle array alignment])
+   ;;
+   256)
+      AC_DEFINE([SWIFT_PART_ALIGNMENT], [256], [Particle array alignment])
+   ;;
+   *)
+      AC_MSG_ERROR([Unknown particle alignment: $with_part_align])
+   ;;
+esac
+
+
 
 
 # Handle .in files.

@@ -60,11 +60,14 @@ git lfs checkout
 - `--enable-no-cuda-mallochost`: Use `malloc` instead of `cudaMallocHost`
 - `--enable-sanitizer`, `--enable-undefined-sanitizer`: Turn on sanitizers
 
-### Selecting a memory layout
+### Selecting a memory layout and alignments
 
 To select a specific memory layout, use the
 `--with-particle-memory-layout=<method>` flag in the `./configure` step. See
 `./configure --help` for available options.
+
+You can set the struct alignments and particle array alignments using the
+`--with-struct-align=<value>` and `--with-part-align=<value>` flags.
 
 
 ## Reading the output
@@ -75,11 +78,14 @@ The contents should be the following:
 
 ```
 # Memory layout: XXX
-# Reproduced measurements: path/to/root/dir/of/measurements
 # nr_threads: [INT]
 # nr_steps: [INT]
 # nr_parts: [INT]
 # cache flush: [0,1]
+# struct align: [INT]
+# part align: [INT]
+# memory layout: [STR]
+# Reproduced measurements: path/to/root/dir/of/measurements
 # type,subtype,timing[ms]
 pack,density,[FLOAT]
 pack,gradient,[FLOAT]

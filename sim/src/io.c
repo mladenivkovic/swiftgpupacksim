@@ -228,35 +228,22 @@ void io_read_logged_events_file(const char* filename,
 void io_write_result(const ticks timers_arr[timer_count],
                      const struct parameters* params) {
 
-#if defined(SPHENIX_AOS_PARTICLE)
-  char suffix[20] = "aos";
-  char comment[80] = "# Memory layout: AOS\n";
-#elif defined(SPHENIX_SOA_PARTICLE)
-#if defined(MODIFIED_PARTICLE_ACCESS)
-  char suffix[20] = "soa-modified";
-  char comment[80] = "# Memory layout: SOA with modified particle access\n";
-#else
-  char suffix[20] = "soa";
-  char comment[80] = "# Memory layout: SOA\n";
-#endif
-#else
-#pragma error "Unknown particle memory layout"
-#endif
-
   char outfname[80] = "results_";
-  strcat(outfname, suffix);
+  strcat(outfname, params->memory_layout);
   strcat(outfname, ".csv");
 
   FILE* out_fp = fopen(outfname, "w");
   if (out_fp == NULL)
     error("Something went wrong when opening output file to write");
 
-  fprintf(out_fp, "%s", comment);
-  fprintf(out_fp, "# Reproduced measurements: %s\n", params->data_root_dir);
   fprintf(out_fp, "# nr_threads: %d\n", params->nr_threads);
-  fprintf(out_fp, "# nr_steps: %d\n", params->nr_steps);
   fprintf(out_fp, "# nr_parts: %ld\n", params->nr_parts);
+  fprintf(out_fp, "# nr_steps: %d\n", params->nr_steps);
   fprintf(out_fp, "# cache flush: %d\n", !params->no_cache_flush);
+  fprintf(out_fp, "# stuct align: %d\n", params->struct_align);
+  fprintf(out_fp, "# part array align: %d\n", params->part_align);
+  fprintf(out_fp, "# memory layout: %s\n", params->memory_layout);
+  fprintf(out_fp, "# reproduced measurements: %s\n", params->data_root_dir);
   fprintf(out_fp, "# type,subtype,timing[ms]\n");
 
   io_util_write_single_output_line(task_type_pack, task_subtype_density,
