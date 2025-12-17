@@ -716,7 +716,7 @@ esac
 
 
 # Struct alignment
-AC_ARG_WITH([stuct-align],
+AC_ARG_WITH([struct-align],
    [AS_HELP_STRING([--with-struct-align=<value>],
       [SWIFT_STRUCT_ALIGNMENT to use @<:@1, 2, 4, 8, 16, 32, 64 default: 32@:>@]
    )],
