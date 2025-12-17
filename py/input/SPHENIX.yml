@@ -1,39 +1,70 @@
 part:
-  id: 
-    type: long long
-    doc:  Particle unique ID
-
-  gpart:
-    type: struct gpart*
-    doc:  Pointer to corresponding gravity part
 
   x:
     type: double
     size: 3
     doc: the particle position
 
+  h:
+    doc: Particle smoothing length
+
   v:
     size: 3
     doc: Particle predicted velocity
+
+  mass:
+    doc: Particle mass
 
   a_hydro:
     size: 3
     doc: Particle acceleration 
 
-  mass:
-    doc: Particle mass
-
-  h:
-    doc: Particle smoothing length
+  u_dt:
+    doc: Time derivative of the internal energy
 
   u:
     doc: Particle internal energy
 
-  u_dt:
-    doc: Time derivative of the internal energy
-
   rho:
     doc: Particle density
+
+  union1:
+    type: union
+    doc: Store density/force specific stuff
+    contents:
+      density:
+        type: struct
+        doc: Structure for the variables only used in the density loop over neighbours 
+             Quantities in this sub-structure should only be accessed in the density loop 
+             over neighbours and the ghost task
+        contents:
+          rho_dh:
+            doc: Derivative of density with respect to h
+          wcount:
+            doc: Neighbour number count
+          wcount_dh:
+            doc: Derivative of the neighbour number with respect to h
+          rot_v:
+            doc: Particle velocity curl
+            size: 3
+      force:
+        type: struct
+        doc: Structure for the variables only used in the force loop over neighbours 
+             Quantities in this sub-structure should only be accessed in the force loop 
+             over neighbours and the ghost, drift and kick tasks
+        contents:
+          f_gradh:
+            doc: "'Grad h' term -- only partial in P-U"
+          pressure:
+            doc: Particle pressure
+          balsara:
+            doc: Balsara switch
+          soundspeed: 
+            doc: Particle soundspeed
+          alpha_visc_max_ngb:
+            doc: Maximal alpha (viscosity) over neighbours
+          h_dt: 
+            doc: Time derivative of smoothing length 
 
   viscosity:
     type: struct
@@ -65,43 +96,13 @@ part:
       alpha_diff: 
         doc: Thermal diffusion coefficient
 
-  union1:
-    type: union
-    doc: Store density/force specific stuff
-    contents:
-      density:
-        type: struct
-        doc: Structure for the variables only used in the density loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the density loop 
-             over neighbours and the ghost task
-        contents:
-          wcount:
-            doc: Neighbour number count
-          wcount_dh:
-            doc: Derivative of the neighbour number with respect to h
-          rho_dh:
-            doc: Derivative of density with respect to h
-          rot_v:
-            doc: Particle velocity curl
-            size: 3
-      force:
-        type: struct
-        doc: Structure for the variables only used in the force loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the force loop 
-             over neighbours and the ghost, drift and kick tasks
-        contents:
-          f_gradh:
-            doc: "'Grad h' term -- only partial in P-U"
-          pressure:
-            doc: Particle pressure
-          soundspeed: 
-            doc: Particle soundspeed
-          h_dt: 
-            doc: Time derivative of smoothing length 
-          balsara:
-            doc: Balsara switch
-          alpha_visc_max_ngb:
-            doc: Maximal alpha (viscosity) over neighbours
+  id: 
+    type: long long
+    doc:  Particle unique ID
+
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
 
   adaptive_softening_data:
     type: struct adaptive_softening_part_data
