@@ -26,7 +26,7 @@
  * This needs to be specific to any hydro scheme/SPH flavour.
  */
 
-#include "../active.h"
+#include "active.h"
 #include "cell.h"
 #include "gpu_part_structs.h"
 #include "hydro_part.h"
