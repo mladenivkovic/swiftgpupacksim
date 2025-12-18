@@ -37,7 +37,7 @@ bin_PROGRAMS = swiftgpupack
 
 # Sources for swift
 swiftgpupack_SOURCES = swiftgpupacksim.c
-swiftgpupack_CFLAGS = $(AM_CFLAGS) $(CUDA_FLAGS) $(MYFLAGS)
+swiftgpupack_CFLAGS = $(AM_CFLAGS) $(CUDA_CFLAGS) $(MYFLAGS)
 swiftgpupack_LDADD =  src/libswiftgpupacksim.la $(AM_LDFLAGS) $(EXTRA_LIBS) $(CUDA_LDFLAGS) $(CUDA_LIBS)
 
 # Non-standard files that should be part of the distribution.

@@ -48,6 +48,7 @@ AC_PROG_CXX_C_O
 
 # We need this for compilation hints and possibly FFTW.
 AX_OPENMP
+# Parallelisation here is with omp, so use that!
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
 LDFLAGS="$LDFLAGS $OPENMP_CFLAGS"
 
@@ -143,6 +144,8 @@ if test "$enable_ipo" = "yes"; then
    fi
 fi
 
+# AM_PROG_AR # Enable archiver for the GPU convenience library.
+
 # Add libtool support (now that CC is defined). Disable shared libraries by default.
 LT_INIT([disable-shared])
 
@@ -207,6 +210,24 @@ fi
 
 # Define HAVE_POSIX_MEMALIGN if it works.
 AX_FUNC_POSIX_MEMALIGN
+
+# if test "$enable_opt" = "yes" ; then
+   # Choose the best flags for this compiler and architecture
+   ac_test_CFLAGS="no"
+   AX_CC_MAXOPT
+   ac_test_CFLAGS="yes"
+
+   # Check SSE & AVX support (some overlap with AX_CC_MAXOPT).
+   # Don't use the SIMD_FLAGS result with Intel compilers. The -x<code>
+   # value from AX_CC_MAXOPT should be sufficient.
+   AX_EXT
+   if test "$SIMD_FLAGS" != ""; then
+       if test "$ax_cv_c_compiler_vendor" != "intel"; then
+           CFLAGS="$CFLAGS $SIMD_FLAGS"
+       fi
+   fi
+# fi
+
 
 # Add address sanitizer options to flags, if requested. Only useful for GCC
 # version 4.8 and later and clang.
@@ -308,7 +329,25 @@ AC_CHECK_LIB(pthread, posix_fallocate,
 
 
 
+
+# AC_ARG_ENABLE([gpu-debug],
+#   [AS_HELP_STRING([--enable-gpu-debug],
+#     [enable gpu debugging symbols.]
+#   )],
+#   [with_gpu_debug="${enableval}"],
+#   [with_gpu_debug="no"]
+# )
+
+AC_ARG_WITH([cuda-arch],
+   [AS_HELP_STRING([--with-cuda-arch=<sm_XX>],
+      [Which architecture to compile cuda device code for. default: native.]
+   )],
+   [with_cuda_arch="$withval"],
+   [with_cuda_arch="native"]
+)
+
 # Check for CUDA
+have_cuda="yes"
 AC_ARG_WITH([cuda],
     [AS_HELP_STRING([--with-cuda=PATH],
        [root directory where CUDA is installed @<:@yes/no@:>@]
@@ -316,19 +355,18 @@ AC_ARG_WITH([cuda],
     [],
     [with_cuda="yes"]
 )
-
 if test "x$with_cuda" != "xyes"; then
-  # we got a path to a cuda installation, use that.
-  # Note: CUDA_*FLAGS get passed to the host compiler.
-  # NVCC_*FLAGS get passed to nvcc.
-  CUDA_CFLAGS="$CUDA_CFLAGS -I$with_cuda/include"
-  CUDA_LDFLAGS="-L$with_cuda/lib -L$with_cuda/lib64"
-  CUDA_LIBS="-lcudadevrt -lcudart"
-  NVCC="$with_cuda/bin/nvcc"
-  NVCC_FLAGS="$NVCC_FLAGS"
-  NVCC_LDFLAGS="$NVCC_LDFLAGS"
-  NVCC_LIBS="$NVCC_LIBS"
-else
+    # we got a path to a cuda installation, use that.
+    # Note: CUDA_*FLAGS get passed to the host compiler.
+    # NVCC_*FLAGS get passed to nvcc.
+    CUDA_CFLAGS="$CUDA_CFLAGS -I$with_cuda/include"
+    CUDA_LDFLAGS="-L$with_cuda/lib -L$with_cuda/lib64"
+    CUDA_LIBS="-lcudadevrt -lcudart"
+    NVCC="$with_cuda/bin/nvcc"
+    NVCC_FLAGS="$NVCC_FLAGS"
+    NVCC_LDFLAGS="$NVCC_LDFLAGS"
+    NVCC_LIBS="$NVCC_LIBS"
+  else
   # Get default installation
   AC_PATH_PROG([NVCC],[nvcc])
   echo "Found nvcc = $NVCC"
@@ -369,8 +407,6 @@ if test "x$with_gpu_debug" != "xno"; then
 fi
 
 NVCC_FLAGS="$NVCC_FLAGS"" -arch=${with_cuda_arch}"
-# fi
-#
 AC_SUBST(CUDA_CFLAGS)
 AC_SUBST(CUDA_LDFLAGS)
 AC_SUBST(CUDA_LIBS)
@@ -378,6 +414,7 @@ AC_SUBST(NVCC)
 AC_SUBST(NVCC_FLAGS)
 AC_SUBST(NVCC_LDFLAGS)
 AC_SUBST(NVCC_LIBS)
+AM_CONDITIONAL([HAVECUDA],[test "x$have_cuda" != "xno"])
 
 
 # Check for special allocators
@@ -808,6 +845,7 @@ AC_MSG_RESULT([
     - vendor             : $ax_cv_c_compiler_vendor
     - version            : $ax_cv_c_compiler_version
     - flags              : $CFLAGS
+    - cuda flags         : $CUDA_CFLAGS
    Special allocators    : $have_special_allocator
    Pthread barriers      : $have_pthread_barrier
    Debugging checks      : $enable_debugging_checks
@@ -822,3 +860,4 @@ AC_MSG_RESULT([
   *** WARNING: unrecognized options: $ac_unrecognized_opts ***
 ])
 fi
+
