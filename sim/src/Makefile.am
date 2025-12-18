@@ -88,7 +88,7 @@ nobase_noinst_HEADERS += packing_data_struct.h
 
 # Sources and flags for regular library
 libswiftgpupacksim_la_SOURCES = $(AM_SOURCES) $(CPU_SOURCES)
-libswiftgpupacksim_la_CFLAGS = $(AM_CFLAGS) $(CUDA_FLAGS) $(MYFLAGS)
+libswiftgpupacksim_la_CFLAGS = $(AM_CFLAGS) $(CUDA_CFLAGS) $(MYFLAGS)
 libswiftgpupacksim_la_LDFLAGS = $(AM_LDFLAGS) $(EXTRA_LIBS) $(CUDA_LDFLAGS) $(CUDA_LIBS)
 
 
