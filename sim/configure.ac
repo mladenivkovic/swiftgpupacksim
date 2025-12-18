@@ -729,7 +729,7 @@ fi
 # Memory layout
 AC_ARG_WITH([particle-memory-layout],
    [AS_HELP_STRING([--with-particle-memory-layout=<method>],
-      [Particle memory layout to use @<:@aos, soa, soa-modified, default: aos@:>@]
+      [Particle memory layout to use @<:@aos, soa, soa-modified, upstream, default: aos@:>@]
    )],
    [with_layout="$withval"],
    [with_layout="aos"]
@@ -741,6 +741,9 @@ case "$with_layout" in
    ;;
    soa)
       AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])
+   ;;
+   upstream)
+      AC_DEFINE([SPHENIX_UPSTREAM_PARTICLE], [1], [SWIFT upstream/master particle layout])
    ;;
    soa-modified)
       AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])

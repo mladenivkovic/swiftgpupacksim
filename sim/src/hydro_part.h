@@ -34,6 +34,8 @@
 #include "realisations/aos/hydro_part.h"
 #elif defined(SPHENIX_SOA_PARTICLE)
 #include "realisations/soa/hydro_part.h"
+#elif defined(SPHENIX_UPSTREAM_PARTICLE)
+#include "realisations/upstream/hydro_part.h"
 #else
 #pragma error "Unknown memory layout realisation"
 #endif

@@ -205,7 +205,9 @@ static __attribute__((always_inline)) INLINE void init_cell(
     omp_set_lock(&part_locks[offset + i]);
   }
 
-#if defined(SPHENIX_AOS_PARTICLE)
+#if defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)
+  /* These realisations have a single particle struct. They don't need
+   * special handling here. */
 #elif defined(SPHENIX_SOA_PARTICLE)
   for (int i = 0; i < count; i++) {
     c->hydro.part_arrs._part[i]._cell_offset = i;
