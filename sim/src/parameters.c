@@ -6,7 +6,7 @@
 /**
  * Default initialisation of the struct
  */
-void init_params(struct parameters *params) {
+void init_params(struct parameters* params) {
 
   params->nr_threads = 0;
   params->nr_parts = 0;
@@ -43,7 +43,7 @@ void init_params(struct parameters *params) {
 /**
  * Initial check that params are valid
  */
-void validate_params(struct parameters *params) {
+void validate_params(struct parameters* params) {
 
   if (params->help) {
     help(0);
@@ -58,7 +58,7 @@ void validate_params(struct parameters *params) {
  * Check that read-in parameters are sensible after they've
  * been read in.
  */
-void validate_read_params(struct parameters *params) {
+void validate_read_params(struct parameters* params) {
 
   swift_assert(params->nr_parts > 0);
   swift_assert(params->nr_threads > 0);
@@ -69,7 +69,7 @@ void validate_read_params(struct parameters *params) {
 /**
  * Print out our run params.
  */
-void print_params(struct parameters *params) {
+void print_params(struct parameters* params) {
 
   printf("Runtime parameters:\n");
   printf("\t nr_threads:        %12d\n", params->nr_threads);
@@ -81,4 +81,3 @@ void print_params(struct parameters *params) {
   printf("\t memory layout:     %s\n", params->memory_layout);
   printf("\t measurement data:  %s\n", params->data_root_dir);
 }
-

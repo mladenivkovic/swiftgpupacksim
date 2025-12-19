@@ -7,15 +7,15 @@
 #include <stddef.h>
 
 /* Function type for mappings. */
-typedef void (*threadpool_map_function)(void *map_data, int num_elements,
-                                        void *extra_data);
+typedef void (*threadpool_map_function)(void* map_data, int num_elements,
+                                        void* extra_data);
 
 
 /* Data of a threadpool. */
 struct threadpool {
 
   /* The threads themselves. */
-  pthread_t *threads;
+  pthread_t* threads;
 
   /* This is where threads go to rest. */
   swift_barrier_t wait_barrier;
@@ -34,7 +34,7 @@ struct threadpool {
   volatile int num_threads_running;
 
 #ifdef SWIFT_DEBUG_THREADPOOL
-  struct mapper_log *logs;
+  struct mapper_log* logs;
 #endif
 };
 

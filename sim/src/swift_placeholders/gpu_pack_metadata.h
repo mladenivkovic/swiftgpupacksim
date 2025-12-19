@@ -41,30 +41,30 @@ struct gpu_pack_metadata {
 
   /*! Lists of leaf cell pairs (ci, cj) which are to be interacted. May contain
    * entries of multiple tasks' leaf cells. */
-  struct cell **ci_leaves;
-  struct cell **cj_leaves;
+  struct cell** ci_leaves;
+  struct cell** cj_leaves;
 
   /*! Number of leaf cells which require interactions found during recursive
    * search for a single task */
   int task_n_leaves;
 
   /*! List of tasks cells to be packed */
-  struct task **task_list;
+  struct task** task_list;
 
   /*! Index of the first (pair of) leaf cell(s) packed into the particle buffer
    * of tasks stored in task_list. */
-  int *task_first_packed_leaf;
+  int* task_first_packed_leaf;
 
   /*! Index of the last (pair of) leaf cell(s) packed into the particle buffer
    * of tasks stored in task_list. */
-  int *task_last_packed_leaf;
+  int* task_last_packed_leaf;
 
   /*! The index of the first particle in the buffer arrays of tasks stored in
    * task_list. */
-  int *task_first_packed_part;
+  int* task_first_packed_part;
 
   /*! Index of the first particle of a bundle in the buffer arrays */
-  int *bundle_first_part;
+  int* bundle_first_part;
 
   /*! Count how many (super-level) tasks we've identified for packing */
   int tasks_in_list;
@@ -99,12 +99,12 @@ struct gpu_pack_metadata {
 #endif
 };
 
-void gpu_pack_metadata_init(struct gpu_pack_metadata *md,
-                            const struct gpu_global_pack_params *params);
-void gpu_pack_metadata_init_step(struct gpu_pack_metadata *md);
-void gpu_pack_metadata_reset(struct gpu_pack_metadata *md,
+void gpu_pack_metadata_init(struct gpu_pack_metadata* md,
+                            const struct gpu_global_pack_params* params);
+void gpu_pack_metadata_init_step(struct gpu_pack_metadata* md);
+void gpu_pack_metadata_reset(struct gpu_pack_metadata* md,
                              int reset_leaves_lists);
-void gpu_pack_metadata_free(struct gpu_pack_metadata *md);
+void gpu_pack_metadata_free(struct gpu_pack_metadata* md);
 
 #ifdef __cplusplus
 }

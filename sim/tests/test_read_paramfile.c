@@ -16,7 +16,7 @@ int main(void) {
   /* Fake cmdlineargs. */
   int argc = 2;
   /* First argument: fake executable name. */
-  char *argv[] = {"swiftpacksim", "input"};
+  char* argv[] = {"swiftpacksim", "input"};
   io_parse_cmdlineargs(argc, argv, &params);
   validate_params(&params);
 

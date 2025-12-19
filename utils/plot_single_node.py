@@ -46,7 +46,7 @@ if __name__ == "__main__":
         if f.endswith("_noflush"):
             noflushlist.append(os.path.join(node_root_dir, f))
 
-            flush = f[:-len("_noflush")]
+            flush = f[: -len("_noflush")]
             fullflush = os.path.join(node_root_dir, flush)
             if not os.path.exists(fullflush):
                 raise FileNotFoundError(f"Didn't find corresponing dir {flush}")
@@ -54,13 +54,15 @@ if __name__ == "__main__":
             flushlist.append(fullflush)
 
     if len(flushlist) != 4:
-        raise ValueError(f"Found {len(flushlist)} subdirs, expected 4. Adapt script to accommodate that.")
+        raise ValueError(
+            f"Found {len(flushlist)} subdirs, expected 4. Adapt script to accommodate that."
+        )
 
-    fig = plt.figure(figsize=(10,10))
-    ax1 = fig.add_subplot(2,2,1)
-    ax2 = fig.add_subplot(2,2,2)
-    ax3 = fig.add_subplot(2,2,3)
-    ax4 = fig.add_subplot(2,2,4)
+    fig = plt.figure(figsize=(10, 10))
+    ax1 = fig.add_subplot(2, 2, 1)
+    ax2 = fig.add_subplot(2, 2, 2)
+    ax3 = fig.add_subplot(2, 2, 3)
+    ax4 = fig.add_subplot(2, 2, 4)
 
     # loop over all experiments
     for i in range(len(flushlist)):
@@ -72,17 +74,17 @@ if __name__ == "__main__":
         title = os.path.basename(flushdir)
 
         # do both flush + no flush
-        for j,srcdir in enumerate([flushdir, noflushdir]):
+        for j, srcdir in enumerate([flushdir, noflushdir]):
 
             #  marker = "o"
             marker = markers[j]
             label_suffix = ""
-            linestyle="-"
+            linestyle = "-"
 
             if j == 1:
                 #  marker = "x"
-                label_suffix=" no cache flush"
-                linestyle="--"
+                label_suffix = " no cache flush"
+                linestyle = "--"
                 if not srcdir.endswith("_noflush"):
                     raise ValueError(f"Expected noflush dir case, got {srcdir}")
 
@@ -106,16 +108,23 @@ if __name__ == "__main__":
 
             aos_timings = resultlist[aos_index].timings
 
-            for k,res in enumerate(resultlist):
+            for k, res in enumerate(resultlist):
 
-                color = "C"+str(k)
+                color = "C" + str(k)
                 marker = markers[k]
 
                 relative_times = res.timings / aos_timings
-                ax.plot(res.tasks, relative_times, label=res.layout + label_suffix, marker=marker, linestyle=linestyle, color=color)
+                ax.plot(
+                    res.tasks,
+                    relative_times,
+                    label=res.layout + label_suffix,
+                    marker=marker,
+                    linestyle=linestyle,
+                    color=color,
+                )
 
         ax.set_title(title)
-        ax.tick_params(axis='x', labelrotation=45)
+        ax.tick_params(axis="x", labelrotation=45)
         ax.legend()
         ax.grid()
         plt.tight_layout()
@@ -126,6 +135,3 @@ if __name__ == "__main__":
     outfname = f"results_{node_dir}.png"
     plt.savefig(outfname)
     print(f"Saved {outfname}")
-
-
-
