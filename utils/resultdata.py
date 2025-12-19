@@ -27,7 +27,7 @@ class ResultData:
         self.verbose = verbose
         self.srcfile = srcfile
         self.layout = self._get_layout_from_filename()
-        self.tasks, self.timings = self._read_results_from_file()
+        self.tasks, self.timings, self.data_dict = self._read_results_from_file()
 
         return
 
@@ -76,6 +76,6 @@ class ResultData:
         tasks = np.array(["pack/density", "pack/gradient", "pack/force", "unpack/density", "unpack/gradient", "unpack/force"])
         timings = np.array([data_d["pack/density"], data_d["pack/gradient"], data_d["pack/force"], data_d["unpack/density"], data_d["unpack/gradient"], data_d["unpack/force"]])
 
-        return tasks, timings
+        return tasks, timings, data_d
 
 

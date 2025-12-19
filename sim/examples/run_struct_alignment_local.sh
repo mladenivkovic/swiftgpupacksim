@@ -1,6 +1,7 @@
 #!/bin/bash
 
-NODE=gn001
+NODE=local
+# NODE=gn001
 # NODE=gn002
 
 set -e
@@ -10,14 +11,13 @@ export OMP_PROC_BIND=true
 
 for align in 1 2 4 8 16 32 64; do
 
-  for dir in EAGLE12_16threads  EAGLE12_32threads  Gresho256_16threads  Gresho256_32threads; do
+  for dir in IntelXeonGold5218_Gresho64_4threads; do
 
     mkdir -p $NODE
     mkdir -p $NODE/"$dir"_struct_align"$align"
     mkdir -p $NODE/"$dir"_struct_align"$align"_noflush
 
-    NTHREADS=16
-    if [[ "$dir" == "*_32thread*" ]]; then NTHREADS=32; fi
+    NTHREADS=4
 
     for ex in ../swiftgpupack_aos ../swiftgpupack_soa ../swiftgpupack_soa-modified ../swiftgpupack_upstream; do
 
