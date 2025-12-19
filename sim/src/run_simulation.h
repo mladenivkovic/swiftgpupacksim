@@ -6,4 +6,4 @@
 
 #include "parameters.h"
 
-void run_simulation(struct parameters *params);
+void run_simulation(struct parameters* params);

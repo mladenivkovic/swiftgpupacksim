@@ -40,10 +40,9 @@ struct parameters {
 
   /*! Root dir of measurement data */
   char data_root_dir[200];
-
 };
 
-void init_params(struct parameters *params);
-void validate_params(struct parameters *params);
-void validate_read_params(struct parameters *params);
-void print_params(struct parameters *params);
+void init_params(struct parameters* params);
+void validate_params(struct parameters* params);
+void validate_read_params(struct parameters* params);
+void print_params(struct parameters* params);

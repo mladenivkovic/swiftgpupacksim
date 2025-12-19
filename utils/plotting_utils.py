@@ -3,7 +3,7 @@
 import os
 
 
-def get_filelist(srcdir:str) -> list:
+def get_filelist(srcdir: str) -> list:
     """
     Get list of results_*.csv files in `srcdir`
     """

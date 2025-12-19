@@ -51,45 +51,45 @@ struct gpu_offload_data {
    * gpu_offload_data will only hold data for either density, gradient, or
    * force task, so we hide them behind a union. */
   union {
-    struct gpu_part_send_d *d_parts_send_d;
-    struct gpu_part_send_g *d_parts_send_g;
-    struct gpu_part_send_f *d_parts_send_f;
+    struct gpu_part_send_d* d_parts_send_d;
+    struct gpu_part_send_g* d_parts_send_g;
+    struct gpu_part_send_f* d_parts_send_f;
   };
 
   /*! Array used to receive particle data on device from host */
   union {
-    struct gpu_part_recv_d *d_parts_recv_d;
-    struct gpu_part_recv_g *d_parts_recv_g;
-    struct gpu_part_recv_f *d_parts_recv_f;
+    struct gpu_part_recv_d* d_parts_recv_d;
+    struct gpu_part_recv_g* d_parts_recv_g;
+    struct gpu_part_recv_f* d_parts_recv_f;
   };
 
   /*! Array used to send particle data from host to device */
   union {
-    struct gpu_part_send_d *parts_send_d;
-    struct gpu_part_send_g *parts_send_g;
-    struct gpu_part_send_f *parts_send_f;
+    struct gpu_part_send_d* parts_send_d;
+    struct gpu_part_send_g* parts_send_g;
+    struct gpu_part_send_f* parts_send_f;
   };
 
   /*! Array used to receive particle data from device on host */
   union {
-    struct gpu_part_recv_d *parts_recv_d;
-    struct gpu_part_recv_g *parts_recv_g;
-    struct gpu_part_recv_f *parts_recv_f;
+    struct gpu_part_recv_d* parts_recv_d;
+    struct gpu_part_recv_g* parts_recv_g;
+    struct gpu_part_recv_f* parts_recv_f;
   };
 
   /*! Handle on events per cuda stream to register completion of async ops */
-  cudaEvent_t *event_end;
+  cudaEvent_t* event_end;
 
 #endif /* WITH_CUDA */
 };
 
-void gpu_data_buffers_init(struct gpu_offload_data *buf,
-                           const struct gpu_global_pack_params *params,
+void gpu_data_buffers_init(struct gpu_offload_data* buf,
+                           const struct gpu_global_pack_params* params,
                            const size_t send_struct_size,
                            const size_t recv_struct_size);
-void gpu_data_buffers_init_step(struct gpu_offload_data *buf);
-void gpu_data_buffers_reset(struct gpu_offload_data *buf);
-void gpu_data_buffers_free(struct gpu_offload_data *buf);
+void gpu_data_buffers_init_step(struct gpu_offload_data* buf);
+void gpu_data_buffers_reset(struct gpu_offload_data* buf);
+void gpu_data_buffers_free(struct gpu_offload_data* buf);
 
 #ifdef __cplusplus
 }

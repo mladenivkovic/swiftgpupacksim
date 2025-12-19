@@ -17,40 +17,40 @@ struct cell_black_holes {
 #endif
 
     /*! Pointer to the #bpart data. */
-    struct bpart *parts;
+    struct bpart* parts;
 
     /*! The drift task for bparts */
-    struct task *drift;
+    struct task* drift;
 
     /*! Implicit tasks marking the entry of the BH physics block of tasks */
-    struct task *black_holes_in;
+    struct task* black_holes_in;
 
     /*! Implicit tasks marking the exit of the BH physics block of tasks */
-    struct task *black_holes_out;
+    struct task* black_holes_out;
 
     /*! The black hole ghost task itself */
-    struct task *density_ghost;
+    struct task* density_ghost;
 
     /*! The ghost tasks related to BH swallowing */
-    struct task *swallow_ghost_1;
-    struct task *swallow_ghost_2;
-    struct task *swallow_ghost_3;
+    struct task* swallow_ghost_1;
+    struct task* swallow_ghost_2;
+    struct task* swallow_ghost_3;
 
     /*! Linked list of the tasks computing this cell's BH density. */
-    struct link *density;
+    struct link* density;
 
     /*! Linked list of the tasks computing this cell's BH swallowing and
      * merging. */
-    struct link *swallow;
+    struct link* swallow;
 
     /*! Linked list of the tasks processing the particles to swallow */
-    struct link *do_gas_swallow;
+    struct link* do_gas_swallow;
 
     /*! Linked list of the tasks processing the particles to swallow */
-    struct link *do_bh_swallow;
+    struct link* do_bh_swallow;
 
     /*! Linked list of the tasks computing this cell's BH feedback. */
-    struct link *feedback;
+    struct link* feedback;
 
     /*! Last (integer) time the cell's bpart were drifted forward in time. */
     integertime_t ti_old_part;
@@ -107,66 +107,66 @@ struct cell_grav {
   union {
 
     /*! Pointer to the #gpart data. */
-    struct gpart *parts;
+    struct gpart* parts;
 
     /*! or #gpart_foreign data. */
-    struct gpart_foreign *parts_foreign;
+    struct gpart_foreign* parts_foreign;
 
     /*! or #gpart_fof_foreign data. */
-    struct gpart_fof_foreign *parts_fof_foreign;
+    struct gpart_fof_foreign* parts_fof_foreign;
   };
 
   union {
 
     /*! Pointer to the #gpart data at rebuild time. */
-    struct gpart *parts_rebuild;
+    struct gpart* parts_rebuild;
 
     /*! Pointer to the #gpart_foreign data at rebuild time. */
-    struct gpart_foreign *parts_foreign_rebuild;
+    struct gpart_foreign* parts_foreign_rebuild;
 
     /*! Pointer to the #gpart_fof_foreign data at rebuild time. */
-    struct gpart_fof_foreign *parts_fof_foreign_rebuild;
+    struct gpart_fof_foreign* parts_fof_foreign_rebuild;
   };
 
   /*! This cell's multipole. */
-  struct gravity_tensors *multipole;
+  struct gravity_tensors* multipole;
 
   /*! Super cell, i.e. the highest-level parent cell that has a grav pair/self
    * tasks */
-  struct cell *super;
+  struct cell* super;
 
   /*! The drift task for gparts */
-  struct task *drift;
+  struct task* drift;
 
   /*! Implicit task (going up- and down the tree) for the #gpart drifts */
-  struct task *drift_out;
+  struct task* drift_out;
 
   /*! Linked list of the tasks computing this cell's gravity forces. */
-  struct link *grav;
+  struct link* grav;
 
   /*! Linked list of the tasks computing this cell's gravity M-M forces. */
-  struct link *mm;
+  struct link* mm;
 
   /*! The multipole initialistation task */
-  struct task *init;
+  struct task* init;
 
   /*! Implicit task for the gravity initialisation */
-  struct task *init_out;
+  struct task* init_out;
 
   /*! Task computing long range non-periodic gravity interactions */
-  struct task *long_range;
+  struct task* long_range;
 
   /*! Implicit task for the down propagation */
-  struct task *down_in;
+  struct task* down_in;
 
   /*! Task propagating the multipole to the particles */
-  struct task *down;
+  struct task* down;
 
   /*! The task to end the force calculation */
-  struct task *end_force;
+  struct task* end_force;
 
   /*! Task for weighting neutrino particles */
-  struct task *neutrino_weight;
+  struct task* neutrino_weight;
 
   /*! Minimum end of (integer) time step in this cell for gravity tasks. */
   integertime_t ti_end_min;
@@ -226,12 +226,12 @@ enum grid_completeness {
 
 struct cell_grid {
   /*! Pointer to parent where the grid is constructed. */
-  struct cell *construction_level;
+  struct cell* construction_level;
 
   /*! Pointer to shallowest parent of this cell used in any pair construction
    * task. Can be above the construction level of this cell. We need to drift at
    * this level. */
-  struct cell *super;
+  struct cell* super;
 
   /*! Whether this cell is complete (at least one particle in all 27 sub-cells
    * if this cell is divided in thirds along each axis). */
@@ -248,18 +248,18 @@ struct cell_grid {
 #endif
 
   /*! Pointer to the voronoi struct of this cell (if any) */
-  struct voronoi *voronoi;
+  struct voronoi* voronoi;
 
   /*! Pointer to this cells construction task. */
-  struct task *construction;
+  struct task* construction;
 
   /*! Linked list of this cells outgoing construction synchronization tasks
    * (i.e. for cells that need this cell for their construction task) */
-  struct link *sync_out;
+  struct link* sync_out;
 
   /*! Linked list of this cells incoming construction synchronization tasks
    * (i.e. cells needed for this cell's construction task) */
-  struct link *sync_in;
+  struct link* sync_in;
 
   /*! Time of last construction */
   integertime_t ti_old;
@@ -278,47 +278,47 @@ struct cell_sinks {
 #endif
 
     /*! Pointer to the #sink data. */
-    struct sink *parts;
+    struct sink* parts;
 
     /*! Pointer to the #spart data at rebuild time. */
-    struct sink *parts_rebuild;
+    struct sink* parts_rebuild;
 
     /*! Linked list of the tasks computing this cell's sink swallow. */
-    struct link *swallow;
+    struct link* swallow;
 
     /*! Linked list of the tasks computing this cell's sink do_gas_swallow. */
-    struct link *do_gas_swallow;
+    struct link* do_gas_swallow;
 
     /*! Linked list of the tasks computing this cell's sink do_sink_swallow. */
-    struct link *do_sink_swallow;
+    struct link* do_sink_swallow;
 
     /*! The drift task for sinks */
-    struct task *drift;
+    struct task* drift;
 
     /*! Implicit tasks marking the entry of the sink block of tasks */
-    struct task *sink_in;
+    struct task* sink_in;
 
     /*! The sink ghost task itself */
-    struct task *density_ghost;
+    struct task* density_ghost;
 
     /*! Linked list of the tasks computing this cell's sink density. */
-    struct link *density;
+    struct link* density;
 
     /*! Implicit tasks marking the end of sink swallow */
-    struct task *sink_ghost1;
+    struct task* sink_ghost1;
 
     /*! Implicit tasks marking the separation between do_gas_swallow and
      * do_sink_swallow */
-    struct task *sink_ghost2;
+    struct task* sink_ghost2;
 
     /*! Implicit tasks marking the exit of the sink block of tasks */
-    struct task *sink_out;
+    struct task* sink_out;
 
     /*! Task for star formation from sink particles */
-    struct task *star_formation_sink;
+    struct task* star_formation_sink;
 
     /*! Task for sink formation */
-    struct task *sink_formation;
+    struct task* sink_formation;
 
     /*! Last (integer) time the cell's sink were drifted forward in time. */
     integertime_t ti_old_part;
@@ -382,49 +382,49 @@ struct cell_stars {
 #endif
 
     /*! Pointer to the #spart data. */
-    struct spart *parts;
+    struct spart* parts;
 
     /*! Pointer to the #spart data at rebuild time. */
-    struct spart *parts_rebuild;
+    struct spart* parts_rebuild;
 
     /*! The star ghost task itself */
-    struct task *density_ghost;
+    struct task* density_ghost;
 
     /*! The first star ghost task related to kinetic feedback */
-    struct task *prep1_ghost;
+    struct task* prep1_ghost;
 
     /*! The second star ghost task related to kinetic feedback */
-    struct task *prep2_ghost;
+    struct task* prep2_ghost;
 
     /*! Linked list of the tasks computing this cell's star density. */
-    struct link *density;
+    struct link* density;
 
     /*! Linked list of the tasks computing this cell's star 1st prep for kinetic
      * feedback. */
-    struct link *prepare1;
+    struct link* prepare1;
 
     /*! Linked list of the tasks computing this cell's star 2nd prep for kinetic
      * feedback. */
-    struct link *prepare2;
+    struct link* prepare2;
 
     /*! Linked list of the tasks computing this cell's star feedback. */
-    struct link *feedback;
+    struct link* feedback;
 
     /*! The task computing this cell's sorts before the density. */
-    struct task *sorts;
+    struct task* sorts;
 
     /*! The drift task for sparts */
-    struct task *drift;
+    struct task* drift;
 
     /*! Implicit tasks marking the entry of the stellar physics block of tasks
      */
-    struct task *stars_in;
+    struct task* stars_in;
 
     /*! Implicit tasks marking the exit of the stellar physics block of tasks */
-    struct task *stars_out;
+    struct task* stars_out;
 
     /*! Pointer for the sorted indices. */
-    struct sort_entry *sort;
+    struct sort_entry* sort;
 
     /*! Last (integer) time the cell's spart were drifted forward in time. */
     integertime_t ti_old_part;
@@ -512,37 +512,37 @@ struct cell_rt {
 #endif
 
     /*! Radiative transfer ghost in task */
-    struct task *rt_in;
+    struct task* rt_in;
 
     /*! Radiative transfer ghost1 task (finishes up injection) */
-    struct task *rt_ghost1;
+    struct task* rt_ghost1;
 
     /*! Task for self/pair gradient step of radiative transfer */
-    struct link *rt_gradient;
+    struct link* rt_gradient;
 
     /*! Radiative transfer ghost2 task */
-    struct task *rt_ghost2;
+    struct task* rt_ghost2;
 
     /*! Task for self/pair transport step of radiative transfer */
-    struct link *rt_transport;
+    struct link* rt_transport;
 
     /*! Radiative transfer transport out task */
-    struct task *rt_transport_out;
+    struct task* rt_transport_out;
 
     /*! Radiative transfer thermochemistry task */
-    struct task *rt_tchem;
+    struct task* rt_tchem;
 
     /*! Radiative transfer cell time advancement task */
-    struct task *rt_advance_cell_time;
+    struct task* rt_advance_cell_time;
 
     /*! Sort a cell after a recv rt gradients */
-    struct task *rt_sorts;
+    struct task* rt_sorts;
 
     /*! Collect the cell times from the super to the top level */
-    struct task *rt_collect_times;
+    struct task* rt_collect_times;
 
     /*! Radiative transfer ghost out task */
-    struct task *rt_out;
+    struct task* rt_out;
 
     /*! Bit mask of sorts that need to be computed for this cell.
      * Needed to be able to skip sorting undrifted cells. */

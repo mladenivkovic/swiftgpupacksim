@@ -43,17 +43,17 @@
  * @param e the #engine
  */
 __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
-    struct cell *restrict c,
-    const struct gpu_part_recv_d *restrict parts_buffer, const int unpack_ind,
-    const int count, const struct engine *e) {
+    struct cell* restrict c,
+    const struct gpu_part_recv_d* restrict parts_buffer, const int unpack_ind,
+    const int count, const struct engine* e) {
 
-  const struct gpu_part_recv_d *parts_recv = &parts_buffer[unpack_ind];
-  struct part *cp = cell_get_hydro_parts(c);
+  const struct gpu_part_recv_d* parts_recv = &parts_buffer[unpack_ind];
+  struct part* cp = cell_get_hydro_parts(c);
 
 #ifndef MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
 
     struct gpu_part_recv_d pr = parts_recv[i];
@@ -70,7 +70,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     float wcount_dh = part_get_wcount_dh(p) + pr.rho_rhodh_wcount_wcount_dh.w;
     part_set_wcount_dh(p, wcount_dh);
 
-    float *rot_v = part_get_rot_v(p);
+    float* rot_v = part_get_rot_v(p);
     rot_v[0] += pr.rot_vx_div_v.x;
     rot_v[1] += pr.rot_vx_div_v.y;
     rot_v[2] += pr.rot_vx_div_v.z;
@@ -80,7 +80,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   }
 #else
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -89,7 +89,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
     float rho_dh = part_get_rho_dh(p) + pr.rho_rhodh_wcount_wcount_dh.y;
@@ -97,7 +97,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -106,7 +106,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -115,18 +115,18 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
-    float *rot_v = part_get_rot_v(p);
+    float* rot_v = part_get_rot_v(p);
     rot_v[0] += pr.rot_vx_div_v.x;
     rot_v[1] += pr.rot_vx_div_v.y;
     rot_v[2] += pr.rot_vx_div_v.z;
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -147,17 +147,17 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
  * @param e the #engine
  */
 __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
-    struct cell *restrict c,
-    const struct gpu_part_recv_g *restrict parts_buffer, const int unpack_ind,
-    const int count, const struct engine *e) {
+    struct cell* restrict c,
+    const struct gpu_part_recv_g* restrict parts_buffer, const int unpack_ind,
+    const int count, const struct engine* e) {
 
-  const struct gpu_part_recv_g *parts_recv = &parts_buffer[unpack_ind];
-  struct part *cp = cell_get_hydro_parts(c);
+  const struct gpu_part_recv_g* parts_recv = &parts_buffer[unpack_ind];
+  struct part* cp = cell_get_hydro_parts(c);
 
 #ifndef MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
 
     struct gpu_part_recv_g pr = parts_recv[i];
@@ -174,7 +174,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   }
 #else
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_g pr = parts_recv[i];
 
@@ -184,7 +184,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_g pr = parts_recv[i];
 
@@ -193,7 +193,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *p = &cp[i];
+    struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_g pr = parts_recv[i];
 
@@ -213,22 +213,22 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
  * @param e the #engine
  */
 __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
-    struct cell *restrict c,
-    const struct gpu_part_recv_f *restrict parts_buffer, const int unpack_ind,
-    const int count, const struct engine *e) {
+    struct cell* restrict c,
+    const struct gpu_part_recv_f* restrict parts_buffer, const int unpack_ind,
+    const int count, const struct engine* e) {
 
-  const struct gpu_part_recv_f *parts_recv = &parts_buffer[unpack_ind];
-  struct part *cp = cell_get_hydro_parts(c);
+  const struct gpu_part_recv_f* parts_recv = &parts_buffer[unpack_ind];
+  struct part* cp = cell_get_hydro_parts(c);
 
 #ifndef MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
-    struct part *restrict p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
 
     struct gpu_part_recv_f pr = parts_recv[i];
 
-    float *a = part_get_a_hydro(p);
+    float* a = part_get_a_hydro(p);
     a[0] += pr.a_hydro.x;
     a[1] += pr.a_hydro.y;
     a[2] += pr.a_hydro.z;
@@ -244,28 +244,27 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
   }
 #else
   for (int i = 0; i < count; i++) {
-    struct part *restrict p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_f pr = parts_recv[i];
 
-    float *a = part_get_a_hydro(p);
+    float* a = part_get_a_hydro(p);
     a[0] += pr.a_hydro.x;
     a[1] += pr.a_hydro.y;
     a[2] += pr.a_hydro.z;
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *restrict p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_f pr = parts_recv[i];
 
     float u_dt = pr.udt_hdt_minngbtb.x + part_get_u_dt(p);
     part_set_u_dt(p, u_dt);
-
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *restrict p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_f pr = parts_recv[i];
     float h_dt = pr.udt_hdt_minngbtb.y + part_get_h_dt(p);
@@ -274,7 +273,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
   }
 
   for (int i = 0; i < count; i++) {
-    struct part *restrict p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_f pr = parts_recv[i];
 
@@ -299,27 +298,27 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
  * interacted with) in buffer
  */
 __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
-    const struct cell *restrict c,
-    struct gpu_part_send_d *restrict parts_buffer, const int pack_ind,
+    const struct cell* restrict c,
+    struct gpu_part_send_d* restrict parts_buffer, const int pack_ind,
     const double shift[3], const int cjstart, const int cjend) {
 
   /* Grab handles */
   const int count = c->hydro.count;
-  const struct part *parts = cell_get_const_hydro_parts(c);
-  struct gpu_part_send_d *ps = &parts_buffer[pack_ind];
+  const struct part* parts = cell_get_const_hydro_parts(c);
+  struct gpu_part_send_d* ps = &parts_buffer[pack_ind];
 
 #ifndef MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
 
-    const double *x = part_get_const_x(p);
+    const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
     ps[i].x_h.y = x[1] - shift[1];
     ps[i].x_h.z = x[2] - shift[2];
     ps[i].x_h.w = part_get_h(p);
 
-    const float *v = part_get_const_v(p);
+    const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
     ps[i].vx_m.z = v[2];
@@ -330,30 +329,30 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   }
 #else
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
 
-    const double *x = part_get_const_x(p);
+    const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
     ps[i].x_h.y = x[1] - shift[1];
     ps[i].x_h.z = x[2] - shift[2];
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
 
-    const float *v = part_get_const_v(p);
+    const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
     ps[i].vx_m.z = v[2];
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
@@ -378,27 +377,27 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
  * interacted with) in buffer
  */
 __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
-    const struct cell *restrict ci,
-    struct gpu_part_send_g *restrict parts_buffer, const int pack_ind,
+    const struct cell* restrict ci,
+    struct gpu_part_send_g* restrict parts_buffer, const int pack_ind,
     const double shift[3], const int cjstart, const int cjend) {
 
   /* Grab handles */
   const int count = ci->hydro.count;
-  const struct part *parts = cell_get_const_hydro_parts(ci);
-  struct gpu_part_send_g *ps = &parts_buffer[pack_ind];
+  const struct part* parts = cell_get_const_hydro_parts(ci);
+  struct gpu_part_send_g* ps = &parts_buffer[pack_ind];
 
 #ifndef MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
 
-    const double *x = part_get_const_x(p);
+    const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
     ps[i].x_h.y = x[1] - shift[1];
     ps[i].x_h.z = x[2] - shift[2];
     ps[i].x_h.w = part_get_h(p);
 
-    const float *v = part_get_const_v(p);
+    const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
     ps[i].vx_m.z = v[2];
@@ -418,64 +417,64 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   }
 #else
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
-    const double *x = part_get_const_x(p);
+    const struct part* p = &parts[i];
+    const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
     ps[i].x_h.y = x[1] - shift[1];
     ps[i].x_h.z = x[2] - shift[2];
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
-    const float *v = part_get_const_v(p);
+    const struct part* p = &parts[i];
+    const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
     ps[i].vx_m.z = v[2];
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
 
     ps[i].u_rho_c_aviscmax.x = part_get_u(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
   }
 
@@ -501,26 +500,26 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
  * interacted with) in buffer
  */
 __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
-    const struct cell *restrict ci,
-    struct gpu_part_send_f *restrict parts_buffer, const int pack_ind,
+    const struct cell* restrict ci,
+    struct gpu_part_send_f* restrict parts_buffer, const int pack_ind,
     const double shift[3], const int cjstart, const int cjend) {
 
   const int count = ci->hydro.count;
-  const struct part *parts = cell_get_const_hydro_parts(ci);
-  struct gpu_part_send_f *ps = &parts_buffer[pack_ind];
+  const struct part* parts = cell_get_const_hydro_parts(ci);
+  struct gpu_part_send_f* ps = &parts_buffer[pack_ind];
 
 #ifndef MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
 
-    const double *x = part_get_const_x(p);
+    const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
     ps[i].x_h.y = x[1] - shift[1];
     ps[i].x_h.z = x[2] - shift[2];
     ps[i].x_h.w = part_get_h(p);
 
-    const float *v = part_get_const_v(p);
+    const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
     ps[i].vx_m.z = v[2];
@@ -544,80 +543,80 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   }
 #else
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
-    const double *x = part_get_const_x(p);
+    const struct part* p = &parts[i];
+    const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
     ps[i].x_h.y = x[1] - shift[1];
     ps[i].x_h.z = x[2] - shift[2];
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
-    const float *v = part_get_const_v(p);
+    const struct part* p = &parts[i];
+    const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
     ps[i].vx_m.z = v[2];
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
 
     ps[i].u_rho_f_p.x = part_get_u(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].u_rho_f_p.y = part_get_rho(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].u_rho_f_p.z = part_get_f_gradh(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].u_rho_f_p.w = part_get_pressure(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
 
     ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
   }
 
   for (int i = 0; i < count; i++) {
-    const struct part *p = &parts[i];
+    const struct part* p = &parts[i];
     int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
     ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
   }

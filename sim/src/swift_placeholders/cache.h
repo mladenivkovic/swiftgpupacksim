@@ -41,46 +41,46 @@
 struct cache {
 
   /* Particle x position. */
-  float *restrict x SWIFT_CACHE_ALIGN;
+  float* restrict x SWIFT_CACHE_ALIGN;
 
   /* Particle y position. */
-  float *restrict y SWIFT_CACHE_ALIGN;
+  float* restrict y SWIFT_CACHE_ALIGN;
 
   /* Particle z position. */
-  float *restrict z SWIFT_CACHE_ALIGN;
+  float* restrict z SWIFT_CACHE_ALIGN;
 
   /* Particle smoothing length. */
-  float *restrict h SWIFT_CACHE_ALIGN;
+  float* restrict h SWIFT_CACHE_ALIGN;
 
   /* Particle mass. */
-  float *restrict m SWIFT_CACHE_ALIGN;
+  float* restrict m SWIFT_CACHE_ALIGN;
 
   /* Particle x velocity. */
-  float *restrict vx SWIFT_CACHE_ALIGN;
+  float* restrict vx SWIFT_CACHE_ALIGN;
 
   /* Particle y velocity. */
-  float *restrict vy SWIFT_CACHE_ALIGN;
+  float* restrict vy SWIFT_CACHE_ALIGN;
 
   /* Particle z velocity. */
-  float *restrict vz SWIFT_CACHE_ALIGN;
+  float* restrict vz SWIFT_CACHE_ALIGN;
 
   /* Maximum index into neighbouring cell for particles that are in range. */
-  int *restrict max_index SWIFT_CACHE_ALIGN;
+  int* restrict max_index SWIFT_CACHE_ALIGN;
 
   /* Particle density. */
-  float *restrict rho SWIFT_CACHE_ALIGN;
+  float* restrict rho SWIFT_CACHE_ALIGN;
 
   /* Particle smoothing length gradient. */
-  float *restrict grad_h SWIFT_CACHE_ALIGN;
+  float* restrict grad_h SWIFT_CACHE_ALIGN;
 
   /* Pressure over density squared. */
-  float *restrict pOrho2 SWIFT_CACHE_ALIGN;
+  float* restrict pOrho2 SWIFT_CACHE_ALIGN;
 
   /* Balsara switch. */
-  float *restrict balsara SWIFT_CACHE_ALIGN;
+  float* restrict balsara SWIFT_CACHE_ALIGN;
 
   /* Particle sound speed. */
-  float *restrict soundspeed SWIFT_CACHE_ALIGN;
+  float* restrict soundspeed SWIFT_CACHE_ALIGN;
 
   /* Cache size. */
   int count;

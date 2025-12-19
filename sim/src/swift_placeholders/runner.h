@@ -68,7 +68,7 @@ struct runner {
   int cpuid, qid;
 
   /*! The engine owing this runner. */
-  struct engine *e;
+  struct engine* e;
 
   /*! The particle gravity_cache of cell ci. */
   struct gravity_cache ci_gravity_cache;
@@ -90,7 +90,7 @@ struct runner {
 
 #ifdef SWIFT_DEBUG_CHECKS
   /*! Pointer to the task this runner is currently performing */
-  const struct task *t;
+  const struct task* t;
 #endif
 };
 

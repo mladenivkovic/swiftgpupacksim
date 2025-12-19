@@ -33,37 +33,37 @@
 struct gravity_cache {
 
   /*! #gpart x position. */
-  float *restrict x SWIFT_CACHE_ALIGN;
+  float* restrict x SWIFT_CACHE_ALIGN;
 
   /*! #gpart y position. */
-  float *restrict y SWIFT_CACHE_ALIGN;
+  float* restrict y SWIFT_CACHE_ALIGN;
 
   /*! #gpart z position. */
-  float *restrict z SWIFT_CACHE_ALIGN;
+  float* restrict z SWIFT_CACHE_ALIGN;
 
   /*! #gpart softening length. */
-  float *restrict epsilon SWIFT_CACHE_ALIGN;
+  float* restrict epsilon SWIFT_CACHE_ALIGN;
 
   /*! #gpart mass. */
-  float *restrict m SWIFT_CACHE_ALIGN;
+  float* restrict m SWIFT_CACHE_ALIGN;
 
   /*! #gpart x acceleration. */
-  float *restrict a_x SWIFT_CACHE_ALIGN;
+  float* restrict a_x SWIFT_CACHE_ALIGN;
 
   /*! #gpart y acceleration. */
-  float *restrict a_y SWIFT_CACHE_ALIGN;
+  float* restrict a_y SWIFT_CACHE_ALIGN;
 
   /*! #gpart z acceleration. */
-  float *restrict a_z SWIFT_CACHE_ALIGN;
+  float* restrict a_z SWIFT_CACHE_ALIGN;
 
   /*! #gpart potential. */
-  float *restrict pot SWIFT_CACHE_ALIGN;
+  float* restrict pot SWIFT_CACHE_ALIGN;
 
   /*! Is this #gpart active ? */
-  int *restrict active SWIFT_CACHE_ALIGN;
+  int* restrict active SWIFT_CACHE_ALIGN;
 
   /*! Can this #gpart use a M2P interaction ? */
-  int *restrict use_mpole SWIFT_CACHE_ALIGN;
+  int* restrict use_mpole SWIFT_CACHE_ALIGN;
 
   /*! Cache size */
   int count;

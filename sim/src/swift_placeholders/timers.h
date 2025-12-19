@@ -51,7 +51,7 @@ enum timer_enum {
 extern ticks timers[timer_count];
 
 /* The timer names. */
-extern const char *timers_names[];
+extern const char* timers_names[];
 
 /* Define the timer macros. */
 /* #ifdef SWIFT_USE_TIMERS */
@@ -66,7 +66,7 @@ INLINE static ticks timers_toc(unsigned int t, ticks tic) {
   return d;
 }
 INLINE static ticks timers_toc_location(unsigned int t, ticks tic,
-                                        ticks *location) {
+                                        ticks* location) {
   const ticks d = (getticks() - tic);
   atomic_add(&location[t], d);
   return d;
@@ -80,8 +80,8 @@ INLINE static ticks timers_toc_location(unsigned int t, ticks tic,
 
 /* Function prototypes. */
 void timers_reset_all(void);
-void timers_reset(ticks *timer);
-void timing_reset_time(double *time);
+void timers_reset(ticks* timer);
+void timing_reset_time(double* time);
 void timers_open_file(int rank);
 void timers_close_file(void);
 void timers_print_file(int step);

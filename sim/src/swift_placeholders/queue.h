@@ -66,13 +66,13 @@ struct queue {
   int size, count;
 
   /* The actual tasks to which the indices refer. */
-  struct task *tasks;
+  struct task* tasks;
 
   /* The task indices and weights. */
-  struct queue_entry *entries;
+  struct queue_entry* entries;
 
   /* DEQ for incoming tasks. */
-  int *tid_incoming;
+  int* tid_incoming;
   volatile unsigned int first_incoming, last_incoming, count_incoming;
 
   /*Number of pack tasks left in queue A. Nasar */

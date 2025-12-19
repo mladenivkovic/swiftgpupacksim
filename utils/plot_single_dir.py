@@ -20,7 +20,6 @@ parser.add_argument(
 )
 
 
-
 if __name__ == "__main__":
 
     args = parser.parse_args()
@@ -46,15 +45,15 @@ if __name__ == "__main__":
 
     aos_timings = resultlist[aos_index].timings
 
-    fig = plt.figure(figsize=(6,4))
-    ax = fig.add_subplot(1,1,1)
+    fig = plt.figure(figsize=(6, 4))
+    ax = fig.add_subplot(1, 1, 1)
 
     for res in resultlist:
 
         relative_times = res.timings / aos_timings
         ax.plot(res.tasks, relative_times, label=res.layout, marker="o")
 
-    ax.tick_params(axis='x', labelrotation=45)
+    ax.tick_params(axis="x", labelrotation=45)
     ax.legend()
     ax.grid()
     plt.tight_layout()
@@ -65,9 +64,3 @@ if __name__ == "__main__":
     outfname = f"results_{measure_dir}.png"
     plt.savefig(outfname)
     print(f"Saved {outfname}")
-
-
-
-
-
-

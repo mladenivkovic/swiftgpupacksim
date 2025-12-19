@@ -63,12 +63,12 @@ struct scheduler {
   int nr_packs_self_grad_done;
   int nr_packs_pair_grad_done;
 
-  volatile int *s_d_left;
-  volatile int *s_g_left;
-  volatile int *s_f_left;
-  volatile int *p_d_left;
-  volatile int *p_g_left;
-  volatile int *p_f_left;
+  volatile int* s_d_left;
+  volatile int* s_g_left;
+  volatile int* s_f_left;
+  volatile int* p_d_left;
+  volatile int* p_g_left;
+  volatile int* p_f_left;
   /* Actual number of GPU tasks. */
   int nr_gpu_tasks;
   /* Number of tasks we want*/
@@ -91,7 +91,7 @@ struct scheduler {
   int nr_queues;
 
   /* Array of queues. */
-  struct queue *queues;
+  struct queue* queues;
 
   /* Total number of tasks. */
   int nr_tasks, size, tasks_next;
@@ -100,18 +100,18 @@ struct scheduler {
   int waiting;
 
   /* The task array. */
-  struct task *tasks;
+  struct task* tasks;
 
   /* The task indices. */
-  int *tasks_ind;
+  int* tasks_ind;
 
   /* List of initial tasks. */
-  int *tid_active;
+  int* tid_active;
   int active_count;
 
   /* The task unlocks. */
-  struct task **volatile unlocks;
-  int *volatile unlock_ind;
+  struct task** volatile unlocks;
+  int* volatile unlock_ind;
   volatile int nr_unlocks, size_unlocks, completed_unlock_writes;
 
   /* Lock for this scheduler. */
@@ -122,10 +122,10 @@ struct scheduler {
   pthread_cond_t sleep_cond;
 
   /* The space associated with this scheduler. */
-  struct space *space;
+  struct space* space;
 
   /* Threadpool to use internally for mundane parallel work. */
-  struct threadpool *threadpool;
+  struct threadpool* threadpool;
 
   /* The node we are working on. */
   int nodeID;
@@ -164,7 +164,7 @@ struct scheduler {
   ticks last_successful_task_fetch;
 
   /* needed to dump queues on deadlock detection */
-  struct engine *e;
+  struct engine* e;
 
 #endif /* SWIFT_DEBUG_CHECKS */
 };

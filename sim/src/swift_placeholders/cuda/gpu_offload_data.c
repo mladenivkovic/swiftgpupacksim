@@ -45,8 +45,8 @@ extern "C" {
  * @param recv_struct_size: size of struct used for recv arrays (both host and
  * device)
  */
-void gpu_data_buffers_init(struct gpu_offload_data *buf,
-                           const struct gpu_global_pack_params *params,
+void gpu_data_buffers_init(struct gpu_offload_data* buf,
+                           const struct gpu_global_pack_params* params,
                            const size_t send_struct_size,
                            const size_t recv_struct_size) {
 
@@ -55,7 +55,7 @@ void gpu_data_buffers_init(struct gpu_offload_data *buf,
   const size_t part_buffer_size = params->part_buffer_size;
 
   /* Initialise and set up metadata */
-  struct gpu_pack_metadata *md = &(buf->md);
+  struct gpu_pack_metadata* md = &(buf->md);
   gpu_pack_metadata_init(md, params);
 
 #if defined(NO_CUDA_MALLOCHOST)
@@ -77,11 +77,11 @@ void gpu_data_buffers_init(struct gpu_offload_data *buf,
   /* cu_error = cudaMalloc((void **)&buf->d_parts_recv_d, */
   /*                       part_buffer_size * recv_struct_size); */
   /* swift_assert(cu_error == cudaSuccess); */
-  cu_error = cudaMallocHost((void **)&buf->parts_send_d,
+  cu_error = cudaMallocHost((void**)&buf->parts_send_d,
                             part_buffer_size * send_struct_size);
   swift_assert(cu_error == cudaSuccess);
 
-  cu_error = cudaMallocHost((void **)&buf->parts_recv_d,
+  cu_error = cudaMallocHost((void**)&buf->parts_recv_d,
                             part_buffer_size * recv_struct_size);
   swift_assert(cu_error == cudaSuccess);
 #endif
@@ -103,9 +103,9 @@ void gpu_data_buffers_init(struct gpu_offload_data *buf,
 /**
  * @brief perform the initialisations required at the start of each step
  */
-void gpu_data_buffers_init_step(struct gpu_offload_data *buf) {
+void gpu_data_buffers_init_step(struct gpu_offload_data* buf) {
 
-  struct gpu_pack_metadata *md = &buf->md;
+  struct gpu_pack_metadata* md = &buf->md;
   gpu_pack_metadata_init_step(md);
   gpu_data_buffers_reset(buf);
 }
@@ -113,7 +113,7 @@ void gpu_data_buffers_init_step(struct gpu_offload_data *buf) {
 /**
  * @brief reset (zero out) the data buffers.
  */
-void gpu_data_buffers_reset(struct gpu_offload_data *buf) {
+void gpu_data_buffers_reset(struct gpu_offload_data* buf) {
 
 #ifdef SWIFT_DEBUG_CHECKS
 
@@ -139,9 +139,9 @@ void gpu_data_buffers_reset(struct gpu_offload_data *buf) {
 /**
  * @brief Free everything you allocated.
  */
-void gpu_data_buffers_free(struct gpu_offload_data *buf) {
+void gpu_data_buffers_free(struct gpu_offload_data* buf) {
 
-  struct gpu_pack_metadata *md = &(buf->md);
+  struct gpu_pack_metadata* md = &(buf->md);
   gpu_pack_metadata_free(md);
 
 #if defined(NO_CUDA_MALLOCHOST)

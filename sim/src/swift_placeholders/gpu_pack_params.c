@@ -45,7 +45,7 @@
  * @param n_top_level_cells how many top level cells we have
  * @param nthreads how many threads we're running on
  */
-void gpu_pack_params_set(struct gpu_global_pack_params *pars,
+void gpu_pack_params_set(struct gpu_global_pack_params* pars,
                          const int pack_size, const int bundle_size,
                          const int gpu_recursion_max_depth,
                          const int part_buffer_size, const float eta_neighbours,
@@ -117,8 +117,8 @@ void gpu_pack_params_set(struct gpu_global_pack_params *pars,
 /**
  * @brief Copy the global packing parameters from src to dest
  */
-void gpu_pack_params_copy(const struct gpu_global_pack_params *src,
-                          struct gpu_global_pack_params *dest) {
+void gpu_pack_params_copy(const struct gpu_global_pack_params* src,
+                          struct gpu_global_pack_params* dest) {
 
   dest->pack_size = src->pack_size;
   dest->bundle_size = src->bundle_size;

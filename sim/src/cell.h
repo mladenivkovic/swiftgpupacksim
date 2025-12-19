@@ -23,22 +23,22 @@ struct cell {
   double width[3];
 
   /*! Pointers to the next level of cells. */
-  struct cell *progeny[8];
+  struct cell* progeny[8];
 
   union {
 
     /*! Linking pointer for "memory management". */
-    struct cell *next;
+    struct cell* next;
 
     /*! Parent cell. */
-    struct cell *parent;
+    struct cell* parent;
   };
 
   /*! Pointer to the top-level cell in a hierarchy */
-  struct cell *top;
+  struct cell* top;
 
   /*! Super cell, i.e. the highest-level parent cell with *any* task */
-  struct cell *super;
+  struct cell* super;
 
   /*! Cell flags bit-mask. */
   volatile uint32_t flags;
@@ -70,25 +70,25 @@ struct cell {
 
     union {
       /* Single list of all send tasks associated with this cell. */
-      struct link *send;
+      struct link* send;
 
       /* Single list of all recv tasks associated with this cell. */
-      struct link *recv;
+      struct link* recv;
     };
 
     union {
       /* Single list of all pack tasks associated with this cell. */
-      struct link *pack;
+      struct link* pack;
 
       /* Single list of all unpack tasks associated with this cell. */
-      struct link *unpack;
+      struct link* unpack;
     };
 
     /*! Bit mask of the proxies this cell is registered with. */
     unsigned long long int sendto;
 
     /*! Pointer to this cell's packed representation. */
-    struct pcell *pcell;
+    struct pcell* pcell;
 
     /*! Size of the packed representation */
     int pcell_size;
@@ -100,27 +100,27 @@ struct cell {
 #endif
 
   /*! The first kick task */
-  struct task *kick1;
+  struct task* kick1;
 
   /*! The second kick task */
-  struct task *kick2;
+  struct task* kick2;
 
   /*! The task to compute time-steps */
-  struct task *timestep;
+  struct task* timestep;
 
   /*! The task to limit the time-step of inactive particles */
-  struct task *timestep_limiter;
+  struct task* timestep_limiter;
 
   /*! The task to synchronize the time-step of inactive particles hit by
    * feedback */
-  struct task *timestep_sync;
+  struct task* timestep_sync;
 
   /*! The task to recursively collect time-steps */
-  struct task *timestep_collect;
+  struct task* timestep_collect;
 
 #ifdef WITH_CSDS
   /*! The csds task */
-  struct task *csds;
+  struct task* csds;
 #endif
 
   /*! Minimum dimension, i.e. smallest edge of this cell (min(width)). */
@@ -175,14 +175,14 @@ struct cell {
 
 
 /* Get hydro particle array */
-static __attribute__((always_inline)) INLINE struct part *cell_get_hydro_parts(
-    struct cell *restrict c) {
+static __attribute__((always_inline)) INLINE struct part* cell_get_hydro_parts(
+    struct cell* restrict c) {
   return c->hydro.part_arrs._part;
 }
 
 /* Get const hydro particle array */
-static __attribute__((always_inline)) INLINE const struct part *
-cell_get_const_hydro_parts(const struct cell *restrict c) {
+static __attribute__((always_inline)) INLINE const struct part*
+cell_get_const_hydro_parts(const struct cell* restrict c) {
   return c->hydro.part_arrs._part;
 }
 
@@ -190,8 +190,8 @@ cell_get_const_hydro_parts(const struct cell *restrict c) {
  * Minimalistic cell initialisation for this benchmark
  */
 static __attribute__((always_inline)) INLINE void init_cell(
-    struct cell *c, int count, const struct hydro_part_arrays *all_parts,
-    int offset, omp_lock_t *part_locks) {
+    struct cell* c, int count, const struct hydro_part_arrays* all_parts,
+    int offset, omp_lock_t* part_locks) {
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;
@@ -222,7 +222,7 @@ static __attribute__((always_inline)) INLINE void init_cell(
  * Clean up after yourself. In particular, release the locks.
  */
 static __attribute__((always_inline)) INLINE void destroy_cell(
-    struct cell *c, int count, int offset, omp_lock_t *part_locks) {
+    struct cell* c, int count, int offset, omp_lock_t* part_locks) {
 
   for (int i = 0; i < count; i++) {
     omp_unset_lock(&part_locks[offset + i]);

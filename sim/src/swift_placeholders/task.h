@@ -35,9 +35,9 @@ enum task_subtypes {
 /**
  * @brief Names of the task types.
  */
-extern const char *taskID_names[];
+extern const char* taskID_names[];
 
 /**
  * @brief Names of the task sub-types.
  */
-extern const char *subtaskID_names[];
+extern const char* subtaskID_names[];
