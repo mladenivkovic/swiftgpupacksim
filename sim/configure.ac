@@ -747,7 +747,9 @@ if test "$enable_optreport" != "no"; then
        CFLAGS="$CFLAGS -fsave-optimization-record"
     ;;
     gnu)
-       CFLAGS="$CFLAGS -fopt-info"
+       # CFLAGS="$CFLAGS -fopt-info-optall-all=gcc_optreport.txt"
+       # CFLAGS="$CFLAGS -fopt-info-loop-vec-inline-all=gcc_optreport.txt"
+       CFLAGS="$CFLAGS -fopt-info-all-vec=gcc_optreport.txt -fdump-tree-vect-details"
     ;;
 
   esac
