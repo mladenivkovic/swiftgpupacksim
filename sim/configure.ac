@@ -729,7 +729,9 @@ fi
 # Memory layout
 AC_ARG_WITH([particle-memory-layout],
    [AS_HELP_STRING([--with-particle-memory-layout=<method>],
-      [Particle memory layout to use @<:@aos, soa, soa-modified, soa-manual, upstream, pack-gradient, pack-force, default: aos@:>@]
+      [Particle memory layout to use @<:@aos, soa, soa-modified, 
+       soa-manual, upstream, pack-gradient, pack-force, pack-shared, 
+       default: aos@:>@]
    )],
    [with_layout="$withval"],
    [with_layout="aos"]
@@ -749,7 +751,10 @@ case "$with_layout" in
       AC_DEFINE([SPHENIX_PACK_GRADIENT_PARTICLE], [1], [SWIFT particle layout prioritizing packing and gradient loop])
    ;;
    pack-force)
-      AC_DEFINE([SPHENIX_PACK_GRADIENT_PARTICLE], [1], [SWIFT particle layout prioritizing packing and force loop])
+      AC_DEFINE([SPHENIX_PACK_FORCE_PARTICLE], [1], [SWIFT particle layout prioritizing packing and force loop])
+   ;;
+   pack-shared)
+      AC_DEFINE([SPHENIX_PACK_SHARED_PARTICLE], [1], [SWIFT particle layout prioritizing packing, shared quantities for force and gradient in separate struct])
    ;;
    soa-modified)
       AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])

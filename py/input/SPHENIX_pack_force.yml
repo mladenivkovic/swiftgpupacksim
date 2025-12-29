@@ -1,0 +1,256 @@
+# Split struct into sub-structs depending on task subtype and operation.
+# - Prioritize fields for packing
+# - Prioritize force struct over gradient struct
+
+x_h_v_m:
+
+  x:
+    type: double
+    size: 3
+    doc: the particle position
+
+  h:
+    doc: Particle smoothing length
+
+  v:
+    size: 3
+    doc: Particle predicted velocity
+
+  mass:
+    doc: Particle mass
+
+
+# gradient packing 
+gradient_pack: 
+
+  alpha_visc_max_ngb:
+    doc: Maximal alpha (viscosity) over neighbours
+
+  v_sig:
+    doc: Signal velocity
+
+  laplace_u:
+    doc: del^2 u, a smoothed quantity
+
+
+
+force_pack:
+
+  u:
+    doc: Particle internal energy
+
+  rho:
+    doc: Particle density
+
+  f_gradh:
+    doc: "'Grad h' term -- only partial in P-U"
+
+  pressure:
+    doc: Particle pressure
+
+  balsara:
+    doc: Balsara switch
+
+  soundspeed: 
+    doc: Particle soundspeed
+
+  alpha_av:
+    doc: Artificial viscosity parameter
+  
+  alpha_diff: 
+    doc: Thermal diffusion coefficient
+
+  time_bin:
+    type: timebin_t
+    doc: Time-step length
+
+  limiter_data:
+    type: struct timestep_limiter_data
+    doc: Time-step limiter information
+
+
+
+density_unpack:
+
+  rho_dh:
+    doc: Derivative of density with respect to h
+
+  wcount:
+    doc: Neighbour number count
+
+  wcount_dh:
+    doc: Derivative of the neighbour number with respect to h
+
+  rot_v:
+    doc: Particle velocity curl
+    size: 3
+
+  div_v:
+    doc: Particle velocity divergence
+
+
+force_unpack:
+
+  a_hydro:
+    size: 3
+    doc: Particle acceleration 
+
+  u_dt:
+    doc: Time derivative of the internal energy
+
+  h_dt: 
+    doc: Time derivative of smoothing length 
+
+
+
+others:
+
+  div_v_dt:
+    doc: Time differential of velocity divergence
+
+  div_v_previous_step:
+    doc: Particle velocity divergence from previous step
+
+
+  id: 
+    type: long long
+    doc:  Particle unique ID
+
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
+
+  adaptive_softening_data:
+    type: struct adaptive_softening_part_data
+    doc: Additional data used for adaptive softening
+
+  mhd_data:
+    type: struct mhd_part_data
+    doc: Additional data used by the MHD scheme
+
+  chemistry_data:
+    type: struct chemistry_part_data 
+    doc: Chemistry information
+
+  cooling_data:
+    type: struct cooling_part_data
+    doc: Cooling information
+
+  feedback_data:
+    type: struct feedback_part_data
+    doc: Additional data used by the feedback
+
+  black_holes_data:
+    type: struct black_holes_part_data
+    doc: Black holes information (eg swallowing ID)
+
+  sink_data:
+    type: struct sink_part_data
+    doc: Sink information (eg swallowing ID)
+
+  pressure_floor_data:
+    type: struct pressure_floor_part_data
+    doc: Additional data used by the pressure floor
+
+  rt_data:
+    type: struct rt_part_data
+    doc: Additional Radiative Transfer Data
+
+  rt_time_data:
+    type: struct rt_timestepping_data
+    doc: RT sub-cycling time stepping data
+
+  depth_h:
+    doc: Tree-depth at which size / 2 <= h * gamma < size
+    type: char
+
+  ti_drift:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS
+
+  ti_kick:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS
+
+  N_density:
+    type: int
+    doc: Integer number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_density_exact:
+    type: int
+    doc: Exact integer number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_gradient:
+    type: int
+    doc: Integer number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_gradient_exact:
+    type: int
+    doc: Exact integer number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_force:
+    type: int
+    doc: Integer number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_force_exact:
+    type: int
+    doc: Exact integer number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  rho_exact:
+    type: float
+    doc: Exact value of the density field obtained via brute-force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_density:
+    type: float
+    doc: Weighted number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_density_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_gradient:
+    type: float
+    doc: Weighted number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_gradient_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_force:
+    type: float
+    doc: Weighted number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_force_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  inhibited_exact:
+    type: char
+    doc: Has this particle interacted with any unhibited neighbour?
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  limited_part:
+    type: char
+    doc: Has this particle been woken up by the limiter?
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  geometry:
+    type: struct fvpm_geometry_struct
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
+
+
