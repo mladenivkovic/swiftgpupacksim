@@ -729,7 +729,7 @@ fi
 # Memory layout
 AC_ARG_WITH([particle-memory-layout],
    [AS_HELP_STRING([--with-particle-memory-layout=<method>],
-      [Particle memory layout to use @<:@aos, soa, soa-modified, upstream, default: aos@:>@]
+      [Particle memory layout to use @<:@aos, soa, soa-modified, soa-manual, upstream, pack-gradient, pack-force, default: aos@:>@]
    )],
    [with_layout="$withval"],
    [with_layout="aos"]
@@ -745,9 +745,19 @@ case "$with_layout" in
    upstream)
       AC_DEFINE([SPHENIX_UPSTREAM_PARTICLE], [1], [SWIFT upstream/master particle layout])
    ;;
+   pack-gradient)
+      AC_DEFINE([SPHENIX_PACK_GRADIENT_PARTICLE], [1], [SWIFT particle layout prioritizing packing and gradient loop])
+   ;;
+   pack-force)
+      AC_DEFINE([SPHENIX_PACK_GRADIENT_PARTICLE], [1], [SWIFT particle layout prioritizing packing and force loop])
+   ;;
    soa-modified)
       AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])
       AC_DEFINE([MODIFIED_PARTICLE_ACCESS], [1], [Modify particle loops])
+   ;;
+   soa-manual)
+      AC_DEFINE([SPHENIX_SOA_MANUAL_PARTICLE], [1], [SOA particle layout with manual accessors])
+      AC_DEFINE([MODIFIED_MANUAL_PARTICLE_ACCESS], [1], [Modify particle loops manually])
    ;;
    *)
       AC_MSG_ERROR([Unknown particle realisation: $with_layout])
