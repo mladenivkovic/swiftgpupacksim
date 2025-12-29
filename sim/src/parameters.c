@@ -24,7 +24,7 @@ void init_params(struct parameters* params) {
 #if defined(SPHENIX_AOS_PARTICLE)
   char layout[20] = "aos";
 #elif defined(SPHENIX_SOA_PARTICLE)
-#if defined(MODIFIED_PARTICLE_ACCESS)
+#if defined(SOA_MODIFIED_PARTICLE_ACCESS)
   char layout[20] = "soa-modified";
 #else
   char layout[20] = "soa";

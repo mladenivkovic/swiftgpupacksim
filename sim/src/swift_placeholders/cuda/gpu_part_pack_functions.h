@@ -50,7 +50,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   const struct gpu_part_recv_d* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifndef MODIFIED_PARTICLE_ACCESS
+#ifndef SOA_MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
     struct part* p = &cp[i];
@@ -154,7 +154,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   const struct gpu_part_recv_g* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifndef MODIFIED_PARTICLE_ACCESS
+#ifndef SOA_MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
     struct part* p = &cp[i];
@@ -220,7 +220,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
   const struct gpu_part_recv_f* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifndef MODIFIED_PARTICLE_ACCESS
+#ifndef SOA_MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
     struct part* restrict p = &cp[i];
@@ -307,7 +307,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   const struct part* parts = cell_get_const_hydro_parts(c);
   struct gpu_part_send_d* ps = &parts_buffer[pack_ind];
 
-#ifndef MODIFIED_PARTICLE_ACCESS
+#ifndef SOA_MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
     const struct part* p = &parts[i];
@@ -386,7 +386,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   const struct part* parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_g* ps = &parts_buffer[pack_ind];
 
-#ifndef MODIFIED_PARTICLE_ACCESS
+#ifndef SOA_MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
     const struct part* p = &parts[i];
@@ -508,7 +508,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   const struct part* parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_f* ps = &parts_buffer[pack_ind];
 
-#ifndef MODIFIED_PARTICLE_ACCESS
+#ifndef SOA_MODIFIED_PARTICLE_ACCESS
   for (int i = 0; i < count; i++) {
 
     const struct part* p = &parts[i];
