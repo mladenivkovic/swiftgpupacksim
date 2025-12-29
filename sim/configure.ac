@@ -676,6 +676,7 @@ if test "$enable_opt" = "yes" -a "$ax_cv_c_compiler_vendor" = "clang"; then
    fi
 fi
 
+
 # Check for glibc extension backtrace().
 AC_CHECK_FUNCS([backtrace backtrace_symbols])
 
@@ -726,6 +727,33 @@ if test "$enable_warn" != "no"; then
 fi
 
 
+# Add warning flags by default, if these can be used. Option =error adds
+# -Werror to GCC, clang and Intel.  Note do this last as compiler tests may
+# become errors, if that's an issue don't use CFLAGS for these, use an AC_SUBST().
+AC_ARG_ENABLE([optreport],
+   [AS_HELP_STRING([--enable-optreport],
+     [Enable optimization reports, if compiler is known @<:@error/no/yes)@:>@]
+   )],
+   [enable_optreport="$enableval"],
+   [enable_optreport="no"]
+)
+if test "$enable_optreport" != "no"; then
+  case "$ax_cv_c_compiler_vendor" in
+
+    intel | oneapi)
+       CFLAGS="$CFLAGS -qopt-report=3"
+    ;;
+    clang)
+       CFLAGS="$CFLAGS -fsave-optimization-record"
+    ;;
+    gnu)
+       CFLAGS="$CFLAGS -fopt-info"
+    ;;
+
+  esac
+fi
+
+
 # Memory layout
 AC_ARG_WITH([particle-memory-layout],
    [AS_HELP_STRING([--with-particle-memory-layout=<method>],
@@ -758,7 +786,7 @@ case "$with_layout" in
    ;;
    soa-modified)
       AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])
-      AC_DEFINE([MODIFIED_PARTICLE_ACCESS], [1], [Modify particle loops])
+      AC_DEFINE([SOA_MODIFIED_PARTICLE_ACCESS], [1], [Modify particle loops])
    ;;
    soa-manual)
       AC_DEFINE([SPHENIX_SOA_MANUAL_PARTICLE], [1], [SOA particle layout with manual accessors])
