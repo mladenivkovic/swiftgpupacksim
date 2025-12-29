@@ -29,8 +29,14 @@ void init_params(struct parameters* params) {
 #else
   char layout[20] = "soa";
 #endif
+#elif defined(SPHENIX_SOA_MANUAL_PARTICLE)
+  char layout[20] = "soa-manual";
 #elif defined(SPHENIX_UPSTREAM_PARTICLE)
   char layout[20] = "upstream";
+#elif defined(SPHENIX_PACK_GRADIENT_PARTICLE)
+  char layout[20] = "pack-gradient";
+#elif defined(SPHENIX_PACK_FORCE_PARTICLE)
+  char layout[20] = "pack-force";
 #else
 #pragma error "Unknown particle memory layout"
 #endif
