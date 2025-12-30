@@ -22,16 +22,16 @@ for align in 1 2 4 8 16 32 64; do
 
     for ex in ../swiftgpupack_aos ../swiftgpupack_soa ../swiftgpupack_soa-modified ../swiftgpupack_upstream ../swiftgpupack_pack-gradient ../swiftgpupack_pack-force ../swiftgpupack_pack-shared; do
 
-      "$ex"_struct_align_"$align" ../../data/$dir
+      "$ex"_struct_align_"$align" ../../data/$NODE/$dir
       mv results_*.csv $NODE/"$dir"_struct_align"$align"/
 
-      "$ex"_struct_align_"$align"_novector ../../data/$dir
+      "$ex"_struct_align_"$align"_novector ../../data/$NODE/$dir
       mv results_*.csv $NODE/"$dir"_struct_align"$align"_novector/
 
-      "$ex"_struct_align_"$align" ../../data/$dir --noflush
+      "$ex"_struct_align_"$align" ../../data/$NODE/$dir --noflush
       mv results_*.csv $NODE/"$dir"_struct_align"$align"_noflush/
 
-      "$ex"_struct_align_"$align"_novector ../../data/$dir --noflush
+      "$ex"_struct_align_"$align"_novector ../../data/$NODE/$dir --noflush
       mv results_*.csv $NODE/"$dir"_struct_align"$align"_noflush_novector/
 
     done
