@@ -9,15 +9,16 @@ Contents
 
 - run_Gresho64_singlethread.sh
 
-- run_struct_alignment.sh
+- run_struct_alignment_[gn001, gn002].sh
 
-  Run suite of benchmarks for struct alignment parameters.
-  First create all executables using
-  `swiftgpupacksim/sim/make_all_struct_alignments.sh`
+  Run suite of benchmarks for struct alignment parameters for gn001, gn002
+  nodes. First create all executables using
+  `swiftgpupacksim/sim/make_all_struct_alignments.sh` on each node,
+  respectively.
 
 
 - run_struct_alignment_local.sh
 
-  Same as run_struct_alignment.sh, but for testing (the run and plotting
-  scripts, mainly) on a local machine.
+  Same as run_struct_alignment_[gn001, gn002].sh, but for testing (the run and
+  plotting scripts, mainly) on a local machine.
 
