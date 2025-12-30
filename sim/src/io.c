@@ -1,5 +1,6 @@
 #include "io.h"
 
+#include "config.h"
 #include "help.h"
 #include "swift_placeholders/clocks.h"
 #include "swift_placeholders/error.h"
@@ -236,6 +237,12 @@ void io_write_result(const ticks timers_arr[timer_count],
   if (out_fp == NULL)
     error("Something went wrong when opening output file to write");
 
+#ifdef VECTORIZE
+  const int vec = 1;
+#else
+  const int vec = 0;
+#endif
+
   fprintf(out_fp, "# nr_threads: %d\n", params->nr_threads);
   fprintf(out_fp, "# nr_parts: %ld\n", params->nr_parts);
   fprintf(out_fp, "# nr_steps: %d\n", params->nr_steps);
@@ -243,6 +250,7 @@ void io_write_result(const ticks timers_arr[timer_count],
   fprintf(out_fp, "# stuct align: %d\n", params->struct_align);
   fprintf(out_fp, "# part array align: %d\n", params->part_align);
   fprintf(out_fp, "# memory layout: %s\n", params->memory_layout);
+  fprintf(out_fp, "# vectorization: %d\n", vec);
   fprintf(out_fp, "# reproduced measurements: %s\n", params->data_root_dir);
   fprintf(out_fp, "# type,subtype,timing[ms]\n");
 
