@@ -198,6 +198,21 @@ if test "$enable_no_cuda_mallochost" = "yes"; then
 fi
 
 
+AC_ARG_ENABLE([vectorization],
+   [AS_HELP_STRING([--enable-vectorization],
+     [Disable manually encouraged vectorization (default: on) @<:@yes/no@:>@]
+   )],
+   [enable_vec="$enableval"],
+   [enable_vec="yes"]
+)
+if test "$enable_vec" = "yes"; then
+   AC_DEFINE([VECTORIZE],1,[Enable manually encouraged vectorization])
+fi
+
+
+
+
+
 # Check whether we have any of the ARM v8.1 tick timers
 AX_ASM_ARM_PMCCNTR
 AX_ASM_ARM_CNTVCT

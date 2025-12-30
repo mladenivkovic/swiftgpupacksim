@@ -51,6 +51,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   struct part* cp = cell_get_hydro_parts(c);
 
 #ifndef SOA_MODIFIED_PARTICLE_ACCESS
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
 
     struct part* p = &cp[i];
@@ -79,6 +82,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     part_set_div_v(p, div_v);
   }
 #else
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -88,6 +95,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     part_set_rho(p, rho);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -96,6 +106,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     part_set_rho_dh(p, rho_dh);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -105,6 +118,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     part_set_wcount(p, wcount);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -114,6 +130,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     part_set_wcount_dh(p, wcount_dh);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -125,6 +144,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     rot_v[2] += pr.rot_vx_div_v.z;
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -155,6 +177,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   struct part* cp = cell_get_hydro_parts(c);
 
 #ifndef SOA_MODIFIED_PARTICLE_ACCESS
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
 
     struct part* p = &cp[i];
@@ -173,6 +199,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     part_set_laplace_u(p, lu);
   }
 #else
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -183,6 +213,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     part_set_alpha_visc_max_ngb(p, avisc);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -192,6 +225,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     part_set_v_sig(p, vsig);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -221,6 +257,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
   struct part* cp = cell_get_hydro_parts(c);
 
 #ifndef SOA_MODIFIED_PARTICLE_ACCESS
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
 
     struct part* restrict p = &cp[i];
@@ -243,6 +283,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     part_set_timestep_limiter_min_ngb_time_bin(p, mintbin);
   }
 #else
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -254,6 +298,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     a[2] += pr.a_hydro.z;
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -263,6 +310,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     part_set_u_dt(p, u_dt);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -272,6 +322,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     part_set_h_dt(p, h_dt);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
@@ -308,6 +361,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   struct gpu_part_send_d* ps = &parts_buffer[pack_ind];
 
 #ifndef SOA_MODIFIED_PARTICLE_ACCESS
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
 
     const struct part* p = &parts[i];
@@ -328,6 +385,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].pjs_pje.y = cjend;
   }
 #else
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
 
@@ -337,11 +398,17 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].x_h.z = x[2] - shift[2];
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
 
@@ -351,11 +418,17 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].vx_m.z = v[2];
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
@@ -387,6 +460,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   struct gpu_part_send_g* ps = &parts_buffer[pack_ind];
 
 #ifndef SOA_MODIFIED_PARTICLE_ACCESS
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
 
     const struct part* p = &parts[i];
@@ -416,6 +493,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.y = cjend;
   }
 #else
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     const double* x = part_get_const_x(p);
@@ -424,11 +505,17 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].x_h.z = x[2] - shift[2];
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     const float* v = part_get_const_v(p);
@@ -437,47 +524,73 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].vx_m.z = v[2];
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
-
     ps[i].u_rho_c_aviscmax.x = part_get_u(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
@@ -509,6 +622,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   struct gpu_part_send_f* ps = &parts_buffer[pack_ind];
 
 #ifndef SOA_MODIFIED_PARTICLE_ACCESS
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
 
     const struct part* p = &parts[i];
@@ -542,6 +659,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
 #else
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     const double* x = part_get_const_x(p);
@@ -550,11 +671,17 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].x_h.z = x[2] - shift[2];
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     const float* v = part_get_const_v(p);
@@ -563,64 +690,100 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].vx_m.z = v[2];
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
 
     ps[i].u_rho_f_p.x = part_get_u(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].u_rho_f_p.y = part_get_rho(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].u_rho_f_p.z = part_get_f_gradh(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].u_rho_f_p.w = part_get_pressure(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
 
     ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
     int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
     ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
   }
 
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
   for (int i = 0; i < count; i++) {
     ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
