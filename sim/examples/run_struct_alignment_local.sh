@@ -42,4 +42,4 @@ for align in 1 2 4 8 16 32 64; do
 done
 
 
-python3 ../../utils/plot_struct_alignments.py
+python3 ../../utils/plot_struct_alignments.py -l local
