@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Run full suite of struct alignment experiments for gn001 node. Measurement
+# data is assumed to be in ../../data/gn001 (likely a symlink to directory
+# where measurements have been run.)
+# Experiment output directory names are hardcoded below.
+# You might want to run ../make_all_struct_alignments.sh to create all
+# executables first.
+
 NODE=gn001
 
 set -e
