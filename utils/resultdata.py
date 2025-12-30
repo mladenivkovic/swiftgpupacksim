@@ -8,7 +8,7 @@ class ResultData:
     """
     Class to read in and hold result data.
 
-    Access tasks and timings via ResultData.tasks and ResultData.timings
+    Access tasks and timings via ResultData.tasks and ResultData.timings.
     """
 
     verbose = True
@@ -20,6 +20,9 @@ class ResultData:
 
         srcfile: str
             path to result file to read in and process
+
+        verbose: bool
+            increase verbosity of reading operation
         """
 
         if not os.path.exists(srcfile):
@@ -27,6 +30,7 @@ class ResultData:
 
         self.verbose = verbose
         self.srcfile = srcfile
+
         self.layout = self._get_layout_from_filename()
         self.tasks, self.timings, self.data_dict = self._read_results_from_file()
 
