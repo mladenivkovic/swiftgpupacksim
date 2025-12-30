@@ -17,7 +17,7 @@ params = {
     "axes.titlesize": 14,
     "font.size": 12,
     "font.family": "serif",
-    "legend.fontsize": 8,
+    "legend.fontsize": 12,
     "xtick.labelsize": 12,
     "ytick.labelsize": 12,
     "xtick.direction": "in",
@@ -43,9 +43,13 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
 Plot results of different struct alignments for different particle memory
-layouts, plotting all data in a single plot. This script assumes that all
-subdirectories in the given `srcdir` will contain result data with filenames
-'results_*.csv' It will read them all in and plot them.
+layouts, making a single output image per memory layout realisation. Which
+experiments to extract (as given by subdirectory name base) is hardcoded in
+this script.
+
+This script assumes that all subdirectories in the given `srcdir` will contain
+result data with filenames 'results_*.csv' It will read them all in and plot
+them.
 
 Sub-directories are expected to have the following file name format:
 `EXPERIMENTNAME`_`NRTHREADS`threads_`ALIGN`[_noflush][_novector]
@@ -92,10 +96,6 @@ if local:
     NRTHREADS = [4]
 
 
-multiple_experiments = False
-if len(EXPERIMENT_NAMES) > 1:
-    multiple_experiments = True
-
 multiple_threads = False
 if len(NRTHREADS) > 1:
     multiple_threads = True
@@ -105,6 +105,7 @@ markers = ["o", "v", "s", "p", "P", "*"]
 linestyles = ["-", "--", ":", "-."]
 dir_suffixes = ["", "_noflush", "_novector", "_noflush_novector"]
 suffix_labels = ["", " no flush", " no vector", " no flush, no vector"]
+
 
 if __name__ == "__main__":
 
@@ -127,25 +128,27 @@ if __name__ == "__main__":
             layout = f[len("results_") : -len(".csv")]
             layouts.append(layout)
 
-    fig = plt.figure(figsize=(12, 6))
-    ax1 = fig.add_subplot(2, 3, 1)
-    ax1.set_title("Density/Pack")
-    ax2 = fig.add_subplot(2, 3, 2)
-    ax2.set_title("Gradient/Pack")
-    ax3 = fig.add_subplot(2, 3, 3)
-    ax3.set_title("Force/Pack")
-    ax4 = fig.add_subplot(2, 3, 4)
-    ax4.set_title("Density/Unpack")
-    ax5 = fig.add_subplot(2, 3, 5)
-    ax5.set_title("Gradient/Unpack")
-    ax6 = fig.add_subplot(2, 3, 6)
-    ax6.set_title("Force/Unpack")
-
-    maxtime = -1.0
-    mintime = 1e32
-
-    index = 0
+    # loop over experiments, create image each
     for l, layout in enumerate(layouts):
+
+        fig = plt.figure(figsize=(12, 6))
+        ax1 = fig.add_subplot(2, 3, 1)
+        ax1.set_title("Density/Pack")
+        ax2 = fig.add_subplot(2, 3, 2)
+        ax2.set_title("Gradient/Pack")
+        ax3 = fig.add_subplot(2, 3, 3)
+        ax3.set_title("Force/Pack")
+        ax4 = fig.add_subplot(2, 3, 4)
+        ax4.set_title("Density/Unpack")
+        ax5 = fig.add_subplot(2, 3, 5)
+        ax5.set_title("Gradient/Unpack")
+        ax6 = fig.add_subplot(2, 3, 6)
+        ax6.set_title("Force/Unpack")
+
+        maxtime = -1.0
+        mintime = 1e32
+
+        index = 0
         for i, name in enumerate(EXPERIMENT_NAMES):
             for j, nthreads in enumerate(NRTHREADS):
 
@@ -186,9 +189,7 @@ if __name__ == "__main__":
                     forc_pack = [res.data_dict["pack/force"] for res in result_data]
                     forc_unpack = [res.data_dict["unpack/force"] for res in result_data]
 
-                    label = f"{layout.upper()}"
-                    if multiple_experiments:
-                        label += f"{name}"
+                    label = f"{name}"
                     if multiple_threads:
                         label += f"{nthreads} threads"
                     label += suffix_labels[s]
@@ -200,7 +201,6 @@ if __name__ == "__main__":
                         "ls": ls,
                         "lw": 2,
                         "alpha": 0.8,
-                        "markersize": 5,
                     }
                     ax1.plot(STRUCT_ALIGNS, dens_pack, **plotkwargs)
                     ax2.plot(STRUCT_ALIGNS, grad_pack, **plotkwargs)
@@ -209,33 +209,34 @@ if __name__ == "__main__":
                     ax5.plot(STRUCT_ALIGNS, grad_unpack, **plotkwargs)
                     ax6.plot(STRUCT_ALIGNS, forc_unpack, **plotkwargs)
 
-    if mintime < 200.0:
-        mintime = 0.0
+        if mintime < 200.0:
+            mintime = 0.0
 
-    # all axes
-    for ax in fig.axes:
-        ax.set_xlabel("struct_align")
-        ax.grid()
-        ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
-        #  ax.legend()
+        # all axes
+        for ax in fig.axes:
+            ax.set_xlabel("struct_align")
+            ax.grid()
+            ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
+            #  ax.legend()
 
-    # leftmost axes
-    for ax in [ax1, ax4]:
-        ax.set_ylabel("Timing [ms]")
+        # leftmost axes
+        for ax in [ax1, ax4]:
+            ax.set_ylabel("Timing [ms]")
 
-    # the others
-    for ax in [ax2, ax3, ax5, ax6]:
-        ax.set_yticklabels([])
+        # the others
+        for ax in [ax2, ax3, ax5, ax6]:
+            ax.set_yticklabels([])
 
 
-    hand, lab = ax1.get_legend_handles_labels()
-    #  ncols=int(len(layouts)*0.5 + 0.5)
-    ncols = 5
-    fig.legend(handles=hand, labels=lab, loc="lower center", ncols=ncols, handlelength=2.5, markerscale=0.5)
-    fig.tight_layout(w_pad=0, rect=(0.01, 0.15, 0.99, 0.99))
+        hand, lab = ax1.get_legend_handles_labels()
+        #  ncols=int(len(layouts)*0.5 + 0.5)
+        ncols = 2
+        fig.legend(handles=hand, labels=lab, loc="lower center", ncols=ncols, handlelength=2.5, markerscale=0.5)
+        fig.tight_layout(w_pad=0, rect=(0.01, 0.10, 0.99, 0.99))
 
-    # construct output file name
-    outfname = f"struct_alignment_all_{srcdir}"
-    outfname += ".png"
-    plt.savefig(outfname, dpi=300)
-    print(f"Saved {outfname}")
+        # construct output file name
+        outfname = f"struct_alignment_{layout}_{srcdir}"
+
+        outfname += ".png"
+        plt.savefig(outfname, dpi=300)
+        print(f"Saved {outfname}")
