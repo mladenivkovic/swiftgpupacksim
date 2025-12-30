@@ -29,8 +29,6 @@ void init_params(struct parameters* params) {
 #else
   char layout[20] = "soa";
 #endif
-#elif defined(SPHENIX_SOA_MANUAL_PARTICLE)
-  char layout[20] = "soa-manual";
 #elif defined(SPHENIX_UPSTREAM_PARTICLE)
   char layout[20] = "upstream";
 #elif defined(SPHENIX_PACK_GRADIENT_PARTICLE)
@@ -79,11 +77,18 @@ void validate_read_params(struct parameters* params) {
  */
 void print_params(struct parameters* params) {
 
+#ifdef VECTORIZE
+  const int vec = 1;
+#else
+  const int vec = 0;
+#endif
+
   printf("Runtime parameters:\n");
   printf("\t nr_threads:        %12d\n", params->nr_threads);
   printf("\t nr_parts:          %12lu\n", params->nr_parts);
   printf("\t nr_steps:          %12d\n", params->nr_steps);
   printf("\t cache flushing:    %12d\n", !params->no_cache_flush);
+  printf("\t vectorized:        %12d\n", vec);
   printf("\t struct alignment:  %12d\n", params->struct_align);
   printf("\t part array align:  %12d\n", params->part_align);
   printf("\t memory layout:     %s\n", params->memory_layout);
