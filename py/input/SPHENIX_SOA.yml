@@ -74,53 +74,103 @@ part_alpha_diff:
   alpha_diff: 
     doc: Thermal diffusion coefficient
 
-part_density_force1:
-  union1:
-    type: union
-    contents:
-      wcount:
-        doc: Neighbour number count
-      f_gradh:
-        doc: "'Grad h' term -- only partial in P-U"
+# unions doen't vectorize with clang19 on gn002. So remove them for now.
+# part_density_force1:
+#   union1:
+#     type: union
+#     contents:
+#       wcount:
+#         doc: Neighbour number count
+#       f_gradh:
+#         doc: "'Grad h' term -- only partial in P-U"
+#
+# part_density_force2:
+#   union2:
+#     type: union
+#     contents:
+#       wcount_dh:
+#         doc: Derivative of the neighbour number with respect to h
+#       pressure:
+#         doc: Particle pressure
+#
+#
+# part_density_force3:
+#   union3:
+#     type: union
+#     contents:
+#       rho_dh:
+#         doc: Derivative of density with respect to h
+#       soundspeed:
+#         doc: Particle soundspeed
+#
+#
+# part_density_force4:
+#   union4:
+#     type: union
+#     contents:
+#       rot_v:
+#         doc: Particle velocity curl
+#         size: 3
+#
+#       force:
+#         type: struct
+#         doc: remaining force quantities to fill this union
+#         contents:
+#           h_dt:
+#             doc: Time derivative of smoothing length
+#           balsara:
+#             doc: Balsara switch
+#           alpha_visc_max_ngb:
+#             doc: Maximal alpha (viscosity) over neighbours
 
-part_density_force2:
-  union2:
-    type: union
-    contents:
-      wcount_dh:
-        doc: Derivative of the neighbour number with respect to h
-      pressure:
-        doc: Particle pressure
+
+part_density1:
+  wcount:
+    doc: Neighbour number count
+
+part_force1:
+  f_gradh:
+    doc: "'Grad h' term -- only partial in P-U"
 
 
-part_density_force3:
-  union3:
-    type: union
-    contents:
-      rho_dh:
-        doc: Derivative of density with respect to h
-      soundspeed: 
-        doc: Particle soundspeed
+
+part_density2:
+  wcount_dh:
+    doc: Derivative of the neighbour number with respect to h
+
+part_force2:
+  pressure:
+    doc: Particle pressure
 
 
-part_density_force4:
-  union4:
-    type: union
-    contents:
-      rot_v:
-        doc: Particle velocity curl
-        size: 3
 
-      force:
-        type: struct
-        doc: remaining force quantities to fill this union
-        contents:
-          h_dt: 
-            doc: Time derivative of smoothing length 
-          balsara:
-            doc: Balsara switch
-          alpha_visc_max_ngb:
-            doc: Maximal alpha (viscosity) over neighbours
+part_density3:
+  rho_dh:
+    doc: Derivative of density with respect to h
+
+part_force3:
+  soundspeed:
+    doc: Particle soundspeed
+
+
+part_density4:
+  rot_v:
+    doc: Particle velocity curl
+    size: 3
+
+part_force4:
+  h_dt: 
+    doc: Time derivative of smoothing length 
+
+part_force5:
+  balsara:
+    doc: Balsara switch
+
+part_force6:
+  alpha_visc_max_ngb:
+    doc: Maximal alpha (viscosity) over neighbours
+
+
 
 part_additional_structs:
   adaptive_softening_data:
