@@ -913,6 +913,8 @@ AC_MSG_RESULT([
    Pthread barriers      : $have_pthread_barrier
    Debugging checks      : $enable_debugging_checks
    Particle memory layout: $with_layout
+   Struct align          : $with_struct_align
+   Part memalign         : $with_part_align
 
  ------------------------]
 )
