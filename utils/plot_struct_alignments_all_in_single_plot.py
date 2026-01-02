@@ -76,6 +76,21 @@ parser.add_argument(
     action="store_true",
     help="plot outputs for small local test-runs",
 )
+parser.add_argument(
+    "-p",
+    "--png",
+    dest="png",
+    action="store_true",
+    help="make a .png plot instead of .pdf",
+)
+parser.add_argument(
+    "-g",
+    "--grace",
+    dest="grace",
+    action="store_true",
+    help="Use default thread numbers for Grace chip (36, 72)",
+)
+
 
 args = parser.parse_args()
 srcdir = args.srcdir
@@ -83,8 +98,10 @@ verbose = args.verbose
 #  use_cache_flush = args.use_cache_flush
 local = args.local
 
-EXPERIMENT_NAMES = ["EAGLE_12", "GRESHO256"]
+EXPERIMENT_NAMES = ["EAGLE12", "Gresho256"]
 NRTHREADS = [16, 32]
+if args.grace:
+    NRTHREADS = [36, 72]
 STRUCT_ALIGNS = ["1", "2", "4", "8", "16", "32", "64"]
 
 if local:
@@ -236,6 +253,10 @@ if __name__ == "__main__":
 
     # construct output file name
     outfname = f"struct_alignment_all_{srcdir}"
-    outfname += ".png"
+    if args.png:
+        outfname += ".png"
+    else:
+        outfname += ".pdf"
+
     plt.savefig(outfname, dpi=300)
     print(f"Saved {outfname}")
