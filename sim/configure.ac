@@ -756,7 +756,7 @@ if test "$enable_optreport" != "no"; then
   case "$ax_cv_c_compiler_vendor" in
 
     intel | oneapi)
-       CFLAGS="$CFLAGS -qopt-report=3"
+       CFLAGS="$CFLAGS -qopt-report=3 -qopt-report-phase=loop,vec"
     ;;
     clang)
        CFLAGS="$CFLAGS -fsave-optimization-record"
