@@ -7,7 +7,7 @@
 #ifndef SWIFT_HYDRO_PART_fdb020f32f5276b4daa9db133b562dec984feedd_H
 #define SWIFT_HYDRO_PART_fdb020f32f5276b4daa9db133b562dec984feedd_H
 
- 
+
 
 #include "align.h"
 #include "error.h"
@@ -33,7 +33,7 @@ struct part {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_id {
   /*! Particle unique ID */
@@ -44,7 +44,7 @@ struct part_id {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_gpart {
   /*! Pointer to corresponding gravity part */
@@ -55,7 +55,7 @@ struct part_gpart {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_x {
   /*! the particle position */
@@ -66,7 +66,7 @@ struct part_x {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_v {
   /*! Particle predicted velocity */
@@ -77,7 +77,7 @@ struct part_v {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_a_hydro {
   /*! Particle acceleration */
@@ -88,7 +88,7 @@ struct part_a_hydro {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_mass {
   /*! Particle mass */
@@ -99,7 +99,7 @@ struct part_mass {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_h {
   /*! Particle smoothing length */
@@ -110,7 +110,7 @@ struct part_h {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_u {
   /*! Particle internal energy */
@@ -121,7 +121,7 @@ struct part_u {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_u_dt {
   /*! Time derivative of the internal energy */
@@ -132,7 +132,7 @@ struct part_u_dt {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_rho {
   /*! Particle density */
@@ -143,7 +143,7 @@ struct part_rho {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_div_v {
   /*! Particle velocity divergence */
@@ -154,7 +154,7 @@ struct part_div_v {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_div_v_dt {
   /*! Time differential of velocity divergence */
@@ -165,7 +165,7 @@ struct part_div_v_dt {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_div_v_previous_step {
   /*! Particle velocity divergence from previous step */
@@ -176,7 +176,7 @@ struct part_div_v_previous_step {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_alpha_av {
   /*! Artificial viscosity parameter */
@@ -187,7 +187,7 @@ struct part_alpha_av {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_v_sig {
   /*! Signal velocity */
@@ -198,7 +198,7 @@ struct part_v_sig {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_laplace_u {
   /*! del^2 u, a smoothed quantity */
@@ -209,7 +209,7 @@ struct part_laplace_u {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_alpha_diff {
   /*! Thermal diffusion coefficient */
@@ -220,7 +220,7 @@ struct part_alpha_diff {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_density1 {
   /*! Neighbour number count */
@@ -231,7 +231,7 @@ struct part_density1 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_force1 {
   /*! 'Grad h' term -- only partial in P-U */
@@ -242,7 +242,7 @@ struct part_force1 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_density2 {
   /*! Derivative of the neighbour number with respect to h */
@@ -253,7 +253,7 @@ struct part_density2 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_force2 {
   /*! Particle pressure */
@@ -264,7 +264,7 @@ struct part_force2 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_density3 {
   /*! Derivative of density with respect to h */
@@ -275,7 +275,7 @@ struct part_density3 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_force3 {
   /*! Particle soundspeed */
@@ -286,7 +286,7 @@ struct part_force3 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_density4 {
   /*! Particle velocity curl */
@@ -297,7 +297,7 @@ struct part_density4 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_force4 {
   /*! Time derivative of smoothing length */
@@ -308,7 +308,7 @@ struct part_force4 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_force5 {
   /*! Balsara switch */
@@ -319,7 +319,7 @@ struct part_force5 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_force6 {
   /*! Maximal alpha (viscosity) over neighbours */
@@ -330,7 +330,7 @@ struct part_force6 {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_additional_structs {
   /*! Additional data used for adaptive softening */
@@ -368,7 +368,7 @@ struct part_additional_structs {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_rt_time_data {
   /*! RT sub-cycling time stepping data */
@@ -379,7 +379,7 @@ struct part_rt_time_data {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_depth_h {
   /*! Tree-depth at which size / 2 <= h * gamma < size */
@@ -390,7 +390,7 @@ struct part_depth_h {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_time_bin {
   /*! Time-step length */
@@ -401,7 +401,7 @@ struct part_time_bin {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_limiter_data {
   /*! Time-step limiter information */
@@ -412,7 +412,7 @@ struct part_limiter_data {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_ti_drift {
 #ifdef SWIFT_DEBUG_CHECKS
@@ -425,7 +425,7 @@ struct part_ti_drift {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_ti_kick {
 #ifdef SWIFT_DEBUG_CHECKS
@@ -438,7 +438,7 @@ struct part_ti_kick {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 struct part_debugging {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
@@ -521,7 +521,7 @@ struct part_debugging {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+};
 
 
 /**

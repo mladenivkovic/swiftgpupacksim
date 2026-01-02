@@ -30,6 +30,7 @@ extern "C" {
 #endif
 
 #include "../error.h"
+#include "../memuse.h"
 #include "gpu_offload_data.h"
 
 #include <cuda.h>
@@ -60,8 +61,11 @@ void gpu_data_buffers_init(struct gpu_offload_data* buf,
 
 #if defined(NO_CUDA_MALLOCHOST)
   /* Hack to get a working test version on my own machine. */
-  buf->parts_send_d = malloc(part_buffer_size * send_struct_size);
-  swift_assert(buf->parts_send_d != NULL);
+  /* buf->parts_send_d = malloc(part_buffer_size * send_struct_size); */
+  /* swift_assert(buf->parts_send_d != NULL); */
+
+  if (swift_memalign("parts_part", (void**)&buf->parts_send_d, SWIFT_PART_ALIGNMENT, part_buffer_size * send_struct_size) != 0)
+    error("Error while allocating memory for SPH particles");
 
   buf->parts_recv_d = malloc(part_buffer_size * recv_struct_size);
   swift_assert(buf->parts_recv_d != NULL);
