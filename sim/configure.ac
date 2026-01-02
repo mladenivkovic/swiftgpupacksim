@@ -755,8 +755,13 @@ AC_ARG_ENABLE([optreport],
 if test "$enable_optreport" != "no"; then
   case "$ax_cv_c_compiler_vendor" in
 
-    intel | oneapi)
-       CFLAGS="$CFLAGS -qopt-report=3 -qopt-report-phase=loop,vec"
+    oneapi)
+       AX_COMPARE_VERSION( $ax_cv_c_compiler_version, [ge], [2025.0.0],
+       [CFLAGS="$CFLAGS -qopt-report=3 -qopt-report-phase=loop,vec"], # if >= 2025
+       [CFLAGS="$CFLAGS -qopt-report=3 -qguide"]  # else 
+     )
+
+
     ;;
     clang)
        CFLAGS="$CFLAGS -fsave-optimization-record"
@@ -766,6 +771,8 @@ if test "$enable_optreport" != "no"; then
        # CFLAGS="$CFLAGS -fopt-info-loop-vec-inline-all=gcc_optreport.txt"
        CFLAGS="$CFLAGS -fopt-info-all-vec=gcc_optreport.txt -fdump-tree-vect-details"
     ;;
+    intel)
+       AC_MSG_ERROR("optreport flags for intel not implemented")
 
   esac
 fi
