@@ -38,7 +38,6 @@ params = {
 matplotlib.rcParams.update(params)
 
 
-
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
@@ -56,7 +55,7 @@ with --disable-vectorization was used.
 
 Note that the sub-directory `EXPERIMENTNAME`, `NRTHREADS`, and `ALIGN` are
 hard-coded in this script. Modify them manually if you need to.
-"""
+""",
 )
 parser.add_argument("srcdir")
 parser.add_argument(
@@ -179,7 +178,11 @@ if __name__ == "__main__":
                     for k, align in enumerate(STRUCT_ALIGNS):
 
                         dirname = (
-                            name + "_" + str(nthreads) + "threads_struct_align" + str(align)
+                            name
+                            + "_"
+                            + str(nthreads)
+                            + "threads_struct_align"
+                            + str(align)
                         )
                         dirname += suffix
                         fulldirname = os.path.join(srcdir, dirname)
@@ -197,9 +200,13 @@ if __name__ == "__main__":
                         mintime = min(mintime, res.timings.min())
 
                     dens_pack = [res.data_dict["pack/density"] for res in result_data]
-                    dens_unpack = [res.data_dict["unpack/density"] for res in result_data]
+                    dens_unpack = [
+                        res.data_dict["unpack/density"] for res in result_data
+                    ]
                     grad_pack = [res.data_dict["pack/gradient"] for res in result_data]
-                    grad_unpack = [res.data_dict["unpack/gradient"] for res in result_data]
+                    grad_unpack = [
+                        res.data_dict["unpack/gradient"] for res in result_data
+                    ]
                     forc_pack = [res.data_dict["pack/force"] for res in result_data]
                     forc_unpack = [res.data_dict["unpack/force"] for res in result_data]
 
@@ -244,11 +251,17 @@ if __name__ == "__main__":
     for ax in [ax2, ax3, ax5, ax6]:
         ax.set_yticklabels([])
 
-
     hand, lab = ax1.get_legend_handles_labels()
     #  ncols=int(len(layouts)*0.5 + 0.5)
     ncols = 5
-    fig.legend(handles=hand, labels=lab, loc="lower center", ncols=ncols, handlelength=2.5, markerscale=0.5)
+    fig.legend(
+        handles=hand,
+        labels=lab,
+        loc="lower center",
+        ncols=ncols,
+        handlelength=2.5,
+        markerscale=0.5,
+    )
     fig.tight_layout(w_pad=0, rect=(0.01, 0.15, 0.99, 0.99))
 
     # construct output file name
