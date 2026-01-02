@@ -39,7 +39,6 @@ params = {
 matplotlib.rcParams.update(params)
 
 
-
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
@@ -61,7 +60,7 @@ with --disable-vectorization was used.
 
 Note that the sub-directory `EXPERIMENTNAME`, `NRTHREADS`, and `ALIGN` are
 hard-coded in this script. Modify them manually if you need to.
-"""
+""",
 )
 parser.add_argument("srcdir")
 parser.add_argument(
@@ -96,9 +95,8 @@ EXPERIMENT_NAMES = ["EAGLE12", "Gresho256"]
 NRTHREADS = ["36", "72"]
 STRUCT_ALIGNS = ["1", "2", "4", "8", "16", "32", "64"]
 
-LAYOUT_COMPARE="aos"
-ALIGN_COMPARE="32"
-
+LAYOUT_COMPARE = "aos"
+ALIGN_COMPARE = "32"
 
 
 datadict_keys = [
@@ -108,7 +106,7 @@ datadict_keys = [
     "unpack/density",
     "unpack/gradient",
     "unpack/force",
-        ]
+]
 
 
 mintimes_dict = {}
@@ -126,7 +124,12 @@ linestyles = ["-", "--", ":", "-."]
 dir_suffixes = ["", "_novector"]
 dir_suffixes_flush = ["", "_noflush"]
 
-suffix_labels = {"": "", "_noflush": "no flush", "_novector": "no vector", "_noflush_novector": "no flush, no vector"}
+suffix_labels = {
+    "": "",
+    "_noflush": "no flush",
+    "_novector": "no vector",
+    "_noflush_novector": "no flush, no vector",
+}
 
 
 if __name__ == "__main__":
@@ -150,8 +153,6 @@ if __name__ == "__main__":
             layout = f[len("results_") : -len(".csv")]
             layouts.append(layout)
 
-
-
     for flush_suffix in dir_suffixes_flush:
 
         # reset best times.
@@ -159,13 +160,12 @@ if __name__ == "__main__":
             "Gresho256": {
                 "36": mintimes_dict.copy(),
                 "72": mintimes_dict.copy(),
-                },
+            },
             "EAGLE12": {
                 "36": mintimes_dict.copy(),
                 "72": mintimes_dict.copy(),
-                }
-            }
-
+            },
+        }
 
         # first, get the times to compare to for threads and for experiments separately
         for nthreads in NRTHREADS:
@@ -190,7 +190,6 @@ if __name__ == "__main__":
                 res = ResultData(fullfname)
                 newtime = sum(res.timings)
                 compare_times[name][nthreads] = newtime
-
 
         fig = plt.figure(figsize=(12, 8))
         ax1 = fig.add_subplot(2, 2, 1)
@@ -231,7 +230,11 @@ if __name__ == "__main__":
                         for k, align in enumerate(STRUCT_ALIGNS):
 
                             dirname = (
-                                name + "_" + str(nthreads) + "threads_struct_align" + str(align)
+                                name
+                                + "_"
+                                + str(nthreads)
+                                + "threads_struct_align"
+                                + str(align)
                             )
                             dirname += flush_suffix + suffix
                             fulldirname = os.path.join(srcdir, dirname)
@@ -257,7 +260,7 @@ if __name__ == "__main__":
                         label = f" {layout.upper()} "
                         if multiple_threads:
                             label += f"{nthreads} threads "
-                        label += suffix_labels[flush_suffix+suffix]
+                        label += suffix_labels[flush_suffix + suffix]
 
                         plotkwargs = {
                             "label": label,
@@ -283,10 +286,12 @@ if __name__ == "__main__":
                 ax.set_yscale("log")
             #  ax.legend()
 
-        # leftmost axes
-        #  for ax in [ax1, ax4]:
+            # leftmost axes
+            #  for ax in [ax1, ax4]:
             if args.relative:
-                ax.set_ylabel(f"Timing relative to {LAYOUT_COMPARE.upper()} align={ALIGN_COMPARE} novector")
+                ax.set_ylabel(
+                    f"Timing relative to {LAYOUT_COMPARE.upper()} align={ALIGN_COMPARE} novector"
+                )
             else:
                 ax.set_ylabel("Timing [ms]")
 
@@ -294,11 +299,17 @@ if __name__ == "__main__":
         #  for ax in [ax2, ax3, ax5, ax6]:
         #      ax.set_yticklabels([])
 
-
         hand, lab = ax1.get_legend_handles_labels()
-        ncols=int(len(layouts)*0.5 + 0.5)
+        ncols = int(len(layouts) * 0.5 + 0.5)
         #  ncols = 5
-        fig.legend(handles=hand, labels=lab, loc="lower center", ncols=ncols, handlelength=2.5, markerscale=0.5)
+        fig.legend(
+            handles=hand,
+            labels=lab,
+            loc="lower center",
+            ncols=ncols,
+            handlelength=2.5,
+            markerscale=0.5,
+        )
         fig.tight_layout(rect=(0.01, 0.15, 0.99, 0.99))
         #  fig.tight_layout(w_pad=0, rect=(0.01, 0.2, 0.99, 0.99))
 
@@ -311,6 +322,3 @@ if __name__ == "__main__":
 
         plt.savefig(outfname, dpi=300)
         print(f"Saved {outfname}")
-
-
-
