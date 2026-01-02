@@ -199,7 +199,7 @@ fi
 
 
 AC_ARG_ENABLE([vectorization],
-   [AS_HELP_STRING([--enable-vectorization],
+   [AS_HELP_STRING([--disable-vectorization],
      [Disable manually encouraged vectorization (default: on) @<:@yes/no@:>@]
    )],
    [enable_vec="$enableval"],
