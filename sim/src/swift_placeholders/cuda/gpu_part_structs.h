@@ -31,7 +31,9 @@ extern "C" {
 /* Config parameters. */
 #include "../../config.h"
 #include "../align.h"
-#include "../timeline.h"
+
+
+
 
 /*! Container for particle data required for density calcs */
 struct gpu_part_send_d {
@@ -48,7 +50,8 @@ struct gpu_part_send_d {
   int2 pjs_pje;
 
 #endif
-};
+/* } __attribute__((aligned(64), packed)); */
+} __attribute__((aligned(64)));
 
 /*! Container for particle data sent back to CPU for density calcs */
 struct gpu_part_recv_d {
@@ -61,7 +64,9 @@ struct gpu_part_recv_d {
   float4 rot_vx_div_v;
 
 #endif
-};
+/* } __attribute__((aligned(32), packed)); */
+} __attribute__((aligned(32)));
+
 
 /*! Container for particle data required for gradient calcs */
 struct gpu_part_send_g {
@@ -84,7 +89,8 @@ struct gpu_part_send_g {
   int2 pjs_pje;
 
 #endif
-};
+/* } __attribute__((aligned(128), packed)); */
+} __attribute__((aligned(128)));
 
 /*! Container for particle data sent back to CPU for gradient calcs */
 struct gpu_part_recv_g {
@@ -94,7 +100,8 @@ struct gpu_part_recv_g {
   float3 aviscmax_vsig_lapu;
 
 #endif
-};
+/* } __attribute__((aligned(16), packed)); */
+} __attribute__((aligned(16)));
 
 /*! Container for particle data required for force calcs */
 struct gpu_part_send_f {
@@ -121,7 +128,8 @@ struct gpu_part_send_f {
   int4 timebin_minngbtimebin_pjs_pje;
 
 #endif
-};
+/* } __attribute__((aligned(128), packed)); */
+} __attribute__((aligned(128)));
 
 /*! Container for particle data sent back to CPU for force calcs */
 struct gpu_part_recv_f {
@@ -134,7 +142,8 @@ struct gpu_part_recv_f {
   float3 udt_hdt_minngbtb;
 
 #endif
-};
+/* } __attribute__((aligned(32), packed)); */
+} __attribute__((aligned(32)));
 
 #ifdef __cplusplus
 }
