@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
-#ifndef GPU_PART_PACK_FUNCTIONS_AOS_H
-#define GPU_PART_PACK_FUNCTIONS_AOS_H
+#pragma once
 
 /**
  * @file cuda/gpu_part_pack_functions.h
@@ -132,7 +131,6 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
   const struct gpu_part_recv_f* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-
   for (int i = 0; i < count; i++) {
 
     struct part* restrict p = &cp[i];
@@ -179,13 +177,16 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   const struct part* restrict parts = cell_get_const_hydro_parts(c);
   struct gpu_part_send_d* restrict ps = &parts_buffer[pack_ind];
 
-
-#pragma omp simd
+  /* always */
+/* #pragma ivdep */
+/* #pragma vector aligned always assert */
+/* #pragma ivdep */
   for (int i = 0; i < count; i++) {
 
     const struct part* restrict p = &parts[i];
+    /* memcpy(&ps[i], p->_cell_part_arrays->_x_h_v_m + p->_cell_offset, sizeof(struct x_h_v_m)); */
 
-    const double* restrict x = part_get_const_x(p);
+    const double* x = part_get_const_x(p);
     /* ps[i].x_h.x = x[0] - shift[0]; */
     /* ps[i].x_h.y = x[1] - shift[1]; */
     /* ps[i].x_h.z = x[2] - shift[2]; */
@@ -194,7 +195,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].x_h.z = x[2];
     ps[i].x_h.w = part_get_h(p);
 
-    const float* restrict v = part_get_const_v(p);
+    const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
     ps[i].vx_m.z = v[2];
@@ -228,7 +229,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   const struct part* parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_g* ps = &parts_buffer[pack_ind];
 
-#pragma omp simd
   for (int i = 0; i < count; i++) {
 
     const struct part* p = &parts[i];
@@ -281,7 +281,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   const struct part* parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_f* ps = &parts_buffer[pack_ind];
 
-#pragma omp simd
   for (int i = 0; i < count; i++) {
 
     const struct part* p = &parts[i];
@@ -316,4 +315,3 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   }
 }
 
-#endif /* GPU_PART_PACK_FUNCTIONS_AOS_H */

@@ -51,7 +51,10 @@ struct gpu_part_send_d {
 
 #endif
 /* } __attribute__((aligned(64), packed)); */
-} __attribute__((aligned(64)));
+/* } __attribute__((aligned(32))); */
+/* } __attribute__((aligned(8))); */
+} SWIFT_STRUCT_ALIGN;
+/* }; */
 
 /*! Container for particle data sent back to CPU for density calcs */
 struct gpu_part_recv_d {

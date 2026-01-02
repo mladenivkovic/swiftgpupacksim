@@ -30,27 +30,43 @@
 
 #if defined(SPHENIX_AOS_PARTICLE)
 #include "realisations/aos/gpu_part_pack_functions.h"
+
 #elif defined(SPHENIX_SOA_PARTICLE)
+#ifdef SOA_MODIFIED_PARTICLE_ACCESS
+#include "realisations/soa/gpu_part_pack_functions_modified.h"
+#else
 #include "realisations/soa/gpu_part_pack_functions.h"
+#endif
+
 #elif defined(SPHENIX_UPSTREAM_PARTICLE)
 #include "realisations/upstream/gpu_part_pack_functions.h"
+
 #elif defined(SPHENIX_PACK_GRADIENT_PARTICLE)
 #include "realisations/pack_gradient/gpu_part_pack_functions.h"
+
 #elif defined(SPHENIX_PACK_FORCE_PARTICLE)
 #include "realisations/pack_force/gpu_part_pack_functions.h"
+
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
 #include "realisations/pack_shared/gpu_part_pack_functions.h"
+
 #elif defined(SPHENIX_SOA_MANUAL_PARTICLE)
 #include "realisations/soa_manual/gpu_part_pack_functions.h"
+
 #else
 #pragma error "Unknown memory layout realisation"
 #endif
 
 
-#else
+#else /* VECTORIZE not defined */
 
 #if defined(SPHENIX_SOA_MANUAL_PARTICLE)
 #include "realisations/soa_manual/gpu_part_pack_functions.h"
+
+#elif defined(SOA_MODIFIED_PARTICLE_ACCESS)
+#include "swift_placeholders/cuda/gpu_part_pack_functions_modified.h"
+
+
 #else
 #include "swift_placeholders/cuda/gpu_part_pack_functions.h"
 #endif

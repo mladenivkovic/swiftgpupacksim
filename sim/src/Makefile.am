@@ -56,6 +56,7 @@ AM_SOURCES += io.c
 
 # Include files for distribution, not installation.
 nobase_noinst_HEADERS = swift_placeholders/cuda/gpu_part_pack_functions.h
+nobase_noinst_HEADERS += swift_placeholders/cuda/gpu_part_pack_functions_modified.h
 nobase_noinst_HEADERS += swift_placeholders/cuda/gpu_part_structs.h
 nobase_noinst_HEADERS += swift_placeholders/minmax.h
 nobase_noinst_HEADERS += swift_placeholders/barrier.h
@@ -91,6 +92,7 @@ nobase_noinst_HEADERS += realisations/soa/hydro_part.h
 nobase_noinst_HEADERS += realisations/soa/hydro_part_arrays_struct.h
 nobase_noinst_HEADERS += realisations/soa/parts.h
 # nobase_noinst_HEADERS += realisations/soa/gpu_part_pack_functions.h
+# nobase_noinst_HEADERS += realisations/soa/gpu_part_pack_functions_modified.h
 nobase_noinst_HEADERS += realisations/pack_force/hydro_part.h
 nobase_noinst_HEADERS += realisations/pack_force/hydro_part_arrays_struct.h
 nobase_noinst_HEADERS += realisations/pack_force/parts.h
