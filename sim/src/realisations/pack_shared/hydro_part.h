@@ -4,8 +4,8 @@
   */
 
 
-#ifndef SWIFT_HYDRO_PART_e7534cbab066c40edc493065a74ace2f983e72e4_H
-#define SWIFT_HYDRO_PART_e7534cbab066c40edc493065a74ace2f983e72e4_H
+#ifndef SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H
+#define SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H
 
  
 
@@ -375,7 +375,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE double*
   part_get_x(struct part *restrict p) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -391,7 +391,7 @@ static __attribute__((always_inline)) INLINE double*
  */
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_x(const struct part *restrict p) {
-  const struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -407,7 +407,7 @@ static __attribute__((always_inline)) INLINE const double*
  */
 static __attribute__((always_inline)) INLINE double
   part_get_x_ind(const struct part *restrict p, const size_t ind) {
-  const struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -424,7 +424,7 @@ static __attribute__((always_inline)) INLINE double
  */
 static __attribute__((always_inline)) INLINE void
   part_set_x(struct part *restrict p, const double x[3]) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -442,7 +442,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_x_ind(struct part *restrict p, const size_t i, const double x) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -461,7 +461,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_h(const struct part *restrict p) {
-  const struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -479,7 +479,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_h_p(struct part *restrict p) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -497,7 +497,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_h_p(const struct part *restrict p) {
-  const struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -513,7 +513,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_h(struct part *restrict p, const float h) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -534,7 +534,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_v(struct part *restrict p) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -550,7 +550,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_v(const struct part *restrict p) {
-  const struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -566,7 +566,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE float
   part_get_v_ind(const struct part *restrict p, const size_t ind) {
-  const struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -583,7 +583,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE void
   part_set_v(struct part *restrict p, const float v[3]) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -601,7 +601,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_v_ind(struct part *restrict p, const size_t i, const float v) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -620,7 +620,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_mass(const struct part *restrict p) {
-  const struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -638,7 +638,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_mass_p(struct part *restrict p) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -656,7 +656,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_mass_p(const struct part *restrict p) {
-  const struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -672,7 +672,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_mass(struct part *restrict p, const float mass) {
-  struct x_h_v_m* x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -693,7 +693,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_alpha_visc_max_ngb(const struct part *restrict p) {
-  const struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -711,7 +711,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_alpha_visc_max_ngb_p(struct part *restrict p) {
-  struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -729,7 +729,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_alpha_visc_max_ngb_p(const struct part *restrict p) {
-  const struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -745,7 +745,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_alpha_visc_max_ngb(struct part *restrict p, const float alpha_visc_max_ngb) {
-  struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -764,7 +764,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_v_sig(const struct part *restrict p) {
-  const struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -782,7 +782,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_v_sig_p(struct part *restrict p) {
-  struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -800,7 +800,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_v_sig_p(const struct part *restrict p) {
-  const struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -816,7 +816,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_v_sig(struct part *restrict p, const float v_sig) {
-  struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -835,7 +835,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_laplace_u(const struct part *restrict p) {
-  const struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -853,7 +853,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_laplace_u_p(struct part *restrict p) {
-  struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -871,7 +871,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_laplace_u_p(const struct part *restrict p) {
-  const struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -887,7 +887,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_laplace_u(struct part *restrict p, const float laplace_u) {
-  struct gradient_pack* gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
+  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -908,7 +908,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_f_gradh(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -926,7 +926,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_f_gradh_p(struct part *restrict p) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -944,7 +944,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_f_gradh_p(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -960,7 +960,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_f_gradh(struct part *restrict p, const float f_gradh) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -979,7 +979,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_pressure(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -997,7 +997,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_pressure_p(struct part *restrict p) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1015,7 +1015,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_pressure_p(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1031,7 +1031,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_pressure(struct part *restrict p, const float pressure) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1050,7 +1050,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_balsara(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1068,7 +1068,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_balsara_p(struct part *restrict p) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1086,7 +1086,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_balsara_p(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1102,7 +1102,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_balsara(struct part *restrict p, const float balsara) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1121,7 +1121,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_alpha_av(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1139,7 +1139,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_alpha_av_p(struct part *restrict p) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1157,7 +1157,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_alpha_av_p(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1173,7 +1173,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_alpha_av(struct part *restrict p, const float alpha_av) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1192,7 +1192,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_alpha_diff(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1210,7 +1210,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_alpha_diff_p(struct part *restrict p) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1228,7 +1228,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_alpha_diff_p(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1244,7 +1244,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_alpha_diff(struct part *restrict p, const float alpha_diff) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1263,7 +1263,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_time_bin(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1281,7 +1281,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  */
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_time_bin_p(struct part *restrict p) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1299,7 +1299,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_time_bin_p(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1315,7 +1315,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_time_bin(struct part *restrict p, const timebin_t time_bin) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1334,7 +1334,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
   part_get_limiter_data(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1352,7 +1352,7 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
   part_get_limiter_data_p(struct part *restrict p) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1370,7 +1370,7 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
  */
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
   part_get_const_limiter_data_p(const struct part *restrict p) {
-  const struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1386,7 +1386,7 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_limiter_data(struct part *restrict p, const struct timestep_limiter_data limiter_data) {
-  struct force_pack* force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1407,7 +1407,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_u(const struct part *restrict p) {
-  const struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1425,7 +1425,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_u_p(struct part *restrict p) {
-  struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1443,7 +1443,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_u_p(const struct part *restrict p) {
-  const struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1459,7 +1459,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_u(struct part *restrict p, const float u) {
-  struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1478,7 +1478,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_rho(const struct part *restrict p) {
-  const struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1496,7 +1496,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_rho_p(struct part *restrict p) {
-  struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1514,7 +1514,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_rho_p(const struct part *restrict p) {
-  const struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1530,7 +1530,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_rho(struct part *restrict p, const float rho) {
-  struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1549,7 +1549,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_soundspeed(const struct part *restrict p) {
-  const struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1567,7 +1567,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_soundspeed_p(struct part *restrict p) {
-  struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1585,7 +1585,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_soundspeed_p(const struct part *restrict p) {
-  const struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1601,7 +1601,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_soundspeed(struct part *restrict p, const float soundspeed) {
-  struct force_gradient_pack_shared* force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1622,7 +1622,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_rho_dh(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1640,7 +1640,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_rho_dh_p(struct part *restrict p) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1658,7 +1658,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_rho_dh_p(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1674,7 +1674,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_rho_dh(struct part *restrict p, const float rho_dh) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1693,7 +1693,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_wcount(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1711,7 +1711,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_wcount_p(struct part *restrict p) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1729,7 +1729,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_wcount_p(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1745,7 +1745,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_wcount(struct part *restrict p, const float wcount) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1764,7 +1764,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_wcount_dh(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1782,7 +1782,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_wcount_dh_p(struct part *restrict p) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1800,7 +1800,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_wcount_dh_p(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1816,7 +1816,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_wcount_dh(struct part *restrict p, const float wcount_dh) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1837,7 +1837,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_rot_v(struct part *restrict p) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1853,7 +1853,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_rot_v(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1869,7 +1869,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE float
   part_get_rot_v_ind(const struct part *restrict p, const size_t ind) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1886,7 +1886,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE void
   part_set_rot_v(struct part *restrict p, const float rot_v[3]) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1904,7 +1904,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_rot_v_ind(struct part *restrict p, const size_t i, const float rot_v) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1923,7 +1923,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_div_v(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1941,7 +1941,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_div_v_p(struct part *restrict p) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1959,7 +1959,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_div_v_p(const struct part *restrict p) {
-  const struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  const struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1975,7 +1975,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_div_v(struct part *restrict p, const float div_v) {
-  struct density_unpack* density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
+  struct density_unpack* restrict density_unpack_s = p->_cell_part_arrays->_density_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -1998,7 +1998,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_a_hydro(struct part *restrict p) {
-  struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2014,7 +2014,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_a_hydro(const struct part *restrict p) {
-  const struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  const struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2030,7 +2030,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE float
   part_get_a_hydro_ind(const struct part *restrict p, const size_t ind) {
-  const struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  const struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2047,7 +2047,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE void
   part_set_a_hydro(struct part *restrict p, const float a_hydro[3]) {
-  struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2065,7 +2065,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_a_hydro_ind(struct part *restrict p, const size_t i, const float a_hydro) {
-  struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2084,7 +2084,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_u_dt(const struct part *restrict p) {
-  const struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  const struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2102,7 +2102,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_u_dt_p(struct part *restrict p) {
-  struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2120,7 +2120,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_u_dt_p(const struct part *restrict p) {
-  const struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  const struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2136,7 +2136,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_u_dt(struct part *restrict p, const float u_dt) {
-  struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2155,7 +2155,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_h_dt(const struct part *restrict p) {
-  const struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  const struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2173,7 +2173,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_h_dt_p(struct part *restrict p) {
-  struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2191,7 +2191,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_h_dt_p(const struct part *restrict p) {
-  const struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  const struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2207,7 +2207,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_h_dt(struct part *restrict p, const float h_dt) {
-  struct force_unpack* force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
+  struct force_unpack* restrict force_unpack_s = p->_cell_part_arrays->_force_unpack + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2228,7 +2228,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_div_v_dt(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2246,7 +2246,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_div_v_dt_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2264,7 +2264,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_div_v_dt_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2280,7 +2280,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_div_v_dt(struct part *restrict p, const float div_v_dt) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2299,7 +2299,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_div_v_previous_step(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2317,7 +2317,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_div_v_previous_step_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2335,7 +2335,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_div_v_previous_step_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2351,7 +2351,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_div_v_previous_step(struct part *restrict p, const float div_v_previous_step) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2370,7 +2370,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE long long
   part_get_id(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2388,7 +2388,7 @@ static __attribute__((always_inline)) INLINE long long
  */
 static __attribute__((always_inline)) INLINE long long*
   part_get_id_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2406,7 +2406,7 @@ static __attribute__((always_inline)) INLINE long long*
  */
 static __attribute__((always_inline)) INLINE const long long*
   part_get_const_id_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2422,7 +2422,7 @@ static __attribute__((always_inline)) INLINE const long long*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_id(struct part *restrict p, const long long id) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2441,7 +2441,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct gpart*
   part_get_gpart(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2459,7 +2459,7 @@ static __attribute__((always_inline)) INLINE struct gpart*
  */
 static __attribute__((always_inline)) INLINE struct gpart**
   part_get_gpart_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2473,7 +2473,7 @@ static __attribute__((always_inline)) INLINE struct gpart**
  */
 static __attribute__((always_inline)) INLINE void
   part_set_gpart(struct part *restrict p,  struct gpart* gpart) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2492,7 +2492,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
   part_get_adaptive_softening_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2510,7 +2510,7 @@ static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
  */
 static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data*
   part_get_adaptive_softening_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2528,7 +2528,7 @@ static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
  */
 static __attribute__((always_inline)) INLINE const struct adaptive_softening_part_data*
   part_get_const_adaptive_softening_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2544,7 +2544,7 @@ static __attribute__((always_inline)) INLINE const struct adaptive_softening_par
  */
 static __attribute__((always_inline)) INLINE void
   part_set_adaptive_softening_data(struct part *restrict p, const struct adaptive_softening_part_data adaptive_softening_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2563,7 +2563,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct mhd_part_data
   part_get_mhd_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2581,7 +2581,7 @@ static __attribute__((always_inline)) INLINE struct mhd_part_data
  */
 static __attribute__((always_inline)) INLINE struct mhd_part_data*
   part_get_mhd_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2599,7 +2599,7 @@ static __attribute__((always_inline)) INLINE struct mhd_part_data*
  */
 static __attribute__((always_inline)) INLINE const struct mhd_part_data*
   part_get_const_mhd_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2615,7 +2615,7 @@ static __attribute__((always_inline)) INLINE const struct mhd_part_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_mhd_data(struct part *restrict p, const struct mhd_part_data mhd_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2634,7 +2634,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct chemistry_part_data
   part_get_chemistry_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2652,7 +2652,7 @@ static __attribute__((always_inline)) INLINE struct chemistry_part_data
  */
 static __attribute__((always_inline)) INLINE struct chemistry_part_data*
   part_get_chemistry_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2670,7 +2670,7 @@ static __attribute__((always_inline)) INLINE struct chemistry_part_data*
  */
 static __attribute__((always_inline)) INLINE const struct chemistry_part_data*
   part_get_const_chemistry_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2686,7 +2686,7 @@ static __attribute__((always_inline)) INLINE const struct chemistry_part_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_chemistry_data(struct part *restrict p, const struct chemistry_part_data chemistry_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2705,7 +2705,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct cooling_part_data
   part_get_cooling_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2723,7 +2723,7 @@ static __attribute__((always_inline)) INLINE struct cooling_part_data
  */
 static __attribute__((always_inline)) INLINE struct cooling_part_data*
   part_get_cooling_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2741,7 +2741,7 @@ static __attribute__((always_inline)) INLINE struct cooling_part_data*
  */
 static __attribute__((always_inline)) INLINE const struct cooling_part_data*
   part_get_const_cooling_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2757,7 +2757,7 @@ static __attribute__((always_inline)) INLINE const struct cooling_part_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_cooling_data(struct part *restrict p, const struct cooling_part_data cooling_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2776,7 +2776,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct feedback_part_data
   part_get_feedback_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2794,7 +2794,7 @@ static __attribute__((always_inline)) INLINE struct feedback_part_data
  */
 static __attribute__((always_inline)) INLINE struct feedback_part_data*
   part_get_feedback_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2812,7 +2812,7 @@ static __attribute__((always_inline)) INLINE struct feedback_part_data*
  */
 static __attribute__((always_inline)) INLINE const struct feedback_part_data*
   part_get_const_feedback_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2828,7 +2828,7 @@ static __attribute__((always_inline)) INLINE const struct feedback_part_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_feedback_data(struct part *restrict p, const struct feedback_part_data feedback_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2847,7 +2847,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct black_holes_part_data
   part_get_black_holes_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2865,7 +2865,7 @@ static __attribute__((always_inline)) INLINE struct black_holes_part_data
  */
 static __attribute__((always_inline)) INLINE struct black_holes_part_data*
   part_get_black_holes_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2883,7 +2883,7 @@ static __attribute__((always_inline)) INLINE struct black_holes_part_data*
  */
 static __attribute__((always_inline)) INLINE const struct black_holes_part_data*
   part_get_const_black_holes_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2899,7 +2899,7 @@ static __attribute__((always_inline)) INLINE const struct black_holes_part_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_black_holes_data(struct part *restrict p, const struct black_holes_part_data black_holes_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2918,7 +2918,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct sink_part_data
   part_get_sink_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2936,7 +2936,7 @@ static __attribute__((always_inline)) INLINE struct sink_part_data
  */
 static __attribute__((always_inline)) INLINE struct sink_part_data*
   part_get_sink_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2954,7 +2954,7 @@ static __attribute__((always_inline)) INLINE struct sink_part_data*
  */
 static __attribute__((always_inline)) INLINE const struct sink_part_data*
   part_get_const_sink_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2970,7 +2970,7 @@ static __attribute__((always_inline)) INLINE const struct sink_part_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_sink_data(struct part *restrict p, const struct sink_part_data sink_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -2989,7 +2989,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct pressure_floor_part_data
   part_get_pressure_floor_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3007,7 +3007,7 @@ static __attribute__((always_inline)) INLINE struct pressure_floor_part_data
  */
 static __attribute__((always_inline)) INLINE struct pressure_floor_part_data*
   part_get_pressure_floor_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3025,7 +3025,7 @@ static __attribute__((always_inline)) INLINE struct pressure_floor_part_data*
  */
 static __attribute__((always_inline)) INLINE const struct pressure_floor_part_data*
   part_get_const_pressure_floor_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3041,7 +3041,7 @@ static __attribute__((always_inline)) INLINE const struct pressure_floor_part_da
  */
 static __attribute__((always_inline)) INLINE void
   part_set_pressure_floor_data(struct part *restrict p, const struct pressure_floor_part_data pressure_floor_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3060,7 +3060,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct rt_part_data
   part_get_rt_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3078,7 +3078,7 @@ static __attribute__((always_inline)) INLINE struct rt_part_data
  */
 static __attribute__((always_inline)) INLINE struct rt_part_data*
   part_get_rt_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3096,7 +3096,7 @@ static __attribute__((always_inline)) INLINE struct rt_part_data*
  */
 static __attribute__((always_inline)) INLINE const struct rt_part_data*
   part_get_const_rt_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3112,7 +3112,7 @@ static __attribute__((always_inline)) INLINE const struct rt_part_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_rt_data(struct part *restrict p, const struct rt_part_data rt_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3131,7 +3131,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct rt_timestepping_data
   part_get_rt_time_data(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3149,7 +3149,7 @@ static __attribute__((always_inline)) INLINE struct rt_timestepping_data
  */
 static __attribute__((always_inline)) INLINE struct rt_timestepping_data*
   part_get_rt_time_data_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3167,7 +3167,7 @@ static __attribute__((always_inline)) INLINE struct rt_timestepping_data*
  */
 static __attribute__((always_inline)) INLINE const struct rt_timestepping_data*
   part_get_const_rt_time_data_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3183,7 +3183,7 @@ static __attribute__((always_inline)) INLINE const struct rt_timestepping_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_rt_time_data(struct part *restrict p, const struct rt_timestepping_data rt_time_data) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3202,7 +3202,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE char
   part_get_depth_h(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3220,7 +3220,7 @@ static __attribute__((always_inline)) INLINE char
  */
 static __attribute__((always_inline)) INLINE char*
   part_get_depth_h_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3238,7 +3238,7 @@ static __attribute__((always_inline)) INLINE char*
  */
 static __attribute__((always_inline)) INLINE const char*
   part_get_const_depth_h_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3254,7 +3254,7 @@ static __attribute__((always_inline)) INLINE const char*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_depth_h(struct part *restrict p, const char depth_h) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3274,7 +3274,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE integertime_t
   part_get_ti_drift(const struct part *restrict p) {
 #ifdef SWIFT_DEBUG_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3296,7 +3296,7 @@ static __attribute__((always_inline)) INLINE integertime_t
 static __attribute__((always_inline)) INLINE integertime_t*
   part_get_ti_drift_p(struct part *restrict p) {
 #ifdef SWIFT_DEBUG_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3318,7 +3318,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
 static __attribute__((always_inline)) INLINE const integertime_t*
   part_get_const_ti_drift_p(const struct part *restrict p) {
 #ifdef SWIFT_DEBUG_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3338,7 +3338,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
 static __attribute__((always_inline)) INLINE void
   part_set_ti_drift(struct part *restrict p, const integertime_t ti_drift) {
 #ifdef SWIFT_DEBUG_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3359,7 +3359,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE integertime_t
   part_get_ti_kick(const struct part *restrict p) {
 #ifdef SWIFT_DEBUG_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3381,7 +3381,7 @@ static __attribute__((always_inline)) INLINE integertime_t
 static __attribute__((always_inline)) INLINE integertime_t*
   part_get_ti_kick_p(struct part *restrict p) {
 #ifdef SWIFT_DEBUG_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3403,7 +3403,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
 static __attribute__((always_inline)) INLINE const integertime_t*
   part_get_const_ti_kick_p(const struct part *restrict p) {
 #ifdef SWIFT_DEBUG_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3423,7 +3423,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
 static __attribute__((always_inline)) INLINE void
   part_set_ti_kick(struct part *restrict p, const integertime_t ti_kick) {
 #ifdef SWIFT_DEBUG_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3444,7 +3444,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int
   part_get_N_density(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3466,7 +3466,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE int*
   part_get_N_density_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3488,7 +3488,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_N_density_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3508,7 +3508,7 @@ static __attribute__((always_inline)) INLINE const int*
 static __attribute__((always_inline)) INLINE void
   part_set_N_density(struct part *restrict p, const int N_density) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3529,7 +3529,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int
   part_get_N_density_exact(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3551,7 +3551,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE int*
   part_get_N_density_exact_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3573,7 +3573,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_N_density_exact_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3593,7 +3593,7 @@ static __attribute__((always_inline)) INLINE const int*
 static __attribute__((always_inline)) INLINE void
   part_set_N_density_exact(struct part *restrict p, const int N_density_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3614,7 +3614,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int
   part_get_N_gradient(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3636,7 +3636,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE int*
   part_get_N_gradient_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3658,7 +3658,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_N_gradient_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3678,7 +3678,7 @@ static __attribute__((always_inline)) INLINE const int*
 static __attribute__((always_inline)) INLINE void
   part_set_N_gradient(struct part *restrict p, const int N_gradient) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3699,7 +3699,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int
   part_get_N_gradient_exact(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3721,7 +3721,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE int*
   part_get_N_gradient_exact_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3743,7 +3743,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_N_gradient_exact_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3763,7 +3763,7 @@ static __attribute__((always_inline)) INLINE const int*
 static __attribute__((always_inline)) INLINE void
   part_set_N_gradient_exact(struct part *restrict p, const int N_gradient_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3784,7 +3784,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int
   part_get_N_force(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3806,7 +3806,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE int*
   part_get_N_force_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3828,7 +3828,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_N_force_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3848,7 +3848,7 @@ static __attribute__((always_inline)) INLINE const int*
 static __attribute__((always_inline)) INLINE void
   part_set_N_force(struct part *restrict p, const int N_force) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3869,7 +3869,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int
   part_get_N_force_exact(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3891,7 +3891,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE int*
   part_get_N_force_exact_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3913,7 +3913,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_N_force_exact_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3933,7 +3933,7 @@ static __attribute__((always_inline)) INLINE const int*
 static __attribute__((always_inline)) INLINE void
   part_set_N_force_exact(struct part *restrict p, const int N_force_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3954,7 +3954,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_rho_exact(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3976,7 +3976,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_rho_exact_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -3998,7 +3998,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_rho_exact_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4018,7 +4018,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_rho_exact(struct part *restrict p, const float rho_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4039,7 +4039,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_n_density(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4061,7 +4061,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_n_density_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4083,7 +4083,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_n_density_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4103,7 +4103,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_n_density(struct part *restrict p, const float n_density) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4124,7 +4124,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_n_density_exact(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4146,7 +4146,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_n_density_exact_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4168,7 +4168,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_n_density_exact_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4188,7 +4188,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_n_density_exact(struct part *restrict p, const float n_density_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4209,7 +4209,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_n_gradient(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4231,7 +4231,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_n_gradient_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4253,7 +4253,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_n_gradient_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4273,7 +4273,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_n_gradient(struct part *restrict p, const float n_gradient) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4294,7 +4294,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_n_gradient_exact(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4316,7 +4316,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_n_gradient_exact_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4338,7 +4338,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_n_gradient_exact_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4358,7 +4358,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_n_gradient_exact(struct part *restrict p, const float n_gradient_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4379,7 +4379,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_n_force(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4401,7 +4401,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_n_force_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4423,7 +4423,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_n_force_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4443,7 +4443,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_n_force(struct part *restrict p, const float n_force) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4464,7 +4464,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_n_force_exact(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4486,7 +4486,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_n_force_exact_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4508,7 +4508,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_n_force_exact_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4528,7 +4528,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_n_force_exact(struct part *restrict p, const float n_force_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4549,7 +4549,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE char
   part_get_inhibited_exact(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4571,7 +4571,7 @@ static __attribute__((always_inline)) INLINE char
 static __attribute__((always_inline)) INLINE char*
   part_get_inhibited_exact_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4593,7 +4593,7 @@ static __attribute__((always_inline)) INLINE char*
 static __attribute__((always_inline)) INLINE const char*
   part_get_const_inhibited_exact_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4613,7 +4613,7 @@ static __attribute__((always_inline)) INLINE const char*
 static __attribute__((always_inline)) INLINE void
   part_set_inhibited_exact(struct part *restrict p, const char inhibited_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4634,7 +4634,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE char
   part_get_limited_part(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4656,7 +4656,7 @@ static __attribute__((always_inline)) INLINE char
 static __attribute__((always_inline)) INLINE char*
   part_get_limited_part_p(struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4678,7 +4678,7 @@ static __attribute__((always_inline)) INLINE char*
 static __attribute__((always_inline)) INLINE const char*
   part_get_const_limited_part_p(const struct part *restrict p) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4698,7 +4698,7 @@ static __attribute__((always_inline)) INLINE const char*
 static __attribute__((always_inline)) INLINE void
   part_set_limited_part(struct part *restrict p, const char limited_part) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4718,7 +4718,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct
   part_get_geometry(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4736,7 +4736,7 @@ static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct
  */
 static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct*
   part_get_geometry_p(struct part *restrict p) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4754,7 +4754,7 @@ static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct*
  */
 static __attribute__((always_inline)) INLINE const struct fvpm_geometry_struct*
   part_get_const_geometry_p(const struct part *restrict p) {
-  const struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  const struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4770,7 +4770,7 @@ static __attribute__((always_inline)) INLINE const struct fvpm_geometry_struct*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_geometry(struct part *restrict p, const struct fvpm_geometry_struct geometry) {
-  struct others* others_s = p->_cell_part_arrays->_others + p->_cell_offset;
+  struct others* restrict others_s = p->_cell_part_arrays->_others + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
@@ -4787,4 +4787,4 @@ static __attribute__((always_inline)) INLINE void
 
 
 
-#endif /* SWIFT_HYDRO_PART_e7534cbab066c40edc493065a74ace2f983e72e4_H */
+#endif /* SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H */
