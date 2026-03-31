@@ -231,7 +231,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   const struct part* parts = cell_get_const_hydro_parts(c);
   struct gpu_part_send_d* ps = &parts_buffer[pack_ind];
 
-#pragma omp simd
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
 
