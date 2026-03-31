@@ -6,7 +6,7 @@
 #include <limits.h>
 #include <stddef.h>
 
-#include "hydro_part_data_struct.h"
+#include "hydro_part_arrays_struct.h"
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
@@ -30,7 +30,7 @@ struct part {
   size_t _cell_offset;
 
   /*! pointer to particle data array struct of the cell this particle is located in */
-  struct hydro_part_data* _cell_part_data;
+  struct hydro_part_arrays* _cell_part_arrays;
 
   struct {
 
@@ -85,6 +85,11 @@ struct part {
      }_ppu;
 
    };
+
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
 
 };
 
@@ -144,7 +149,78 @@ struct part2 {
 
    };
 
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
+
 };
+
+
+/**
+ * @brief get cell_offset, offset/index of particle in cell particle data array.
+ */
+static __attribute__((always_inline)) INLINE size_t
+  part_get_cell_offset(const struct part *restrict p) {
+  return p->_cell_offset;
+}
+
+/**
+ * @brief get a pointer to cell_offset, offset/index of particle in cell particle data array.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to cell_offset. If you need read-only access to cell_offset, use part_get_const_cell_offset_p() instead.
+ */
+static __attribute__((always_inline)) INLINE size_t*
+  part_get_cell_offset_p(struct part *restrict p) {
+  return &p->_cell_offset;
+}
+
+/**
+ * @brief get read-only access to pointer to cell_offset,
+ * offset/index of particle in cell particle data array.
+ * If you need write access to cell_offset, use part_get_cell_offset_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const size_t*
+  part_get_const_cell_offset_p(const struct part *restrict p) {
+  return &p->_cell_offset;
+}
+
+/**
+ * @brief set the value of cell_offset, offset/index of particle in cell particle data array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_cell_offset(struct part *restrict p, const size_t cell_offset) {
+  p->_cell_offset = cell_offset;
+}
+
+
+
+
+/**
+ * @brief get cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
+ */
+static __attribute__((always_inline)) INLINE struct hydro_part_arrays*
+  part_get_cell_part_arrays(const struct part *restrict p) {
+  return p->_cell_part_arrays;
+}
+
+/**
+ * @brief get a pointer to cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to cell_part_arrays. If you need read-only access to cell_part_arrays, use part_get_const_cell_part_arrays_p() instead.
+ */
+static __attribute__((always_inline)) INLINE struct hydro_part_arrays**
+  part_get_cell_part_arrays_p(struct part *restrict p) {
+  return &p->_cell_part_arrays;
+}/**
+ * @brief set the value of cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_cell_part_arrays(struct part *restrict p,  struct hydro_part_arrays* cell_part_arrays) {
+  p->_cell_part_arrays = cell_part_arrays;
+}
+
+
 
 
 /**
@@ -617,12 +693,21 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
+
 /**
  * @brief get a2.
  */
 static __attribute__((always_inline)) INLINE float
   part_get_a2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_st3._a2;
 }
 
@@ -633,7 +718,14 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_a2_p(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st3._a2;
 }
 
@@ -643,7 +735,14 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_a2_p(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st3._a2;
 }
 
@@ -652,7 +751,14 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_a2(struct part *restrict p, const float a2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_st3._a2 = a2;
 }
 
@@ -664,7 +770,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_b2(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_st3._b2;
 }
 
@@ -673,7 +786,14 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_b2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_st3._b2;
 }
 
@@ -682,7 +802,14 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE float
   part_get_b2_ind(const struct part *restrict p, const size_t ind) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_st3._b2[ind];
 }
 
@@ -692,7 +819,14 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE void
   part_set_b2(struct part *restrict p, const float b2[3]) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_st3._b2[0] = b2[0];
   part2_s->_st3._b2[1] = b2[1];
   part2_s->_st3._b2[2] = b2[2];
@@ -703,7 +837,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_b2_ind(struct part *restrict p, const size_t i, const float b2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_st3._b2[i] = b2;
 }
 
@@ -714,7 +855,14 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE long long
   part_get_c2(const struct part *restrict p) {
 #ifdef DEBUG
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_st3._c2;
 #else
   return 0;
@@ -729,7 +877,14 @@ static __attribute__((always_inline)) INLINE long long
 static __attribute__((always_inline)) INLINE long long*
   part_get_c2_p(struct part *restrict p) {
 #ifdef DEBUG
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st3._c2;
 #else
   return NULL;
@@ -743,7 +898,14 @@ static __attribute__((always_inline)) INLINE long long*
 static __attribute__((always_inline)) INLINE const long long*
   part_get_const_c2_p(const struct part *restrict p) {
 #ifdef DEBUG
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st3._c2;
 #else
   return NULL;
@@ -756,7 +918,14 @@ static __attribute__((always_inline)) INLINE const long long*
 static __attribute__((always_inline)) INLINE void
   part_set_c2(struct part *restrict p, const long long c2) {
 #ifdef DEBUG
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_st3._c2 = c2;
 #endif
 }
@@ -769,7 +938,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE double
   part_get_d2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_st4._d2;
 }
 
@@ -780,7 +956,14 @@ static __attribute__((always_inline)) INLINE double
  */
 static __attribute__((always_inline)) INLINE double*
   part_get_d2_p(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st4._d2;
 }
 
@@ -790,7 +973,14 @@ static __attribute__((always_inline)) INLINE double*
  */
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_d2_p(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st4._d2;
 }
 
@@ -799,7 +989,14 @@ static __attribute__((always_inline)) INLINE const double*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_d2(struct part *restrict p, const double d2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_st4._d2 = d2;
 }
 
@@ -809,7 +1006,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct gpart*
   part_get_gps2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_st4._nested12._gps2;
 }
 
@@ -820,14 +1024,28 @@ static __attribute__((always_inline)) INLINE struct gpart*
  */
 static __attribute__((always_inline)) INLINE struct gpart**
   part_get_gps2_p(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st4._nested12._gps2;
 }/**
  * @brief set the value of gps2.
  */
 static __attribute__((always_inline)) INLINE void
   part_set_gps2(struct part *restrict p,  struct gpart* gps2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_st4._nested12._gps2 = gps2;
 }
 
@@ -837,7 +1055,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_ts2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_st4._nested12._ts2;
 }
 
@@ -848,7 +1073,14 @@ static __attribute__((always_inline)) INLINE timebin_t
  */
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_ts2_p(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st4._nested12._ts2;
 }
 
@@ -858,7 +1090,14 @@ static __attribute__((always_inline)) INLINE timebin_t*
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_ts2_p(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_st4._nested12._ts2;
 }
 
@@ -867,7 +1106,14 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_ts2(struct part *restrict p, const timebin_t ts2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_st4._nested12._ts2 = ts2;
 }
 
@@ -879,7 +1125,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_au2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_au2;
 }
 
@@ -890,7 +1143,14 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_au2_p(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_au2;
 }
 
@@ -900,7 +1160,14 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_au2_p(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_au2;
 }
 
@@ -909,7 +1176,14 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_au2(struct part *restrict p, const float au2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_au2 = au2;
 }
 
@@ -920,7 +1194,14 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_bu2(const struct part *restrict p) {
 #ifdef DEBUG
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_bu2;
 #else
   return FLT_MAX;
@@ -935,7 +1216,14 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_bu2_p(struct part *restrict p) {
 #ifdef DEBUG
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_bu2;
 #else
   return NULL;
@@ -949,7 +1237,14 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_bu2_p(const struct part *restrict p) {
 #ifdef DEBUG
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_bu2;
 #else
   return NULL;
@@ -962,7 +1257,14 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_bu2(struct part *restrict p, const float bu2) {
 #ifdef DEBUG
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_bu2 = bu2;
 #endif
 }
@@ -974,7 +1276,14 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_cu2(const struct part *restrict p) {
 #ifdef NODEBUG
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_cu2;
 #else
   return FLT_MAX;
@@ -989,7 +1298,14 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_cu2_p(struct part *restrict p) {
 #ifdef NODEBUG
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_cu2;
 #else
   return NULL;
@@ -1003,7 +1319,14 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_cu2_p(const struct part *restrict p) {
 #ifdef NODEBUG
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_cu2;
 #else
   return NULL;
@@ -1016,7 +1339,14 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_cu2(struct part *restrict p, const float cu2) {
 #ifdef NODEBUG
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_cu2 = cu2;
 #endif
 }
@@ -1029,7 +1359,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct gp*
   part_get_gpu2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_gpu2;
 }
 
@@ -1040,14 +1377,28 @@ static __attribute__((always_inline)) INLINE struct gp*
  */
 static __attribute__((always_inline)) INLINE struct gp**
   part_get_gpu2_p(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_gpu2;
 }/**
  * @brief set the value of gpu2.
  */
 static __attribute__((always_inline)) INLINE void
   part_set_gpu2(struct part *restrict p,  struct gp* gpu2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_gpu2 = gpu2;
 }
 
@@ -1057,7 +1408,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_du2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_ppu2._du2;
 }
 
@@ -1068,7 +1426,14 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_du2_p(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_ppu2._du2;
 }
 
@@ -1078,7 +1443,14 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_du2_p(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_ppu2._du2;
 }
 
@@ -1087,7 +1459,14 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_du2(struct part *restrict p, const float du2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_ppu2._du2 = du2;
 }
 
@@ -1097,7 +1476,14 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_eu2(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return part2_s->_ppu2._eu2;
 }
 
@@ -1108,7 +1494,14 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_eu2_p(struct part *restrict p) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_ppu2._eu2;
 }
 
@@ -1118,7 +1511,14 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_eu2_p(const struct part *restrict p) {
-  const struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   return &part2_s->_ppu2._eu2;
 }
 
@@ -1127,9 +1527,18 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_eu2(struct part *restrict p, const float eu2) {
-  struct part2* part2_s = p->_cell_part_data->_part2 + p->_cell_offset;
+  struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(part2_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
+#endif
   part2_s->_ppu2._eu2 = eu2;
 }
+
+
 
 
 
