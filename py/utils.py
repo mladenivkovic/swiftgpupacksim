@@ -233,11 +233,24 @@ def add_auxiliary_fields(
             updated_contents_d[key] = contents_d[key]
 
     else:
-        # Check that we don't have these field names already
+        # start empty
+        updated_contents_d["part"] = {}
+
+        # Add auxiliary fields to the updated contents
         for key in main_part_struct_aux_fields_props:
+            # Check that we don't have these field names already
             if key in contents_d["part"].keys():
                 raise ValueError(f"key '{key} is already a field name in part struct!")
             updated_contents_d["part"][key] = main_part_struct_aux_fields_props[key]
+
+        # Now copy data over
+        for key in contents_d.keys():
+            if key == "part":
+                for partkey in contents_d["part"].keys():
+                    updated_contents_d["part"][partkey] = contents_d["part"][partkey]
+            else:
+                updated_contents_d[key] = contents_d[key]
+
 
     if id_checks:
         if len(list(updated_contents_d.keys())) == 1:

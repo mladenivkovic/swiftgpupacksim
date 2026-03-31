@@ -6,7 +6,7 @@
 #include <limits.h>
 #include <stddef.h>
 
-#include "hydro_part_data_struct.h"
+#include "hydro_part_arrays_struct.h"
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
