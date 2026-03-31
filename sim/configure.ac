@@ -199,14 +199,14 @@ fi
 
 
 AC_ARG_ENABLE([vectorization],
-   [AS_HELP_STRING([--disable-vectorization],
-     [Disable manually encouraged vectorization (default: on) @<:@yes/no@:>@]
+   [AS_HELP_STRING([--enable-vectorization-pragmas],
+     [Enable manually encouraged vectorization through simd pragmas (default: no) @<:@yes/no@:>@]
    )],
    [enable_vec="$enableval"],
-   [enable_vec="yes"]
+   [enable_vec="no"]
 )
 if test "$enable_vec" = "yes"; then
-   AC_DEFINE([VECTORIZE],1,[Enable manually encouraged vectorization])
+   AC_DEFINE([VECTORIZE],1,[Enable manually encouraged vectorization through simd pragmas])
 fi
 
 
