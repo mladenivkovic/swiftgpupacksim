@@ -21,6 +21,10 @@ Dependencies:
 - jinja2
 
 
+Look at the `make_all.sh` to re-generate all files used in swiftgpupacksim.
+
+
+
 ## Outputs
 
 - `hydro_part.h`: Header containing a particle struct and its getters/setters
