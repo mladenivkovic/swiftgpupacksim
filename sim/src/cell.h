@@ -171,7 +171,7 @@ struct cell {
 
   /* struct ghost_stats ghost_statistics; */
 
-} SWIFT_STRUCT_ALIGN;
+} __attribute__((aligned(32)));
 
 
 /* Get hydro particle array */

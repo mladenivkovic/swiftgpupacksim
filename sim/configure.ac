@@ -209,6 +209,17 @@ if test "$enable_vec" = "yes"; then
 fi
 
 
+AC_ARG_ENABLE([packed-structs],
+   [AS_HELP_STRING([--enable-packed-structs],
+     [add __attribute__((packed)) to structs (default: no) @<:@yes/no@:>@]
+   )],
+   [enable_packed="$enableval"],
+   [enable_packed="no"]
+)
+if test "$enable_packed" = "yes"; then
+   AC_DEFINE([PACKED_STRUCTS],1,[use __attribute__((packed)) on structs])
+fi
+
 
 
 
@@ -827,12 +838,13 @@ AC_ARG_WITH([struct-align],
       [SWIFT_STRUCT_ALIGNMENT to use @<:@-1, 1, 2, 4, 8, 16, 32, 64 default: -1 (=manual (hardcoded) struct align)@:>@]
    )],
    [with_struct_align="$withval"],
-   [with_struct_align="32"]
+   [with_struct_align="-1"]
 )
 
 case "$with_struct_align" in
    -1)
       AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [-1], [Use manual (=hardcoded) struct align])
+   ;;
    1)
       AC_DEFINE([SWIFT_STRUCT_ALIGNMENT], [1], [Struct alignment])
    ;;
@@ -865,7 +877,7 @@ AC_ARG_WITH([part-align],
       [SWIFT_PART_ALIGNMENT to use (memalign arrays of particle data) @<:@-1, 1, 32, 64, 128, 256, default: -1 (=same as SWIFT_STRUCT_ALIGNMENT)@:>@]
    )],
    [with_part_align="$withval"],
-   [with_part_align="128"]
+   [with_part_align="-1"]
 )
 
 case "$with_part_align" in
