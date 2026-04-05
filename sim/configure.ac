@@ -46,7 +46,6 @@ AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_PROG_CXX_C_O
 
-# We need this for compilation hints and possibly FFTW.
 AX_OPENMP
 # Parallelisation here is with omp, so use that!
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
@@ -772,7 +771,7 @@ if test "$enable_optreport" != "no"; then
        CFLAGS="$CFLAGS -fopt-info-all-vec=gcc_optreport.txt -fdump-tree-vect-details"
     ;;
     intel)
-       AC_MSG_ERROR("optreport flags for intel not implemented")
+       CFLAGS="$CFLAGS -qopt-report=4 -qopt-report-phase=loop,vec"
 
   esac
 fi
