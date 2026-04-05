@@ -98,7 +98,7 @@ struct xpart {
   struct csds_part_data csds_data;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} {% if MANUAL_STRUCT_ALIGN -%} SWIFT_STRUCT_ALIGN_XPART; {%- else %} SWIFT_STRUCT_ALIGN; {% endif %}
 
 
 {% else %} {# ----------------------- includes for swiftgpupacksim ------------------ #}
@@ -121,7 +121,7 @@ struct {{STRUCT_NAME}} {
 {% for DECL in STRUCT_CONTENTS[STRUCT_NAME]["DECLARATIONS"] -%}
     {{DECL}}
 {%- endfor -%}
-} SWIFT_STRUCT_ALIGN;
+} {%- if MANUAL_STRUCT_ALIGN %} SWIFT_STRUCT_ALIGN_{{STRUCT_NAME.upper()}}; {%- else %} SWIFT_STRUCT_ALIGN; {%- endif %}
 {% endfor -%}
 {# ------------------------- GENERATE GETTERS AND SETTERS  -------------------------- #}
 {%- for STRUCT_NAME in STRUCT_NAMES -%}

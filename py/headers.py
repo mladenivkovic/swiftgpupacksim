@@ -13,6 +13,7 @@ def generate_hydro_part_header(
     part_d: dict,
     swift_header: bool = True,
     id_checks: bool = True,
+    manual_align: bool = False,
     testing: bool = False,
     verbose: bool = False,
 ) -> str:
@@ -31,6 +32,9 @@ def generate_hydro_part_header(
     id_checks: bool
         if True, add a struct_id field to every struct for debugging checks
         and a debugging check in each getter/setter
+
+    manual_align: bool
+        if True, generate a different SWIFT_STRUCT_ALIGN_ macro for each struct.
 
     testing: bool
         if True, use minimalistic header template for unit tests to generate
@@ -81,7 +85,7 @@ def generate_hydro_part_header(
 
     # Now generate the file from template
     header_file = jinja_generate_hydro_part_h(
-        part_struct_d, swift_header=swift_header, testing=testing, verbose=verbose
+        part_struct_d, swift_header=swift_header, manual_struct_align=manual_align, testing=testing, verbose=verbose
     )
 
     return header_file
