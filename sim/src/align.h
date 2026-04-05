@@ -27,6 +27,21 @@
 /* Moved into config.h */
 /* #define SWIFT_STRUCT_ALIGNMENT 32 */
 
+#if SWIFT_STRUCT_ALIGNMENT == -1
+/* Use manual, hardcoded particle alignments */
+
+#else
+
+#endif
+
+
+#ifdef PACKED_STRUCTS
+/* Make structs packed as well */
+
+#else
+
+#endif
+
 /**
  * @brief Defines alignment of structures
  */

@@ -4,8 +4,8 @@
   */
 
 
-#ifndef SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H
-#define SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H
+#ifndef SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H
+#define SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H
 
  
 
@@ -33,7 +33,7 @@ struct part {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_PART;
 
 struct x_h_v_m {
   /*! the particle position */
@@ -53,7 +53,7 @@ struct x_h_v_m {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_X_H_V_M;
 
 struct gradient_pack {
   /*! Maximal alpha (viscosity) over neighbours */
@@ -70,7 +70,7 @@ struct gradient_pack {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_GRADIENT_PACK;
 
 struct force_pack {
   /*! 'Grad h' term -- only partial in P-U */
@@ -99,7 +99,7 @@ struct force_pack {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_FORCE_PACK;
 
 struct force_gradient_pack_shared {
   /*! Particle internal energy */
@@ -116,7 +116,7 @@ struct force_gradient_pack_shared {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_FORCE_GRADIENT_PACK_SHARED;
 
 struct density_unpack {
   /*! Derivative of density with respect to h */
@@ -139,7 +139,7 @@ struct density_unpack {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_DENSITY_UNPACK;
 
 struct force_unpack {
   /*! Particle acceleration */
@@ -156,7 +156,7 @@ struct force_unpack {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_FORCE_UNPACK;
 
 struct others {
   /*! Time differential of velocity divergence */
@@ -297,7 +297,7 @@ struct others {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_OTHERS;
 
 
 /**
@@ -4787,4 +4787,4 @@ static __attribute__((always_inline)) INLINE void
 
 
 
-#endif /* SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H */
+#endif /* SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H */
