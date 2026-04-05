@@ -4,8 +4,8 @@
   */
 
 
-#ifndef SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H
-#define SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H
+#ifndef SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H
+#define SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H
 
  
 
@@ -255,7 +255,7 @@ struct part {
   /*! Geometrical quantities used for Finite Volume Particle Method RT */
   struct fvpm_geometry_struct _geometry;
 
-} SWIFT_STRUCT_ALIGN;
+} SWIFT_STRUCT_ALIGN_PART;
 
 
 /**
@@ -2755,4 +2755,4 @@ static __attribute__((always_inline)) INLINE void
 
 
 
-#endif /* SWIFT_HYDRO_PART_a8944f2129a242409446c964f27ebbe9e45eba09_H */
+#endif /* SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H */
