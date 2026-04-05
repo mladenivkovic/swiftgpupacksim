@@ -29,6 +29,7 @@ def jinja_generate_hydro_part_h(
     part_structs_d: dict,
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
+    manual_struct_align: bool = False,
     testing: bool = False,
     verbose: bool = False,
 ) -> str:
@@ -52,6 +53,9 @@ def jinja_generate_hydro_part_h(
 
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
+
+    manual_struct_align: bool
+        if True, generate a different SWIFT_STRUCT_ALIGN_ macro for each struct.
 
     testing: bool
         if True, use minimalistic header template for unit tests to generate
@@ -82,6 +86,7 @@ def jinja_generate_hydro_part_h(
     d["TEMPLATE_FILENAME"] = templ_full_fname
     d["HEADER_FOR_SWIFT"] = swift_header
     d["HEADER_GUARD"] = get_git_hash()
+    d["MANUAL_STRUCT_ALIGN"] = manual_struct_align
 
     header_template = templ.render(d)
 

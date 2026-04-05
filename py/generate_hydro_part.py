@@ -70,6 +70,14 @@ parser.add_argument(
     default=False,
     help="Do not generate particle struct ID debugging checks",
 )
+parser.add_argument(
+        "-a",
+        "--no-manual-align",
+        dest="no_manual_align",
+        action="store_true",
+        default=False,
+        help="Align each particle data struct equally using SWIFT_STRUCT_ALIGN",
+        )
 
 if __name__ == "__main__":
 
@@ -81,6 +89,7 @@ if __name__ == "__main__":
     input_file = args.input_file
     testing = args.testing
     id_checks = not args.no_id_checks
+    manual_align = not args.no_manual_align
     verify_file_exists(input_file)
 
     input_fp = open(input_file, "r")
@@ -99,6 +108,7 @@ if __name__ == "__main__":
         particle_fields_d,
         swift_header=swift_header,
         id_checks=id_checks,
+        manual_align=manual_align,
         testing=testing,
         verbose=verbose,
     )
