@@ -42,8 +42,6 @@
 #include "realisations/pack_force/hydro_part.h"
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
 #include "realisations/pack_shared/hydro_part.h"
-#elif defined(SPHENIX_SOA_MANUAL_PARTICLE)
-#include "realisations/soa_manual/hydro_part.h"
 #else
 #pragma error "Unknown memory layout realisation"
 #endif
