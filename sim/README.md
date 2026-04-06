@@ -28,7 +28,7 @@ Building the program
                           Particle data access variant to use [part-struct,
                           global-var, explicit-var, default: part-struct]
   --with-loop-split=<value>
-                          Loop splitting variant to use [none, by-gpu-struct,
+                          Loop splitting variant to use [none, by-struct,
                           by-element. Default: none]
   --with-struct-align=<value>
                           SWIFT_STRUCT_ALIGNMENT to use [-1, 1, 2, 4, 8, 16,
@@ -93,7 +93,7 @@ Build variants explanation
 - `--with-loop-split=<value>`
   Manually split the data copying loop into several loops. Either do a single
   loop accessing all of a single particle's data (`none`), or make a new loop
-  for each particle data struct (`by-struct`), or make a new loop for each
-  element of the particle data being accessed (`by-element`) (This is
+  for each particle data struct on CPU (`by-struct`), or make a new loop for
+  each element of the particle data being accessed (`by-element`) (This is
   essentially SoA access).
 
