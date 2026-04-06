@@ -60,7 +60,9 @@ git lfs checkout
 - `--enable-no-cuda-mallochost`: Use `malloc` instead of `cudaMallocHost`
 - `--enable-sanitizer`, `--enable-undefined-sanitizer`: Turn on sanitizers
 
-### Selecting a memory layout and alignments
+### Selecting a memory layout, alignments, loop splitting, particle access variant
+
+See `/sim/README.md` for more details.
 
 To select a specific memory layout, use the
 `--with-particle-memory-layout=<method>` flag in the `./configure` step. See
@@ -68,6 +70,13 @@ To select a specific memory layout, use the
 
 You can set the struct alignments and particle array alignments using the
 `--with-struct-align=<value>` and `--with-part-align=<value>` flags.
+
+Particle access variants (how particle data is being accessed via
+getters/setters) can be selected using the `--with-particle-access=<value>` flag.
+
+Loop splitting variants (i.e. splitting the loop iterating over particle data to
+pack them into buffers in multiple loops instead of a single iteration per
+particle) can be selected using the `--with-loop-split=<value>` flag.
 
 
 ## Reading the output

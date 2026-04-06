@@ -10,19 +10,27 @@ Building the program
 1) Run `./autoreconf --install --symlink --force` or simply `./autogen.sh`
 
 2) Run `./configure`.
-   The interesting options are:
+   The interesting options are: (Explanations below)
 
   ```
   --enable-no-cuda-mallochost
-                            Disable cudaMallocHost calls and use malloc instead
-                            [yes/no]
+                          Disable cudaMallocHost calls and use malloc instead
+                          [yes/no]
   --enable-vectorization-pragmas
-                            Enable manually encouraged vectorization through
-                            simd pragmas (default: no) [yes/no]
+                          Enable manually encouraged vectorization through
+                          simd pragmas (default: no) [yes/no]
+  --enable-packed-structs add __attribute__((packed)) to structs (default: no)
+                          [yes/no]
   --with-particle-memory-layout=<method>
                           Particle memory layout to use [aos, soa,
                           soa-modified, soa-manual, upstream, pack-gradient,
                           pack-force, pack-shared, default: aos]
+  --with-particle-access=<value>
+                          Particle data access variant to use [part-struct,
+                          global-var, explicit-var, default: part-struct]
+  --with-loop-split=<value>
+                          Loop splitting variant to use [none, by-gpu-struct,
+                          by-element. Default: none]
   --with-struct-align=<value>
                           SWIFT_STRUCT_ALIGNMENT to use [-1, 1, 2, 4, 8, 16,
                           32, 64 default: -1 (=manual (hardcoded) struct
@@ -34,7 +42,12 @@ Building the program
   ```
 
 
+
+
+
   Interesting developer options:
+
+
   ```
   --enable-sanitizer      Enable memory error detection using address
                           sanitizer [no/yes]
@@ -47,4 +60,24 @@ Building the program
   --enable-optreport      Enable optimization reports, if compiler is known
                           [error/no/yes)]
   ```
+
+
+
+Build variants explanation
+--------------------------
+
+- `--with-particle-access=<value>`
+  Select particle data access variant, i.e. which getter/setter to use (or: how
+  the getter/setters work). Could be passing a `struct part* p` to the getter
+  (`part-struct`), could be passing a pointer to the particle data arrays + an
+  integer index of where the particle is located in that array (`explicit-var`),
+  could be passing just an integer index of a particle and using a globally
+  defined variable which is in global scope (`global-var`).
+
+- `--with-loop-split=<value>`
+  Manually split the data copying loop into several loops. Either do a single
+  loop accessing all of a single particle's data (`none`), or make a new loop
+  for each particle data struct (`by-struct`), or make a new loop for each
+  element of the particle data being accessed (`by-element`) (This is
+  essentially SoA access).
 
