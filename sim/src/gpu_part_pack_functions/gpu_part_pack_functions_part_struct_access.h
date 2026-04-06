@@ -49,7 +49,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   const struct gpu_part_recv_d* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifdef SWIFT_LOOP_SPLIT_NONE
+#if defined(SWIFT_LOOP_SPLIT_NONE) || \
+  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
+  )
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -81,9 +84,15 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     float div_v = part_get_div_v(p) + pr.rot_vx_div_v.w;
     part_set_div_v(p, div_v);
   }
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
+  (                                            \
+    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
+    )
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -157,7 +166,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     float div_v = part_get_div_v(p) + pr.rot_vx_div_v.w;
     part_set_div_v(p, div_v);
   }
-#endif /* SWIFT_LOOP_SPLIT_BY_ELEMENT */
+#else
+#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
+#endif
 }
 
 /**
@@ -177,7 +188,11 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   const struct gpu_part_recv_g* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifdef SWIFT_LOOP_SPLIT_NONE
+#if defined(SWIFT_LOOP_SPLIT_NONE) || \
+  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
+  )
+
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -199,9 +214,14 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     float lu = pr.aviscmax_vsig_lapu.z + part_get_laplace_u(p);
     part_set_laplace_u(p, lu);
   }
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
+  (                                            \
+    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -239,7 +259,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     float lu = pr.aviscmax_vsig_lapu.z + part_get_laplace_u(p);
     part_set_laplace_u(p, lu);
   }
-#endif /* SWIFT_LOOP_SPLIT_BY_ELEMENT */
+#else
+#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
+#endif
 }
 
 /**
@@ -259,7 +281,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
   const struct gpu_part_recv_f* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifdef SWIFT_LOOP_SPLIT_NONE
+#if defined(SWIFT_LOOP_SPLIT_NONE) || \
+  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
+  )
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -286,9 +311,14 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     part_set_timestep_limiter_min_ngb_time_bin(p, mintbin);
   }
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
+  (                                            \
+    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -340,6 +370,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     part_set_timestep_limiter_min_ngb_time_bin(p, mintbin);
   }
 
+#else
+#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
 #endif
 }
 
@@ -366,7 +398,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   const struct part* parts = cell_get_const_hydro_parts(c);
   struct gpu_part_send_d* ps = &parts_buffer[pack_ind];
 
-#ifdef SWIFT_LOOP_SPLIT_NONE
+#if defined(SWIFT_LOOP_SPLIT_NONE) || \
+  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
+  )
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -390,9 +425,14 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
+  (                                            \
+    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -441,7 +481,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-#endif /* defined SWIFT_LOOP_SPLIT_BY_ELEMENT */
+#else
+#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
+#endif
 }
 
 /**
@@ -467,7 +509,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   const struct part* parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_g* ps = &parts_buffer[pack_ind];
 
-#ifdef SWIFT_LOOP_SPLIT_NONE
+#if defined(SWIFT_LOOP_SPLIT_NONE) || \
+  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
+  )
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -500,9 +545,15 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
+  (                                            \
+    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -605,7 +656,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-#endif /* defined SWIFT_LOOP_SPLIT_BY_ELEMENT */
+#else
+#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
+#endif
 }
 
 /**
@@ -630,7 +683,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   const struct part* parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_f* ps = &parts_buffer[pack_ind];
 
-#ifdef SWIFT_LOOP_SPLIT_NONE
+#if defined(SWIFT_LOOP_SPLIT_NONE) || \
+  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
+  )
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -667,8 +723,16 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
+  (                                            \
+    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
+
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -796,6 +860,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
-#endif /* defined SWIFT_LOOP_SPLIT_BY_ELEMENT */
+#else
+#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
+#endif
 }
 
