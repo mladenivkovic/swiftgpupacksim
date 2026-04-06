@@ -732,6 +732,16 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].vx_m.z = v[2];
     ps[i].vx_m.w = part_get_mass(p);
 
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
+
+    ps[i].aviscmax_vsig_lapu.x = part_get_alpha_visc_max_ngb(p);
+    ps[i].aviscmax_vsig_lapu.y = part_get_v_sig(p);
+    ps[i].aviscmax_vsig_lapu.z = part_get_laplace_u(p);
+#else
     ps[i].u_rho_c_aviscmax.x = part_get_u(p);
     ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
     ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
@@ -740,6 +750,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
     ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
     ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
+#endif
 
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
@@ -1072,6 +1083,17 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].vx_m.z = v[2];
     ps[i].vx_m.w = part_get_mass(p);
 
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
+
+    ps[i].f_p_balsara_adiff.x = part_get_f_gradh(p);
+    ps[i].f_p_balsara_adiff.y = part_get_pressure(p);
+    ps[i].f_p_balsara_adiff.z = part_get_balsara(p);
+    ps[i].f_p_balsara_adiff.w = part_get_alpha_diff(p);
+#else
     ps[i].u_rho_f_p.x = part_get_u(p);
     ps[i].u_rho_f_p.y = part_get_rho(p);
     ps[i].u_rho_f_p.z = part_get_f_gradh(p);
@@ -1081,6 +1103,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
     ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
     ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
+#endif
 
     ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
     int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
