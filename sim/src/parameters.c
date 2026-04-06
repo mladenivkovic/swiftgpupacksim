@@ -24,11 +24,7 @@ void init_params(struct parameters* params) {
 #if defined(SPHENIX_AOS_PARTICLE)
   char layout[20] = "aos";
 #elif defined(SPHENIX_SOA_PARTICLE)
-#if defined(SOA_MODIFIED_PARTICLE_ACCESS)
-  char layout[20] = "soa-modified";
-#else
   char layout[20] = "soa";
-#endif
 #elif defined(SPHENIX_UPSTREAM_PARTICLE)
   char layout[20] = "upstream";
 #elif defined(SPHENIX_PACK_GRADIENT_PARTICLE)
@@ -42,6 +38,29 @@ void init_params(struct parameters* params) {
 #endif
   strcpy(params->memory_layout, layout);
 
+#if defined(SWIFT_PARTICLE_ACCESS_PART_STRUCT)
+  char access_variant[20] = "part-struct";
+#elif defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR)
+  char access_variant[20] = "global-var";
+#elif defined(SWIFT_PARTICLE_ACCESS_EXPLICIT_VAR)
+  char access_variant[20] = "explicit-var";
+#else
+#pragma error "Unknown particle access variant"
+#endif
+  strcpy(params->access_variant, access_variant);
+
+#if defined(SWIFT_LOOP_SPLIT_NONE)
+  char loop_split[20] = "none";
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+  char loop_split[20] = "by-struct";
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
+  char loop_split[20] = "by-element";
+#else
+#pragma error "Unknown loop splitting variant"
+#endif
+  strcpy(params->loop_split, loop_split);
+
+  /* Empty string for intial value of data root dir */
   strcpy(params->data_root_dir, "\0");
 }
 

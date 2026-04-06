@@ -816,16 +816,6 @@ case "$with_layout" in
    pack-shared)
       AC_DEFINE([SPHENIX_PACK_SHARED_PARTICLE], [1], [SWIFT particle layout prioritizing packing, shared quantities for force and gradient in separate struct])
    ;;
-   soa-modified)
-   # TODO: REMOVE THIS
-      AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])
-      AC_DEFINE([SOA_MODIFIED_PARTICLE_ACCESS], [1], [Modify particle loops])
-   ;;
-   soa-manual)
-   # TODO: REMOVE THIS
-      AC_DEFINE([SPHENIX_SOA_MANUAL_PARTICLE], [1], [SOA particle layout with manual accessors])
-      AC_DEFINE([MODIFIED_MANUAL_PARTICLE_ACCESS], [1], [Modify particle loops manually])
-   ;;
    *)
       AC_MSG_ERROR([Unknown particle realisation: $with_layout])
    ;;

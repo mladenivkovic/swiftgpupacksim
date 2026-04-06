@@ -36,7 +36,13 @@ struct parameters {
   int part_align;
 
   /*! Currently used memory layout */
-  char memory_layout[40];
+  char memory_layout[20];
+
+  /*! Currently used particle access variant */
+  char access_variant[20];
+
+  /*! Currently used loop splitting variant */
+  char loop_split[20];
 
   /*! Root dir of measurement data */
   char data_root_dir[200];
