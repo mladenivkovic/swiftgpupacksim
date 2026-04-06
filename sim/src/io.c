@@ -243,6 +243,13 @@ void io_write_result(const ticks timers_arr[timer_count],
   const int vec = 0;
 #endif
 
+#ifdef PACKED_STRUCTS
+  const int packed = 1;
+#else
+  const int packed = 0;
+#endif
+
+
   fprintf(out_fp, "# nr_threads: %d\n", params->nr_threads);
   fprintf(out_fp, "# nr_parts: %ld\n", params->nr_parts);
   fprintf(out_fp, "# nr_steps: %d\n", params->nr_steps);
@@ -250,7 +257,10 @@ void io_write_result(const ticks timers_arr[timer_count],
   fprintf(out_fp, "# stuct align: %d\n", params->struct_align);
   fprintf(out_fp, "# part array align: %d\n", params->part_align);
   fprintf(out_fp, "# memory layout: %s\n", params->memory_layout);
+  fprintf(out_fp, "# access variant: %s\n", params->access_variant);
+  fprintf(out_fp, "# loop splitting variant: %s\n", params->loop_split);
   fprintf(out_fp, "# vectorization: %d\n", vec);
+  fprintf(out_fp, "# packed structs: %d\n", packed);
   fprintf(out_fp, "# reproduced measurements: %s\n", params->data_root_dir);
   fprintf(out_fp, "# type,subtype,timing[ms]\n");
 
