@@ -791,9 +791,7 @@ fi
 # Memory layout
 AC_ARG_WITH([particle-memory-layout],
    [AS_HELP_STRING([--with-particle-memory-layout=<method>],
-      [Particle memory layout to use @<:@aos, soa, soa-modified, 
-       soa-manual, upstream, pack-gradient, pack-force, pack-shared, 
-       default: aos@:>@]
+      [Particle memory layout to use @<:@aos, soa, upstream, pack-gradient, pack-force, pack-shared, default: aos@:>@]
    )],
    [with_layout="$withval"],
    [with_layout="aos"]

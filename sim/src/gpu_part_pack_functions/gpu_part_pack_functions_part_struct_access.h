@@ -17,19 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
-#ifndef GPU_PART_PACK_FUNCTIONS_H
-#define GPU_PART_PACK_FUNCTIONS_H
+#pragma once
 
 /**
- * @file cuda/gpu_part_pack_functions.h
+ * @file gpu_part_pack_functions_part_struct_access.h
  * @brief Functions related to packing and unpacking particles to/from a cell.
- * This needs to be specific to any hydro scheme/SPH flavour.
+ * Uses particle struct for access in getters/setters
  */
 
 #include "active.h"
-#include "../hydro_part.h"
 #include "cell.h"
 #include "gpu_part_structs.h"
+#include "hydro_part.h"
 
 #include <math.h>
 
@@ -50,7 +49,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   const struct gpu_part_recv_d* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifndef SOA_MODIFIED_PARTICLE_ACCESS
+#ifdef SWIFT_LOOP_SPLIT_NONE
+
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
@@ -81,7 +81,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     float div_v = part_get_div_v(p) + pr.rot_vx_div_v.w;
     part_set_div_v(p, div_v);
   }
-#else
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -155,8 +157,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     float div_v = part_get_div_v(p) + pr.rot_vx_div_v.w;
     part_set_div_v(p, div_v);
   }
-
-#endif
+#endif /* SWIFT_LOOP_SPLIT_BY_ELEMENT */
 }
 
 /**
@@ -176,7 +177,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   const struct gpu_part_recv_g* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifndef SOA_MODIFIED_PARTICLE_ACCESS
+#ifdef SWIFT_LOOP_SPLIT_NONE
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -198,7 +199,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     float lu = pr.aviscmax_vsig_lapu.z + part_get_laplace_u(p);
     part_set_laplace_u(p, lu);
   }
-#else
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -217,7 +220,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_g pr = parts_recv[i];
 
@@ -229,14 +232,14 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_g pr = parts_recv[i];
 
     float lu = pr.aviscmax_vsig_lapu.z + part_get_laplace_u(p);
     part_set_laplace_u(p, lu);
   }
-#endif
+#endif /* SWIFT_LOOP_SPLIT_BY_ELEMENT */
 }
 
 /**
@@ -256,7 +259,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
   const struct gpu_part_recv_f* parts_recv = &parts_buffer[unpack_ind];
   struct part* cp = cell_get_hydro_parts(c);
 
-#ifndef SOA_MODIFIED_PARTICLE_ACCESS
+#ifdef SWIFT_LOOP_SPLIT_NONE
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -282,7 +285,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     timebin_t mintbin = (timebin_t)(pr.udt_hdt_minngbtb.z + 0.5f);
     part_set_timestep_limiter_min_ngb_time_bin(p, mintbin);
   }
-#else
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -360,7 +366,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   const struct part* parts = cell_get_const_hydro_parts(c);
   struct gpu_part_send_d* ps = &parts_buffer[pack_ind];
 
-#ifndef SOA_MODIFIED_PARTICLE_ACCESS
+#ifdef SWIFT_LOOP_SPLIT_NONE
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -384,7 +390,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-#else
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -433,7 +441,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-#endif
+#endif /* defined SWIFT_LOOP_SPLIT_BY_ELEMENT */
 }
 
 /**
@@ -459,7 +467,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   const struct part* parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_g* ps = &parts_buffer[pack_ind];
 
-#ifndef SOA_MODIFIED_PARTICLE_ACCESS
+#ifdef SWIFT_LOOP_SPLIT_NONE
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -492,7 +500,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-#else
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -595,8 +605,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-
-#endif
+#endif /* defined SWIFT_LOOP_SPLIT_BY_ELEMENT */
 }
 
 /**
@@ -621,7 +630,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   const struct part* parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_f* ps = &parts_buffer[pack_ind];
 
-#ifndef SOA_MODIFIED_PARTICLE_ACCESS
+#ifdef SWIFT_LOOP_SPLIT_NONE
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -658,7 +667,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
-#else
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT)
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -703,7 +713,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
-
     ps[i].u_rho_f_p.x = part_get_u(p);
   }
 
@@ -736,7 +745,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* p = &parts[i];
-
     ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
   }
 
@@ -788,7 +796,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
-#endif
+#endif /* defined SWIFT_LOOP_SPLIT_BY_ELEMENT */
 }
 
-#endif /* GPU_PART_PACK_FUNCTIONS_H */
