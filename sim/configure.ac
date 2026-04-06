@@ -979,12 +979,23 @@ AC_MSG_RESULT([
     - version            : $ax_cv_c_compiler_version
     - flags              : $CFLAGS
     - cuda flags         : $CUDA_CFLAGS
+
    Special allocators    : $have_special_allocator
    Pthread barriers      : $have_pthread_barrier
+
    Debugging checks      : $enable_debugging_checks
+   Sanitizer enabled     : $enable_san
+   Undef. San. enabled   : $enable_ubsan
+   Optreports enabled    : $enable_optreport
+
+   SIMD vectorisation    : $enable_vec
+   Packed structs        : $enable_packed
+
    Particle memory layout: $with_layout
    Struct align          : $with_struct_align
    Part memalign         : $with_part_align
+   Particle access       : $with_part_access
+   Loop split            : $with_loop_split
 
  ------------------------]
 )
