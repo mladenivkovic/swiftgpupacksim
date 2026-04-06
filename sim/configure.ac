@@ -864,16 +864,13 @@ esac
 # Struct alignment
 AC_ARG_WITH([part-align],
    [AS_HELP_STRING([--with-part-align=<value>],
-      [SWIFT_PART_ALIGNMENT to use (memalign arrays of particle data) @<:@-1, 1, 32, 64, 128, 256, default: -1 (=same as SWIFT_STRUCT_ALIGNMENT)@:>@]
+      [SWIFT_PART_ALIGNMENT to use (memalign arrays of particle data) @<:@1, 32, 64, 128, 256, 512 default: 128@:>@]
    )],
    [with_part_align="$withval"],
-   [with_part_align="-1"]
+   [with_part_align="128"]
 )
 
 case "$with_part_align" in
-   -1)
-      AC_DEFINE([SWIFT_PART_ALIGNMENT], [-1], [Particle array alignment])
-   ;;
    1)
       AC_DEFINE([SWIFT_PART_ALIGNMENT], [1], [Particle array alignment])
    ;;
@@ -888,6 +885,9 @@ case "$with_part_align" in
    ;;
    256)
       AC_DEFINE([SWIFT_PART_ALIGNMENT], [256], [Particle array alignment])
+   ;;
+   512)
+      AC_DEFINE([SWIFT_PART_ALIGNMENT], [512], [Particle array alignment])
    ;;
    *)
       AC_MSG_ERROR([Unknown particle alignment: $with_part_align])
