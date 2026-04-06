@@ -817,10 +817,12 @@ case "$with_layout" in
       AC_DEFINE([SPHENIX_PACK_SHARED_PARTICLE], [1], [SWIFT particle layout prioritizing packing, shared quantities for force and gradient in separate struct])
    ;;
    soa-modified)
+   # TODO: REMOVE THIS
       AC_DEFINE([SPHENIX_SOA_PARTICLE], [1], [SOA particle layout])
       AC_DEFINE([SOA_MODIFIED_PARTICLE_ACCESS], [1], [Modify particle loops])
    ;;
    soa-manual)
+   # TODO: REMOVE THIS
       AC_DEFINE([SPHENIX_SOA_MANUAL_PARTICLE], [1], [SOA particle layout with manual accessors])
       AC_DEFINE([MODIFIED_MANUAL_PARTICLE_ACCESS], [1], [Modify particle loops manually])
    ;;
@@ -928,7 +930,7 @@ esac
 
 AC_ARG_WITH([loop-split],
    [AS_HELP_STRING([--with-loop-split=<value>],
-      [Loop splitting variant to use @<:@none, by-gpu-struct, by-element. Default: none@:>@]
+      [Loop splitting variant to use @<:@none, by-struct, by-element. Default: none@:>@]
    )],
    [with_loop_split="$withval"],
    [with_loop_split="none"]
@@ -938,7 +940,7 @@ case "$with_loop_split" in
    "none")
       AC_DEFINE([SWIFT_LOOP_SPLIT_NONE], [1], [Loop accesses all required particle data each iteration])
    ;;
-   "by-cpu-struct")
+   "by-struct")
       AC_DEFINE([SWIFT_LOOP_SPLIT_BY_STRUCT], [1], [Split loops by struct])
    ;;
    "by-element")

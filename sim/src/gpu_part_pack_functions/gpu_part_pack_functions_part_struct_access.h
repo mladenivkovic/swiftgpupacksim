@@ -288,6 +288,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
+  )
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -422,6 +423,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
+  )
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -588,6 +590,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
+  )
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -747,6 +750,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
+  )
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -1067,6 +1071,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
+)
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -1117,6 +1122,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     /* struct force_pack */
+
+    const struct part* restrict p = &parts[i];
 
     ps[i].u_rho_f_p.z = part_get_f_gradh(p);
     ps[i].u_rho_f_p.w = part_get_pressure(p);
@@ -1178,6 +1185,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     /* struct force_pack */
+
+    const struct part* restrict p = &parts[i];
 
     ps[i].u_rho_f_p.z = part_get_f_gradh(p);
     ps[i].u_rho_f_p.w = part_get_pressure(p);
