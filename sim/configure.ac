@@ -921,7 +921,7 @@ case "$with_part_access" in
       AC_DEFINE([SWIFT_PARTICLE_ACCESS_EXPLICIT_VAR], [1], [Use local variable explicitly passed as argument + index to access particle data])
    ;;
    *)
-      AC_MSG_ERROR([Unknown particle access variant: $with_struct_align])
+      AC_MSG_ERROR([Unknown particle access variant: $with_part_access])
    ;;
 esac
 
@@ -938,14 +938,14 @@ case "$with_loop_split" in
    "none")
       AC_DEFINE([SWIFT_LOOP_SPLIT_NONE], [1], [Loop accesses all required particle data each iteration])
    ;;
-   "by-struct")
+   "by-cpu-struct")
       AC_DEFINE([SWIFT_LOOP_SPLIT_BY_STRUCT], [1], [Split loops by struct])
    ;;
    "by-element")
       AC_DEFINE([SWIFT_LOOP_SPLIT_BY_ELEMENT], [1], [Split loops for each struct element])
    ;;
    *)
-      AC_MSG_ERROR([Unknown particle access variant: $with_struct_align])
+      AC_MSG_ERROR([Unknown particle loop splitting variant: $with_loop_split])
    ;;
 esac
 

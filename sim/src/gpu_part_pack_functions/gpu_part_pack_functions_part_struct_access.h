@@ -44,22 +44,26 @@
 __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     struct cell* restrict c,
     const struct gpu_part_recv_d* restrict parts_buffer, const int unpack_ind,
-    const int count, const struct engine* e) {
+    const int count, const struct engine* restrict e) {
 
-  const struct gpu_part_recv_d* parts_recv = &parts_buffer[unpack_ind];
-  struct part* cp = cell_get_hydro_parts(c);
+  const struct gpu_part_recv_d* restrict parts_recv = &parts_buffer[unpack_ind];
+  struct part* restrict cp = cell_get_hydro_parts(c);
 
 #if defined(SWIFT_LOOP_SPLIT_NONE) || \
   ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
    ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
   )
 
+  /* -------------------------------------------------- */
+  /* Loops over all fields of a particle each iteration */
+  /* -------------------------------------------------- */
+
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
 
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
 
     struct gpu_part_recv_d pr = parts_recv[i];
@@ -91,14 +95,75 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
     )
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+  /* ---------------------------------------- */
+  /* Loops split by struct field distribution */
+  /* ---------------------------------------- */
+
+  /* All three of them use a common `struct density_unpack`
+   * The only difference is where `rho` is stored. It's always
+   * in a different struct from `struct density_unpack`, but
+   * that's the only other struct we're unpacking into, so
+   * same loop split applies to all three of them. */
 
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    /* struct gradient pack for SPHENIX_PACK_GRADIENT_PARTICLE */
+    /* struct force pack for SPHENIX_PACK_FORCE_PARTICLE */
+    /* struct force_gradient_pack_shared for SPHENIX_PACK_SHARED_PARTICLE */
+
+    struct part* restrict p = &cp[i];
+    if (!part_is_active(p, e)) continue;
+
+    struct gpu_part_recv_d pr = parts_recv[i];
+
+    float rho = part_get_rho(p) + pr.rho_rhodh_wcount_wcount_dh.x;
+    part_set_rho(p, rho);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct density_unpack */
+
+    struct part* restrict p = &cp[i];
+    if (!part_is_active(p, e)) continue;
+
+    struct gpu_part_recv_d pr = parts_recv[i];
+
+    float rho_dh = part_get_rho_dh(p) + pr.rho_rhodh_wcount_wcount_dh.y;
+    part_set_rho_dh(p, rho_dh);
+
+    float wcount = part_get_wcount(p) + pr.rho_rhodh_wcount_wcount_dh.z;
+    part_set_wcount(p, wcount);
+
+    float wcount_dh = part_get_wcount_dh(p) + pr.rho_rhodh_wcount_wcount_dh.w;
+    part_set_wcount_dh(p, wcount_dh);
+
+    float* rot_v = part_get_rot_v(p);
+    rot_v[0] += pr.rot_vx_div_v.x;
+    rot_v[1] += pr.rot_vx_div_v.y;
+    rot_v[2] += pr.rot_vx_div_v.z;
+
+    float div_v = part_get_div_v(p) + pr.rot_vx_div_v.w;
+    part_set_div_v(p, div_v);
+  }
+
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+
+  /* ---------- */
+  /* SoA access */
+  /* ---------- */
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -110,7 +175,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
     float rho_dh = part_get_rho_dh(p) + pr.rho_rhodh_wcount_wcount_dh.y;
@@ -121,7 +186,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -133,7 +198,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -145,7 +210,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -159,7 +224,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
@@ -185,21 +250,24 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     const struct gpu_part_recv_g* restrict parts_buffer, const int unpack_ind,
     const int count, const struct engine* e) {
 
-  const struct gpu_part_recv_g* parts_recv = &parts_buffer[unpack_ind];
-  struct part* cp = cell_get_hydro_parts(c);
+  const struct gpu_part_recv_g* restrict parts_recv = &parts_buffer[unpack_ind];
+  struct part* restrict cp = cell_get_hydro_parts(c);
 
 #if defined(SWIFT_LOOP_SPLIT_NONE) || \
   ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
    ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
   )
 
+  /* -------------------------------------------------- */
+  /* Loops over all fields of a particle each iteration */
+  /* -------------------------------------------------- */
 
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
 
-    struct part* p = &cp[i];
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
 
     struct gpu_part_recv_g pr = parts_recv[i];
@@ -214,20 +282,54 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     float lu = pr.aviscmax_vsig_lapu.z + part_get_laplace_u(p);
     part_set_laplace_u(p, lu);
   }
+
 #elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
   (                                            \
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+  /* ---------------------------------------- */
+  /* Loops split by struct field distribution */
+  /* ---------------------------------------- */
+
+  /* All three variations (gradient, force, shared)
+   * store all these variables in struct gradient_pack */
 
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    struct part* p = &cp[i];
+    /* struct gradient_pack */
+
+    struct part* restrict p = &cp[i];
+    if (!part_is_active(p, e)) continue;
+
+    struct gpu_part_recv_g pr = parts_recv[i];
+
+    float avisc_old = part_get_alpha_visc_max_ngb(p);
+    float avisc = fmaxf(avisc_old, pr.aviscmax_vsig_lapu.x);
+    part_set_alpha_visc_max_ngb(p, avisc);
+
+    float vsig = fmaxf(pr.aviscmax_vsig_lapu.y, part_get_v_sig(p));
+    part_set_v_sig(p, vsig);
+
+    float lu = pr.aviscmax_vsig_lapu.z + part_get_laplace_u(p);
+    part_set_laplace_u(p, lu);
+  }
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+
+  /* ---------- */
+  /* SoA access */
+  /* ---------- */
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    struct part* restrict p = &cp[i];
     if (!part_is_active(p, e)) continue;
     struct gpu_part_recv_g pr = parts_recv[i];
 
@@ -278,13 +380,17 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     const struct gpu_part_recv_f* restrict parts_buffer, const int unpack_ind,
     const int count, const struct engine* e) {
 
-  const struct gpu_part_recv_f* parts_recv = &parts_buffer[unpack_ind];
-  struct part* cp = cell_get_hydro_parts(c);
+  const struct gpu_part_recv_f* restrict parts_recv = &parts_buffer[unpack_ind];
+  struct part* restrict cp = cell_get_hydro_parts(c);
 
 #if defined(SWIFT_LOOP_SPLIT_NONE) || \
   ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
    ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
   )
+
+  /* -------------------------------------------------- */
+  /* Loops over all fields of a particle each iteration */
+  /* -------------------------------------------------- */
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -317,8 +423,55 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
 
+  /* ---------------------------------------- */
+  /* Loops split by struct field distribution */
+  /* ---------------------------------------- */
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_unpack */
+
+    struct part* restrict p = &cp[i];
+    if (!part_is_active(p, e)) continue;
+
+    struct gpu_part_recv_f pr = parts_recv[i];
+
+    float* a = part_get_a_hydro(p);
+    a[0] += pr.a_hydro.x;
+    a[1] += pr.a_hydro.y;
+    a[2] += pr.a_hydro.z;
+
+    float u_dt = pr.udt_hdt_minngbtb.x + part_get_u_dt(p);
+    part_set_u_dt(p, u_dt);
+
+    float h_dt = pr.udt_hdt_minngbtb.y + part_get_h_dt(p);
+    part_set_h_dt(p, h_dt);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+
+    struct part* restrict p = &cp[i];
+    if (!part_is_active(p, e)) continue;
+
+    struct gpu_part_recv_f pr = parts_recv[i];
+
+    timebin_t mintbin = (timebin_t)(pr.udt_hdt_minngbtb.z + 0.5f);
+    part_set_timestep_limiter_min_ngb_time_bin(p, mintbin);
+  }
+
+
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
   (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+
+  /* ---------- */
+  /* SoA access */
+  /* ---------- */
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -395,20 +548,24 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 
   /* Grab handles */
   const int count = c->hydro.count;
-  const struct part* parts = cell_get_const_hydro_parts(c);
-  struct gpu_part_send_d* ps = &parts_buffer[pack_ind];
+  const struct part* restrict parts = cell_get_const_hydro_parts(c);
+  struct gpu_part_send_d* restrict ps = &parts_buffer[pack_ind];
 
 #if defined(SWIFT_LOOP_SPLIT_NONE) || \
   ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
    ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
   )
 
+  /* -------------------------------------------------- */
+  /* Loops over all fields of a particle each iteration */
+  /* -------------------------------------------------- */
+
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
 
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
 
     const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
@@ -425,20 +582,55 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
+
 #elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
   (                                            \
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+  /* ---------------------------------------- */
+  /* Loops split by struct field distribution */
+  /* ---------------------------------------- */
+
+  /* All three of them use a common `struct x_h_v_m`. */
 
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    /* struct x_h_v_m */
+
+    const struct part* restrict p = &parts[i];
+
+    const double* x = part_get_const_x(p);
+    ps[i].x_h.x = x[0] - shift[0];
+    ps[i].x_h.y = x[1] - shift[1];
+    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.w = part_get_h(p);
+
+    const float* v = part_get_const_v(p);
+    ps[i].vx_m.x = v[0];
+    ps[i].vx_m.y = v[1];
+    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.w = part_get_mass(p);
+
+    ps[i].pjs_pje.x = cjstart;
+    ps[i].pjs_pje.y = cjend;
+  }
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+
+  /* ---------- */
+  /* SoA access */
+  /* ---------- */
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    const struct part* restrict p = &parts[i];
 
     const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
@@ -450,7 +642,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
@@ -458,7 +650,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
 
     const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
@@ -470,7 +662,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
@@ -506,20 +698,24 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
   /* Grab handles */
   const int count = ci->hydro.count;
-  const struct part* parts = cell_get_const_hydro_parts(ci);
-  struct gpu_part_send_g* ps = &parts_buffer[pack_ind];
+  const struct part* restrict parts = cell_get_const_hydro_parts(ci);
+  struct gpu_part_send_g* restrict ps = &parts_buffer[pack_ind];
 
 #if defined(SWIFT_LOOP_SPLIT_NONE) || \
   ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
    ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
   )
 
+  /* -------------------------------------------------- */
+  /* Loops over all fields of a particle each iteration */
+  /* -------------------------------------------------- */
+
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
 
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
 
     const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
@@ -552,14 +748,152 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+  /* ---------------------------------------- */
+  /* Loops split by struct field distribution */
+  /* ---------------------------------------- */
+
+  /* All three of them use a common `struct x_h_v_m`, but
+   * remaining variables are split among different structs. */
 
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    /* struct x_h_v_m */
+
+    const struct part* restrict p = &parts[i];
+
+    const double* x = part_get_const_x(p);
+    ps[i].x_h.x = x[0] - shift[0];
+    ps[i].x_h.y = x[1] - shift[1];
+    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.w = part_get_h(p);
+
+    const float* v = part_get_const_v(p);
+    ps[i].vx_m.x = v[0];
+    ps[i].vx_m.y = v[1];
+    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.w = part_get_mass(p);
+  }
+
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE)
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct gradient_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_c_aviscmax.x = part_get_u(p);
+    ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
+    ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
+    ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
+
+    ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
+    ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
+    ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
+
+    ps[i].pjs_pje.x = cjstart;
+    ps[i].pjs_pje.y = cjend;
+  }
+
+#elif defined(SPHENIX_PACK_FORCE_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_gradient_share_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_c_aviscmax.x = part_get_u(p);
+    ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
+    ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
+    /* TODO: CAN WE RE-WRITE THIS GPU STRUCT? */
+    /* EXCHANGE AVISC and AVISC_MAX */
+    ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct gradient_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
+    ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
+    ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
+
+    ps[i].pjs_pje.x = cjstart;
+    ps[i].pjs_pje.y = cjend;
+  }
+
+#elif defined(SPHENIX_PACK_SHARED_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_gradient_share_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_c_aviscmax.x = part_get_u(p);
+    ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
+    ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
+    /* TODO: CAN WE RE-WRITE THIS GPU STRUCT? */
+    /* EXCHANGE AVISC and AVISC_MAX */
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+    const struct part* restrict p = &parts[i];
+    ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct gradient_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
+    ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
+    ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
+
+    ps[i].pjs_pje.x = cjstart;
+    ps[i].pjs_pje.y = cjend;
+  }
+
+
+#else
+  /* Should be only SPHENIX_PACK_GRADIENT_PARTICLE,
+   * SPHENIX_PACK_FORCE_PARTICLE, or SPHENIX_PACK_SHARED_PARTICLE */
+#pragma error "how did we get here...?"
+#endif
+
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+
+  /* ---------- */
+  /* SoA access */
+  /* ---------- */
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    const struct part* restrict p = &parts[i];
     const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
     ps[i].x_h.y = x[1] - shift[1];
@@ -570,7 +904,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
@@ -578,7 +912,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
@@ -589,7 +923,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
@@ -597,7 +931,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].u_rho_c_aviscmax.x = part_get_u(p);
   }
 
@@ -605,7 +939,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
   }
 
@@ -613,7 +947,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
   }
 
@@ -621,7 +955,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
   }
 
@@ -629,7 +963,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
   }
 
@@ -637,7 +971,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
   }
 
@@ -645,7 +979,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
   }
 
@@ -680,20 +1014,24 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     const double shift[3], const int cjstart, const int cjend) {
 
   const int count = ci->hydro.count;
-  const struct part* parts = cell_get_const_hydro_parts(ci);
-  struct gpu_part_send_f* ps = &parts_buffer[pack_ind];
+  const struct part* restrict parts = cell_get_const_hydro_parts(ci);
+  struct gpu_part_send_f* restrict ps = &parts_buffer[pack_ind];
 
 #if defined(SWIFT_LOOP_SPLIT_NONE) || \
   ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
    ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
   )
 
+  /* -------------------------------------------------- */
+  /* Loops over all fields of a particle each iteration */
+  /* -------------------------------------------------- */
+
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
 
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
 
     const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
@@ -730,15 +1068,149 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)      \
 
+  /* ---------------------------------------- */
+  /* Loops split by struct field distribution */
+  /* ---------------------------------------- */
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+  /* All three of them use a common `struct x_h_v_m`, but
+   * remaining variables are split among different structs. */
 
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    /* struct x_h_v_m */
+
+    const struct part* restrict p = &parts[i];
+
+    const double* x = part_get_const_x(p);
+    ps[i].x_h.x = x[0] - shift[0];
+    ps[i].x_h.y = x[1] - shift[1];
+    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.w = part_get_h(p);
+
+    const float* v = part_get_const_v(p);
+    ps[i].vx_m.x = v[0];
+    ps[i].vx_m.y = v[1];
+    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.w = part_get_mass(p);
+  }
+
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct gradient_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_f_p.x = part_get_u(p);
+    ps[i].u_rho_f_p.y = part_get_rho(p);
+    ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
+    ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+
+    ps[i].u_rho_f_p.z = part_get_f_gradh(p);
+    ps[i].u_rho_f_p.w = part_get_pressure(p);
+
+    ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
+    ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
+
+    ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
+    int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
+    ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
+    ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
+    ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
+  }
+
+#elif defined(SPHENIX_PACK_FORCE_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_f_p.x = part_get_u(p);
+    ps[i].u_rho_f_p.y = part_get_rho(p);
+    ps[i].u_rho_f_p.z = part_get_f_gradh(p);
+    ps[i].u_rho_f_p.w = part_get_pressure(p);
+
+    ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
+    ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
+    ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
+    ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
+
+    ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
+    int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
+    ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
+    ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
+    ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
+  }
+
+#elif defined(SPHENIX_PACK_SHARED_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_gradient_pack_shared */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_f_p.x = part_get_u(p);
+    ps[i].u_rho_f_p.y = part_get_rho(p);
+    ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+
+    ps[i].u_rho_f_p.z = part_get_f_gradh(p);
+    ps[i].u_rho_f_p.w = part_get_pressure(p);
+
+    ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
+    ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
+    ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
+
+    ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
+    int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
+    ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
+    ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
+    ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
+  }
+
+#else
+  /* should only be SPHENIX_PACK_SHARED_PARTICLE, SPHENIX_PACK_FORCE_PARTICLE,
+   * or SPHENIX_PACK_GRADIENT_PARTICLE */
+#pragma error "how did we get here...?"
+#endif
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
+  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+
+  /* ---------- */
+  /* SoA access */
+  /* ---------- */
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    const struct part* restrict p = &parts[i];
     const double* x = part_get_const_x(p);
     ps[i].x_h.x = x[0] - shift[0];
     ps[i].x_h.y = x[1] - shift[1];
@@ -749,7 +1221,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].x_h.w = part_get_h(p);
   }
 
@@ -757,7 +1229,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     const float* v = part_get_const_v(p);
     ps[i].vx_m.x = v[0];
     ps[i].vx_m.y = v[1];
@@ -768,7 +1240,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].vx_m.w = part_get_mass(p);
   }
 
@@ -776,7 +1248,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].u_rho_f_p.x = part_get_u(p);
   }
 
@@ -784,7 +1256,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].u_rho_f_p.y = part_get_rho(p);
   }
 
@@ -792,7 +1264,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].u_rho_f_p.z = part_get_f_gradh(p);
   }
 
@@ -800,7 +1272,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].u_rho_f_p.w = part_get_pressure(p);
   }
 
@@ -808,7 +1280,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
   }
 
@@ -816,7 +1288,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
   }
 
@@ -824,7 +1296,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
   }
 
@@ -832,7 +1304,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
   }
 
@@ -840,7 +1312,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
   }
 
@@ -848,7 +1320,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const struct part* p = &parts[i];
+    const struct part* restrict p = &parts[i];
     int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
     ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
   }
