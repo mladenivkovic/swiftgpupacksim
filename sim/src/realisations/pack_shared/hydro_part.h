@@ -4,8 +4,8 @@
   */
 
 
-#ifndef SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H
-#define SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H
+#ifndef SWIFT_HYDRO_PART_b3a228f7bbc8ca563e5c74b89d52a62da7241bf9_H
+#define SWIFT_HYDRO_PART_b3a228f7bbc8ca563e5c74b89d52a62da7241bf9_H
 
  
 
@@ -82,9 +82,6 @@ struct force_pack {
   /*! Balsara switch */
   float _balsara;
 
-  /*! Artificial viscosity parameter */
-  float _alpha_av;
-
   /*! Thermal diffusion coefficient */
   float _alpha_diff;
 
@@ -110,6 +107,9 @@ struct force_gradient_pack_shared {
 
   /*! Particle soundspeed */
   float _soundspeed;
+
+  /*! Artificial viscosity parameter */
+  float _alpha_av;
 
 #ifdef SWIFT_DEBUG_CHECKS
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
@@ -1117,77 +1117,6 @@ static __attribute__((always_inline)) INLINE void
 
 
 /**
- * @brief get alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return force_pack_s->_alpha_av;
-}
-
-/**
- * @brief get a pointer to alpha_av, Artificial viscosity parameter.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p(struct part *restrict p) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &force_pack_s->_alpha_av;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_av,
- * Artificial viscosity parameter.
- * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &force_pack_s->_alpha_av;
-}
-
-/**
- * @brief set the value of alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av(struct part *restrict p, const float alpha_av) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  force_pack_s->_alpha_av = alpha_av;
-}
-
-
-
-
-/**
  * @brief get alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE float
@@ -1610,6 +1539,77 @@ static __attribute__((always_inline)) INLINE void
     error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
 #endif
   force_gradient_pack_shared_s->_soundspeed = soundspeed;
+}
+
+
+
+
+/**
+ * @brief get alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_alpha_av(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief get a pointer to alpha_av, Artificial viscosity parameter.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_alpha_av_p(struct part *restrict p) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief get read-only access to pointer to alpha_av,
+ * Artificial viscosity parameter.
+ * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_alpha_av_p(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief set the value of alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_alpha_av(struct part *restrict p, const float alpha_av) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_alpha_av = alpha_av;
 }
 
 
@@ -4787,4 +4787,4 @@ static __attribute__((always_inline)) INLINE void
 
 
 
-#endif /* SWIFT_HYDRO_PART_a3af4622cac06e84c1b3647317f5d0bad11f8a73_H */
+#endif /* SWIFT_HYDRO_PART_b3a228f7bbc8ca563e5c74b89d52a62da7241bf9_H */

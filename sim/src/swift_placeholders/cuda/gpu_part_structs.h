@@ -76,11 +76,25 @@ struct gpu_part_send_g {
   /*! Particle velocity and mass */
   float4 vx_m;
 
-  /*! Particle density, alpha visc, internal energy u, and speed of sound c */
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+
+  /*! Internal energy, density, particle soundspeed, alpha constant for viscosity */
+  float4 u_rho_c_avisc;
+
+  /*! Max viscosity alpha among neighbours, signal velocity, laplacian of
+   * intenal energy */
+  float3 aviscmax_vsig_lapu;
+
+#else
+
+  /*! internal energy, particle density, and speed of sound c, max alpha
+   * viscosity among neighbours */
   float4 u_rho_c_aviscmax;
 
   /*! viscosity information results */
   float3 avisc_vsig_lapu;
+
+#endif
 
   /*! Start and end index of particles to be interacted with in particle
    * buffer arrays */
@@ -111,12 +125,26 @@ struct gpu_part_send_f {
   /*! Particle predicted velocity and mass */
   float4 vx_m;
 
-  /*! Variable smoothing length term f, balsara, density, pressure */
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+
+  /*! Internal energy, density, particle soundspeed, alpha constant for
+   * viscosity */
+  float4 u_rho_c_avisc;
+
+  /*! Variable smoothing length term f, pressure, balsara, alpha constant for
+   * diffusion */
+  float4 f_p_balsara_adiff;
+
+#else
+
+  /*! Internal energy, density, variable smoothing length term f, pressure */
   float4 u_rho_f_p;
 
-  /*! Particle speed of sound, internal energy, alpha constants for
-   * viscosity and diffusion */
+  /*! balsara, particle speed of sound, viscosity parameter alpha, diffusion
+   * parameter alpha */
   float4 bals_c_avisc_adiff;
+
+#endif
 
   /*! Particle timebin, initial value of min neighbour timebin, start
    * and end index of particles to be interacted with in particle buffer
