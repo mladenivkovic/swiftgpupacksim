@@ -812,12 +812,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
     const struct part* restrict p = &parts[i];
 
-    ps[i].u_rho_c_aviscmax.x = part_get_u(p);
-    ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
-    ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
-    /* TODO: CAN WE RE-WRITE THIS GPU STRUCT? */
-    /* EXCHANGE AVISC and AVISC_MAX */
-    ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
   }
 
 #ifdef VECTORIZE
@@ -828,9 +826,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
     const struct part* restrict p = &parts[i];
 
-    ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
-    ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
-    ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
+    ps[i].aviscmax_vsig_lapu.x = part_get_alpha_visc_max_ngb(p);
+    ps[i].aviscmax_vsig_lapu.y = part_get_v_sig(p);
+    ps[i].aviscmax_vsig_lapu.z = part_get_laplace_u(p);
 
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
@@ -846,11 +844,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
     const struct part* restrict p = &parts[i];
 
-    ps[i].u_rho_c_aviscmax.x = part_get_u(p);
-    ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
-    ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
-    /* TODO: CAN WE RE-WRITE THIS GPU STRUCT? */
-    /* EXCHANGE AVISC and AVISC_MAX */
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
   }
 
 #ifdef VECTORIZE
@@ -859,7 +855,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
     /* struct force_pack */
     const struct part* restrict p = &parts[i];
-    ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
+    ps[i].u_rho_c_avisc.x = part_get_alpha_av(p);
   }
 
 #ifdef VECTORIZE
@@ -870,14 +866,13 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
     const struct part* restrict p = &parts[i];
 
-    ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
-    ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
-    ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
+    ps[i].aviscmax_vsig_lapu.x = part_get_alpha_visc_max_ngb(p);
+    ps[i].aviscmax_vsig_lapu.y = part_get_v_sig(p);
+    ps[i].aviscmax_vsig_lapu.z = part_get_laplace_u(p);
 
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
-
 
 #else
   /* Should be only SPHENIX_PACK_GRADIENT_PARTICLE,
@@ -936,7 +931,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+#else
     ps[i].u_rho_c_aviscmax.x = part_get_u(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -944,7 +943,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+#else
     ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -952,7 +955,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
+#else
     ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -960,7 +967,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
+#else
     ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -968,7 +979,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].aviscmax_vsig_lapu.x = part_get_alpha_visc_max_ngb(p);
+#else
     ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -976,7 +991,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].aviscmax_vsig_lapu.y = part_get_v_sig(p);
+#else
     ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -984,7 +1003,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].aviscmax_vsig_lapu.z = part_get_laplace_u(p);
+#else
     ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -1111,10 +1134,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 
     const struct part* restrict p = &parts[i];
 
-    ps[i].u_rho_f_p.x = part_get_u(p);
-    ps[i].u_rho_f_p.y = part_get_rho(p);
-    ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
-    ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
   }
 
 #ifdef VECTORIZE
@@ -1125,11 +1148,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 
     const struct part* restrict p = &parts[i];
 
-    ps[i].u_rho_f_p.z = part_get_f_gradh(p);
-    ps[i].u_rho_f_p.w = part_get_pressure(p);
-
-    ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
-    ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
+    ps[i].f_p_balsara_adiff.x = part_get_f_gradh(p);
+    ps[i].f_p_balsara_adiff.y = part_get_pressure(p);
+    ps[i].f_p_balsara_adiff.z = part_get_balsara(p);
+    ps[i].f_p_balsara_adiff.w = part_get_alpha_diff(p);
 
     ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
     int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
@@ -1175,9 +1197,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 
     const struct part* restrict p = &parts[i];
 
-    ps[i].u_rho_f_p.x = part_get_u(p);
-    ps[i].u_rho_f_p.y = part_get_rho(p);
-    ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
+    ps[i].u_rho_c_avisc.z = part_get_alpha_av(p);
   }
 
 #ifdef VECTORIZE
@@ -1188,12 +1211,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 
     const struct part* restrict p = &parts[i];
 
-    ps[i].u_rho_f_p.z = part_get_f_gradh(p);
-    ps[i].u_rho_f_p.w = part_get_pressure(p);
-
-    ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
-    ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
-    ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
+    ps[i].f_p_balsara_adiff.x = part_get_f_gradh(p);
+    ps[i].f_p_balsara_adiff.y = part_get_pressure(p);
+    ps[i].f_p_balsara_adiff.z = part_get_balsara(p);
+    ps[i].f_p_balsara_adiff.w = part_get_alpha_diff(p);
 
     ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
     int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
@@ -1258,7 +1279,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+#else
     ps[i].u_rho_f_p.x = part_get_u(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -1266,7 +1291,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+#else
     ps[i].u_rho_f_p.y = part_get_rho(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -1274,7 +1303,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
+#else
     ps[i].u_rho_f_p.z = part_get_f_gradh(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -1282,7 +1315,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
+#else
     ps[i].u_rho_f_p.w = part_get_pressure(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -1290,7 +1327,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].f_p_balsara_adiff.x = part_get_f_gradh(p);
+#else
     ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -1298,7 +1339,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].f_p_balsara_adiff.y = part_get_pressure(p);
+#else
     ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -1306,7 +1351,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].f_p_balsara_adiff.z = part_get_balsara(p);
+#else
     ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
+#endif
   }
 
 #ifdef VECTORIZE
@@ -1314,7 +1363,11 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+    ps[i].f_p_balsara_adiff.w = part_get_alpha_diff(p);
+#else
     ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
+#endif
   }
 
 #ifdef VECTORIZE

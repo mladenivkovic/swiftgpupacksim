@@ -45,9 +45,6 @@ force_pack:
   balsara:
     doc: Balsara switch
 
-  alpha_av:
-    doc: Artificial viscosity parameter
-  
   alpha_diff: 
     doc: Thermal diffusion coefficient
 
@@ -71,6 +68,9 @@ force_gradient_pack_shared:
   soundspeed: 
     doc: Particle soundspeed
 
+  alpha_av:
+    doc: Artificial viscosity parameter
+  
 
 
 density_unpack:
