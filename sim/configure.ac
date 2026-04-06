@@ -904,6 +904,55 @@ case "$with_part_align" in
    ;;
 esac
 
+AC_ARG_WITH([particle-access],
+   [AS_HELP_STRING([--with-particle-access=<value>],
+      [Particle data access variant to use @<:@part-struct, global-var, explicit-var, default: part-struct@:>@]
+   )],
+   [with_part_access="$withval"],
+   [with_part_access="part-struct"]
+)
+
+case "$with_part_access" in
+   "part-struct")
+      AC_DEFINE([SWIFT_PARTICLE_ACCESS_PART_STRUCT], [1], [Use particle struct to access particle data])
+   ;;
+   "global-var")
+      AC_DEFINE([SWIFT_PARTICLE_ACCESS_GLOBAL_VAR], [1], [Use global variable + index to access particle data])
+   ;;
+   "explicit-var")
+      AC_DEFINE([SWIFT_PARTICLE_ACCESS_EXPLICIT_VAR], [1], [Use local variable explicitly passed as argument + index to access particle data])
+   ;;
+   *)
+      AC_MSG_ERROR([Unknown particle access variant: $with_struct_align])
+   ;;
+esac
+
+
+AC_ARG_WITH([loop-split],
+   [AS_HELP_STRING([--with-loop-split=<value>],
+      [Loop splitting variant to use @<:@none, by-gpu-struct, by-element. Default: none@:>@]
+   )],
+   [with_loop_split="$withval"],
+   [with_loop_split="none"]
+)
+
+case "$with_loop_split" in
+   "none")
+      AC_DEFINE([SWIFT_LOOP_SPLIT_NONE], [1], [Loop accesses all required particle data each iteration])
+   ;;
+   "by-struct")
+      AC_DEFINE([SWIFT_LOOP_SPLIT_BY_STRUCT], [1], [Split loops by struct])
+   ;;
+   "by-element")
+      AC_DEFINE([SWIFT_LOOP_SPLIT_BY_ELEMENT], [1], [Split loops for each struct element])
+   ;;
+   *)
+      AC_MSG_ERROR([Unknown particle access variant: $with_struct_align])
+   ;;
+esac
+
+
+
 
 
 
