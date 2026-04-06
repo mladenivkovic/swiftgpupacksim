@@ -22,9 +22,8 @@ Building the program
   --enable-packed-structs add __attribute__((packed)) to structs (default: no)
                           [yes/no]
   --with-particle-memory-layout=<method>
-                          Particle memory layout to use [aos, soa,
-                          soa-modified, soa-manual, upstream, pack-gradient,
-                          pack-force, pack-shared, default: aos]
+                          Particle memory layout to use [aos, soa, upstream,
+                          pack-gradient, pack-force, pack-shared, default: aos]
   --with-particle-access=<value>
                           Particle data access variant to use [part-struct,
                           global-var, explicit-var, default: part-struct]
@@ -65,6 +64,23 @@ Building the program
 
 Build variants explanation
 --------------------------
+
+- `--with-particle-memory-layout=<method>`
+  Particle memory layout to use:
+  - `aos`: Array of Structs. One big particle struct in a single global array.
+  - `upstream`: Same as `aos`, but the struct fields are arranged the same way
+    SWIFT/upstream SPHENIX particle is arranged, whereas `aos` follows the same
+    order as the fields are used in the packing and unpacking operations.
+  - `soa`: Struct of Arrays. Each particle data field is stored in its own
+    array.
+  - `pack-gradient`: Particle data is split into several structs. Structs
+    correspond to the data fields needed for packing operations (unpacking is
+    disadvantaged). Fields needed in both force and gradient packs/unpacks are
+    stored in the `gradient` struct.
+  - `pack-force`: Same as `pack-gradient`, but fields needed in both force and
+    gradient packs/unpacks are stored in the `force` struct.
+  - `pack-shared`: Same as `pack-gradient`, but fields needed in both force and
+    gradient packs/unpacks are stored in a separate `shared` struct.
 
 - `--with-particle-access=<value>`
   Select particle data access variant, i.e. which getter/setter to use (or: how
