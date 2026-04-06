@@ -192,6 +192,10 @@
 /* Make structs packed as well */
 
 #define SWIFT_STRUCT_ALIGN __attribute__((packed, aligned(32)))
+#define SWIFT_STRUCT_GPU_PART_SEND_G_ALIGN __attribute__((packed, aligned(128)))
+#define SWIFT_STRUCT_GPU_PART_RECV_G_ALIGN __attribute__((packed, aligned(16)))
+#define SWIFT_STRUCT_GPU_PART_SEND_F_ALIGN __attribute__((packed, aligned(128)))
+#define SWIFT_STRUCT_GPU_PART_RECV_F_ALIGN __attribute__((packed, aligned(32)))
 #define SWIFT_STRUCT_ALIGN_PART __attribute__((packed, aligned(SWIFT_STRUCT_ALIGNMENT_PART)))
 
 #if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_FORCE_PARTICLE) || defined (SPHENIX_PACK_SHARED_PARTICLE)
@@ -248,6 +252,10 @@
 #else /* PACKED_STRUCTS not defined */
 
 #define SWIFT_STRUCT_ALIGN __attribute__((aligned(32)))
+#define SWIFT_STRUCT_GPU_PART_SEND_G_ALIGN __attribute__((aligned(128)))
+#define SWIFT_STRUCT_GPU_PART_RECV_G_ALIGN __attribute__((aligned(16)))
+#define SWIFT_STRUCT_GPU_PART_SEND_F_ALIGN __attribute__((aligned(128)))
+#define SWIFT_STRUCT_GPU_PART_RECV_F_ALIGN __attribute__((aligned(32)))
 #define SWIFT_STRUCT_ALIGN_PART __attribute__((aligned(SWIFT_STRUCT_ALIGNMENT_PART)))
 
 #if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_FORCE_PARTICLE) || defined (SPHENIX_PACK_SHARED_PARTICLE)
