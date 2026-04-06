@@ -86,15 +86,18 @@ where `XXX` is determined by the selected memory layout realisation.
 The contents should be the following:
 
 ```
-# Memory layout: XXX
 # nr_threads: [INT]
-# nr_steps: [INT]
 # nr_parts: [INT]
-# cache flush: [0,1]
-# struct align: [INT]
-# part align: [INT]
-# memory layout: [STR]
-# Reproduced measurements: path/to/root/dir/of/measurements
+# nr_steps: [INT]
+# cache flush: 0 or 1
+# stuct align: [INT]
+# part array align: [INT]
+# memory layout: XXX [aos, soa, pack_gradient, pack_force, pack_shared]
+# access variant: XXX [part-struct, global-var, explicit-var]
+# loop splitting variant: [none, by-struct, by-element]
+# vectorization: 0 or 1
+# packed structs: 0 or 1
+# reproduced measurements: path/to/root/dir/of/measurements
 # type,subtype,timing[ms]
 pack,density,[FLOAT]
 pack,gradient,[FLOAT]
