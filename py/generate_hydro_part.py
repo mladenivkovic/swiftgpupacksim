@@ -78,6 +78,22 @@ parser.add_argument(
     default=False,
     help="Align each particle data struct equally using SWIFT_STRUCT_ALIGN",
 )
+parser.add_argument(
+    "-e",
+    "--explicit-var-accessors",
+    dest="explicit_var_accessors",
+    action="store_true",
+    default=False,
+    help="Generate getters/setters using explicitly passed argument pointer",
+)
+parser.add_argument(
+    "-g",
+    "--global-var-accessors",
+    dest="global_var_accessors",
+    action="store_true",
+    default=False,
+    help="Generate getters/setters using global variable pointer",
+)
 
 if __name__ == "__main__":
 
@@ -90,6 +106,8 @@ if __name__ == "__main__":
     testing = args.testing
     id_checks = not args.no_id_checks
     manual_align = not args.no_manual_align
+    explicit_var_accessors = args.explicit_var_accessors
+    global_var_accessors = args.global_var_accessors
     verify_file_exists(input_file)
 
     input_fp = open(input_file, "r")
@@ -109,6 +127,8 @@ if __name__ == "__main__":
         swift_header=swift_header,
         id_checks=id_checks,
         manual_align=manual_align,
+        explicit_var_accessors=explicit_var_accessors,
+        global_var_accessors=global_var_accessors,
         testing=testing,
         verbose=verbose,
     )
