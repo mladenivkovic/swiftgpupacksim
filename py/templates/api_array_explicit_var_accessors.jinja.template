@@ -5,7 +5,7 @@
  * part_get_const_{{NAME}}() instead.
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}*
-  part_get_{{NAME}}_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_{{NAME}}_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -41,7 +41,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %} for read-only access.
  */
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
-  part_get_const_{{NAME}}_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_{{NAME}}_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -77,7 +77,7 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %} by index.
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}
-  part_get_{{NAME}}_ind_explicit(const struct hydro_part_arrays *restrict pd, const int pind, const int i) {
+  part_get_{{NAME}}_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -114,7 +114,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_{{NAME}}_explicit(struct hydro_part_arrays *restrict pd, const int pind, const {{TYPE}} {{NAME}}[{{SIZE}}]) {
+  part_set_{{NAME}}_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const {{TYPE}} {{NAME}}[{{SIZE}}]) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -150,7 +150,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %} by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_{{NAME}}_ind_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int i, const {{TYPE}} {{NAME}}) {
+  part_set_{{NAME}}_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const {{TYPE}} {{NAME}}) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
