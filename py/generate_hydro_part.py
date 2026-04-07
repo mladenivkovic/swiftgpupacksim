@@ -71,13 +71,13 @@ parser.add_argument(
     help="Do not generate particle struct ID debugging checks",
 )
 parser.add_argument(
-        "-a",
-        "--no-manual-align",
-        dest="no_manual_align",
-        action="store_true",
-        default=False,
-        help="Align each particle data struct equally using SWIFT_STRUCT_ALIGN",
-        )
+    "-a",
+    "--no-manual-align",
+    dest="no_manual_align",
+    action="store_true",
+    default=False,
+    help="Align each particle data struct equally using SWIFT_STRUCT_ALIGN",
+)
 
 if __name__ == "__main__":
 

@@ -33,8 +33,6 @@ extern "C" {
 #include "../align.h"
 
 
-
-
 /*! Container for particle data required for density calcs */
 struct gpu_part_send_d {
 #ifdef WITH_CUDA
@@ -76,9 +74,11 @@ struct gpu_part_send_g {
   /*! Particle velocity and mass */
   float4 vx_m;
 
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
 
-  /*! Internal energy, density, particle soundspeed, alpha constant for viscosity */
+  /*! Internal energy, density, particle soundspeed, alpha constant for
+   * viscosity */
   float4 u_rho_c_avisc;
 
   /*! Max viscosity alpha among neighbours, signal velocity, laplacian of
@@ -125,7 +125,8 @@ struct gpu_part_send_f {
   /*! Particle predicted velocity and mass */
   float4 vx_m;
 
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
 
   /*! Internal energy, density, particle soundspeed, alpha constant for
    * viscosity */

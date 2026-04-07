@@ -64,7 +64,9 @@ void gpu_data_buffers_init(struct gpu_offload_data* buf,
   /* buf->parts_send_d = malloc(part_buffer_size * send_struct_size); */
   /* swift_assert(buf->parts_send_d != NULL); */
 
-  if (swift_memalign("parts_part", (void**)&buf->parts_send_d, SWIFT_PART_ALIGNMENT, part_buffer_size * send_struct_size) != 0)
+  if (swift_memalign("parts_part", (void**)&buf->parts_send_d,
+                     SWIFT_PART_ALIGNMENT,
+                     part_buffer_size * send_struct_size) != 0)
     error("Error while allocating memory for SPH particles");
 
   buf->parts_recv_d = malloc(part_buffer_size * recv_struct_size);

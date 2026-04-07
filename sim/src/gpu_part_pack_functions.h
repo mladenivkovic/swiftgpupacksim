@@ -35,4 +35,3 @@
 #else
 #pragma error "Unknown particle access layout realisation"
 #endif
-

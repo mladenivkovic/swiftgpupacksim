@@ -251,7 +251,6 @@ def add_auxiliary_fields(
             else:
                 updated_contents_d[key] = contents_d[key]
 
-
     if id_checks:
         if len(list(updated_contents_d.keys())) == 1:
             if verbose:

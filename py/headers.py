@@ -85,7 +85,11 @@ def generate_hydro_part_header(
 
     # Now generate the file from template
     header_file = jinja_generate_hydro_part_h(
-        part_struct_d, swift_header=swift_header, manual_struct_align=manual_align, testing=testing, verbose=verbose
+        part_struct_d,
+        swift_header=swift_header,
+        manual_struct_align=manual_align,
+        testing=testing,
+        verbose=verbose,
     )
 
     return header_file
