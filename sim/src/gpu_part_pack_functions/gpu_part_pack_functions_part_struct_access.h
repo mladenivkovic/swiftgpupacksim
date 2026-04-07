@@ -49,10 +49,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   const struct gpu_part_recv_d* restrict parts_recv = &parts_buffer[unpack_ind];
   struct part* restrict cp = cell_get_hydro_parts(c);
 
-#if defined(SWIFT_LOOP_SPLIT_NONE) || \
-  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
-   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
-  )
+#if defined(SWIFT_LOOP_SPLIT_NONE) ||       \
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+     (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)))
 
   /* -------------------------------------------------- */
   /* Loops over all fields of a particle each iteration */
@@ -88,12 +87,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     float div_v = part_get_div_v(p) + pr.rot_vx_div_v.w;
     part_set_div_v(p, div_v);
   }
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
-  (                                            \
-    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
-    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
-    )
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&    \
+    (defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+     defined(SPHENIX_PACK_SHARED_PARTICLE))
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -153,7 +150,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
 
 
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
   /* ---------- */
   /* SoA access */
@@ -253,10 +250,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   const struct gpu_part_recv_g* restrict parts_recv = &parts_buffer[unpack_ind];
   struct part* restrict cp = cell_get_hydro_parts(c);
 
-#if defined(SWIFT_LOOP_SPLIT_NONE) || \
-  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
-   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
-  )
+#if defined(SWIFT_LOOP_SPLIT_NONE) ||       \
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+     (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)))
 
   /* -------------------------------------------------- */
   /* Loops over all fields of a particle each iteration */
@@ -283,12 +279,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     part_set_laplace_u(p, lu);
   }
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
-  (                                            \
-    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
-    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
-  )
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&    \
+    (defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+     defined(SPHENIX_PACK_SHARED_PARTICLE))
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -320,7 +314,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
   }
 
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
   /* ---------- */
   /* SoA access */
@@ -384,10 +378,9 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
   const struct gpu_part_recv_f* restrict parts_recv = &parts_buffer[unpack_ind];
   struct part* restrict cp = cell_get_hydro_parts(c);
 
-#if defined(SWIFT_LOOP_SPLIT_NONE) || \
-  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
-   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
-  )
+#if defined(SWIFT_LOOP_SPLIT_NONE) ||       \
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+     (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)))
 
   /* -------------------------------------------------- */
   /* Loops over all fields of a particle each iteration */
@@ -418,12 +411,10 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     part_set_timestep_limiter_min_ngb_time_bin(p, mintbin);
   }
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
-  (                                            \
-    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
-    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
-  )
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&    \
+    (defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+     defined(SPHENIX_PACK_SHARED_PARTICLE))
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -469,7 +460,7 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
 
 
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
   /* ---------- */
   /* SoA access */
@@ -553,10 +544,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   const struct part* restrict parts = cell_get_const_hydro_parts(c);
   struct gpu_part_send_d* restrict ps = &parts_buffer[pack_ind];
 
-#if defined(SWIFT_LOOP_SPLIT_NONE) || \
-  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
-   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
-  )
+#if defined(SWIFT_LOOP_SPLIT_NONE) ||       \
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+     (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)))
 
   /* -------------------------------------------------- */
   /* Loops over all fields of a particle each iteration */
@@ -585,12 +575,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ps[i].pjs_pje.y = cjend;
   }
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
-  (                                            \
-    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
-    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
-  )
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&    \
+    (defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+     defined(SPHENIX_PACK_SHARED_PARTICLE))
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -623,7 +611,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   }
 
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
   /* ---------- */
   /* SoA access */
@@ -704,10 +692,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   const struct part* restrict parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_g* restrict ps = &parts_buffer[pack_ind];
 
-#if defined(SWIFT_LOOP_SPLIT_NONE) || \
-  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
-   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
-  )
+#if defined(SWIFT_LOOP_SPLIT_NONE) ||       \
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+     (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)))
 
   /* -------------------------------------------------- */
   /* Loops over all fields of a particle each iteration */
@@ -732,7 +719,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].vx_m.z = v[2];
     ps[i].vx_m.w = part_get_mass(p);
 
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.x = part_get_u(p);
     ps[i].u_rho_c_avisc.y = part_get_rho(p);
     ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
@@ -756,12 +744,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.y = cjend;
   }
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
-  (                                            \
-    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
-    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
-  )
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&    \
+    (defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+     defined(SPHENIX_PACK_SHARED_PARTICLE))
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -893,7 +879,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
 
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
   /* ---------- */
   /* SoA access */
@@ -942,7 +928,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.x = part_get_u(p);
 #else
     ps[i].u_rho_c_aviscmax.x = part_get_u(p);
@@ -954,7 +941,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.y = part_get_rho(p);
 #else
     ps[i].u_rho_c_aviscmax.y = part_get_rho(p);
@@ -966,7 +954,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
 #else
     ps[i].u_rho_c_aviscmax.z = part_get_soundspeed(p);
@@ -978,7 +967,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
 #else
     ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb(p);
@@ -990,7 +980,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].aviscmax_vsig_lapu.x = part_get_alpha_visc_max_ngb(p);
 #else
     ps[i].avisc_vsig_lapu.x = part_get_alpha_av(p);
@@ -1002,7 +993,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].aviscmax_vsig_lapu.y = part_get_v_sig(p);
 #else
     ps[i].avisc_vsig_lapu.y = part_get_v_sig(p);
@@ -1014,7 +1006,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_FORCE_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].aviscmax_vsig_lapu.z = part_get_laplace_u(p);
 #else
     ps[i].avisc_vsig_lapu.z = part_get_laplace_u(p);
@@ -1055,10 +1048,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   const struct part* restrict parts = cell_get_const_hydro_parts(ci);
   struct gpu_part_send_f* restrict ps = &parts_buffer[pack_ind];
 
-#if defined(SWIFT_LOOP_SPLIT_NONE) || \
-  ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
-   ( defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) ) \
-  )
+#if defined(SWIFT_LOOP_SPLIT_NONE) ||       \
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && \
+     (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)))
 
   /* -------------------------------------------------- */
   /* Loops over all fields of a particle each iteration */
@@ -1083,7 +1075,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].vx_m.z = v[2];
     ps[i].vx_m.w = part_get_mass(p);
 
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.x = part_get_u(p);
     ps[i].u_rho_c_avisc.y = part_get_rho(p);
     ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
@@ -1112,12 +1105,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
 
-#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&   \
-  (                                            \
-    defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
-    defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)      \
-)
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&    \
+    (defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+     defined(SPHENIX_PACK_SHARED_PARTICLE))
 
   /* ---------------------------------------- */
   /* Loops split by struct field distribution */
@@ -1253,7 +1244,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
 
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-  (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
   /* ---------- */
   /* SoA access */
@@ -1302,7 +1293,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.x = part_get_u(p);
 #else
     ps[i].u_rho_f_p.x = part_get_u(p);
@@ -1314,7 +1306,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.y = part_get_rho(p);
 #else
     ps[i].u_rho_f_p.y = part_get_rho(p);
@@ -1326,7 +1319,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
 #else
     ps[i].u_rho_f_p.z = part_get_f_gradh(p);
@@ -1338,7 +1332,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
 #else
     ps[i].u_rho_f_p.w = part_get_pressure(p);
@@ -1350,7 +1345,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].f_p_balsara_adiff.x = part_get_f_gradh(p);
 #else
     ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
@@ -1362,7 +1358,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].f_p_balsara_adiff.y = part_get_pressure(p);
 #else
     ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
@@ -1374,7 +1371,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].f_p_balsara_adiff.z = part_get_balsara(p);
 #else
     ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
@@ -1386,7 +1384,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_SHARED_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].f_p_balsara_adiff.w = part_get_alpha_diff(p);
 #else
     ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
@@ -1421,4 +1420,3 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
 #endif
 }
-
