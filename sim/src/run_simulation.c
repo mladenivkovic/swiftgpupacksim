@@ -11,6 +11,8 @@
 #include <float.h>
 #include <omp.h>
 
+/* Global variable used for global variable access variant */
+struct hydro_part_arrays global_hydro_part_arrays;
 
 /**
  * Flush the caches by performing meaningless operations on a large array with
@@ -208,6 +210,9 @@ void run_simulation(struct parameters* params) {
   /* Allocate data to work on */
   struct hydro_part_arrays part_data;
   init_part_arrays(&part_data, params->nr_parts);
+
+  /* Copy pointers over to the global data */
+  global_hydro_part_arrays = part_data;
 
   /* Initialise particle locks */
   omp_lock_t* part_locks = malloc(params->nr_parts * sizeof(omp_lock_t));

@@ -115,6 +115,10 @@ struct xpart {
 #include <stddef.h>
 {% endif -%}
 
+{% if GLOBAL_VAR_ACCESSORS %}
+extern struct hydro_part_arrays global_hydro_part_arrays;
+{%- endif %}
+
 {# --------------------------------- GENERATE STUCTS -------------------------------- #}
 {% for STRUCT_NAME in STRUCT_NAMES %}
 struct {{STRUCT_NAME}} {

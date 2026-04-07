@@ -3,18 +3,18 @@
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}
-  part_get_{{NAME}}_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_{{NAME}}_global(const ptrdiff_t pind) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
+  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_hydro_part_arrays._{{ROOT_STRUCT}} + pind;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -41,18 +41,18 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  * to {{NAME}}. If you need read-only access to {{NAME}}, use part_get_const_{{NAME}}_p() instead.
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}*
-  part_get_{{NAME}}_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_{{NAME}}_p_global(const ptrdiff_t pind) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_hydro_part_arrays._{{ROOT_STRUCT}} + pind;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -80,18 +80,18 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
  * If you need write access to {{NAME}}, use part_get_{{NAME}}_p() instead.
  */
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
-  part_get_const_{{NAME}}_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_{{NAME}}_p_global(const ptrdiff_t pind) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
+  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_hydro_part_arrays._{{ROOT_STRUCT}} + pind;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -117,13 +117,13 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_{{NAME}}_explicit(struct hydro_part_arrays *restrict pd, const int pind, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
+  part_set_{{NAME}}_global(const ptrdiff_t pind, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_hydro_part_arrays._{{ROOT_STRUCT}} + pind;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
