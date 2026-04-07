@@ -41,10 +41,10 @@ __attribute__((always_inline)) INLINE static int part_is_active(
  * @return 1 if the #part is active, 0 otherwise.
  */
 __attribute__((always_inline)) INLINE static int part_is_active_explicit(
-    const struct hydro_part_arrays* pd, int index, const struct engine* restrict e) {
+    const struct hydro_part_arrays* pd, int pind, const struct engine* restrict e) {
 
   const timebin_t max_active_bin = e->max_active_bin;
-  const timebin_t part_bin = part_get_time_bin_explicit(pd, index);
+  const timebin_t part_bin = part_get_time_bin_explicit(pd, pind);
 
 #ifdef SWIFT_DEBUG_CHECKS
   const integertime_t ti_current = e->ti_current;
@@ -58,6 +58,34 @@ __attribute__((always_inline)) INLINE static int part_is_active_explicit(
 
   return (part_bin <= max_active_bin);
 }
+
+
+/**
+ * @brief Is this particle finishing its time-step now ?
+ *
+ * @param p The #part.
+ * @param e The #engine containing information about the current time.
+ * @return 1 if the #part is active, 0 otherwise.
+ */
+__attribute__((always_inline)) INLINE static int part_is_active_global(
+    int pind, const struct engine* restrict e) {
+
+  const timebin_t max_active_bin = e->max_active_bin;
+  const timebin_t part_bin = part_get_time_bin_global(pind);
+
+#ifdef SWIFT_DEBUG_CHECKS
+  const integertime_t ti_current = e->ti_current;
+  const integertime_t ti_end = get_integer_time_end(ti_current, part_bin);
+  if (ti_end < ti_current)
+    error(
+        "particle in an impossible time-zone! p->ti_end=%lld "
+        "e->ti_current=%lld",
+        ti_end, ti_current);
+#endif
+
+  return (part_bin <= max_active_bin);
+}
+
 
 
 

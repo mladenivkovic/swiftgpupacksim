@@ -30,6 +30,7 @@ def jinja_generate_hydro_part_h(
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
     manual_struct_align: bool = False,
+    global_var_accessors: bool= False,
     testing: bool = False,
     verbose: bool = False,
 ) -> str:
@@ -56,6 +57,9 @@ def jinja_generate_hydro_part_h(
 
     manual_struct_align: bool
         if True, generate a different SWIFT_STRUCT_ALIGN_ macro for each struct.
+
+    global_var_accessors: bool
+        if True, also generate getters/setters which use global variable pointer
 
     testing: bool
         if True, use minimalistic header template for unit tests to generate
@@ -87,6 +91,7 @@ def jinja_generate_hydro_part_h(
     d["HEADER_FOR_SWIFT"] = swift_header
     d["HEADER_GUARD"] = get_git_hash()
     d["MANUAL_STRUCT_ALIGN"] = manual_struct_align
+    d["GLOBAL_VAR_ACCESSORS"] = global_var_accessors
 
     header_template = templ.render(d)
 

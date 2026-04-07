@@ -97,6 +97,7 @@ def generate_hydro_part_header(
         part_struct_d,
         swift_header=swift_header,
         manual_struct_align=manual_align,
+        global_var_accessors=global_var_accessors,
         testing=testing,
         verbose=verbose,
     )

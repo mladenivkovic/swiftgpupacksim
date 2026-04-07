@@ -236,7 +236,7 @@ fi
 # Define HAVE_POSIX_MEMALIGN if it works.
 AX_FUNC_POSIX_MEMALIGN
 
-# if test "$enable_opt" = "yes" ; then
+if test "$enable_opt" = "yes" ; then
    # Choose the best flags for this compiler and architecture
    ac_test_CFLAGS="no"
    AX_CC_MAXOPT
@@ -251,7 +251,7 @@ AX_FUNC_POSIX_MEMALIGN
            CFLAGS="$CFLAGS $SIMD_FLAGS"
        fi
    fi
-# fi
+fi
 
 
 # Add address sanitizer options to flags, if requested. Only useful for GCC
