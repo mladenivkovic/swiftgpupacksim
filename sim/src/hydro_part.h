@@ -99,6 +99,55 @@ part_set_timestep_limiter_to_be_synchronized(struct part* restrict p,
   timestep_limiter_set_to_be_synchronized(d, to_be_synchronized);
 }
 
+static __attribute__((always_inline)) INLINE timebin_t
+part_get_timestep_limiter_wakeup_explicit(const struct hydro_part_arrays* restrict pd, int index) {
+  const struct timestep_limiter_data* restrict d =
+      part_get_const_limiter_data_p_explicit(pd, index);
+  return timestep_limiter_get_wakeup(d);
+}
+
+static __attribute__((always_inline)) INLINE timebin_t*
+part_get_timestep_limiter_wakeup_p_explicit(struct hydro_part_arrays* restrict pd, int index) {
+  struct timestep_limiter_data* restrict d = part_get_limiter_data_p_explicit(pd, index);
+  return timestep_limiter_get_wakeup_p(d);
+}
+
+static __attribute__((always_inline)) INLINE void
+part_set_timestep_limiter_wakeup_explicit(struct hydro_part_arrays* restrict pd, int index,
+                                 const timebin_t wakeup) {
+  struct timestep_limiter_data* restrict d = part_get_limiter_data_p_explicit(pd, index);
+  timestep_limiter_set_wakeup(d, wakeup);
+}
+
+static __attribute__((always_inline)) INLINE timebin_t
+part_get_timestep_limiter_min_ngb_time_bin_explicit(const struct hydro_part_arrays* restrict pd, int index) {
+  const struct timestep_limiter_data* restrict d =
+      part_get_const_limiter_data_p_explicit(pd, index);
+  return timestep_limiter_get_min_ngb_time_bin(d);
+}
+
+static __attribute__((always_inline)) INLINE void
+part_set_timestep_limiter_min_ngb_time_bin_explicit(struct hydro_part_arrays* restrict pd, int index,
+                                           const timebin_t min_ngb_time_bin) {
+  struct timestep_limiter_data* restrict d = part_get_limiter_data_p_explicit(pd, index);
+  timestep_limiter_set_min_ngb_time_bin(d, min_ngb_time_bin);
+}
+
+static __attribute__((always_inline)) INLINE char
+part_get_timestep_limiter_to_be_synchronized_explicit(const struct hydro_part_arrays* restrict pd, int index) {
+  const struct timestep_limiter_data* restrict d =
+      part_get_const_limiter_data_p_explicit(pd, index);
+  return timestep_limiter_get_to_be_synchronized(d);
+}
+
+static __attribute__((always_inline)) INLINE void
+part_set_timestep_limiter_to_be_synchronized_explicit(struct hydro_part_arrays* restrict pd, int index,
+                                             const char to_be_synchronized) {
+  struct timestep_limiter_data* restrict d = part_get_limiter_data_p_explicit(pd, index);
+  timestep_limiter_set_to_be_synchronized(d, to_be_synchronized);
+}
+
+
 /* ----------------------------------------------
  * Radiative Transfer time data getters/setters
  * ---------------------------------------------- */
@@ -128,5 +177,33 @@ static __attribute__((always_inline)) INLINE void part_set_rt_min_ngb_time_bin(
   struct rt_timestepping_data* restrict rtd = part_get_rt_time_data_p(p);
   rt_timestepping_data_set_min_ngb_time_bin(rtd, min_ngb_time_bin);
 }
+
+
+static __attribute__((always_inline)) INLINE timebin_t
+part_get_rt_time_bin_explicit(const struct hydro_part_arrays* restrict pd, int index) {
+  const struct rt_timestepping_data* restrict const rtd =
+      part_get_const_rt_time_data_p_explicit(pd, index);
+  return rt_timestepping_data_get_time_bin(rtd);
+}
+
+static __attribute__((always_inline)) INLINE void part_set_rt_time_bin_explicit(
+    struct hydro_part_arrays* restrict pd, int index, const timebin_t time_bin) {
+  struct rt_timestepping_data* restrict rtd = part_get_rt_time_data_p_explicit(pd, index);
+  rt_timestepping_data_set_time_bin(rtd, time_bin);
+}
+
+static __attribute__((always_inline)) INLINE timebin_t
+part_get_rt_min_ngb_time_bin_explicit(const struct hydro_part_arrays* restrict pd, int index) {
+  const struct rt_timestepping_data* restrict const rtd =
+      part_get_const_rt_time_data_p_explicit(pd, index);
+  return rt_timestepping_data_get_min_ngb_time_bin(rtd);
+}
+
+static __attribute__((always_inline)) INLINE void part_set_rt_min_ngb_time_bin_explicit(
+    struct hydro_part_arrays* restrict pd, int index, const timebin_t min_ngb_time_bin) {
+  struct rt_timestepping_data* restrict rtd = part_get_rt_time_data_p_explicit(pd, index);
+  rt_timestepping_data_set_min_ngb_time_bin(rtd, min_ngb_time_bin);
+}
+
 
 #endif

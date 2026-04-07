@@ -473,7 +473,7 @@ class FieldEntry(object):
             api_explicit = ""
             api_global = ""
 
-            #  api_part_struct = templ_part_struct.render(params_dict)
+            api_part_struct = templ_part_struct.render(params_dict)
             if explicit_var_accessors:
                 api_explicit = templ_explicit.render(params_dict)
             if global_var_accessors:
