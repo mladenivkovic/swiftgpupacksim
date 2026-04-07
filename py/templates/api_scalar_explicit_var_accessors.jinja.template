@@ -3,7 +3,7 @@
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}
-  part_get_{{NAME}}_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_{{NAME}}_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -41,7 +41,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  * to {{NAME}}. If you need read-only access to {{NAME}}, use part_get_const_{{NAME}}_p() instead.
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}*
-  part_get_{{NAME}}_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_{{NAME}}_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -80,7 +80,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
  * If you need write access to {{NAME}}, use part_get_{{NAME}}_p() instead.
  */
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
-  part_get_const_{{NAME}}_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_{{NAME}}_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -117,7 +117,7 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_{{NAME}}_explicit(struct hydro_part_arrays *restrict pd, const int pind, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
+  part_set_{{NAME}}_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}

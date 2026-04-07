@@ -4,8 +4,8 @@
   */
 
 
-#ifndef SWIFT_HYDRO_PART_f1aeb16f8bd06ead5c10ea1f54a9d64ad7b4f0f6_H
-#define SWIFT_HYDRO_PART_f1aeb16f8bd06ead5c10ea1f54a9d64ad7b4f0f6_H
+#ifndef SWIFT_HYDRO_PART_cc5f5f8948b030f7f511d72b21e4f719b2d6fca9_H
+#define SWIFT_HYDRO_PART_cc5f5f8948b030f7f511d72b21e4f719b2d6fca9_H
 
  
 
@@ -568,7 +568,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE size_t
-  part_get_cell_offset_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_cell_offset_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -588,7 +588,7 @@ static __attribute__((always_inline)) INLINE size_t
  * to cell_offset. If you need read-only access to cell_offset, use part_get_const_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE size_t*
-  part_get_cell_offset_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_cell_offset_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -608,7 +608,7 @@ static __attribute__((always_inline)) INLINE size_t*
  * If you need write access to cell_offset, use part_get_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE const size_t*
-  part_get_const_cell_offset_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_cell_offset_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -626,7 +626,7 @@ static __attribute__((always_inline)) INLINE const size_t*
  * @brief set the value of cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_offset_explicit(struct hydro_part_arrays *restrict pd, const int pind, const size_t cell_offset) {
+  part_set_cell_offset_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const size_t cell_offset) {
 
   struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -644,7 +644,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE size_t
-  part_get_cell_offset_global(const int pind) {
+  part_get_cell_offset_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -664,7 +664,7 @@ static __attribute__((always_inline)) INLINE size_t
  * to cell_offset. If you need read-only access to cell_offset, use part_get_const_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE size_t*
-  part_get_cell_offset_p_global(const int pind) {
+  part_get_cell_offset_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -684,7 +684,7 @@ static __attribute__((always_inline)) INLINE size_t*
  * If you need write access to cell_offset, use part_get_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE const size_t*
-  part_get_const_cell_offset_p_global(const int pind) {
+  part_get_const_cell_offset_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -702,7 +702,7 @@ static __attribute__((always_inline)) INLINE const size_t*
  * @brief set the value of cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_offset_global(const int pind, const size_t cell_offset) {
+  part_set_cell_offset_global(const ptrdiff_t pind, const size_t cell_offset) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -747,7 +747,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  */
 static __attribute__((always_inline)) INLINE struct hydro_part_arrays*
-  part_get_cell_part_arrays_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_cell_part_arrays_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -767,7 +767,7 @@ static __attribute__((always_inline)) INLINE struct hydro_part_arrays*
  * to cell_part_arrays. If you need read-only access to cell_part_arrays, use part_get_const_cell_part_arrays_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct hydro_part_arrays**
-  part_get_cell_part_arrays_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_cell_part_arrays_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -783,7 +783,7 @@ static __attribute__((always_inline)) INLINE struct hydro_part_arrays**
  * @brief set the value of cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_part_arrays_explicit(struct hydro_part_arrays *restrict pd, const int pind,  struct hydro_part_arrays* cell_part_arrays) {
+  part_set_cell_part_arrays_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind,  struct hydro_part_arrays* cell_part_arrays) {
 
   struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -801,7 +801,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  */
 static __attribute__((always_inline)) INLINE struct hydro_part_arrays*
-  part_get_cell_part_arrays_global(const int pind) {
+  part_get_cell_part_arrays_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -821,7 +821,7 @@ static __attribute__((always_inline)) INLINE struct hydro_part_arrays*
  * to cell_part_arrays. If you need read-only access to cell_part_arrays, use part_get_const_cell_part_arrays_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct hydro_part_arrays**
-  part_get_cell_part_arrays_p_global(const int pind) {
+  part_get_cell_part_arrays_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -837,7 +837,7 @@ static __attribute__((always_inline)) INLINE struct hydro_part_arrays**
  * @brief set the value of cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_part_arrays_global(const int pind,  struct hydro_part_arrays* cell_part_arrays) {
+  part_set_cell_part_arrays_global(const ptrdiff_t pind,  struct hydro_part_arrays* cell_part_arrays) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -928,7 +928,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get id, Particle unique ID.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_id_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_id_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_id* restrict part_id_s = pd->_part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -948,7 +948,7 @@ static __attribute__((always_inline)) INLINE long long
  * to id. If you need read-only access to id, use part_get_const_id_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_id_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_id_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_id* restrict part_id_s = pd->_part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -968,7 +968,7 @@ static __attribute__((always_inline)) INLINE long long*
  * If you need write access to id, use part_get_id_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_id_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_id_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_id* restrict part_id_s = pd->_part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -986,7 +986,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief set the value of id, Particle unique ID.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_id_explicit(struct hydro_part_arrays *restrict pd, const int pind, const long long id) {
+  part_set_id_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const long long id) {
 
   struct part_id* restrict part_id_s = pd->_part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1004,7 +1004,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get id, Particle unique ID.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_id_global(const int pind) {
+  part_get_id_global(const ptrdiff_t pind) {
 
   const struct part_id* restrict part_id_s = global_hydro_part_arrays._part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1024,7 +1024,7 @@ static __attribute__((always_inline)) INLINE long long
  * to id. If you need read-only access to id, use part_get_const_id_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_id_p_global(const int pind) {
+  part_get_id_p_global(const ptrdiff_t pind) {
 
   struct part_id* restrict part_id_s = global_hydro_part_arrays._part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1044,7 +1044,7 @@ static __attribute__((always_inline)) INLINE long long*
  * If you need write access to id, use part_get_id_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_id_p_global(const int pind) {
+  part_get_const_id_p_global(const ptrdiff_t pind) {
 
   const struct part_id* restrict part_id_s = global_hydro_part_arrays._part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1062,7 +1062,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief set the value of id, Particle unique ID.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_id_global(const int pind, const long long id) {
+  part_set_id_global(const ptrdiff_t pind, const long long id) {
 
   struct part_id* restrict part_id_s = global_hydro_part_arrays._part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1133,7 +1133,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get gpart, Pointer to corresponding gravity part.
  */
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_gpart_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_gpart_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_gpart* restrict part_gpart_s = pd->_part_gpart + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1153,7 +1153,7 @@ static __attribute__((always_inline)) INLINE struct gpart*
  * to gpart. If you need read-only access to gpart, use part_get_const_gpart_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_gpart_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_gpart_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_gpart* restrict part_gpart_s = pd->_part_gpart + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1169,7 +1169,7 @@ static __attribute__((always_inline)) INLINE struct gpart**
  * @brief set the value of gpart, Pointer to corresponding gravity part.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_gpart_explicit(struct hydro_part_arrays *restrict pd, const int pind,  struct gpart* gpart) {
+  part_set_gpart_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind,  struct gpart* gpart) {
 
   struct part_gpart* restrict part_gpart_s = pd->_part_gpart + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1187,7 +1187,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get gpart, Pointer to corresponding gravity part.
  */
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_gpart_global(const int pind) {
+  part_get_gpart_global(const ptrdiff_t pind) {
 
   const struct part_gpart* restrict part_gpart_s = global_hydro_part_arrays._part_gpart + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1207,7 +1207,7 @@ static __attribute__((always_inline)) INLINE struct gpart*
  * to gpart. If you need read-only access to gpart, use part_get_const_gpart_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_gpart_p_global(const int pind) {
+  part_get_gpart_p_global(const ptrdiff_t pind) {
 
   struct part_gpart* restrict part_gpart_s = global_hydro_part_arrays._part_gpart + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1223,7 +1223,7 @@ static __attribute__((always_inline)) INLINE struct gpart**
  * @brief set the value of gpart, Pointer to corresponding gravity part.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_gpart_global(const int pind,  struct gpart* gpart) {
+  part_set_gpart_global(const ptrdiff_t pind,  struct gpart* gpart) {
 
   struct part_gpart* restrict part_gpart_s = global_hydro_part_arrays._part_gpart + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1333,7 +1333,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_x() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_x_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_x* restrict part_x_s = pd->_part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1351,7 +1351,7 @@ static __attribute__((always_inline)) INLINE double*
  * @brief get x, the particle position, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_x_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_x_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_x* restrict part_x_s = pd->_part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1369,7 +1369,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief get x, the particle position, by index.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_x_ind_explicit(const struct hydro_part_arrays *restrict pd, const int pind, const int i) {
+  part_get_x_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
 
   const struct part_x* restrict part_x_s = pd->_part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1388,7 +1388,7 @@ static __attribute__((always_inline)) INLINE double
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_x_explicit(struct hydro_part_arrays *restrict pd, const int pind, const double x[3]) {
+  part_set_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const double x[3]) {
 
   struct part_x* restrict part_x_s = pd->_part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1408,7 +1408,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of x, the particle position, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_x_ind_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int i, const double x) {
+  part_set_x_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const double x) {
 
   struct part_x* restrict part_x_s = pd->_part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1429,7 +1429,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_x() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_x_global(const int pind) {
+  part_get_x_global(const ptrdiff_t pind) {
 
   struct part_x* restrict part_x_s = global_hydro_part_arrays._part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1447,7 +1447,7 @@ static __attribute__((always_inline)) INLINE double*
  * @brief get x, the particle position, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_x_global(const int pind) {
+  part_get_const_x_global(const ptrdiff_t pind) {
 
   const struct part_x* restrict part_x_s = global_hydro_part_arrays._part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1465,7 +1465,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief get x, the particle position, by index.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_x_ind_global(const int pind, const int i) {
+  part_get_x_ind_global(const ptrdiff_t pind, const int i) {
 
   const struct part_x* restrict part_x_s = global_hydro_part_arrays._part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1484,7 +1484,7 @@ static __attribute__((always_inline)) INLINE double
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_x_global(const int pind, const double x[3]) {
+  part_set_x_global(const ptrdiff_t pind, const double x[3]) {
 
   struct part_x* restrict part_x_s = global_hydro_part_arrays._part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1504,7 +1504,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of x, the particle position, by index i.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_x_ind_global(const int pind, const int i, const double x) {
+  part_set_x_ind_global(const ptrdiff_t pind, const int i, const double x) {
 
   struct part_x* restrict part_x_s = global_hydro_part_arrays._part_x + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1615,7 +1615,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_v() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_v_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_v* restrict part_v_s = pd->_part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1633,7 +1633,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get v, Particle predicted velocity, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_v_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_v_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_v* restrict part_v_s = pd->_part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1651,7 +1651,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get v, Particle predicted velocity, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_v_ind_explicit(const struct hydro_part_arrays *restrict pd, const int pind, const int i) {
+  part_get_v_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
 
   const struct part_v* restrict part_v_s = pd->_part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1670,7 +1670,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_v_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float v[3]) {
+  part_set_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float v[3]) {
 
   struct part_v* restrict part_v_s = pd->_part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1690,7 +1690,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of v, Particle predicted velocity, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_v_ind_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int i, const float v) {
+  part_set_v_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const float v) {
 
   struct part_v* restrict part_v_s = pd->_part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1711,7 +1711,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_v() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_v_global(const int pind) {
+  part_get_v_global(const ptrdiff_t pind) {
 
   struct part_v* restrict part_v_s = global_hydro_part_arrays._part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1729,7 +1729,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get v, Particle predicted velocity, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_v_global(const int pind) {
+  part_get_const_v_global(const ptrdiff_t pind) {
 
   const struct part_v* restrict part_v_s = global_hydro_part_arrays._part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1747,7 +1747,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get v, Particle predicted velocity, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_v_ind_global(const int pind, const int i) {
+  part_get_v_ind_global(const ptrdiff_t pind, const int i) {
 
   const struct part_v* restrict part_v_s = global_hydro_part_arrays._part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1766,7 +1766,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_v_global(const int pind, const float v[3]) {
+  part_set_v_global(const ptrdiff_t pind, const float v[3]) {
 
   struct part_v* restrict part_v_s = global_hydro_part_arrays._part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1786,7 +1786,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of v, Particle predicted velocity, by index i.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_v_ind_global(const int pind, const int i, const float v) {
+  part_set_v_ind_global(const ptrdiff_t pind, const int i, const float v) {
 
   struct part_v* restrict part_v_s = global_hydro_part_arrays._part_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1897,7 +1897,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_a_hydro() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_a_hydro_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_a_hydro_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_a_hydro* restrict part_a_hydro_s = pd->_part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1915,7 +1915,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get a_hydro, Particle acceleration, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_a_hydro_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_a_hydro_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_a_hydro* restrict part_a_hydro_s = pd->_part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1933,7 +1933,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get a_hydro, Particle acceleration, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_a_hydro_ind_explicit(const struct hydro_part_arrays *restrict pd, const int pind, const int i) {
+  part_get_a_hydro_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
 
   const struct part_a_hydro* restrict part_a_hydro_s = pd->_part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1952,7 +1952,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_a_hydro_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float a_hydro[3]) {
+  part_set_a_hydro_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float a_hydro[3]) {
 
   struct part_a_hydro* restrict part_a_hydro_s = pd->_part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1972,7 +1972,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of a_hydro, Particle acceleration, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_a_hydro_ind_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int i, const float a_hydro) {
+  part_set_a_hydro_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const float a_hydro) {
 
   struct part_a_hydro* restrict part_a_hydro_s = pd->_part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1993,7 +1993,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_a_hydro() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_a_hydro_global(const int pind) {
+  part_get_a_hydro_global(const ptrdiff_t pind) {
 
   struct part_a_hydro* restrict part_a_hydro_s = global_hydro_part_arrays._part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2011,7 +2011,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get a_hydro, Particle acceleration, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_a_hydro_global(const int pind) {
+  part_get_const_a_hydro_global(const ptrdiff_t pind) {
 
   const struct part_a_hydro* restrict part_a_hydro_s = global_hydro_part_arrays._part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2029,7 +2029,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get a_hydro, Particle acceleration, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_a_hydro_ind_global(const int pind, const int i) {
+  part_get_a_hydro_ind_global(const ptrdiff_t pind, const int i) {
 
   const struct part_a_hydro* restrict part_a_hydro_s = global_hydro_part_arrays._part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2048,7 +2048,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_a_hydro_global(const int pind, const float a_hydro[3]) {
+  part_set_a_hydro_global(const ptrdiff_t pind, const float a_hydro[3]) {
 
   struct part_a_hydro* restrict part_a_hydro_s = global_hydro_part_arrays._part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2068,7 +2068,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of a_hydro, Particle acceleration, by index i.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_a_hydro_ind_global(const int pind, const int i, const float a_hydro) {
+  part_set_a_hydro_ind_global(const ptrdiff_t pind, const int i, const float a_hydro) {
 
   struct part_a_hydro* restrict part_a_hydro_s = global_hydro_part_arrays._part_a_hydro + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2160,7 +2160,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_mass_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_mass_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_mass* restrict part_mass_s = pd->_part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2180,7 +2180,7 @@ static __attribute__((always_inline)) INLINE float
  * to mass. If you need read-only access to mass, use part_get_const_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_mass_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_mass_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_mass* restrict part_mass_s = pd->_part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2200,7 +2200,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to mass, use part_get_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_mass_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_mass_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_mass* restrict part_mass_s = pd->_part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2218,7 +2218,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_mass_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float mass) {
+  part_set_mass_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float mass) {
 
   struct part_mass* restrict part_mass_s = pd->_part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2236,7 +2236,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_mass_global(const int pind) {
+  part_get_mass_global(const ptrdiff_t pind) {
 
   const struct part_mass* restrict part_mass_s = global_hydro_part_arrays._part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2256,7 +2256,7 @@ static __attribute__((always_inline)) INLINE float
  * to mass. If you need read-only access to mass, use part_get_const_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_mass_p_global(const int pind) {
+  part_get_mass_p_global(const ptrdiff_t pind) {
 
   struct part_mass* restrict part_mass_s = global_hydro_part_arrays._part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2276,7 +2276,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to mass, use part_get_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_mass_p_global(const int pind) {
+  part_get_const_mass_p_global(const ptrdiff_t pind) {
 
   const struct part_mass* restrict part_mass_s = global_hydro_part_arrays._part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2294,7 +2294,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_mass_global(const int pind, const float mass) {
+  part_set_mass_global(const ptrdiff_t pind, const float mass) {
 
   struct part_mass* restrict part_mass_s = global_hydro_part_arrays._part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2385,7 +2385,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get h, Particle smoothing length.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_h_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_h_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_h* restrict part_h_s = pd->_part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2405,7 +2405,7 @@ static __attribute__((always_inline)) INLINE float
  * to h. If you need read-only access to h, use part_get_const_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_h_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_h_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_h* restrict part_h_s = pd->_part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2425,7 +2425,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to h, use part_get_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_h_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_h_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_h* restrict part_h_s = pd->_part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2443,7 +2443,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of h, Particle smoothing length.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_h_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float h) {
+  part_set_h_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float h) {
 
   struct part_h* restrict part_h_s = pd->_part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2461,7 +2461,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get h, Particle smoothing length.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_h_global(const int pind) {
+  part_get_h_global(const ptrdiff_t pind) {
 
   const struct part_h* restrict part_h_s = global_hydro_part_arrays._part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2481,7 +2481,7 @@ static __attribute__((always_inline)) INLINE float
  * to h. If you need read-only access to h, use part_get_const_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_h_p_global(const int pind) {
+  part_get_h_p_global(const ptrdiff_t pind) {
 
   struct part_h* restrict part_h_s = global_hydro_part_arrays._part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2501,7 +2501,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to h, use part_get_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_h_p_global(const int pind) {
+  part_get_const_h_p_global(const ptrdiff_t pind) {
 
   const struct part_h* restrict part_h_s = global_hydro_part_arrays._part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2519,7 +2519,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of h, Particle smoothing length.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_h_global(const int pind, const float h) {
+  part_set_h_global(const ptrdiff_t pind, const float h) {
 
   struct part_h* restrict part_h_s = global_hydro_part_arrays._part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2610,7 +2610,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_u_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_u_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_u* restrict part_u_s = pd->_part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2630,7 +2630,7 @@ static __attribute__((always_inline)) INLINE float
  * to u. If you need read-only access to u, use part_get_const_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_u_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_u_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_u* restrict part_u_s = pd->_part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2650,7 +2650,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to u, use part_get_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_u_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_u* restrict part_u_s = pd->_part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2668,7 +2668,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_u_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float u) {
+  part_set_u_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float u) {
 
   struct part_u* restrict part_u_s = pd->_part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2686,7 +2686,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_u_global(const int pind) {
+  part_get_u_global(const ptrdiff_t pind) {
 
   const struct part_u* restrict part_u_s = global_hydro_part_arrays._part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2706,7 +2706,7 @@ static __attribute__((always_inline)) INLINE float
  * to u. If you need read-only access to u, use part_get_const_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_u_p_global(const int pind) {
+  part_get_u_p_global(const ptrdiff_t pind) {
 
   struct part_u* restrict part_u_s = global_hydro_part_arrays._part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2726,7 +2726,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to u, use part_get_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_p_global(const int pind) {
+  part_get_const_u_p_global(const ptrdiff_t pind) {
 
   const struct part_u* restrict part_u_s = global_hydro_part_arrays._part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2744,7 +2744,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_u_global(const int pind, const float u) {
+  part_set_u_global(const ptrdiff_t pind, const float u) {
 
   struct part_u* restrict part_u_s = global_hydro_part_arrays._part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2835,7 +2835,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get u_dt, Time derivative of the internal energy.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_u_dt_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_u_dt_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_u_dt* restrict part_u_dt_s = pd->_part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2855,7 +2855,7 @@ static __attribute__((always_inline)) INLINE float
  * to u_dt. If you need read-only access to u_dt, use part_get_const_u_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_u_dt_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_u_dt_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_u_dt* restrict part_u_dt_s = pd->_part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2875,7 +2875,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to u_dt, use part_get_u_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_u_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_u_dt* restrict part_u_dt_s = pd->_part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2893,7 +2893,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of u_dt, Time derivative of the internal energy.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_u_dt_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float u_dt) {
+  part_set_u_dt_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float u_dt) {
 
   struct part_u_dt* restrict part_u_dt_s = pd->_part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2911,7 +2911,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get u_dt, Time derivative of the internal energy.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_u_dt_global(const int pind) {
+  part_get_u_dt_global(const ptrdiff_t pind) {
 
   const struct part_u_dt* restrict part_u_dt_s = global_hydro_part_arrays._part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2931,7 +2931,7 @@ static __attribute__((always_inline)) INLINE float
  * to u_dt. If you need read-only access to u_dt, use part_get_const_u_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_u_dt_p_global(const int pind) {
+  part_get_u_dt_p_global(const ptrdiff_t pind) {
 
   struct part_u_dt* restrict part_u_dt_s = global_hydro_part_arrays._part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2951,7 +2951,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to u_dt, use part_get_u_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_dt_p_global(const int pind) {
+  part_get_const_u_dt_p_global(const ptrdiff_t pind) {
 
   const struct part_u_dt* restrict part_u_dt_s = global_hydro_part_arrays._part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2969,7 +2969,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of u_dt, Time derivative of the internal energy.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_u_dt_global(const int pind, const float u_dt) {
+  part_set_u_dt_global(const ptrdiff_t pind, const float u_dt) {
 
   struct part_u_dt* restrict part_u_dt_s = global_hydro_part_arrays._part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3060,7 +3060,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rho, Particle density.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_rho_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rho_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_rho* restrict part_rho_s = pd->_part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3080,7 +3080,7 @@ static __attribute__((always_inline)) INLINE float
  * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_rho_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rho_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_rho* restrict part_rho_s = pd->_part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3100,7 +3100,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to rho, use part_get_rho_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_rho_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_rho* restrict part_rho_s = pd->_part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3118,7 +3118,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of rho, Particle density.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rho_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float rho) {
+  part_set_rho_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho) {
 
   struct part_rho* restrict part_rho_s = pd->_part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3136,7 +3136,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rho, Particle density.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_rho_global(const int pind) {
+  part_get_rho_global(const ptrdiff_t pind) {
 
   const struct part_rho* restrict part_rho_s = global_hydro_part_arrays._part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3156,7 +3156,7 @@ static __attribute__((always_inline)) INLINE float
  * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_rho_p_global(const int pind) {
+  part_get_rho_p_global(const ptrdiff_t pind) {
 
   struct part_rho* restrict part_rho_s = global_hydro_part_arrays._part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3176,7 +3176,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to rho, use part_get_rho_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_p_global(const int pind) {
+  part_get_const_rho_p_global(const ptrdiff_t pind) {
 
   const struct part_rho* restrict part_rho_s = global_hydro_part_arrays._part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3194,7 +3194,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of rho, Particle density.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rho_global(const int pind, const float rho) {
+  part_set_rho_global(const ptrdiff_t pind, const float rho) {
 
   struct part_rho* restrict part_rho_s = global_hydro_part_arrays._part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3285,7 +3285,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get div_v, Particle velocity divergence.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_div_v_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_div_v* restrict part_div_v_s = pd->_part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3305,7 +3305,7 @@ static __attribute__((always_inline)) INLINE float
  * to div_v. If you need read-only access to div_v, use part_get_const_div_v_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_div_v_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_div_v* restrict part_div_v_s = pd->_part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3325,7 +3325,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to div_v, use part_get_div_v_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_div_v_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_div_v* restrict part_div_v_s = pd->_part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3343,7 +3343,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of div_v, Particle velocity divergence.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float div_v) {
+  part_set_div_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float div_v) {
 
   struct part_div_v* restrict part_div_v_s = pd->_part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3361,7 +3361,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get div_v, Particle velocity divergence.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_global(const int pind) {
+  part_get_div_v_global(const ptrdiff_t pind) {
 
   const struct part_div_v* restrict part_div_v_s = global_hydro_part_arrays._part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3381,7 +3381,7 @@ static __attribute__((always_inline)) INLINE float
  * to div_v. If you need read-only access to div_v, use part_get_const_div_v_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_p_global(const int pind) {
+  part_get_div_v_p_global(const ptrdiff_t pind) {
 
   struct part_div_v* restrict part_div_v_s = global_hydro_part_arrays._part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3401,7 +3401,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to div_v, use part_get_div_v_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_p_global(const int pind) {
+  part_get_const_div_v_p_global(const ptrdiff_t pind) {
 
   const struct part_div_v* restrict part_div_v_s = global_hydro_part_arrays._part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3419,7 +3419,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of div_v, Particle velocity divergence.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_global(const int pind, const float div_v) {
+  part_set_div_v_global(const ptrdiff_t pind, const float div_v) {
 
   struct part_div_v* restrict part_div_v_s = global_hydro_part_arrays._part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3510,7 +3510,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get div_v_dt, Time differential of velocity divergence.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_dt_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_div_v_dt_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_div_v_dt* restrict part_div_v_dt_s = pd->_part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3530,7 +3530,7 @@ static __attribute__((always_inline)) INLINE float
  * to div_v_dt. If you need read-only access to div_v_dt, use part_get_const_div_v_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_dt_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_div_v_dt_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_div_v_dt* restrict part_div_v_dt_s = pd->_part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3550,7 +3550,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to div_v_dt, use part_get_div_v_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_div_v_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_div_v_dt* restrict part_div_v_dt_s = pd->_part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3568,7 +3568,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of div_v_dt, Time differential of velocity divergence.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_dt_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float div_v_dt) {
+  part_set_div_v_dt_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float div_v_dt) {
 
   struct part_div_v_dt* restrict part_div_v_dt_s = pd->_part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3586,7 +3586,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get div_v_dt, Time differential of velocity divergence.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_dt_global(const int pind) {
+  part_get_div_v_dt_global(const ptrdiff_t pind) {
 
   const struct part_div_v_dt* restrict part_div_v_dt_s = global_hydro_part_arrays._part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3606,7 +3606,7 @@ static __attribute__((always_inline)) INLINE float
  * to div_v_dt. If you need read-only access to div_v_dt, use part_get_const_div_v_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_dt_p_global(const int pind) {
+  part_get_div_v_dt_p_global(const ptrdiff_t pind) {
 
   struct part_div_v_dt* restrict part_div_v_dt_s = global_hydro_part_arrays._part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3626,7 +3626,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to div_v_dt, use part_get_div_v_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_dt_p_global(const int pind) {
+  part_get_const_div_v_dt_p_global(const ptrdiff_t pind) {
 
   const struct part_div_v_dt* restrict part_div_v_dt_s = global_hydro_part_arrays._part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3644,7 +3644,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of div_v_dt, Time differential of velocity divergence.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_dt_global(const int pind, const float div_v_dt) {
+  part_set_div_v_dt_global(const ptrdiff_t pind, const float div_v_dt) {
 
   struct part_div_v_dt* restrict part_div_v_dt_s = global_hydro_part_arrays._part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3735,7 +3735,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get div_v_previous_step, Particle velocity divergence from previous step.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_previous_step_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_div_v_previous_step_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_div_v_previous_step* restrict part_div_v_previous_step_s = pd->_part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3755,7 +3755,7 @@ static __attribute__((always_inline)) INLINE float
  * to div_v_previous_step. If you need read-only access to div_v_previous_step, use part_get_const_div_v_previous_step_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_previous_step_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_div_v_previous_step_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_div_v_previous_step* restrict part_div_v_previous_step_s = pd->_part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3775,7 +3775,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to div_v_previous_step, use part_get_div_v_previous_step_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_previous_step_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_div_v_previous_step_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_div_v_previous_step* restrict part_div_v_previous_step_s = pd->_part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3793,7 +3793,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of div_v_previous_step, Particle velocity divergence from previous step.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_previous_step_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float div_v_previous_step) {
+  part_set_div_v_previous_step_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float div_v_previous_step) {
 
   struct part_div_v_previous_step* restrict part_div_v_previous_step_s = pd->_part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3811,7 +3811,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get div_v_previous_step, Particle velocity divergence from previous step.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_previous_step_global(const int pind) {
+  part_get_div_v_previous_step_global(const ptrdiff_t pind) {
 
   const struct part_div_v_previous_step* restrict part_div_v_previous_step_s = global_hydro_part_arrays._part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3831,7 +3831,7 @@ static __attribute__((always_inline)) INLINE float
  * to div_v_previous_step. If you need read-only access to div_v_previous_step, use part_get_const_div_v_previous_step_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_previous_step_p_global(const int pind) {
+  part_get_div_v_previous_step_p_global(const ptrdiff_t pind) {
 
   struct part_div_v_previous_step* restrict part_div_v_previous_step_s = global_hydro_part_arrays._part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3851,7 +3851,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to div_v_previous_step, use part_get_div_v_previous_step_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_previous_step_p_global(const int pind) {
+  part_get_const_div_v_previous_step_p_global(const ptrdiff_t pind) {
 
   const struct part_div_v_previous_step* restrict part_div_v_previous_step_s = global_hydro_part_arrays._part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3869,7 +3869,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of div_v_previous_step, Particle velocity divergence from previous step.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_previous_step_global(const int pind, const float div_v_previous_step) {
+  part_set_div_v_previous_step_global(const ptrdiff_t pind, const float div_v_previous_step) {
 
   struct part_div_v_previous_step* restrict part_div_v_previous_step_s = global_hydro_part_arrays._part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3960,7 +3960,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get alpha_av, Artificial viscosity parameter.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_alpha_av_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_alpha_av* restrict part_alpha_av_s = pd->_part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3980,7 +3980,7 @@ static __attribute__((always_inline)) INLINE float
  * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_alpha_av_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_alpha_av* restrict part_alpha_av_s = pd->_part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4000,7 +4000,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_alpha_av_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_alpha_av* restrict part_alpha_av_s = pd->_part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4018,7 +4018,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of alpha_av, Artificial viscosity parameter.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float alpha_av) {
+  part_set_alpha_av_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_av) {
 
   struct part_alpha_av* restrict part_alpha_av_s = pd->_part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4036,7 +4036,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get alpha_av, Artificial viscosity parameter.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av_global(const int pind) {
+  part_get_alpha_av_global(const ptrdiff_t pind) {
 
   const struct part_alpha_av* restrict part_alpha_av_s = global_hydro_part_arrays._part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4056,7 +4056,7 @@ static __attribute__((always_inline)) INLINE float
  * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p_global(const int pind) {
+  part_get_alpha_av_p_global(const ptrdiff_t pind) {
 
   struct part_alpha_av* restrict part_alpha_av_s = global_hydro_part_arrays._part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4076,7 +4076,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p_global(const int pind) {
+  part_get_const_alpha_av_p_global(const ptrdiff_t pind) {
 
   const struct part_alpha_av* restrict part_alpha_av_s = global_hydro_part_arrays._part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4094,7 +4094,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of alpha_av, Artificial viscosity parameter.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av_global(const int pind, const float alpha_av) {
+  part_set_alpha_av_global(const ptrdiff_t pind, const float alpha_av) {
 
   struct part_alpha_av* restrict part_alpha_av_s = global_hydro_part_arrays._part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4185,7 +4185,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_v_sig_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_v_sig_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_v_sig* restrict part_v_sig_s = pd->_part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4205,7 +4205,7 @@ static __attribute__((always_inline)) INLINE float
  * to v_sig. If you need read-only access to v_sig, use part_get_const_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_v_sig_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_v_sig_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_v_sig* restrict part_v_sig_s = pd->_part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4225,7 +4225,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to v_sig, use part_get_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_v_sig_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_v_sig_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_v_sig* restrict part_v_sig_s = pd->_part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4243,7 +4243,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_v_sig_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float v_sig) {
+  part_set_v_sig_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float v_sig) {
 
   struct part_v_sig* restrict part_v_sig_s = pd->_part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4261,7 +4261,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_v_sig_global(const int pind) {
+  part_get_v_sig_global(const ptrdiff_t pind) {
 
   const struct part_v_sig* restrict part_v_sig_s = global_hydro_part_arrays._part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4281,7 +4281,7 @@ static __attribute__((always_inline)) INLINE float
  * to v_sig. If you need read-only access to v_sig, use part_get_const_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_v_sig_p_global(const int pind) {
+  part_get_v_sig_p_global(const ptrdiff_t pind) {
 
   struct part_v_sig* restrict part_v_sig_s = global_hydro_part_arrays._part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4301,7 +4301,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to v_sig, use part_get_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_v_sig_p_global(const int pind) {
+  part_get_const_v_sig_p_global(const ptrdiff_t pind) {
 
   const struct part_v_sig* restrict part_v_sig_s = global_hydro_part_arrays._part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4319,7 +4319,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_v_sig_global(const int pind, const float v_sig) {
+  part_set_v_sig_global(const ptrdiff_t pind, const float v_sig) {
 
   struct part_v_sig* restrict part_v_sig_s = global_hydro_part_arrays._part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4410,7 +4410,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_laplace_u_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_laplace_u_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_laplace_u* restrict part_laplace_u_s = pd->_part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4430,7 +4430,7 @@ static __attribute__((always_inline)) INLINE float
  * to laplace_u. If you need read-only access to laplace_u, use part_get_const_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_laplace_u_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_laplace_u_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_laplace_u* restrict part_laplace_u_s = pd->_part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4450,7 +4450,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to laplace_u, use part_get_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_laplace_u_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_laplace_u_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_laplace_u* restrict part_laplace_u_s = pd->_part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4468,7 +4468,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_laplace_u_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float laplace_u) {
+  part_set_laplace_u_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float laplace_u) {
 
   struct part_laplace_u* restrict part_laplace_u_s = pd->_part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4486,7 +4486,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_laplace_u_global(const int pind) {
+  part_get_laplace_u_global(const ptrdiff_t pind) {
 
   const struct part_laplace_u* restrict part_laplace_u_s = global_hydro_part_arrays._part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4506,7 +4506,7 @@ static __attribute__((always_inline)) INLINE float
  * to laplace_u. If you need read-only access to laplace_u, use part_get_const_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_laplace_u_p_global(const int pind) {
+  part_get_laplace_u_p_global(const ptrdiff_t pind) {
 
   struct part_laplace_u* restrict part_laplace_u_s = global_hydro_part_arrays._part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4526,7 +4526,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to laplace_u, use part_get_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_laplace_u_p_global(const int pind) {
+  part_get_const_laplace_u_p_global(const ptrdiff_t pind) {
 
   const struct part_laplace_u* restrict part_laplace_u_s = global_hydro_part_arrays._part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4544,7 +4544,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_laplace_u_global(const int pind, const float laplace_u) {
+  part_set_laplace_u_global(const ptrdiff_t pind, const float laplace_u) {
 
   struct part_laplace_u* restrict part_laplace_u_s = global_hydro_part_arrays._part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4635,7 +4635,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_alpha_diff_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_alpha_diff_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_alpha_diff* restrict part_alpha_diff_s = pd->_part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4655,7 +4655,7 @@ static __attribute__((always_inline)) INLINE float
  * to alpha_diff. If you need read-only access to alpha_diff, use part_get_const_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_diff_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_alpha_diff_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_alpha_diff* restrict part_alpha_diff_s = pd->_part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4675,7 +4675,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to alpha_diff, use part_get_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_diff_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_alpha_diff_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_alpha_diff* restrict part_alpha_diff_s = pd->_part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4693,7 +4693,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_alpha_diff_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float alpha_diff) {
+  part_set_alpha_diff_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_diff) {
 
   struct part_alpha_diff* restrict part_alpha_diff_s = pd->_part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4711,7 +4711,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_alpha_diff_global(const int pind) {
+  part_get_alpha_diff_global(const ptrdiff_t pind) {
 
   const struct part_alpha_diff* restrict part_alpha_diff_s = global_hydro_part_arrays._part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4731,7 +4731,7 @@ static __attribute__((always_inline)) INLINE float
  * to alpha_diff. If you need read-only access to alpha_diff, use part_get_const_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_diff_p_global(const int pind) {
+  part_get_alpha_diff_p_global(const ptrdiff_t pind) {
 
   struct part_alpha_diff* restrict part_alpha_diff_s = global_hydro_part_arrays._part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4751,7 +4751,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to alpha_diff, use part_get_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_diff_p_global(const int pind) {
+  part_get_const_alpha_diff_p_global(const ptrdiff_t pind) {
 
   const struct part_alpha_diff* restrict part_alpha_diff_s = global_hydro_part_arrays._part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4769,7 +4769,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_alpha_diff_global(const int pind, const float alpha_diff) {
+  part_set_alpha_diff_global(const ptrdiff_t pind, const float alpha_diff) {
 
   struct part_alpha_diff* restrict part_alpha_diff_s = global_hydro_part_arrays._part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4860,7 +4860,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_wcount_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_wcount_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_density1* restrict part_density1_s = pd->_part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4880,7 +4880,7 @@ static __attribute__((always_inline)) INLINE float
  * to wcount. If you need read-only access to wcount, use part_get_const_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_wcount_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_density1* restrict part_density1_s = pd->_part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4900,7 +4900,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to wcount, use part_get_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_wcount_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_density1* restrict part_density1_s = pd->_part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4918,7 +4918,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_wcount_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float wcount) {
+  part_set_wcount_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float wcount) {
 
   struct part_density1* restrict part_density1_s = pd->_part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4936,7 +4936,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_wcount_global(const int pind) {
+  part_get_wcount_global(const ptrdiff_t pind) {
 
   const struct part_density1* restrict part_density1_s = global_hydro_part_arrays._part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4956,7 +4956,7 @@ static __attribute__((always_inline)) INLINE float
  * to wcount. If you need read-only access to wcount, use part_get_const_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_p_global(const int pind) {
+  part_get_wcount_p_global(const ptrdiff_t pind) {
 
   struct part_density1* restrict part_density1_s = global_hydro_part_arrays._part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4976,7 +4976,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to wcount, use part_get_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_p_global(const int pind) {
+  part_get_const_wcount_p_global(const ptrdiff_t pind) {
 
   const struct part_density1* restrict part_density1_s = global_hydro_part_arrays._part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -4994,7 +4994,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_wcount_global(const int pind, const float wcount) {
+  part_set_wcount_global(const ptrdiff_t pind, const float wcount) {
 
   struct part_density1* restrict part_density1_s = global_hydro_part_arrays._part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5085,7 +5085,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get f_gradh, 'Grad h' term -- only partial in P-U.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_f_gradh_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_f_gradh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force1* restrict part_force1_s = pd->_part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5105,7 +5105,7 @@ static __attribute__((always_inline)) INLINE float
  * to f_gradh. If you need read-only access to f_gradh, use part_get_const_f_gradh_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_f_gradh_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_f_gradh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_force1* restrict part_force1_s = pd->_part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5125,7 +5125,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to f_gradh, use part_get_f_gradh_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_f_gradh_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_f_gradh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force1* restrict part_force1_s = pd->_part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5143,7 +5143,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of f_gradh, 'Grad h' term -- only partial in P-U.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_f_gradh_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float f_gradh) {
+  part_set_f_gradh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float f_gradh) {
 
   struct part_force1* restrict part_force1_s = pd->_part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5161,7 +5161,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get f_gradh, 'Grad h' term -- only partial in P-U.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_f_gradh_global(const int pind) {
+  part_get_f_gradh_global(const ptrdiff_t pind) {
 
   const struct part_force1* restrict part_force1_s = global_hydro_part_arrays._part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5181,7 +5181,7 @@ static __attribute__((always_inline)) INLINE float
  * to f_gradh. If you need read-only access to f_gradh, use part_get_const_f_gradh_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_f_gradh_p_global(const int pind) {
+  part_get_f_gradh_p_global(const ptrdiff_t pind) {
 
   struct part_force1* restrict part_force1_s = global_hydro_part_arrays._part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5201,7 +5201,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to f_gradh, use part_get_f_gradh_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_f_gradh_p_global(const int pind) {
+  part_get_const_f_gradh_p_global(const ptrdiff_t pind) {
 
   const struct part_force1* restrict part_force1_s = global_hydro_part_arrays._part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5219,7 +5219,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of f_gradh, 'Grad h' term -- only partial in P-U.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_f_gradh_global(const int pind, const float f_gradh) {
+  part_set_f_gradh_global(const ptrdiff_t pind, const float f_gradh) {
 
   struct part_force1* restrict part_force1_s = global_hydro_part_arrays._part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5310,7 +5310,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get wcount_dh, Derivative of the neighbour number with respect to h.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_wcount_dh_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_wcount_dh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_density2* restrict part_density2_s = pd->_part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5330,7 +5330,7 @@ static __attribute__((always_inline)) INLINE float
  * to wcount_dh. If you need read-only access to wcount_dh, use part_get_const_wcount_dh_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_dh_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_wcount_dh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_density2* restrict part_density2_s = pd->_part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5350,7 +5350,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to wcount_dh, use part_get_wcount_dh_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_dh_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_wcount_dh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_density2* restrict part_density2_s = pd->_part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5368,7 +5368,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of wcount_dh, Derivative of the neighbour number with respect to h.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_wcount_dh_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float wcount_dh) {
+  part_set_wcount_dh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float wcount_dh) {
 
   struct part_density2* restrict part_density2_s = pd->_part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5386,7 +5386,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get wcount_dh, Derivative of the neighbour number with respect to h.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_wcount_dh_global(const int pind) {
+  part_get_wcount_dh_global(const ptrdiff_t pind) {
 
   const struct part_density2* restrict part_density2_s = global_hydro_part_arrays._part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5406,7 +5406,7 @@ static __attribute__((always_inline)) INLINE float
  * to wcount_dh. If you need read-only access to wcount_dh, use part_get_const_wcount_dh_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_dh_p_global(const int pind) {
+  part_get_wcount_dh_p_global(const ptrdiff_t pind) {
 
   struct part_density2* restrict part_density2_s = global_hydro_part_arrays._part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5426,7 +5426,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to wcount_dh, use part_get_wcount_dh_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_dh_p_global(const int pind) {
+  part_get_const_wcount_dh_p_global(const ptrdiff_t pind) {
 
   const struct part_density2* restrict part_density2_s = global_hydro_part_arrays._part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5444,7 +5444,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of wcount_dh, Derivative of the neighbour number with respect to h.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_wcount_dh_global(const int pind, const float wcount_dh) {
+  part_set_wcount_dh_global(const ptrdiff_t pind, const float wcount_dh) {
 
   struct part_density2* restrict part_density2_s = global_hydro_part_arrays._part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5535,7 +5535,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get pressure, Particle pressure.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_pressure_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_pressure_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force2* restrict part_force2_s = pd->_part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5555,7 +5555,7 @@ static __attribute__((always_inline)) INLINE float
  * to pressure. If you need read-only access to pressure, use part_get_const_pressure_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_pressure_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_pressure_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_force2* restrict part_force2_s = pd->_part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5575,7 +5575,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to pressure, use part_get_pressure_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_pressure_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_pressure_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force2* restrict part_force2_s = pd->_part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5593,7 +5593,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of pressure, Particle pressure.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_pressure_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float pressure) {
+  part_set_pressure_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float pressure) {
 
   struct part_force2* restrict part_force2_s = pd->_part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5611,7 +5611,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get pressure, Particle pressure.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_pressure_global(const int pind) {
+  part_get_pressure_global(const ptrdiff_t pind) {
 
   const struct part_force2* restrict part_force2_s = global_hydro_part_arrays._part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5631,7 +5631,7 @@ static __attribute__((always_inline)) INLINE float
  * to pressure. If you need read-only access to pressure, use part_get_const_pressure_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_pressure_p_global(const int pind) {
+  part_get_pressure_p_global(const ptrdiff_t pind) {
 
   struct part_force2* restrict part_force2_s = global_hydro_part_arrays._part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5651,7 +5651,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to pressure, use part_get_pressure_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_pressure_p_global(const int pind) {
+  part_get_const_pressure_p_global(const ptrdiff_t pind) {
 
   const struct part_force2* restrict part_force2_s = global_hydro_part_arrays._part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5669,7 +5669,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of pressure, Particle pressure.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_pressure_global(const int pind, const float pressure) {
+  part_set_pressure_global(const ptrdiff_t pind, const float pressure) {
 
   struct part_force2* restrict part_force2_s = global_hydro_part_arrays._part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5760,7 +5760,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rho_dh, Derivative of density with respect to h.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_rho_dh_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rho_dh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_density3* restrict part_density3_s = pd->_part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5780,7 +5780,7 @@ static __attribute__((always_inline)) INLINE float
  * to rho_dh. If you need read-only access to rho_dh, use part_get_const_rho_dh_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_rho_dh_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rho_dh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_density3* restrict part_density3_s = pd->_part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5800,7 +5800,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to rho_dh, use part_get_rho_dh_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_dh_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_rho_dh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_density3* restrict part_density3_s = pd->_part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5818,7 +5818,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of rho_dh, Derivative of density with respect to h.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rho_dh_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float rho_dh) {
+  part_set_rho_dh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho_dh) {
 
   struct part_density3* restrict part_density3_s = pd->_part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5836,7 +5836,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rho_dh, Derivative of density with respect to h.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_rho_dh_global(const int pind) {
+  part_get_rho_dh_global(const ptrdiff_t pind) {
 
   const struct part_density3* restrict part_density3_s = global_hydro_part_arrays._part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5856,7 +5856,7 @@ static __attribute__((always_inline)) INLINE float
  * to rho_dh. If you need read-only access to rho_dh, use part_get_const_rho_dh_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_rho_dh_p_global(const int pind) {
+  part_get_rho_dh_p_global(const ptrdiff_t pind) {
 
   struct part_density3* restrict part_density3_s = global_hydro_part_arrays._part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5876,7 +5876,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to rho_dh, use part_get_rho_dh_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_dh_p_global(const int pind) {
+  part_get_const_rho_dh_p_global(const ptrdiff_t pind) {
 
   const struct part_density3* restrict part_density3_s = global_hydro_part_arrays._part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5894,7 +5894,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of rho_dh, Derivative of density with respect to h.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rho_dh_global(const int pind, const float rho_dh) {
+  part_set_rho_dh_global(const ptrdiff_t pind, const float rho_dh) {
 
   struct part_density3* restrict part_density3_s = global_hydro_part_arrays._part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -5985,7 +5985,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get soundspeed, Particle soundspeed.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_soundspeed_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_soundspeed_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force3* restrict part_force3_s = pd->_part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6005,7 +6005,7 @@ static __attribute__((always_inline)) INLINE float
  * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_soundspeed_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_soundspeed_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_force3* restrict part_force3_s = pd->_part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6025,7 +6025,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_soundspeed_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_soundspeed_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force3* restrict part_force3_s = pd->_part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6043,7 +6043,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of soundspeed, Particle soundspeed.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_soundspeed_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float soundspeed) {
+  part_set_soundspeed_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float soundspeed) {
 
   struct part_force3* restrict part_force3_s = pd->_part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6061,7 +6061,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get soundspeed, Particle soundspeed.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_soundspeed_global(const int pind) {
+  part_get_soundspeed_global(const ptrdiff_t pind) {
 
   const struct part_force3* restrict part_force3_s = global_hydro_part_arrays._part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6081,7 +6081,7 @@ static __attribute__((always_inline)) INLINE float
  * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_soundspeed_p_global(const int pind) {
+  part_get_soundspeed_p_global(const ptrdiff_t pind) {
 
   struct part_force3* restrict part_force3_s = global_hydro_part_arrays._part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6101,7 +6101,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_soundspeed_p_global(const int pind) {
+  part_get_const_soundspeed_p_global(const ptrdiff_t pind) {
 
   const struct part_force3* restrict part_force3_s = global_hydro_part_arrays._part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6119,7 +6119,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of soundspeed, Particle soundspeed.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_soundspeed_global(const int pind, const float soundspeed) {
+  part_set_soundspeed_global(const ptrdiff_t pind, const float soundspeed) {
 
   struct part_force3* restrict part_force3_s = global_hydro_part_arrays._part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6229,7 +6229,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_rot_v() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_rot_v_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rot_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_density4* restrict part_density4_s = pd->_part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6247,7 +6247,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get rot_v, Particle velocity curl, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rot_v_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_rot_v_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_density4* restrict part_density4_s = pd->_part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6265,7 +6265,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get rot_v, Particle velocity curl, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_rot_v_ind_explicit(const struct hydro_part_arrays *restrict pd, const int pind, const int i) {
+  part_get_rot_v_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
 
   const struct part_density4* restrict part_density4_s = pd->_part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6284,7 +6284,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rot_v_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float rot_v[3]) {
+  part_set_rot_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rot_v[3]) {
 
   struct part_density4* restrict part_density4_s = pd->_part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6304,7 +6304,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of rot_v, Particle velocity curl, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rot_v_ind_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int i, const float rot_v) {
+  part_set_rot_v_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const float rot_v) {
 
   struct part_density4* restrict part_density4_s = pd->_part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6325,7 +6325,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_rot_v() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_rot_v_global(const int pind) {
+  part_get_rot_v_global(const ptrdiff_t pind) {
 
   struct part_density4* restrict part_density4_s = global_hydro_part_arrays._part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6343,7 +6343,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get rot_v, Particle velocity curl, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rot_v_global(const int pind) {
+  part_get_const_rot_v_global(const ptrdiff_t pind) {
 
   const struct part_density4* restrict part_density4_s = global_hydro_part_arrays._part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6361,7 +6361,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get rot_v, Particle velocity curl, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_rot_v_ind_global(const int pind, const int i) {
+  part_get_rot_v_ind_global(const ptrdiff_t pind, const int i) {
 
   const struct part_density4* restrict part_density4_s = global_hydro_part_arrays._part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6380,7 +6380,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rot_v_global(const int pind, const float rot_v[3]) {
+  part_set_rot_v_global(const ptrdiff_t pind, const float rot_v[3]) {
 
   struct part_density4* restrict part_density4_s = global_hydro_part_arrays._part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6400,7 +6400,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of rot_v, Particle velocity curl, by index i.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rot_v_ind_global(const int pind, const int i, const float rot_v) {
+  part_set_rot_v_ind_global(const ptrdiff_t pind, const int i, const float rot_v) {
 
   struct part_density4* restrict part_density4_s = global_hydro_part_arrays._part_density4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6492,7 +6492,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get h_dt, Time derivative of smoothing length.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_h_dt_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_h_dt_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force4* restrict part_force4_s = pd->_part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6512,7 +6512,7 @@ static __attribute__((always_inline)) INLINE float
  * to h_dt. If you need read-only access to h_dt, use part_get_const_h_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_h_dt_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_h_dt_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_force4* restrict part_force4_s = pd->_part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6532,7 +6532,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to h_dt, use part_get_h_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_h_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_h_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force4* restrict part_force4_s = pd->_part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6550,7 +6550,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of h_dt, Time derivative of smoothing length.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_h_dt_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float h_dt) {
+  part_set_h_dt_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float h_dt) {
 
   struct part_force4* restrict part_force4_s = pd->_part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6568,7 +6568,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get h_dt, Time derivative of smoothing length.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_h_dt_global(const int pind) {
+  part_get_h_dt_global(const ptrdiff_t pind) {
 
   const struct part_force4* restrict part_force4_s = global_hydro_part_arrays._part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6588,7 +6588,7 @@ static __attribute__((always_inline)) INLINE float
  * to h_dt. If you need read-only access to h_dt, use part_get_const_h_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_h_dt_p_global(const int pind) {
+  part_get_h_dt_p_global(const ptrdiff_t pind) {
 
   struct part_force4* restrict part_force4_s = global_hydro_part_arrays._part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6608,7 +6608,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to h_dt, use part_get_h_dt_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_h_dt_p_global(const int pind) {
+  part_get_const_h_dt_p_global(const ptrdiff_t pind) {
 
   const struct part_force4* restrict part_force4_s = global_hydro_part_arrays._part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6626,7 +6626,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of h_dt, Time derivative of smoothing length.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_h_dt_global(const int pind, const float h_dt) {
+  part_set_h_dt_global(const ptrdiff_t pind, const float h_dt) {
 
   struct part_force4* restrict part_force4_s = global_hydro_part_arrays._part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6717,7 +6717,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get balsara, Balsara switch.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_balsara_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_balsara_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force5* restrict part_force5_s = pd->_part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6737,7 +6737,7 @@ static __attribute__((always_inline)) INLINE float
  * to balsara. If you need read-only access to balsara, use part_get_const_balsara_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_balsara_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_balsara_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_force5* restrict part_force5_s = pd->_part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6757,7 +6757,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to balsara, use part_get_balsara_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_balsara_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_balsara_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force5* restrict part_force5_s = pd->_part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6775,7 +6775,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of balsara, Balsara switch.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_balsara_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float balsara) {
+  part_set_balsara_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float balsara) {
 
   struct part_force5* restrict part_force5_s = pd->_part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6793,7 +6793,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get balsara, Balsara switch.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_balsara_global(const int pind) {
+  part_get_balsara_global(const ptrdiff_t pind) {
 
   const struct part_force5* restrict part_force5_s = global_hydro_part_arrays._part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6813,7 +6813,7 @@ static __attribute__((always_inline)) INLINE float
  * to balsara. If you need read-only access to balsara, use part_get_const_balsara_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_balsara_p_global(const int pind) {
+  part_get_balsara_p_global(const ptrdiff_t pind) {
 
   struct part_force5* restrict part_force5_s = global_hydro_part_arrays._part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6833,7 +6833,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to balsara, use part_get_balsara_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_balsara_p_global(const int pind) {
+  part_get_const_balsara_p_global(const ptrdiff_t pind) {
 
   const struct part_force5* restrict part_force5_s = global_hydro_part_arrays._part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6851,7 +6851,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of balsara, Balsara switch.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_balsara_global(const int pind, const float balsara) {
+  part_set_balsara_global(const ptrdiff_t pind, const float balsara) {
 
   struct part_force5* restrict part_force5_s = global_hydro_part_arrays._part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6942,7 +6942,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get alpha_visc_max_ngb, Maximal alpha (viscosity) over neighbours.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_alpha_visc_max_ngb_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_alpha_visc_max_ngb_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force6* restrict part_force6_s = pd->_part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6962,7 +6962,7 @@ static __attribute__((always_inline)) INLINE float
  * to alpha_visc_max_ngb. If you need read-only access to alpha_visc_max_ngb, use part_get_const_alpha_visc_max_ngb_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_visc_max_ngb_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_alpha_visc_max_ngb_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_force6* restrict part_force6_s = pd->_part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -6982,7 +6982,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to alpha_visc_max_ngb, use part_get_alpha_visc_max_ngb_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_visc_max_ngb_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_alpha_visc_max_ngb_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_force6* restrict part_force6_s = pd->_part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7000,7 +7000,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of alpha_visc_max_ngb, Maximal alpha (viscosity) over neighbours.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_alpha_visc_max_ngb_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float alpha_visc_max_ngb) {
+  part_set_alpha_visc_max_ngb_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_visc_max_ngb) {
 
   struct part_force6* restrict part_force6_s = pd->_part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7018,7 +7018,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get alpha_visc_max_ngb, Maximal alpha (viscosity) over neighbours.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_alpha_visc_max_ngb_global(const int pind) {
+  part_get_alpha_visc_max_ngb_global(const ptrdiff_t pind) {
 
   const struct part_force6* restrict part_force6_s = global_hydro_part_arrays._part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7038,7 +7038,7 @@ static __attribute__((always_inline)) INLINE float
  * to alpha_visc_max_ngb. If you need read-only access to alpha_visc_max_ngb, use part_get_const_alpha_visc_max_ngb_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_visc_max_ngb_p_global(const int pind) {
+  part_get_alpha_visc_max_ngb_p_global(const ptrdiff_t pind) {
 
   struct part_force6* restrict part_force6_s = global_hydro_part_arrays._part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7058,7 +7058,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to alpha_visc_max_ngb, use part_get_alpha_visc_max_ngb_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_visc_max_ngb_p_global(const int pind) {
+  part_get_const_alpha_visc_max_ngb_p_global(const ptrdiff_t pind) {
 
   const struct part_force6* restrict part_force6_s = global_hydro_part_arrays._part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7076,7 +7076,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of alpha_visc_max_ngb, Maximal alpha (viscosity) over neighbours.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_alpha_visc_max_ngb_global(const int pind, const float alpha_visc_max_ngb) {
+  part_set_alpha_visc_max_ngb_global(const ptrdiff_t pind, const float alpha_visc_max_ngb) {
 
   struct part_force6* restrict part_force6_s = global_hydro_part_arrays._part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7167,7 +7167,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get adaptive_softening_data, Additional data used for adaptive softening.
  */
 static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
-  part_get_adaptive_softening_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_adaptive_softening_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7187,7 +7187,7 @@ static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
  * to adaptive_softening_data. If you need read-only access to adaptive_softening_data, use part_get_const_adaptive_softening_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data*
-  part_get_adaptive_softening_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_adaptive_softening_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7207,7 +7207,7 @@ static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
  * If you need write access to adaptive_softening_data, use part_get_adaptive_softening_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct adaptive_softening_part_data*
-  part_get_const_adaptive_softening_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_adaptive_softening_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7225,7 +7225,7 @@ static __attribute__((always_inline)) INLINE const struct adaptive_softening_par
  * @brief set the value of adaptive_softening_data, Additional data used for adaptive softening.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_adaptive_softening_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct adaptive_softening_part_data adaptive_softening_data) {
+  part_set_adaptive_softening_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct adaptive_softening_part_data adaptive_softening_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7243,7 +7243,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get adaptive_softening_data, Additional data used for adaptive softening.
  */
 static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
-  part_get_adaptive_softening_data_global(const int pind) {
+  part_get_adaptive_softening_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7263,7 +7263,7 @@ static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
  * to adaptive_softening_data. If you need read-only access to adaptive_softening_data, use part_get_const_adaptive_softening_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data*
-  part_get_adaptive_softening_data_p_global(const int pind) {
+  part_get_adaptive_softening_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7283,7 +7283,7 @@ static __attribute__((always_inline)) INLINE struct adaptive_softening_part_data
  * If you need write access to adaptive_softening_data, use part_get_adaptive_softening_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct adaptive_softening_part_data*
-  part_get_const_adaptive_softening_data_p_global(const int pind) {
+  part_get_const_adaptive_softening_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7301,7 +7301,7 @@ static __attribute__((always_inline)) INLINE const struct adaptive_softening_par
  * @brief set the value of adaptive_softening_data, Additional data used for adaptive softening.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_adaptive_softening_data_global(const int pind, const struct adaptive_softening_part_data adaptive_softening_data) {
+  part_set_adaptive_softening_data_global(const ptrdiff_t pind, const struct adaptive_softening_part_data adaptive_softening_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7390,7 +7390,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get mhd_data, Additional data used by the MHD scheme.
  */
 static __attribute__((always_inline)) INLINE struct mhd_part_data
-  part_get_mhd_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_mhd_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7410,7 +7410,7 @@ static __attribute__((always_inline)) INLINE struct mhd_part_data
  * to mhd_data. If you need read-only access to mhd_data, use part_get_const_mhd_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct mhd_part_data*
-  part_get_mhd_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_mhd_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7430,7 +7430,7 @@ static __attribute__((always_inline)) INLINE struct mhd_part_data*
  * If you need write access to mhd_data, use part_get_mhd_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct mhd_part_data*
-  part_get_const_mhd_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_mhd_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7448,7 +7448,7 @@ static __attribute__((always_inline)) INLINE const struct mhd_part_data*
  * @brief set the value of mhd_data, Additional data used by the MHD scheme.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_mhd_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct mhd_part_data mhd_data) {
+  part_set_mhd_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct mhd_part_data mhd_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7466,7 +7466,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get mhd_data, Additional data used by the MHD scheme.
  */
 static __attribute__((always_inline)) INLINE struct mhd_part_data
-  part_get_mhd_data_global(const int pind) {
+  part_get_mhd_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7486,7 +7486,7 @@ static __attribute__((always_inline)) INLINE struct mhd_part_data
  * to mhd_data. If you need read-only access to mhd_data, use part_get_const_mhd_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct mhd_part_data*
-  part_get_mhd_data_p_global(const int pind) {
+  part_get_mhd_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7506,7 +7506,7 @@ static __attribute__((always_inline)) INLINE struct mhd_part_data*
  * If you need write access to mhd_data, use part_get_mhd_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct mhd_part_data*
-  part_get_const_mhd_data_p_global(const int pind) {
+  part_get_const_mhd_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7524,7 +7524,7 @@ static __attribute__((always_inline)) INLINE const struct mhd_part_data*
  * @brief set the value of mhd_data, Additional data used by the MHD scheme.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_mhd_data_global(const int pind, const struct mhd_part_data mhd_data) {
+  part_set_mhd_data_global(const ptrdiff_t pind, const struct mhd_part_data mhd_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7613,7 +7613,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get chemistry_data, Chemistry information.
  */
 static __attribute__((always_inline)) INLINE struct chemistry_part_data
-  part_get_chemistry_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_chemistry_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7633,7 +7633,7 @@ static __attribute__((always_inline)) INLINE struct chemistry_part_data
  * to chemistry_data. If you need read-only access to chemistry_data, use part_get_const_chemistry_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct chemistry_part_data*
-  part_get_chemistry_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_chemistry_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7653,7 +7653,7 @@ static __attribute__((always_inline)) INLINE struct chemistry_part_data*
  * If you need write access to chemistry_data, use part_get_chemistry_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct chemistry_part_data*
-  part_get_const_chemistry_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_chemistry_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7671,7 +7671,7 @@ static __attribute__((always_inline)) INLINE const struct chemistry_part_data*
  * @brief set the value of chemistry_data, Chemistry information.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_chemistry_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct chemistry_part_data chemistry_data) {
+  part_set_chemistry_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct chemistry_part_data chemistry_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7689,7 +7689,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get chemistry_data, Chemistry information.
  */
 static __attribute__((always_inline)) INLINE struct chemistry_part_data
-  part_get_chemistry_data_global(const int pind) {
+  part_get_chemistry_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7709,7 +7709,7 @@ static __attribute__((always_inline)) INLINE struct chemistry_part_data
  * to chemistry_data. If you need read-only access to chemistry_data, use part_get_const_chemistry_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct chemistry_part_data*
-  part_get_chemistry_data_p_global(const int pind) {
+  part_get_chemistry_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7729,7 +7729,7 @@ static __attribute__((always_inline)) INLINE struct chemistry_part_data*
  * If you need write access to chemistry_data, use part_get_chemistry_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct chemistry_part_data*
-  part_get_const_chemistry_data_p_global(const int pind) {
+  part_get_const_chemistry_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7747,7 +7747,7 @@ static __attribute__((always_inline)) INLINE const struct chemistry_part_data*
  * @brief set the value of chemistry_data, Chemistry information.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_chemistry_data_global(const int pind, const struct chemistry_part_data chemistry_data) {
+  part_set_chemistry_data_global(const ptrdiff_t pind, const struct chemistry_part_data chemistry_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7836,7 +7836,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get cooling_data, Cooling information.
  */
 static __attribute__((always_inline)) INLINE struct cooling_part_data
-  part_get_cooling_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_cooling_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7856,7 +7856,7 @@ static __attribute__((always_inline)) INLINE struct cooling_part_data
  * to cooling_data. If you need read-only access to cooling_data, use part_get_const_cooling_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct cooling_part_data*
-  part_get_cooling_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_cooling_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7876,7 +7876,7 @@ static __attribute__((always_inline)) INLINE struct cooling_part_data*
  * If you need write access to cooling_data, use part_get_cooling_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct cooling_part_data*
-  part_get_const_cooling_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_cooling_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7894,7 +7894,7 @@ static __attribute__((always_inline)) INLINE const struct cooling_part_data*
  * @brief set the value of cooling_data, Cooling information.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cooling_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct cooling_part_data cooling_data) {
+  part_set_cooling_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct cooling_part_data cooling_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7912,7 +7912,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get cooling_data, Cooling information.
  */
 static __attribute__((always_inline)) INLINE struct cooling_part_data
-  part_get_cooling_data_global(const int pind) {
+  part_get_cooling_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7932,7 +7932,7 @@ static __attribute__((always_inline)) INLINE struct cooling_part_data
  * to cooling_data. If you need read-only access to cooling_data, use part_get_const_cooling_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct cooling_part_data*
-  part_get_cooling_data_p_global(const int pind) {
+  part_get_cooling_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7952,7 +7952,7 @@ static __attribute__((always_inline)) INLINE struct cooling_part_data*
  * If you need write access to cooling_data, use part_get_cooling_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct cooling_part_data*
-  part_get_const_cooling_data_p_global(const int pind) {
+  part_get_const_cooling_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -7970,7 +7970,7 @@ static __attribute__((always_inline)) INLINE const struct cooling_part_data*
  * @brief set the value of cooling_data, Cooling information.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cooling_data_global(const int pind, const struct cooling_part_data cooling_data) {
+  part_set_cooling_data_global(const ptrdiff_t pind, const struct cooling_part_data cooling_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8059,7 +8059,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get feedback_data, Additional data used by the feedback.
  */
 static __attribute__((always_inline)) INLINE struct feedback_part_data
-  part_get_feedback_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_feedback_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8079,7 +8079,7 @@ static __attribute__((always_inline)) INLINE struct feedback_part_data
  * to feedback_data. If you need read-only access to feedback_data, use part_get_const_feedback_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct feedback_part_data*
-  part_get_feedback_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_feedback_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8099,7 +8099,7 @@ static __attribute__((always_inline)) INLINE struct feedback_part_data*
  * If you need write access to feedback_data, use part_get_feedback_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct feedback_part_data*
-  part_get_const_feedback_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_feedback_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8117,7 +8117,7 @@ static __attribute__((always_inline)) INLINE const struct feedback_part_data*
  * @brief set the value of feedback_data, Additional data used by the feedback.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_feedback_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct feedback_part_data feedback_data) {
+  part_set_feedback_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct feedback_part_data feedback_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8135,7 +8135,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get feedback_data, Additional data used by the feedback.
  */
 static __attribute__((always_inline)) INLINE struct feedback_part_data
-  part_get_feedback_data_global(const int pind) {
+  part_get_feedback_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8155,7 +8155,7 @@ static __attribute__((always_inline)) INLINE struct feedback_part_data
  * to feedback_data. If you need read-only access to feedback_data, use part_get_const_feedback_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct feedback_part_data*
-  part_get_feedback_data_p_global(const int pind) {
+  part_get_feedback_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8175,7 +8175,7 @@ static __attribute__((always_inline)) INLINE struct feedback_part_data*
  * If you need write access to feedback_data, use part_get_feedback_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct feedback_part_data*
-  part_get_const_feedback_data_p_global(const int pind) {
+  part_get_const_feedback_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8193,7 +8193,7 @@ static __attribute__((always_inline)) INLINE const struct feedback_part_data*
  * @brief set the value of feedback_data, Additional data used by the feedback.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_feedback_data_global(const int pind, const struct feedback_part_data feedback_data) {
+  part_set_feedback_data_global(const ptrdiff_t pind, const struct feedback_part_data feedback_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8282,7 +8282,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get black_holes_data, Black holes information (eg swallowing ID).
  */
 static __attribute__((always_inline)) INLINE struct black_holes_part_data
-  part_get_black_holes_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_black_holes_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8302,7 +8302,7 @@ static __attribute__((always_inline)) INLINE struct black_holes_part_data
  * to black_holes_data. If you need read-only access to black_holes_data, use part_get_const_black_holes_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct black_holes_part_data*
-  part_get_black_holes_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_black_holes_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8322,7 +8322,7 @@ static __attribute__((always_inline)) INLINE struct black_holes_part_data*
  * If you need write access to black_holes_data, use part_get_black_holes_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct black_holes_part_data*
-  part_get_const_black_holes_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_black_holes_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8340,7 +8340,7 @@ static __attribute__((always_inline)) INLINE const struct black_holes_part_data*
  * @brief set the value of black_holes_data, Black holes information (eg swallowing ID).
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_black_holes_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct black_holes_part_data black_holes_data) {
+  part_set_black_holes_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct black_holes_part_data black_holes_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8358,7 +8358,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get black_holes_data, Black holes information (eg swallowing ID).
  */
 static __attribute__((always_inline)) INLINE struct black_holes_part_data
-  part_get_black_holes_data_global(const int pind) {
+  part_get_black_holes_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8378,7 +8378,7 @@ static __attribute__((always_inline)) INLINE struct black_holes_part_data
  * to black_holes_data. If you need read-only access to black_holes_data, use part_get_const_black_holes_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct black_holes_part_data*
-  part_get_black_holes_data_p_global(const int pind) {
+  part_get_black_holes_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8398,7 +8398,7 @@ static __attribute__((always_inline)) INLINE struct black_holes_part_data*
  * If you need write access to black_holes_data, use part_get_black_holes_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct black_holes_part_data*
-  part_get_const_black_holes_data_p_global(const int pind) {
+  part_get_const_black_holes_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8416,7 +8416,7 @@ static __attribute__((always_inline)) INLINE const struct black_holes_part_data*
  * @brief set the value of black_holes_data, Black holes information (eg swallowing ID).
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_black_holes_data_global(const int pind, const struct black_holes_part_data black_holes_data) {
+  part_set_black_holes_data_global(const ptrdiff_t pind, const struct black_holes_part_data black_holes_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8505,7 +8505,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get sink_data, Sink information (eg swallowing ID).
  */
 static __attribute__((always_inline)) INLINE struct sink_part_data
-  part_get_sink_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_sink_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8525,7 +8525,7 @@ static __attribute__((always_inline)) INLINE struct sink_part_data
  * to sink_data. If you need read-only access to sink_data, use part_get_const_sink_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct sink_part_data*
-  part_get_sink_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_sink_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8545,7 +8545,7 @@ static __attribute__((always_inline)) INLINE struct sink_part_data*
  * If you need write access to sink_data, use part_get_sink_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct sink_part_data*
-  part_get_const_sink_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_sink_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8563,7 +8563,7 @@ static __attribute__((always_inline)) INLINE const struct sink_part_data*
  * @brief set the value of sink_data, Sink information (eg swallowing ID).
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_sink_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct sink_part_data sink_data) {
+  part_set_sink_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct sink_part_data sink_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8581,7 +8581,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get sink_data, Sink information (eg swallowing ID).
  */
 static __attribute__((always_inline)) INLINE struct sink_part_data
-  part_get_sink_data_global(const int pind) {
+  part_get_sink_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8601,7 +8601,7 @@ static __attribute__((always_inline)) INLINE struct sink_part_data
  * to sink_data. If you need read-only access to sink_data, use part_get_const_sink_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct sink_part_data*
-  part_get_sink_data_p_global(const int pind) {
+  part_get_sink_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8621,7 +8621,7 @@ static __attribute__((always_inline)) INLINE struct sink_part_data*
  * If you need write access to sink_data, use part_get_sink_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct sink_part_data*
-  part_get_const_sink_data_p_global(const int pind) {
+  part_get_const_sink_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8639,7 +8639,7 @@ static __attribute__((always_inline)) INLINE const struct sink_part_data*
  * @brief set the value of sink_data, Sink information (eg swallowing ID).
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_sink_data_global(const int pind, const struct sink_part_data sink_data) {
+  part_set_sink_data_global(const ptrdiff_t pind, const struct sink_part_data sink_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8728,7 +8728,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get pressure_floor_data, Additional data used by the pressure floor.
  */
 static __attribute__((always_inline)) INLINE struct pressure_floor_part_data
-  part_get_pressure_floor_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_pressure_floor_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8748,7 +8748,7 @@ static __attribute__((always_inline)) INLINE struct pressure_floor_part_data
  * to pressure_floor_data. If you need read-only access to pressure_floor_data, use part_get_const_pressure_floor_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct pressure_floor_part_data*
-  part_get_pressure_floor_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_pressure_floor_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8768,7 +8768,7 @@ static __attribute__((always_inline)) INLINE struct pressure_floor_part_data*
  * If you need write access to pressure_floor_data, use part_get_pressure_floor_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct pressure_floor_part_data*
-  part_get_const_pressure_floor_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_pressure_floor_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8786,7 +8786,7 @@ static __attribute__((always_inline)) INLINE const struct pressure_floor_part_da
  * @brief set the value of pressure_floor_data, Additional data used by the pressure floor.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_pressure_floor_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct pressure_floor_part_data pressure_floor_data) {
+  part_set_pressure_floor_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct pressure_floor_part_data pressure_floor_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8804,7 +8804,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get pressure_floor_data, Additional data used by the pressure floor.
  */
 static __attribute__((always_inline)) INLINE struct pressure_floor_part_data
-  part_get_pressure_floor_data_global(const int pind) {
+  part_get_pressure_floor_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8824,7 +8824,7 @@ static __attribute__((always_inline)) INLINE struct pressure_floor_part_data
  * to pressure_floor_data. If you need read-only access to pressure_floor_data, use part_get_const_pressure_floor_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct pressure_floor_part_data*
-  part_get_pressure_floor_data_p_global(const int pind) {
+  part_get_pressure_floor_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8844,7 +8844,7 @@ static __attribute__((always_inline)) INLINE struct pressure_floor_part_data*
  * If you need write access to pressure_floor_data, use part_get_pressure_floor_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct pressure_floor_part_data*
-  part_get_const_pressure_floor_data_p_global(const int pind) {
+  part_get_const_pressure_floor_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8862,7 +8862,7 @@ static __attribute__((always_inline)) INLINE const struct pressure_floor_part_da
  * @brief set the value of pressure_floor_data, Additional data used by the pressure floor.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_pressure_floor_data_global(const int pind, const struct pressure_floor_part_data pressure_floor_data) {
+  part_set_pressure_floor_data_global(const ptrdiff_t pind, const struct pressure_floor_part_data pressure_floor_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8951,7 +8951,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get geometry, Geometrical quantities used for Finite Volume Particle Method RT.
  */
 static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct
-  part_get_geometry_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_geometry_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8971,7 +8971,7 @@ static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct
  * to geometry. If you need read-only access to geometry, use part_get_const_geometry_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct*
-  part_get_geometry_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_geometry_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -8991,7 +8991,7 @@ static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct*
  * If you need write access to geometry, use part_get_geometry_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct fvpm_geometry_struct*
-  part_get_const_geometry_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_geometry_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9009,7 +9009,7 @@ static __attribute__((always_inline)) INLINE const struct fvpm_geometry_struct*
  * @brief set the value of geometry, Geometrical quantities used for Finite Volume Particle Method RT.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_geometry_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct fvpm_geometry_struct geometry) {
+  part_set_geometry_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct fvpm_geometry_struct geometry) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9027,7 +9027,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get geometry, Geometrical quantities used for Finite Volume Particle Method RT.
  */
 static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct
-  part_get_geometry_global(const int pind) {
+  part_get_geometry_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9047,7 +9047,7 @@ static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct
  * to geometry. If you need read-only access to geometry, use part_get_const_geometry_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct*
-  part_get_geometry_p_global(const int pind) {
+  part_get_geometry_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9067,7 +9067,7 @@ static __attribute__((always_inline)) INLINE struct fvpm_geometry_struct*
  * If you need write access to geometry, use part_get_geometry_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct fvpm_geometry_struct*
-  part_get_const_geometry_p_global(const int pind) {
+  part_get_const_geometry_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9085,7 +9085,7 @@ static __attribute__((always_inline)) INLINE const struct fvpm_geometry_struct*
  * @brief set the value of geometry, Geometrical quantities used for Finite Volume Particle Method RT.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_geometry_global(const int pind, const struct fvpm_geometry_struct geometry) {
+  part_set_geometry_global(const ptrdiff_t pind, const struct fvpm_geometry_struct geometry) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9174,7 +9174,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rt_data, Additional Radiative Transfer Data.
  */
 static __attribute__((always_inline)) INLINE struct rt_part_data
-  part_get_rt_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rt_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9194,7 +9194,7 @@ static __attribute__((always_inline)) INLINE struct rt_part_data
  * to rt_data. If you need read-only access to rt_data, use part_get_const_rt_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct rt_part_data*
-  part_get_rt_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rt_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9214,7 +9214,7 @@ static __attribute__((always_inline)) INLINE struct rt_part_data*
  * If you need write access to rt_data, use part_get_rt_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct rt_part_data*
-  part_get_const_rt_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_rt_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9232,7 +9232,7 @@ static __attribute__((always_inline)) INLINE const struct rt_part_data*
  * @brief set the value of rt_data, Additional Radiative Transfer Data.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rt_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct rt_part_data rt_data) {
+  part_set_rt_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct rt_part_data rt_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9250,7 +9250,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rt_data, Additional Radiative Transfer Data.
  */
 static __attribute__((always_inline)) INLINE struct rt_part_data
-  part_get_rt_data_global(const int pind) {
+  part_get_rt_data_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9270,7 +9270,7 @@ static __attribute__((always_inline)) INLINE struct rt_part_data
  * to rt_data. If you need read-only access to rt_data, use part_get_const_rt_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct rt_part_data*
-  part_get_rt_data_p_global(const int pind) {
+  part_get_rt_data_p_global(const ptrdiff_t pind) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9290,7 +9290,7 @@ static __attribute__((always_inline)) INLINE struct rt_part_data*
  * If you need write access to rt_data, use part_get_rt_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct rt_part_data*
-  part_get_const_rt_data_p_global(const int pind) {
+  part_get_const_rt_data_p_global(const ptrdiff_t pind) {
 
   const struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9308,7 +9308,7 @@ static __attribute__((always_inline)) INLINE const struct rt_part_data*
  * @brief set the value of rt_data, Additional Radiative Transfer Data.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rt_data_global(const int pind, const struct rt_part_data rt_data) {
+  part_set_rt_data_global(const ptrdiff_t pind, const struct rt_part_data rt_data) {
 
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9399,7 +9399,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rt_time_data, RT sub-cycling time stepping data.
  */
 static __attribute__((always_inline)) INLINE struct rt_timestepping_data
-  part_get_rt_time_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rt_time_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_rt_time_data* restrict part_rt_time_data_s = pd->_part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9419,7 +9419,7 @@ static __attribute__((always_inline)) INLINE struct rt_timestepping_data
  * to rt_time_data. If you need read-only access to rt_time_data, use part_get_const_rt_time_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct rt_timestepping_data*
-  part_get_rt_time_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rt_time_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_rt_time_data* restrict part_rt_time_data_s = pd->_part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9439,7 +9439,7 @@ static __attribute__((always_inline)) INLINE struct rt_timestepping_data*
  * If you need write access to rt_time_data, use part_get_rt_time_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct rt_timestepping_data*
-  part_get_const_rt_time_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_rt_time_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_rt_time_data* restrict part_rt_time_data_s = pd->_part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9457,7 +9457,7 @@ static __attribute__((always_inline)) INLINE const struct rt_timestepping_data*
  * @brief set the value of rt_time_data, RT sub-cycling time stepping data.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rt_time_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct rt_timestepping_data rt_time_data) {
+  part_set_rt_time_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct rt_timestepping_data rt_time_data) {
 
   struct part_rt_time_data* restrict part_rt_time_data_s = pd->_part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9475,7 +9475,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rt_time_data, RT sub-cycling time stepping data.
  */
 static __attribute__((always_inline)) INLINE struct rt_timestepping_data
-  part_get_rt_time_data_global(const int pind) {
+  part_get_rt_time_data_global(const ptrdiff_t pind) {
 
   const struct part_rt_time_data* restrict part_rt_time_data_s = global_hydro_part_arrays._part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9495,7 +9495,7 @@ static __attribute__((always_inline)) INLINE struct rt_timestepping_data
  * to rt_time_data. If you need read-only access to rt_time_data, use part_get_const_rt_time_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct rt_timestepping_data*
-  part_get_rt_time_data_p_global(const int pind) {
+  part_get_rt_time_data_p_global(const ptrdiff_t pind) {
 
   struct part_rt_time_data* restrict part_rt_time_data_s = global_hydro_part_arrays._part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9515,7 +9515,7 @@ static __attribute__((always_inline)) INLINE struct rt_timestepping_data*
  * If you need write access to rt_time_data, use part_get_rt_time_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct rt_timestepping_data*
-  part_get_const_rt_time_data_p_global(const int pind) {
+  part_get_const_rt_time_data_p_global(const ptrdiff_t pind) {
 
   const struct part_rt_time_data* restrict part_rt_time_data_s = global_hydro_part_arrays._part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9533,7 +9533,7 @@ static __attribute__((always_inline)) INLINE const struct rt_timestepping_data*
  * @brief set the value of rt_time_data, RT sub-cycling time stepping data.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rt_time_data_global(const int pind, const struct rt_timestepping_data rt_time_data) {
+  part_set_rt_time_data_global(const ptrdiff_t pind, const struct rt_timestepping_data rt_time_data) {
 
   struct part_rt_time_data* restrict part_rt_time_data_s = global_hydro_part_arrays._part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9624,7 +9624,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get depth_h, Tree-depth at which size / 2 <= h * gamma < size.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_depth_h_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_depth_h_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_depth_h* restrict part_depth_h_s = pd->_part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9644,7 +9644,7 @@ static __attribute__((always_inline)) INLINE char
  * to depth_h. If you need read-only access to depth_h, use part_get_const_depth_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_depth_h_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_depth_h_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_depth_h* restrict part_depth_h_s = pd->_part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9664,7 +9664,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to depth_h, use part_get_depth_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_depth_h_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_depth_h_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_depth_h* restrict part_depth_h_s = pd->_part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9682,7 +9682,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of depth_h, Tree-depth at which size / 2 <= h * gamma < size.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_depth_h_explicit(struct hydro_part_arrays *restrict pd, const int pind, const char depth_h) {
+  part_set_depth_h_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const char depth_h) {
 
   struct part_depth_h* restrict part_depth_h_s = pd->_part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9700,7 +9700,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get depth_h, Tree-depth at which size / 2 <= h * gamma < size.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_depth_h_global(const int pind) {
+  part_get_depth_h_global(const ptrdiff_t pind) {
 
   const struct part_depth_h* restrict part_depth_h_s = global_hydro_part_arrays._part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9720,7 +9720,7 @@ static __attribute__((always_inline)) INLINE char
  * to depth_h. If you need read-only access to depth_h, use part_get_const_depth_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_depth_h_p_global(const int pind) {
+  part_get_depth_h_p_global(const ptrdiff_t pind) {
 
   struct part_depth_h* restrict part_depth_h_s = global_hydro_part_arrays._part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9740,7 +9740,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to depth_h, use part_get_depth_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_depth_h_p_global(const int pind) {
+  part_get_const_depth_h_p_global(const ptrdiff_t pind) {
 
   const struct part_depth_h* restrict part_depth_h_s = global_hydro_part_arrays._part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9758,7 +9758,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of depth_h, Tree-depth at which size / 2 <= h * gamma < size.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_depth_h_global(const int pind, const char depth_h) {
+  part_set_depth_h_global(const ptrdiff_t pind, const char depth_h) {
 
   struct part_depth_h* restrict part_depth_h_s = global_hydro_part_arrays._part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9849,7 +9849,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get time_bin, Time-step length.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_time_bin_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_time_bin_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_time_bin* restrict part_time_bin_s = pd->_part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9869,7 +9869,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * to time_bin. If you need read-only access to time_bin, use part_get_const_time_bin_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_time_bin_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_time_bin_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_time_bin* restrict part_time_bin_s = pd->_part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9889,7 +9889,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * If you need write access to time_bin, use part_get_time_bin_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_time_bin_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_time_bin_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_time_bin* restrict part_time_bin_s = pd->_part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9907,7 +9907,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief set the value of time_bin, Time-step length.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_time_bin_explicit(struct hydro_part_arrays *restrict pd, const int pind, const timebin_t time_bin) {
+  part_set_time_bin_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const timebin_t time_bin) {
 
   struct part_time_bin* restrict part_time_bin_s = pd->_part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9925,7 +9925,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get time_bin, Time-step length.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_time_bin_global(const int pind) {
+  part_get_time_bin_global(const ptrdiff_t pind) {
 
   const struct part_time_bin* restrict part_time_bin_s = global_hydro_part_arrays._part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9945,7 +9945,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * to time_bin. If you need read-only access to time_bin, use part_get_const_time_bin_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_time_bin_p_global(const int pind) {
+  part_get_time_bin_p_global(const ptrdiff_t pind) {
 
   struct part_time_bin* restrict part_time_bin_s = global_hydro_part_arrays._part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9965,7 +9965,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * If you need write access to time_bin, use part_get_time_bin_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_time_bin_p_global(const int pind) {
+  part_get_const_time_bin_p_global(const ptrdiff_t pind) {
 
   const struct part_time_bin* restrict part_time_bin_s = global_hydro_part_arrays._part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -9983,7 +9983,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief set the value of time_bin, Time-step length.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_time_bin_global(const int pind, const timebin_t time_bin) {
+  part_set_time_bin_global(const ptrdiff_t pind, const timebin_t time_bin) {
 
   struct part_time_bin* restrict part_time_bin_s = global_hydro_part_arrays._part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10074,7 +10074,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get limiter_data, Time-step limiter information.
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
-  part_get_limiter_data_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_limiter_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_limiter_data* restrict part_limiter_data_s = pd->_part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10094,7 +10094,7 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
  * to limiter_data. If you need read-only access to limiter_data, use part_get_const_limiter_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
-  part_get_limiter_data_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_limiter_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part_limiter_data* restrict part_limiter_data_s = pd->_part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10114,7 +10114,7 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
  * If you need write access to limiter_data, use part_get_limiter_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
-  part_get_const_limiter_data_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_limiter_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part_limiter_data* restrict part_limiter_data_s = pd->_part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10132,7 +10132,7 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
  * @brief set the value of limiter_data, Time-step limiter information.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_limiter_data_explicit(struct hydro_part_arrays *restrict pd, const int pind, const struct timestep_limiter_data limiter_data) {
+  part_set_limiter_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct timestep_limiter_data limiter_data) {
 
   struct part_limiter_data* restrict part_limiter_data_s = pd->_part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10150,7 +10150,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get limiter_data, Time-step limiter information.
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
-  part_get_limiter_data_global(const int pind) {
+  part_get_limiter_data_global(const ptrdiff_t pind) {
 
   const struct part_limiter_data* restrict part_limiter_data_s = global_hydro_part_arrays._part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10170,7 +10170,7 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
  * to limiter_data. If you need read-only access to limiter_data, use part_get_const_limiter_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
-  part_get_limiter_data_p_global(const int pind) {
+  part_get_limiter_data_p_global(const ptrdiff_t pind) {
 
   struct part_limiter_data* restrict part_limiter_data_s = global_hydro_part_arrays._part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10190,7 +10190,7 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
  * If you need write access to limiter_data, use part_get_limiter_data_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
-  part_get_const_limiter_data_p_global(const int pind) {
+  part_get_const_limiter_data_p_global(const ptrdiff_t pind) {
 
   const struct part_limiter_data* restrict part_limiter_data_s = global_hydro_part_arrays._part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10208,7 +10208,7 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
  * @brief set the value of limiter_data, Time-step limiter information.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_limiter_data_global(const int pind, const struct timestep_limiter_data limiter_data) {
+  part_set_limiter_data_global(const ptrdiff_t pind, const struct timestep_limiter_data limiter_data) {
 
   struct part_limiter_data* restrict part_limiter_data_s = global_hydro_part_arrays._part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -10313,7 +10313,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get ti_drift, Time of the last drift.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_ti_drift_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_ti_drift_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   const struct part_ti_drift* restrict part_ti_drift_s = pd->_part_ti_drift + pind;
@@ -10337,7 +10337,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * to ti_drift. If you need read-only access to ti_drift, use part_get_const_ti_drift_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_ti_drift_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_ti_drift_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   struct part_ti_drift* restrict part_ti_drift_s = pd->_part_ti_drift + pind;
@@ -10361,7 +10361,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to ti_drift, use part_get_ti_drift_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_ti_drift_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_ti_drift_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   const struct part_ti_drift* restrict part_ti_drift_s = pd->_part_ti_drift + pind;
@@ -10383,7 +10383,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief set the value of ti_drift, Time of the last drift.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_ti_drift_explicit(struct hydro_part_arrays *restrict pd, const int pind, const integertime_t ti_drift) {
+  part_set_ti_drift_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const integertime_t ti_drift) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   struct part_ti_drift* restrict part_ti_drift_s = pd->_part_ti_drift + pind;
@@ -10403,7 +10403,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get ti_drift, Time of the last drift.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_ti_drift_global(const int pind) {
+  part_get_ti_drift_global(const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   const struct part_ti_drift* restrict part_ti_drift_s = global_hydro_part_arrays._part_ti_drift + pind;
@@ -10427,7 +10427,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * to ti_drift. If you need read-only access to ti_drift, use part_get_const_ti_drift_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_ti_drift_p_global(const int pind) {
+  part_get_ti_drift_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   struct part_ti_drift* restrict part_ti_drift_s = global_hydro_part_arrays._part_ti_drift + pind;
@@ -10451,7 +10451,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to ti_drift, use part_get_ti_drift_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_ti_drift_p_global(const int pind) {
+  part_get_const_ti_drift_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   const struct part_ti_drift* restrict part_ti_drift_s = global_hydro_part_arrays._part_ti_drift + pind;
@@ -10473,7 +10473,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief set the value of ti_drift, Time of the last drift.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_ti_drift_global(const int pind, const integertime_t ti_drift) {
+  part_set_ti_drift_global(const ptrdiff_t pind, const integertime_t ti_drift) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   struct part_ti_drift* restrict part_ti_drift_s = global_hydro_part_arrays._part_ti_drift + pind;
@@ -10580,7 +10580,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get ti_kick, Time of the last drift.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_ti_kick_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_ti_kick_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   const struct part_ti_kick* restrict part_ti_kick_s = pd->_part_ti_kick + pind;
@@ -10604,7 +10604,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * to ti_kick. If you need read-only access to ti_kick, use part_get_const_ti_kick_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_ti_kick_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_ti_kick_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   struct part_ti_kick* restrict part_ti_kick_s = pd->_part_ti_kick + pind;
@@ -10628,7 +10628,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to ti_kick, use part_get_ti_kick_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_ti_kick_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_ti_kick_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   const struct part_ti_kick* restrict part_ti_kick_s = pd->_part_ti_kick + pind;
@@ -10650,7 +10650,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief set the value of ti_kick, Time of the last drift.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_ti_kick_explicit(struct hydro_part_arrays *restrict pd, const int pind, const integertime_t ti_kick) {
+  part_set_ti_kick_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const integertime_t ti_kick) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   struct part_ti_kick* restrict part_ti_kick_s = pd->_part_ti_kick + pind;
@@ -10670,7 +10670,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get ti_kick, Time of the last drift.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_ti_kick_global(const int pind) {
+  part_get_ti_kick_global(const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   const struct part_ti_kick* restrict part_ti_kick_s = global_hydro_part_arrays._part_ti_kick + pind;
@@ -10694,7 +10694,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * to ti_kick. If you need read-only access to ti_kick, use part_get_const_ti_kick_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_ti_kick_p_global(const int pind) {
+  part_get_ti_kick_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   struct part_ti_kick* restrict part_ti_kick_s = global_hydro_part_arrays._part_ti_kick + pind;
@@ -10718,7 +10718,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to ti_kick, use part_get_ti_kick_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_ti_kick_p_global(const int pind) {
+  part_get_const_ti_kick_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   const struct part_ti_kick* restrict part_ti_kick_s = global_hydro_part_arrays._part_ti_kick + pind;
@@ -10740,7 +10740,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief set the value of ti_kick, Time of the last drift.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_ti_kick_global(const int pind, const integertime_t ti_kick) {
+  part_set_ti_kick_global(const ptrdiff_t pind, const integertime_t ti_kick) {
 #ifdef SWIFT_DEBUG_CHECKS
 
   struct part_ti_kick* restrict part_ti_kick_s = global_hydro_part_arrays._part_ti_kick + pind;
@@ -10847,7 +10847,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_density, Integer number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_density_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_density_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -10871,7 +10871,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_density. If you need read-only access to N_density, use part_get_const_N_density_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_density_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_density_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -10895,7 +10895,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_density, use part_get_N_density_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_density_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_N_density_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -10917,7 +10917,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_density, Integer number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_density_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int N_density) {
+  part_set_N_density_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int N_density) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -10937,7 +10937,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_density, Integer number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_density_global(const int pind) {
+  part_get_N_density_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -10961,7 +10961,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_density. If you need read-only access to N_density, use part_get_const_N_density_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_density_p_global(const int pind) {
+  part_get_N_density_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -10985,7 +10985,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_density, use part_get_N_density_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_density_p_global(const int pind) {
+  part_get_const_N_density_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11007,7 +11007,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_density, Integer number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_density_global(const int pind, const int N_density) {
+  part_set_N_density_global(const ptrdiff_t pind, const int N_density) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11112,7 +11112,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_density_exact, Exact integer number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_density_exact_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_density_exact_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11136,7 +11136,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_density_exact. If you need read-only access to N_density_exact, use part_get_const_N_density_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_density_exact_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_density_exact_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11160,7 +11160,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_density_exact, use part_get_N_density_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_density_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_N_density_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11182,7 +11182,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_density_exact, Exact integer number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_density_exact_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int N_density_exact) {
+  part_set_N_density_exact_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int N_density_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11202,7 +11202,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_density_exact, Exact integer number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_density_exact_global(const int pind) {
+  part_get_N_density_exact_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11226,7 +11226,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_density_exact. If you need read-only access to N_density_exact, use part_get_const_N_density_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_density_exact_p_global(const int pind) {
+  part_get_N_density_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11250,7 +11250,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_density_exact, use part_get_N_density_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_density_exact_p_global(const int pind) {
+  part_get_const_N_density_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11272,7 +11272,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_density_exact, Exact integer number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_density_exact_global(const int pind, const int N_density_exact) {
+  part_set_N_density_exact_global(const ptrdiff_t pind, const int N_density_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11377,7 +11377,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_gradient, Integer number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_gradient_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_gradient_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11401,7 +11401,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_gradient. If you need read-only access to N_gradient, use part_get_const_N_gradient_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_gradient_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_gradient_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11425,7 +11425,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_gradient, use part_get_N_gradient_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_gradient_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_N_gradient_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11447,7 +11447,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_gradient, Integer number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_gradient_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int N_gradient) {
+  part_set_N_gradient_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int N_gradient) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11467,7 +11467,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_gradient, Integer number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_gradient_global(const int pind) {
+  part_get_N_gradient_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11491,7 +11491,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_gradient. If you need read-only access to N_gradient, use part_get_const_N_gradient_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_gradient_p_global(const int pind) {
+  part_get_N_gradient_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11515,7 +11515,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_gradient, use part_get_N_gradient_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_gradient_p_global(const int pind) {
+  part_get_const_N_gradient_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11537,7 +11537,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_gradient, Integer number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_gradient_global(const int pind, const int N_gradient) {
+  part_set_N_gradient_global(const ptrdiff_t pind, const int N_gradient) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11642,7 +11642,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_gradient_exact, Exact integer number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_gradient_exact_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_gradient_exact_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11666,7 +11666,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_gradient_exact. If you need read-only access to N_gradient_exact, use part_get_const_N_gradient_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_gradient_exact_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_gradient_exact_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11690,7 +11690,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_gradient_exact, use part_get_N_gradient_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_gradient_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_N_gradient_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11712,7 +11712,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_gradient_exact, Exact integer number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_gradient_exact_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int N_gradient_exact) {
+  part_set_N_gradient_exact_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int N_gradient_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11732,7 +11732,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_gradient_exact, Exact integer number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_gradient_exact_global(const int pind) {
+  part_get_N_gradient_exact_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11756,7 +11756,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_gradient_exact. If you need read-only access to N_gradient_exact, use part_get_const_N_gradient_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_gradient_exact_p_global(const int pind) {
+  part_get_N_gradient_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11780,7 +11780,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_gradient_exact, use part_get_N_gradient_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_gradient_exact_p_global(const int pind) {
+  part_get_const_N_gradient_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11802,7 +11802,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_gradient_exact, Exact integer number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_gradient_exact_global(const int pind, const int N_gradient_exact) {
+  part_set_N_gradient_exact_global(const ptrdiff_t pind, const int N_gradient_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -11907,7 +11907,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_force, Integer number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_force_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_force_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11931,7 +11931,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_force. If you need read-only access to N_force, use part_get_const_N_force_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_force_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_force_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11955,7 +11955,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_force, use part_get_N_force_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_force_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_N_force_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11977,7 +11977,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_force, Integer number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_force_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int N_force) {
+  part_set_N_force_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int N_force) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -11997,7 +11997,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_force, Integer number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_force_global(const int pind) {
+  part_get_N_force_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12021,7 +12021,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_force. If you need read-only access to N_force, use part_get_const_N_force_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_force_p_global(const int pind) {
+  part_get_N_force_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12045,7 +12045,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_force, use part_get_N_force_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_force_p_global(const int pind) {
+  part_get_const_N_force_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12067,7 +12067,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_force, Integer number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_force_global(const int pind, const int N_force) {
+  part_set_N_force_global(const ptrdiff_t pind, const int N_force) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12172,7 +12172,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_force_exact, Exact integer number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_force_exact_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_force_exact_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12196,7 +12196,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_force_exact. If you need read-only access to N_force_exact, use part_get_const_N_force_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_force_exact_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_N_force_exact_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12220,7 +12220,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_force_exact, use part_get_N_force_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_force_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_N_force_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12242,7 +12242,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_force_exact, Exact integer number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_force_exact_explicit(struct hydro_part_arrays *restrict pd, const int pind, const int N_force_exact) {
+  part_set_N_force_exact_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int N_force_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12262,7 +12262,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get N_force_exact, Exact integer number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_N_force_exact_global(const int pind) {
+  part_get_N_force_exact_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12286,7 +12286,7 @@ static __attribute__((always_inline)) INLINE int
  * to N_force_exact. If you need read-only access to N_force_exact, use part_get_const_N_force_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_N_force_exact_p_global(const int pind) {
+  part_get_N_force_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12310,7 +12310,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to N_force_exact, use part_get_N_force_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_N_force_exact_p_global(const int pind) {
+  part_get_const_N_force_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12332,7 +12332,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of N_force_exact, Exact integer number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_N_force_exact_global(const int pind, const int N_force_exact) {
+  part_set_N_force_exact_global(const ptrdiff_t pind, const int N_force_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12437,7 +12437,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rho_exact, Exact value of the density field obtained via brute-force loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_rho_exact_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rho_exact_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12461,7 +12461,7 @@ static __attribute__((always_inline)) INLINE float
  * to rho_exact. If you need read-only access to rho_exact, use part_get_const_rho_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_rho_exact_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_rho_exact_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12485,7 +12485,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to rho_exact, use part_get_rho_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_rho_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12507,7 +12507,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of rho_exact, Exact value of the density field obtained via brute-force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rho_exact_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float rho_exact) {
+  part_set_rho_exact_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12527,7 +12527,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get rho_exact, Exact value of the density field obtained via brute-force loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_rho_exact_global(const int pind) {
+  part_get_rho_exact_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12551,7 +12551,7 @@ static __attribute__((always_inline)) INLINE float
  * to rho_exact. If you need read-only access to rho_exact, use part_get_const_rho_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_rho_exact_p_global(const int pind) {
+  part_get_rho_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12575,7 +12575,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to rho_exact, use part_get_rho_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_exact_p_global(const int pind) {
+  part_get_const_rho_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12597,7 +12597,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of rho_exact, Exact value of the density field obtained via brute-force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_rho_exact_global(const int pind, const float rho_exact) {
+  part_set_rho_exact_global(const ptrdiff_t pind, const float rho_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12702,7 +12702,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_density, Weighted number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_density_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_density_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12726,7 +12726,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_density. If you need read-only access to n_density, use part_get_const_n_density_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_density_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_density_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12750,7 +12750,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_density, use part_get_n_density_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_density_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_n_density_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12772,7 +12772,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_density, Weighted number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_density_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float n_density) {
+  part_set_n_density_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float n_density) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12792,7 +12792,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_density, Weighted number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_density_global(const int pind) {
+  part_get_n_density_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12816,7 +12816,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_density. If you need read-only access to n_density, use part_get_const_n_density_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_density_p_global(const int pind) {
+  part_get_n_density_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12840,7 +12840,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_density, use part_get_n_density_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_density_p_global(const int pind) {
+  part_get_const_n_density_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12862,7 +12862,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_density, Weighted number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_density_global(const int pind, const float n_density) {
+  part_set_n_density_global(const ptrdiff_t pind, const float n_density) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -12967,7 +12967,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_density_exact, Exact value of the weighted number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_density_exact_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_density_exact_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -12991,7 +12991,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_density_exact. If you need read-only access to n_density_exact, use part_get_const_n_density_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_density_exact_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_density_exact_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13015,7 +13015,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_density_exact, use part_get_n_density_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_density_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_n_density_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13037,7 +13037,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_density_exact, Exact value of the weighted number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_density_exact_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float n_density_exact) {
+  part_set_n_density_exact_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float n_density_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13057,7 +13057,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_density_exact, Exact value of the weighted number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_density_exact_global(const int pind) {
+  part_get_n_density_exact_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13081,7 +13081,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_density_exact. If you need read-only access to n_density_exact, use part_get_const_n_density_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_density_exact_p_global(const int pind) {
+  part_get_n_density_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13105,7 +13105,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_density_exact, use part_get_n_density_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_density_exact_p_global(const int pind) {
+  part_get_const_n_density_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13127,7 +13127,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_density_exact, Exact value of the weighted number of neighbours in the density loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_density_exact_global(const int pind, const float n_density_exact) {
+  part_set_n_density_exact_global(const ptrdiff_t pind, const float n_density_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13232,7 +13232,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_gradient, Weighted number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_gradient_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_gradient_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13256,7 +13256,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_gradient. If you need read-only access to n_gradient, use part_get_const_n_gradient_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_gradient_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_gradient_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13280,7 +13280,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_gradient, use part_get_n_gradient_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_gradient_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_n_gradient_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13302,7 +13302,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_gradient, Weighted number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_gradient_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float n_gradient) {
+  part_set_n_gradient_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float n_gradient) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13322,7 +13322,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_gradient, Weighted number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_gradient_global(const int pind) {
+  part_get_n_gradient_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13346,7 +13346,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_gradient. If you need read-only access to n_gradient, use part_get_const_n_gradient_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_gradient_p_global(const int pind) {
+  part_get_n_gradient_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13370,7 +13370,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_gradient, use part_get_n_gradient_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_gradient_p_global(const int pind) {
+  part_get_const_n_gradient_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13392,7 +13392,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_gradient, Weighted number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_gradient_global(const int pind, const float n_gradient) {
+  part_set_n_gradient_global(const ptrdiff_t pind, const float n_gradient) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13497,7 +13497,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_gradient_exact, Exact value of the weighted number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_gradient_exact_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_gradient_exact_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13521,7 +13521,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_gradient_exact. If you need read-only access to n_gradient_exact, use part_get_const_n_gradient_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_gradient_exact_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_gradient_exact_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13545,7 +13545,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_gradient_exact, use part_get_n_gradient_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_gradient_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_n_gradient_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13567,7 +13567,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_gradient_exact, Exact value of the weighted number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_gradient_exact_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float n_gradient_exact) {
+  part_set_n_gradient_exact_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float n_gradient_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13587,7 +13587,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_gradient_exact, Exact value of the weighted number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_gradient_exact_global(const int pind) {
+  part_get_n_gradient_exact_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13611,7 +13611,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_gradient_exact. If you need read-only access to n_gradient_exact, use part_get_const_n_gradient_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_gradient_exact_p_global(const int pind) {
+  part_get_n_gradient_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13635,7 +13635,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_gradient_exact, use part_get_n_gradient_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_gradient_exact_p_global(const int pind) {
+  part_get_const_n_gradient_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13657,7 +13657,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_gradient_exact, Exact value of the weighted number of neighbours in the gradient loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_gradient_exact_global(const int pind, const float n_gradient_exact) {
+  part_set_n_gradient_exact_global(const ptrdiff_t pind, const float n_gradient_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13762,7 +13762,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_force, Weighted number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_force_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_force_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13786,7 +13786,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_force. If you need read-only access to n_force, use part_get_const_n_force_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_force_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_force_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13810,7 +13810,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_force, use part_get_n_force_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_force_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_n_force_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13832,7 +13832,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_force, Weighted number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_force_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float n_force) {
+  part_set_n_force_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float n_force) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -13852,7 +13852,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_force, Weighted number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_force_global(const int pind) {
+  part_get_n_force_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13876,7 +13876,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_force. If you need read-only access to n_force, use part_get_const_n_force_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_force_p_global(const int pind) {
+  part_get_n_force_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13900,7 +13900,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_force, use part_get_n_force_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_force_p_global(const int pind) {
+  part_get_const_n_force_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -13922,7 +13922,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_force, Weighted number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_force_global(const int pind, const float n_force) {
+  part_set_n_force_global(const ptrdiff_t pind, const float n_force) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14027,7 +14027,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_force_exact, Exact value of the weighted number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_force_exact_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_force_exact_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14051,7 +14051,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_force_exact. If you need read-only access to n_force_exact, use part_get_const_n_force_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_force_exact_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_n_force_exact_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14075,7 +14075,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_force_exact, use part_get_n_force_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_force_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_n_force_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14097,7 +14097,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_force_exact, Exact value of the weighted number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_force_exact_explicit(struct hydro_part_arrays *restrict pd, const int pind, const float n_force_exact) {
+  part_set_n_force_exact_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float n_force_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14117,7 +14117,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get n_force_exact, Exact value of the weighted number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_n_force_exact_global(const int pind) {
+  part_get_n_force_exact_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14141,7 +14141,7 @@ static __attribute__((always_inline)) INLINE float
  * to n_force_exact. If you need read-only access to n_force_exact, use part_get_const_n_force_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_n_force_exact_p_global(const int pind) {
+  part_get_n_force_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14165,7 +14165,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to n_force_exact, use part_get_n_force_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_n_force_exact_p_global(const int pind) {
+  part_get_const_n_force_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14187,7 +14187,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of n_force_exact, Exact value of the weighted number of neighbours in the force loop.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_n_force_exact_global(const int pind, const float n_force_exact) {
+  part_set_n_force_exact_global(const ptrdiff_t pind, const float n_force_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14292,7 +14292,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get inhibited_exact, Has this particle interacted with any unhibited neighbour?.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_inhibited_exact_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_inhibited_exact_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14316,7 +14316,7 @@ static __attribute__((always_inline)) INLINE char
  * to inhibited_exact. If you need read-only access to inhibited_exact, use part_get_const_inhibited_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_inhibited_exact_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_inhibited_exact_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14340,7 +14340,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to inhibited_exact, use part_get_inhibited_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_inhibited_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_inhibited_exact_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14362,7 +14362,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of inhibited_exact, Has this particle interacted with any unhibited neighbour?.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_inhibited_exact_explicit(struct hydro_part_arrays *restrict pd, const int pind, const char inhibited_exact) {
+  part_set_inhibited_exact_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const char inhibited_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14382,7 +14382,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get inhibited_exact, Has this particle interacted with any unhibited neighbour?.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_inhibited_exact_global(const int pind) {
+  part_get_inhibited_exact_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14406,7 +14406,7 @@ static __attribute__((always_inline)) INLINE char
  * to inhibited_exact. If you need read-only access to inhibited_exact, use part_get_const_inhibited_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_inhibited_exact_p_global(const int pind) {
+  part_get_inhibited_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14430,7 +14430,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to inhibited_exact, use part_get_inhibited_exact_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_inhibited_exact_p_global(const int pind) {
+  part_get_const_inhibited_exact_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14452,7 +14452,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of inhibited_exact, Has this particle interacted with any unhibited neighbour?.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_inhibited_exact_global(const int pind, const char inhibited_exact) {
+  part_set_inhibited_exact_global(const ptrdiff_t pind, const char inhibited_exact) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14557,7 +14557,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get limited_part, Has this particle been woken up by the limiter?.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_limited_part_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_limited_part_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14581,7 +14581,7 @@ static __attribute__((always_inline)) INLINE char
  * to limited_part. If you need read-only access to limited_part, use part_get_const_limited_part_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_limited_part_p_explicit(struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_limited_part_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14605,7 +14605,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to limited_part, use part_get_limited_part_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_limited_part_p_explicit(const struct hydro_part_arrays *restrict pd, const int pind) {
+  part_get_const_limited_part_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14627,7 +14627,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of limited_part, Has this particle been woken up by the limiter?.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_limited_part_explicit(struct hydro_part_arrays *restrict pd, const int pind, const char limited_part) {
+  part_set_limited_part_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const char limited_part) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
@@ -14647,7 +14647,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get limited_part, Has this particle been woken up by the limiter?.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_limited_part_global(const int pind) {
+  part_get_limited_part_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14671,7 +14671,7 @@ static __attribute__((always_inline)) INLINE char
  * to limited_part. If you need read-only access to limited_part, use part_get_const_limited_part_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_limited_part_p_global(const int pind) {
+  part_get_limited_part_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14695,7 +14695,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to limited_part, use part_get_limited_part_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_limited_part_p_global(const int pind) {
+  part_get_const_limited_part_p_global(const ptrdiff_t pind) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   const struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14717,7 +14717,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of limited_part, Has this particle been woken up by the limiter?.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_limited_part_global(const int pind, const char limited_part) {
+  part_set_limited_part_global(const ptrdiff_t pind, const char limited_part) {
 #ifdef SWIFT_HYDRO_DENSITY_CHECKS
 
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
@@ -14738,4 +14738,4 @@ static __attribute__((always_inline)) INLINE void
 
 
 
-#endif /* SWIFT_HYDRO_PART_f1aeb16f8bd06ead5c10ea1f54a9d64ad7b4f0f6_H */
+#endif /* SWIFT_HYDRO_PART_cc5f5f8948b030f7f511d72b21e4f719b2d6fca9_H */
