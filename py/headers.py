@@ -14,6 +14,8 @@ def generate_hydro_part_header(
     swift_header: bool = True,
     id_checks: bool = True,
     manual_align: bool = False,
+    explicit_var_accessors: bool = False,
+    global_var_accessors: bool = False,
     testing: bool = False,
     verbose: bool = False,
 ) -> str:
@@ -35,6 +37,13 @@ def generate_hydro_part_header(
 
     manual_align: bool
         if True, generate a different SWIFT_STRUCT_ALIGN_ macro for each struct.
+
+    explicit_var_accessors: bool
+        if True, also generate getters/setters which use explicitly passed pointer
+        as an argument
+
+    global_var_accessors: bool
+        if True, also generate getters/setters which use global variable pointer
 
     testing: bool
         if True, use minimalistic header template for unit tests to generate
@@ -77,7 +86,7 @@ def generate_hydro_part_header(
             decl = field_entry.generate_declaration(verbose=verbose)
             declarations.append(decl)
             # get the API C-code
-            api = field_entry.generate_API(verbose=verbose, id_checks=id_checks)
+            api = field_entry.generate_API(verbose=verbose, id_checks=id_checks, explicit_var_accessors=explicit_var_accessors, global_var_accessors=global_var_accessors)
             apis.append(api)
 
         # store the parsed data

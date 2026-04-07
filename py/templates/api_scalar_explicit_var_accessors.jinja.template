@@ -3,18 +3,18 @@
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}
-  part_get_{{NAME}}(const struct part *restrict p) {
+  part_get_{{NAME}}(const struct hydro_part_arrays *restrict pd, int index) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-{%- if IS_IN_SPLIT_STRUCT %}
-  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + index;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + index;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -22,22 +22,13 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
     {%- endif %}
 
-  {%- if HAS_PARENT_STRUCT %}
+{%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
-  {%- else %}
+{%- else %}
   return {{ROOT_STRUCT}}_s->_{{NAME}};
-  {%- endif -%}
+{%- endif -%}
 
-{%- else -%}
-
-  {%- if HAS_PARENT_STRUCT %}
-  return p->_{{PARENT_STRUCT}}._{{NAME}};
-  {%- else %}
-  return p->_{{NAME}};
-  {%- endif %}
-{%- endif %}
-
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF %} {# return some default val if function contents are hidden behind macro #}
 #else
   return {{IFDEF_RETURN_VAL}};
 #endif
@@ -50,18 +41,18 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
  * to {{NAME}}. If you need read-only access to {{NAME}}, use part_get_const_{{NAME}}_p() instead.
  */
 static __attribute__((always_inline)) INLINE {{TYPE}}*
-  part_get_{{NAME}}_p(struct part *restrict p) {
+  part_get_{{NAME}}_p(struct hydro_part_arrays *restrict pd, int index) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-{%- if IS_IN_SPLIT_STRUCT %}
-  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + index;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + index;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -69,20 +60,11 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
     {%- endif %}
 
-  {%- if HAS_PARENT_STRUCT %}
+{%- if HAS_PARENT_STRUCT %}
   return &{{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
-  {%- else %}
+{%- else %}
   return &{{ROOT_STRUCT}}_s->_{{NAME}};
-  {%- endif -%}
-
-{%- else -%}
-
-  {%- if HAS_PARENT_STRUCT %}
-  return &p->_{{PARENT_STRUCT}}._{{NAME}};
-  {%- else %}
-  return &p->_{{NAME}};
-  {%- endif %}
-{%- endif %}
+{%- endif -%}
 
 {%- if HAS_IFDEF %}
 #else
@@ -98,18 +80,18 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
  * If you need write access to {{NAME}}, use part_get_{{NAME}}_p() instead.
  */
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
-  part_get_const_{{NAME}}_p(const struct part *restrict p) {
+  part_get_const_{{NAME}}_p(const struct hydro_part_arrays *restrict pd, int index) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-{%- if IS_IN_SPLIT_STRUCT %}
-  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + index;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + index;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -117,20 +99,11 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
     {%- endif %}
 
-  {%- if HAS_PARENT_STRUCT %}
+{%- if HAS_PARENT_STRUCT %}
   return &{{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
-  {%- else %}
+{%- else %}
   return &{{ROOT_STRUCT}}_s->_{{NAME}};
-  {%- endif -%}
-
-{%- else -%}
-
-  {%- if HAS_PARENT_STRUCT %}
-  return &p->_{{PARENT_STRUCT}}._{{NAME}};
-  {%- else %}
-  return &p->_{{NAME}};
-  {%- endif %}
-{%- endif %}
+{%- endif -%}
 
 {%- if HAS_IFDEF %}
 #else
@@ -144,14 +117,13 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_{{NAME}}(struct part *restrict p, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
+  part_set_{{NAME}}(struct hydro_part_arrays *restrict pd, int index, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-{%- if IS_IN_SPLIT_STRUCT %}
-  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + index;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
@@ -163,20 +135,11 @@ static __attribute__((always_inline)) INLINE void
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
     {%- endif %}
 
-  {%- if HAS_PARENT_STRUCT %}
+{%- if HAS_PARENT_STRUCT %}
   {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}} = {{NAME}};
-  {%- else %}
+{%- else %}
   {{ROOT_STRUCT}}_s->_{{NAME}} = {{NAME}};
-  {%- endif -%}
-
-{%- else -%}
-
-  {%- if HAS_PARENT_STRUCT %}
-  p->_{{PARENT_STRUCT}}._{{NAME}} = {{NAME}};
-  {%- else %}
-  p->_{{NAME}} = {{NAME}};
-  {%- endif %}
-{%- endif %}
+{%- endif -%}
 
 {%- if HAS_IFDEF %}
 #endif
