@@ -1,2 +1,4 @@
 data/IntelXeonGold5218_Gresho64_1thread/* filter=lfs diff=lfs merge=lfs -text
 data/IntelXeonGold5218_Gresho64_4threads/* filter=lfs diff=lfs merge=lfs -text
+data/IntelCoffeeLake_Gresho128_1thread/* filter=lfs diff=lfs merge=lfs -text
+data/IntelCoffeeLake_Gresho128_6threads/* filter=lfs diff=lfs merge=lfs -text
