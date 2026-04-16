@@ -102,14 +102,24 @@ void print_params(struct parameters* params) {
   const int vec = 0;
 #endif
 
+#ifdef PACKED_STRUCTS
+  const int packed = 1;
+#else
+  const int packed = 0;
+#endif
+
+
   printf("Runtime parameters:\n");
-  printf("\t nr_threads:        %12d\n", params->nr_threads);
-  printf("\t nr_parts:          %12lu\n", params->nr_parts);
-  printf("\t nr_steps:          %12d\n", params->nr_steps);
-  printf("\t cache flushing:    %12d\n", !params->no_cache_flush);
-  printf("\t vectorized:        %12d\n", vec);
-  printf("\t struct alignment:  %12d\n", params->struct_align);
-  printf("\t part array align:  %12d\n", params->part_align);
-  printf("\t memory layout:     %s\n", params->memory_layout);
-  printf("\t measurement data:  %s\n", params->data_root_dir);
+  printf("\t nr_threads:             %12d\n", params->nr_threads);
+  printf("\t nr_parts:               %12lu\n", params->nr_parts);
+  printf("\t nr_steps:               %12d\n", params->nr_steps);
+  printf("\t cache flush:            %12d\n", !params->no_cache_flush);
+  printf("\t stuct align:            %12d\n", params->struct_align);
+  printf("\t part array align:       %12d\n", params->part_align);
+  printf("\t memory layout:          %s\n", params->memory_layout);
+  printf("\t access variant:         %s\n", params->access_variant);
+  printf("\t loop splitting variant: %s\n", params->loop_split);
+  printf("\t vectorization:          %12d\n", vec);
+  printf("\t packed structs:         %12d\n", packed);
+  printf("\t measurement data:       %s\n", params->data_root_dir);
 }
