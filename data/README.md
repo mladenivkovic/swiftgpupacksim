@@ -1,6 +1,9 @@
 # Contents
 
 - `IntelXeonGold5218_Gresho64_1thread`: cosma gn001, 64^3 GreshoVortex_3D, single thread
+- `IntelXeonGold5218_Gresho64_4threads`: cosma gn001, 64^3 GreshoVortex_3D, 4 threads
+- `IntelCoffeeLake_Gresho128_1thread`: local Lenovo Legion, 128^3 GreshoVortex_3D, single thread
+- `IntelCoffeeLake_Gresho128_6thread`: local Lenovo Legion, 128^3 GreshoVortex_3D, 6 threads
 
 
 
