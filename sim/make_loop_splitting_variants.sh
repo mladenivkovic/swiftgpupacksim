@@ -6,7 +6,7 @@ if [[ ! -f ./configure ]]; then
   ./autogen.sh
 fi
 
-EXTRA_CONFFLAGS="--config-cache"
+EXTRA_CONFFLAGS="--config-cache --enable-no-cuda-mallochost"
 
 if [ $# -gt 0 ]; then
   case "$1" in
