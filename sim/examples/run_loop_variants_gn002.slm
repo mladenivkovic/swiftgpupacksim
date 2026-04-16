@@ -33,44 +33,54 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
 
       mkdir -p $NODE
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush
+      # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
+      # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector
+      # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_packed
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_packed_noflush
+      # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush
+      # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_packed
+      # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_packed_noflush
 
       NTHREADS=36
       if [[ "$dir" == "*_72thread*" ]]; then NTHREADS=72; fi
+
+      export OMP_NUM_THREADS=$NTHREADS
 
       for layout in aos soa upstream pack-gradient pack-force pack-shared; do
 
         ex=../swiftgpupack_"$layout"_"$part_access"_"$loop"
 
+        echo running "$ex" ../../data/gn002/$dir
         "$ex" ../../data/gn002/$dir
         mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"/
 
-        "$ex" ../../data/gn002/$dir --noflush
-        mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_noflush/
+        # echo running "$ex" ../../data/gn002/$dir --noflush
+        # "$ex" ../../data/gn002/$dir --noflush
+        # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_noflush/
 
-        "$ex"_vector ../../data/gn002/$dir
-        mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector/
+        # echo running "$ex"_vector ../../data/gn002/$dir
+        # "$ex"_vector ../../data/gn002/$dir
+        # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector/
 
-        "$ex"_vector ../../data/gn002/$dir --noflush
-        mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush/
+        # echo running "$ex"_vector ../../data/gn002/$dir --noflush
+        # "$ex"_vector ../../data/gn002/$dir --noflush
+        # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush/
 
+        echo running "$ex"_packed ../../data/gn002/$dir
         "$ex"_packed ../../data/gn002/$dir
         mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed/
 
-        "$ex"_packed ../../data/gn002/$dir --noflush
-        mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush/
+        # echo running "$ex"_packed ../../data/gn002/$dir --noflush
+        # "$ex"_packed ../../data/gn002/$dir --noflush
+        # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush/
 
-        "$ex"_vector_packed ../../data/gn002/$dir
-        mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_packed/
+        # echo running "$ex"_vector_packed ../../data/gn002/$dir
+        # "$ex"_vector_packed ../../data/gn002/$dir
+        # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_packed/
 
-        "$ex"_vector_packed ../../data/gn002/$dir --noflush
-        mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_packed_noflush/
+        # echo running "$ex"_vector_packed ../../data/gn002/$dir --noflush
+        # "$ex"_vector_packed ../../data/gn002/$dir --noflush
+        # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_packed_noflush/
 
       done
     done
