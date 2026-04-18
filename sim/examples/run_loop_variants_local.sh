@@ -9,6 +9,7 @@ NODE=local
 EXPERIMENT="IntelCoffeeLake_Gresho128_6threads"
 NTHREADS=6
 RUN_ALL="false"
+NSTEPS=5
 
 while [[ $# > 0 ]]; do
   arg="$1"
@@ -17,6 +18,7 @@ while [[ $# > 0 ]]; do
       echo "script to run all loop variant tests on a local laptop."
       echo "use -hp for HP machine. Default: Lenovo Legion."
       echo "use -a to run *all* tests (include vector/novector, flush/noflush variants)"
+      echo "use -s <nsteps> to set number of simulation steps to run"
       exit
     ;;
     -hp)
@@ -25,6 +27,10 @@ while [[ $# > 0 ]]; do
     ;;
     -a | --all)
       RUN_ALL="true"
+    ;;
+    -s | --steps)
+      NSTEPS=$2
+      shift
     ;;
     *)
       echo "Unknown argument: '""$arg""'"
@@ -60,38 +66,38 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
 
         ex="likwid-pin -c N:0-""$NTHREADS"" ../swiftgpupack_""$layout"_"$part_access"_"$loop"
 
-        echo running "$ex" ../../data/$dir -s 1
-        $ex ../../data/$dir -s 1
+        echo running "$ex" ../../data/$dir -s $NSTEPS
+        $ex ../../data/$dir -s $NSTEPS
         mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"/
 
-        echo running "$ex"_packed ../../data/$dir -s 1
-        $ex"_packed" ../../data/$dir -s 1
+        echo running "$ex"_packed ../../data/$dir -s $NSTEPS
+        $ex"_packed" ../../data/$dir -s $NSTEPS
         mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed/
 
         if [[ "$RUN_ALL" == "true" ]]; then
 
-          echo running "$ex" ../../data/$dir --noflush -s 1
-          $ex ../../data/$dir --noflush -s 1
+          echo running "$ex" ../../data/$dir --noflush -s $NSTEPS
+          $ex ../../data/$dir --noflush -s $NSTEPS
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_noflush/
 
-          echo running "$ex"_vector ../../data/$dir -s 1
-          $ex"_vector" ../../data/$dir -s 1
+          echo running "$ex"_vector ../../data/$dir -s $NSTEPS
+          $ex"_vector" ../../data/$dir -s $NSTEPS
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector/
 
-          echo running "$ex"_vector ../../data/$dir --noflush -s 1
-          $ex"_vector" ../../data/$dir --noflush -s 1
+          echo running "$ex"_vector ../../data/$dir --noflush -s $NSTEPS
+          $ex"_vector" ../../data/$dir --noflush -s $NSTEPS
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush/
 
-          echo running "$ex"_packed ../../data/$dir --noflush -s 1
-          $ex"_packed" ../../data/$dir --noflush -s 1
+          echo running "$ex"_packed ../../data/$dir --noflush -s $NSTEPS
+          $ex"_packed" ../../data/$dir --noflush -s $NSTEPS
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush/
 
-          echo running "$ex"_vector_packed ../../data/$dir -s 1
-          $ex"_vector_packed" ../../data/$dir -s 1
+          echo running "$ex"_vector_packed ../../data/$dir -s $NSTEPS
+          $ex"_vector_packed" ../../data/$dir -s $NSTEPS
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_vector/
 
-          echo running "$ex"_vector_packed ../../data/$dir --noflush -s 1
-          $ex"_vector_packed" ../../data/$dir --noflush -s 1
+          echo running "$ex"_vector_packed ../../data/$dir --noflush -s $NSTEPS
+          $ex"_vector_packed" ../../data/$dir --noflush -s $NSTEPS
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_vector_noflush/
         fi
 
