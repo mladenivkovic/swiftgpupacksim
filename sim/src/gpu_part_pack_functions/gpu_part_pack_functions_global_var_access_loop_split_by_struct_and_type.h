@@ -350,9 +350,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (ptrdiff_t i = 0; i < count; i++) {
-    ptrdiff_t pi = i + first;
-    /* struct gradient_pack */
-
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
