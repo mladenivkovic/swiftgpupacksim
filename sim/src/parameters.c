@@ -34,7 +34,7 @@ void init_params(struct parameters* params) {
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
   char layout[20] = "pack-shared";
 #else
-#pragma error "Unknown particle memory layout"
+#error "Unknown particle memory layout"
 #endif
   strcpy(params->memory_layout, layout);
 
@@ -45,7 +45,7 @@ void init_params(struct parameters* params) {
 #elif defined(SWIFT_PARTICLE_ACCESS_EXPLICIT_VAR)
   char access_variant[20] = "explicit-var";
 #else
-#pragma error "Unknown particle access variant"
+#error "Unknown particle access variant"
 #endif
   strcpy(params->access_variant, access_variant);
 
@@ -56,7 +56,7 @@ void init_params(struct parameters* params) {
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
   char loop_split[20] = "by-element";
 #else
-#pragma error "Unknown loop splitting variant"
+#error "Unknown loop splitting variant"
 #endif
   strcpy(params->loop_split, loop_split);
 

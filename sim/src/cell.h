@@ -217,7 +217,7 @@ static __attribute__((always_inline)) INLINE void init_cell(
     c->hydro.part_arrs._part[i]._cell_part_arrays = &c->hydro.part_arrs;
   }
 #else
-#pragma error "particle handling for this memory layout not implemented"
+#error "particle handling for this memory layout not implemented"
 #endif
 }
 

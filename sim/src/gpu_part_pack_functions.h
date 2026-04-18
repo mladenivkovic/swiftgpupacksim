@@ -69,7 +69,6 @@
 
 #include "gpu_part_pack_functions/gpu_part_pack_functions_part_struct_access_loop_split_by_struct_and_type.h"
 
-
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
     (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE))
 
@@ -79,7 +78,7 @@
 #include "gpu_part_pack_functions/gpu_part_pack_functions_part_struct_access_loop_split_by_element.h"
 
 #else
-#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
+#error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
 #endif /* Loop splitting variants */
 
 
@@ -93,7 +92,8 @@
    * is equivalent to not splitting the loop at all */
 
 #include "gpu_part_pack_functions/gpu_part_pack_functions_global_var_access_loop_split_none.h"
-#if defined(SWIFT_LOOP_SPLIT_BY_TYPE) ||       \
+
+#elif defined(SWIFT_LOOP_SPLIT_BY_TYPE) ||       \
     (defined(SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE) && \
      (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)))
 
@@ -132,7 +132,7 @@
 #include "gpu_part_pack_functions/gpu_part_pack_functions_global_var_access_loop_split_by_element.h"
 
 #else
-#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
+#error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
 #endif /* Loop splitting variants */
 
 
@@ -188,10 +188,10 @@
 #include "gpu_part_pack_functions/gpu_part_pack_functions_explicit_var_access_loop_split_by_element.h"
 
 #else
-#pragma error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
+#error "UNKNOWN CONFIGURATION OF PARTICLE + LOOP SPLIT"
 #endif /* Loop splitting variants */
 
 
 #else
-#pragma error "Unknown particle access layout realisation"
+#error "Unknown particle access layout realisation"
 #endif

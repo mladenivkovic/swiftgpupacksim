@@ -132,7 +132,7 @@
 #define SWIFT_STRUCT_ALIGNMENT_OTHERS 32
 
 #else
-#pragma error "Unknown memory layout realisation"
+#error "Unknown memory layout realisation"
 #endif /* particle memory layout branch */
 
 #else /* if SWIFT_STRUCT_ALIGNMENT == -1 */

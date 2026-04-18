@@ -38,7 +38,7 @@
        defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
        (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE)) \
       )
-#pragma error "How did we get here?"
+#error "How did we get here?"
 #endif
 
 /* Apparently redundant declaration */

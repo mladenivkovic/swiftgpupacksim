@@ -43,7 +43,7 @@
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
 #include "realisations/pack_shared/hydro_part.h"
 #else
-#pragma error "Unknown memory layout realisation"
+#error "Unknown memory layout realisation"
 #endif
 
 

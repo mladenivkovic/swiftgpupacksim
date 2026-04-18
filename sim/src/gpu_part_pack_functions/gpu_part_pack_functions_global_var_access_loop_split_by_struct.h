@@ -41,7 +41,7 @@
         defined(SPHENIX_PACK_SHARED_PARTICLE)      \
         )                                          \
       )
-#pragma error "How did we get here?"
+#error "How did we get here?"
 #endif
 
 /* Apparently redundant declaration */
@@ -403,7 +403,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #else
   /* Should be only SPHENIX_PACK_GRADIENT_PARTICLE,
    * SPHENIX_PACK_FORCE_PARTICLE, or SPHENIX_PACK_SHARED_PARTICLE */
-#pragma error "how did we get here...?"
+#error "how did we get here...?"
 #endif
 }
 
@@ -549,6 +549,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #else
   /* should only be SPHENIX_PACK_SHARED_PARTICLE, SPHENIX_PACK_FORCE_PARTICLE,
    * or SPHENIX_PACK_GRADIENT_PARTICLE */
-#pragma error "how did we get here...?"
+#error "how did we get here...?"
 #endif
 }

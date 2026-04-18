@@ -23,7 +23,7 @@
        defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
        ( defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE) ) \
       )
-#pragma error "We shouldn't be here."
+#error "We shouldn't be here."
 #endif
 
 
