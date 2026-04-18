@@ -20,7 +20,7 @@ if [ $# -gt 0 ]; then
 fi
 
 for part_access in "part-struct" "global-var" "explicit-var"; do
-  for loop in "none" "by-struct" "by-element"; do
+  for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
     for layout in "aos" "soa" "upstream" "pack-gradient" "pack-force" "pack-shared"; do
       ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access $EXTRA_CONFFLAGS
       make clean
