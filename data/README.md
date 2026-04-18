@@ -46,7 +46,7 @@ subtype:        d (density), g (gradient), or f (force)
 pack_or_unpack: p for packing operation, u for unpacking
 c_offset:       offset of c->hydro.parts array in global parts array
 count:          c->hydro.count
-index:          intex to pack into/unpack from in particle buffer arrays
+index:          index to pack into/unpack from in particle buffer arrays
 time:           Measured time for operation, in [micro s]
 ```
 
