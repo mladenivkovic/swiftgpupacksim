@@ -55,6 +55,10 @@ void init_params(struct parameters* params) {
   char loop_split[20] = "by-struct";
 #elif defined(SWIFT_LOOP_SPLIT_BY_ELEMENT)
   char loop_split[20] = "by-element";
+#elif defined(SWIFT_LOOP_SPLIT_BY_TYPE)
+  char loop_split[20] = "by-type";
+#elif defined(SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE)
+  char loop_split[20] = "by-struct-and-type";
 #else
 #error "Unknown loop splitting variant"
 #endif
