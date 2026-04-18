@@ -39,7 +39,7 @@
         (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)) \
        )                                                                      \
       )
-#pragma error "How did we get here?"
+#error "How did we get here?"
 #endif
 
 /* Apparently redundant declaration */

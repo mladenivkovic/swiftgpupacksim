@@ -15,5 +15,5 @@
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
 #include "realisations/pack_shared/parts.h"
 #else
-#pragma error "Unknown memory layout realisation"
+#error "Unknown memory layout realisation"
 #endif
