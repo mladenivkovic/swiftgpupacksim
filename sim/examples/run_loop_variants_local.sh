@@ -58,40 +58,40 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
 
       for layout in aos soa upstream pack-gradient pack-force pack-shared; do
 
-        ex=likwid-pin -c N:0-$NTHREADS ../swiftgpupack_"$layout"_"$part_access"_"$loop"
+        ex="likwid-pin -c N:0-""$NTHREADS"" ../swiftgpupack_""$layout"_"$part_access"_"$loop"
 
         echo running "$ex" ../../data/$dir -s 1
-        "$ex" ../../data/$dir -s 1
+        $ex ../../data/$dir -s 1
         mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"/
 
         echo running "$ex"_packed ../../data/$dir -s 1
-        "$ex"_packed ../../data/$dir -s 1
+        $ex"_packed" ../../data/$dir -s 1
         mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed/
 
         if [[ "$RUN_ALL" == "true" ]]; then
 
           echo running "$ex" ../../data/$dir --noflush -s 1
-          "$ex" ../../data/$dir --noflush -s 1
+          $ex ../../data/$dir --noflush -s 1
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_noflush/
 
           echo running "$ex"_vector ../../data/$dir -s 1
-          "$ex"_vector ../../data/$dir -s 1
+          $ex"_vector" ../../data/$dir -s 1
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector/
 
           echo running "$ex"_vector ../../data/$dir --noflush -s 1
-          "$ex"_vector ../../data/$dir --noflush -s 1
+          $ex"_vector" ../../data/$dir --noflush -s 1
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush/
 
           echo running "$ex"_packed ../../data/$dir --noflush -s 1
-          "$ex"_packed ../../data/$dir --noflush -s 1
+          $ex"_packed" ../../data/$dir --noflush -s 1
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush/
 
           echo running "$ex"_vector_packed ../../data/$dir -s 1
-          "$ex"_vector_packed ../../data/$dir -s 1
+          $ex"_vector_packed" ../../data/$dir -s 1
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_vector/
 
           echo running "$ex"_vector_packed ../../data/$dir --noflush -s 1
-          "$ex"_vector_packed ../../data/$dir --noflush -s 1
+          $ex"_vector_packed" ../../data/$dir --noflush -s 1
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_vector_noflush/
         fi
 
