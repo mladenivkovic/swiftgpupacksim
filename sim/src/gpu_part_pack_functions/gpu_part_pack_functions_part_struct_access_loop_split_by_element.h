@@ -19,10 +19,7 @@
  ******************************************************************************/
 #pragma once
 
-#if ! (                                                                        \
-        defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) ||                                \
-        (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE)) \
-      )
+#ifndef USE_LOOP_SPLIT_BY_ELEMENT
 #error "How did we get here?"
 #endif
 

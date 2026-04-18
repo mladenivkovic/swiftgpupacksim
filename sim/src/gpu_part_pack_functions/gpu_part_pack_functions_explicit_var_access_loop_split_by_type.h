@@ -19,13 +19,7 @@
  ******************************************************************************/
 #pragma once
 
-#if ! (                                                                       \
-       defined(SWIFT_LOOP_SPLIT_BY_TYPE) ||                                   \
-       (                                                                      \
-        defined(SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE) &&                       \
-        (defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)) \
-       )                                                                      \
-      )
+#ifndef USE_LOOP_SPLIT_BY_TYPE
 #error "How did we get here?"
 #endif
 
