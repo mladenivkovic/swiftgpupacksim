@@ -53,6 +53,8 @@ git lfs checkout
 
 ## Configuration options
 
+See `sim/README.md` for more details.
+
 ### Development options
 
 - `--enable-debug`: Enable debugging symbols
