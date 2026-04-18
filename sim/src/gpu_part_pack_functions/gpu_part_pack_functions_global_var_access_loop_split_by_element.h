@@ -19,6 +19,10 @@
  ******************************************************************************/
 #pragma once
 
+#ifndef USE_LOOP_SPLIT_BY_ELEMENT
+#error "How did we get here?"
+#endif
+
 /**
  * @file gpu_part_pack_functions_global_var_access_loop_split_by_struct.h
  * @brief Functions related to packing and unpacking particles to/from a cell.
@@ -34,12 +38,6 @@
 #include <math.h>
 
 
-#if ! ( \
-       defined(SWIFT_LOOP_SPLIT_BY_ELEMENT) || \
-       (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_SOA_PARTICLE)) \
-      )
-#error "How did we get here?"
-#endif
 
 /* Apparently redundant declaration */
 /* extern struct hydro_part_arrays global_hydro_part_arrays; */

@@ -19,14 +19,7 @@
  ******************************************************************************/
 #pragma once
 
-#if ! (\
-    defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&    \
-    ( \
-      defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
-      defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
-      defined(SPHENIX_PACK_SHARED_PARTICLE) \
-      ) \
-    )
+#ifndef USE_LOOP_SPLIT_BY_STRUCT
 #error "How did we get here?"
 #endif
 
