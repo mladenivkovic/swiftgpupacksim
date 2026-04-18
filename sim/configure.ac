@@ -920,7 +920,7 @@ esac
 
 AC_ARG_WITH([loop-split],
    [AS_HELP_STRING([--with-loop-split=<value>],
-      [Loop splitting variant to use @<:@none, by-struct, by-element. Default: none@:>@]
+      [Loop splitting variant to use @<:@none, by-struct, by-element, by-type, by-struct-and-type. Default: none@:>@]
    )],
    [with_loop_split="$withval"],
    [with_loop_split="none"]
@@ -935,6 +935,12 @@ case "$with_loop_split" in
    ;;
    "by-element")
       AC_DEFINE([SWIFT_LOOP_SPLIT_BY_ELEMENT], [1], [Split loops for each struct element])
+   ;;
+   "by-type")
+      AC_DEFINE([SWIFT_LOOP_SPLIT_BY_TYPE], [1], [Split loops by data type])
+   ;;
+   "by-struct-and-type")
+      AC_DEFINE([SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE], [1], [Split loops for each struct element and data type])
    ;;
    *)
       AC_MSG_ERROR([Unknown particle loop splitting variant: $with_loop_split])
