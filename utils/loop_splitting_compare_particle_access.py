@@ -4,10 +4,11 @@ import os
 import matplotlib
 from matplotlib import pyplot as plt
 import argparse
+import numpy as np
 
 matplotlib.use("Agg")
 
-from plotting_utils import get_filelist
+from plotting_utils import get_filelist, LOOP_SPLITS, LOOP_SPLIT_LABELS, PART_ACCESS, PART_ACCESS_LABELS
 from resultdata import ResultData
 
 
@@ -126,11 +127,18 @@ parser.add_argument(
     action="store_true",
     help="Use identical y-axis limits for all subplots",
 )
-
+parser.add_argument(
+    "-n",
+    "--normalise",
+    dest="normalise",
+    action="store_true",
+    help="Normalise times using t(aos, explicit-var, no loop split)",
+)
 args = parser.parse_args()
 srcdir = args.srcdir
 local = args.local
 nthreads = args.nthreads
+normalise = args.normalise
 
 experiment = "Gresho256"
 if args.use_eagle:
@@ -139,13 +147,6 @@ if args.use_eagle:
 if local:
     nthreads = 4
     experiment = "IntelXeonGold5218_Gresho64"
-
-
-LOOP_SPLITS = ["none", "by-struct", "by-element"]
-LOOP_SPLIT_LABELS = ["no loop split", "loop split by struct", "loop split by element"]
-
-PART_ACCESS = ["part-struct", "explicit-var", "global-var"]
-PART_ACCESS_LABELS = ["part struct access", "explicit var access", "global var access"]
 
 
 variant_dir_suffix = ""
@@ -195,6 +196,15 @@ if __name__ == "__main__":
             layouts.append(layout)
     layouts.sort()
 
+    aos_ind = -1
+    for i in range(len(layouts)):
+        if layouts[i] == "aos":
+            aos_ind = i
+            break
+    if aos_ind == -1:
+        raise ValueError("Something went wrong determining index of AoS in array,", layouts)
+
+
     fig = plt.figure(figsize=(12, 6))
     ax1 = fig.add_subplot(2, 3, 1)
     ax1.set_title("Density/Pack")
@@ -212,13 +222,26 @@ if __name__ == "__main__":
     maxtime = -1.0
     mintime = 1e32
 
+    # first, get normalisation: Compare to access="part-struct", loop-split = "none"
+    dirname = ( experiment + "_" + str(nthreads) + "threads_part-struct_none" + variant_dir_suffix)
+    fulldirname = os.path.join(srcdir, dirname)
+    if not os.path.exists(fulldirname):
+        raise FileNotFoundError(
+            f"Experiment output directory {fulldirname} not found."
+        )
+
+    fname = "results_aos.csv"
+    fullfname = os.path.join(fulldirname, fname)
+    res = ResultData(fullfname, verbose=False)
+    normalisation = res.data_dict
+
     for a, access in enumerate(PART_ACCESS):
-        color = "C" + str(a)
+        ls = linestyles[a]
 
         for s, split in enumerate(LOOP_SPLITS):
-            ls = linestyles[s]
+            color = "C" + str(s)
 
-            # Get result data for all layouts
+            # Now get result data for all layouts
             result_data = []
 
             for l, layout in enumerate(layouts):
@@ -245,12 +268,20 @@ if __name__ == "__main__":
                 mintime = min(mintime, res.timings.min())
 
             # Unpack result data by packing operation type
-            dens_pack = [res.data_dict["pack/density"] for res in result_data]
-            dens_unpack = [ res.data_dict["unpack/density"] for res in result_data ]
-            grad_pack = [res.data_dict["pack/gradient"] for res in result_data]
-            grad_unpack = [ res.data_dict["unpack/gradient"] for res in result_data ]
-            forc_pack = [res.data_dict["pack/force"] for res in result_data]
-            forc_unpack = [res.data_dict["unpack/force"] for res in result_data]
+            dens_pack = np.array([res.data_dict["pack/density"] for res in result_data])
+            dens_unpack = np.array([ res.data_dict["unpack/density"] for res in result_data ])
+            grad_pack = np.array([res.data_dict["pack/gradient"] for res in result_data])
+            grad_unpack = np.array([ res.data_dict["unpack/gradient"] for res in result_data ])
+            forc_pack = np.array([res.data_dict["pack/force"] for res in result_data])
+            forc_unpack = np.array([res.data_dict["unpack/force"] for res in result_data])
+
+            if normalise:
+                dens_pack /= normalisation["pack/density"]
+                dens_unpack /= normalisation["unpack/density"]
+                grad_pack /= normalisation["pack/gradient"]
+                grad_unpack /= normalisation["unpack/gradient"]
+                forc_pack /= normalisation["pack/force"]
+                forc_unpack /= normalisation["unpack/force"]
 
             label = PART_ACCESS_LABELS[a] + " " + LOOP_SPLIT_LABELS[s] + variant_label_suffix
 
@@ -275,7 +306,10 @@ if __name__ == "__main__":
 
     # leftmost axes
     for ax in [ax1, ax4]:
-        ax.set_ylabel("Timing [ms]")
+        if normalise:
+            ax.set_ylabel(r"$t / t_{\mathrm{aos}}$")
+        else:
+            ax.set_ylabel("Timing [ms]")
 
     # top row axes
     for ax in [ax1, ax2, ax3]:
@@ -298,12 +332,14 @@ if __name__ == "__main__":
         handlelength=2.5,
         markerscale=0.5,
     )
-    fig.tight_layout(w_pad=0, rect=(0.01, 0.10, 0.99, 0.99))
+    fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"loop_splitting_{srcdir}_{experiment}_{nthreads}threads"
+    outfname = f"loop_splitting_compare_part_access_{srcdir}_{experiment}_{nthreads}threads"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
+    if normalise:
+        outfname += "_normalised"
     if args.png:
         outfname += ".png"
     else:
