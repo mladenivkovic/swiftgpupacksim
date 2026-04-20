@@ -1,6 +1,8 @@
 #!/usr/bin/bash
 
-module restore gpu_swift_oneapi_2025
+# module restore gpu_swift_oneapi_2025
+module load gnu_comp/14.1.0
+module load likwid
 
 # Generate executables first using `swiftgpupacksim/sim/make_all_loop_splitting_variants.sh`
 
@@ -38,7 +40,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
 
       for layout in aos soa upstream pack-gradient pack-force pack-shared; do
 
-        ex="likwid-pin -c N:16-""$((NTHREADS - 1))"" ../swiftgpupack_""$layout"_"$part_access"_"$loop"
+        ex="likwid-pin -c N:16-""$((2 * NTHREADS - 1))"" ../swiftgpupack_""$layout"_"$part_access"_"$loop"
 
         echo running "$ex" ../../data/gn004/$dir
         $ex ../../data/gn004/$dir
