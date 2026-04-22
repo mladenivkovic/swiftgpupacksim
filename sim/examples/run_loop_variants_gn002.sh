@@ -1,15 +1,4 @@
-#!/usr/bin/bash -l
-
-#SBATCH --job-name GRACE
-#SBATCH --time 72:00:00
-#SBATCH --partition gracehopper # this should be gn003
-#SBATCH --account do016
-#SBATCH --exclusive
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=72
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=mladen.ivkovic@durham.ac.uk
+#!/usr/bin/bash
 
 module restore gpu_swift_gn002
 
