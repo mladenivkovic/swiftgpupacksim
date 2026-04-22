@@ -1,5 +1,6 @@
 #include "parameters.h"
 
+#include "config.h"
 #include "help.h"
 #include "swift_placeholders/error.h"
 
