@@ -8,6 +8,8 @@ LOOP_SPLIT_LABELS = ["no loop split", "loop split by struct", "loop split by ele
 PART_ACCESS = ["part-struct", "explicit-var", "global-var"]
 PART_ACCESS_LABELS = ["part struct access", "explicit var access", "global var access"]
 
+EXPERIMENTS = ["Gresho256", "EAGLE12"]
+
 
 
 def get_filelist(srcdir: str) -> list:

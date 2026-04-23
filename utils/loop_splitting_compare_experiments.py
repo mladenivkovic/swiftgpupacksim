@@ -43,7 +43,7 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
 Plot results of different loop splitting variants for different particle memory
-layouts and different experiments.
+layouts for different experiments.
 
 For an adequate comparable plot, the results are normalized using the times for
 layout = aos
@@ -62,13 +62,13 @@ result data with filenames 'results_*.csv' It will read them all in and plot
 them.
 
 Sub-directories are expected to have the following file name format:
-<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_novector]
+<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_vector]
 
 The *_packed variants should contain outputs where the structs were packed,
 i.e. where the code was configured with --enable-packed-structs. The *_noflush
 variants should contain outputs where no cache flushes between packing
-operations were used (sim ran with --noflush flag). Similarly for *_novector,
-where code compiled with --disable-vectorization was used.
+operations were used (sim ran with --noflush flag). Similarly for *_vector,
+where code compiled with --enable-manual-vectorization was used.
 
 Note that the sub-directory sub-strings <EXPERIMENTNAME>, <NRTHREADS>,
 <PART_ACCESS>, and <LOOP_SPLIT> are hard-coded in this script. Modify them
@@ -126,17 +126,14 @@ nthreads = args.nthreads
 
 EXPERIMENTS = ["Gresho256", "EAGLE12"]
 
-part_access = "explicit-var"
-part_access_label = "explicit var access"
-
 variant_dir_suffix = ""
 variant_label_suffix = ""
 if args.use_noflush:
     variant_dir_suffix += "_noflush"
     variant_label_suffix += ", no flush"
 if args.use_vector:
-    variant_dir_suffix += "_novector"
-    variant_label_suffix += ", no vector"
+    variant_dir_suffix += "_vector"
+    variant_label_suffix += ", vector"
 if args.use_packed:
     variant_dir_suffix += "_packed"
     variant_label_suffix += ", packed structs"
@@ -148,7 +145,7 @@ linestyles = ["-", "--", ":", "-."]
 plotkwargs = {
     "marker": "o",
     "lw": 2,
-    "alpha": 0.8,
+    "alpha": 0.6,
     "markersize": 5,
 }
 
@@ -176,127 +173,143 @@ if __name__ == "__main__":
             layouts.append(layout)
     layouts.sort()
 
-    aos_ind = -1
-    for i in range(len(layouts)):
-        if layouts[i] == "aos":
-            aos_ind = i
-            break
-    if aos_ind == -1:
-        raise ValueError("Something went wrong determining index of AoS in array,", layouts)
 
-    fig = plt.figure(figsize=(12, 6))
-    ax1 = fig.add_subplot(2, 3, 1)
-    ax1.set_title("Density/Pack")
-    ax2 = fig.add_subplot(2, 3, 2)
-    ax2.set_title("Gradient/Pack")
-    ax3 = fig.add_subplot(2, 3, 3)
-    ax3.set_title("Force/Pack")
-    ax4 = fig.add_subplot(2, 3, 4)
-    ax4.set_title("Density/Unpack")
-    ax5 = fig.add_subplot(2, 3, 5)
-    ax5.set_title("Gradient/Unpack")
-    ax6 = fig.add_subplot(2, 3, 6)
-    ax6.set_title("Force/Unpack")
+    for a, part_access in enumerate(PART_ACCESS):
 
-    maxtime = -1.0
-    mintime = 1e32
+        fig = plt.figure(figsize=(12, 6))
+        ax1 = fig.add_subplot(2, 3, 1)
+        ax1.set_title("Density/Pack")
+        ax2 = fig.add_subplot(2, 3, 2)
+        ax2.set_title("Gradient/Pack")
+        ax3 = fig.add_subplot(2, 3, 3)
+        ax3.set_title("Force/Pack")
+        ax4 = fig.add_subplot(2, 3, 4)
+        ax4.set_title("Density/Unpack")
+        ax5 = fig.add_subplot(2, 3, 5)
+        ax5.set_title("Gradient/Unpack")
+        ax6 = fig.add_subplot(2, 3, 6)
+        ax6.set_title("Force/Unpack")
 
-    for e, experiment in enumerate(EXPERIMENTS):
-        ls = linestyles[e]
+        maxtime = -1.0
+        mintime = 1e32
 
-        for s, split in enumerate(LOOP_SPLITS):
-            color = "C" + str(s)
+        for e, experiment in enumerate(EXPERIMENTS):
+            ls = linestyles[e]
 
-            # Get result data for all layouts
-            result_data = []
-
-            for l, layout in enumerate(layouts):
-                dirname = (
-                    experiment
-                    + "_"
-                    + str(nthreads)
-                    + "threads_"
-                    + part_access + "_" + split + variant_dir_suffix
+            # first, get the normalisation
+            dirname = (
+                        experiment
+                        + "_"
+                        + str(nthreads)
+                        + "threads_"
+                        + part_access + "_none" + variant_dir_suffix
+                    )
+            fulldirname = os.path.join(srcdir, dirname)
+            if not os.path.exists(fulldirname):
+                raise FileNotFoundError(
+                    f"Experiment output directory {fulldirname} not found."
                 )
 
-                fulldirname = os.path.join(srcdir, dirname)
-                if not os.path.exists(fulldirname):
-                    raise FileNotFoundError(
-                        f"Experiment output directory {fulldirname} not found."
+            # hardcode aos as reference value here
+            fname = "results_aos.csv"
+            fullfname = os.path.join(fulldirname, fname)
+            res = ResultData(fullfname, verbose=False)
+            normalisation = res.data_dict
+
+            for s, split in enumerate(LOOP_SPLITS):
+                color = "C" + str(s)
+
+                # Get result data for all layouts
+                result_data = []
+
+                for l, layout in enumerate(layouts):
+                    dirname = (
+                        experiment
+                        + "_"
+                        + str(nthreads)
+                        + "threads_"
+                        + part_access + "_" + split + variant_dir_suffix
                     )
 
-                fname = "results_" + layout + ".csv"
-                fullfname = os.path.join(fulldirname, fname)
-                res = ResultData(fullfname, verbose=False)
-                result_data.append(res)
+                    fulldirname = os.path.join(srcdir, dirname)
+                    if not os.path.exists(fulldirname):
+                        raise FileNotFoundError(
+                            f"Experiment output directory {fulldirname} not found."
+                        )
 
-                maxtime = max(maxtime, res.timings.max())
-                mintime = min(mintime, res.timings.min())
+                    fname = "results_" + layout + ".csv"
+                    fullfname = os.path.join(fulldirname, fname)
+                    res = ResultData(fullfname, verbose=False)
+                    result_data.append(res)
 
-            # Unpack result data by packing operation type
-            dens_pack = np.array([res.data_dict["pack/density"] for res in result_data])
-            dens_unpack = np.array([ res.data_dict["unpack/density"] for res in result_data ])
-            grad_pack = np.array([res.data_dict["pack/gradient"] for res in result_data])
-            grad_unpack = np.array([ res.data_dict["unpack/gradient"] for res in result_data ])
-            forc_pack = np.array([res.data_dict["pack/force"] for res in result_data])
-            forc_unpack = np.array([res.data_dict["unpack/force"] for res in result_data])
+                    maxtime = max(maxtime, res.timings.max())
+                    mintime = min(mintime, res.timings.min())
 
-            label = experiment + " " + part_access_label + " " + LOOP_SPLIT_LABELS[s] + variant_label_suffix
+                # Unpack result data by packing operation type
+                dens_pack = np.array([res.data_dict["pack/density"] for res in result_data])
+                dens_unpack = np.array([ res.data_dict["unpack/density"] for res in result_data ])
+                grad_pack = np.array([res.data_dict["pack/gradient"] for res in result_data])
+                grad_unpack = np.array([ res.data_dict["unpack/gradient"] for res in result_data ])
+                forc_pack = np.array([res.data_dict["pack/force"] for res in result_data])
+                forc_unpack = np.array([res.data_dict["unpack/force"] for res in result_data])
 
-            ax1.plot(layouts, dens_pack / dens_pack[aos_ind], c=color, ls=ls, label=label, **plotkwargs)
-            ax2.plot(layouts, grad_pack / grad_pack[aos_ind], c=color, ls=ls, label=label, **plotkwargs)
-            ax3.plot(layouts, forc_pack / forc_pack[aos_ind], c=color, ls=ls, label=label, **plotkwargs)
-            ax4.plot(layouts, dens_unpack / dens_unpack[aos_ind], c=color, ls=ls, label=label, **plotkwargs)
-            ax5.plot(layouts, grad_unpack / grad_unpack[aos_ind], c=color, ls=ls, label=label, **plotkwargs)
-            ax6.plot(layouts, forc_unpack / forc_unpack[aos_ind], c=color, ls=ls, label=label, **plotkwargs)
+                label = experiment + " " + PART_ACCESS_LABELS[a] + " " + LOOP_SPLIT_LABELS[s] + variant_label_suffix
 
-    #  if mintime < 200.0:
-    #      mintime = 0.0
+                ax1.plot(layouts, dens_pack / normalisation["pack/density"], c=color, ls=ls, label=label, **plotkwargs)
+                ax2.plot(layouts, grad_pack / normalisation["pack/gradient"], c=color, ls=ls, label=label, **plotkwargs)
+                ax3.plot(layouts, forc_pack / normalisation["pack/force"], c=color, ls=ls, label=label, **plotkwargs)
+                ax4.plot(layouts, dens_unpack / normalisation["unpack/density"], c=color, ls=ls, label=label, **plotkwargs)
+                ax5.plot(layouts, grad_unpack / normalisation["unpack/gradient"], c=color, ls=ls, label=label, **plotkwargs)
+                ax6.plot(layouts, forc_unpack / normalisation["unpack/force"], c=color, ls=ls, label=label, **plotkwargs)
 
-    # all axes
-    for ax in fig.axes:
-        ax.set_xlabel("particle data layouts")
-        ax.tick_params("x", rotation=45)
-        ax.grid()
-        #  ax.legend()
-        if args.equal_axis_limits:
-            ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
+        #  if mintime < 200.0:
+        #      mintime = 0.0
 
-    # leftmost axes
-    for ax in [ax1, ax4]:
-        ax.set_ylabel(r"$t / t_{\mathrm{aos}}$")
+        # all axes
+        for ax in fig.axes:
+            ax.set_xlabel("particle data layouts")
+            ax.tick_params("x", rotation=45)
+            ax.grid()
+            #  ax.legend()
+            if args.equal_axis_limits:
+                ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
 
-    # top row axes
-    for ax in [ax1, ax2, ax3]:
-        ax.set_xticklabels([])
-        ax.set_xlabel(None)
+        # leftmost axes
+        for ax in [ax1, ax4]:
+            ax.set_ylabel(r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{"+f"{part_access}"+"}}$")
 
-    # the others
-    for ax in [ax2, ax3, ax5, ax6]:
-        if args.equal_axis_limits:
-            ax.set_yticklabels([])
+        # top row axes
+        for ax in [ax1, ax2, ax3]:
+            ax.set_xticklabels([])
+            ax.set_xlabel(None)
 
-    hand, lab = ax1.get_legend_handles_labels()
-    #  ncols=int(len(layouts)*0.5 + 0.5)
-    ncols = 2
-    fig.legend(
-        handles=hand,
-        labels=lab,
-        loc="lower center",
-        ncols=ncols,
-        handlelength=4.5,
-        markerscale=0.75,
-    )
-    fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
+        # the others
+        for ax in [ax2, ax3, ax5, ax6]:
+            if args.equal_axis_limits:
+                ax.set_yticklabels([])
 
-    # construct output file name
-    outfname = f"compare_experiments_loop_splitting_{nthreads}threads"
-    if variant_dir_suffix != "":
-        outfname += variant_dir_suffix
-    if args.png:
-        outfname += ".png"
-    else:
-        outfname += ".pdf"
+        hand, lab = ax1.get_legend_handles_labels()
+        #  ncols=int(len(layouts)*0.5 + 0.5)
+        ncols = 2
+        fig.legend(
+            handles=hand,
+            labels=lab,
+            loc="lower center",
+            ncols=ncols,
+            handlelength=4.5,
+            markerscale=0.75,
+        )
+        fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
-    plt.savefig(outfname, dpi=300)
-    print(f"Saved {outfname}")
+        # construct output file name
+        outfname = f"compare_experiments_loop_splitting_{srcdir}_{part_access}_{nthreads}threads"
+        if variant_dir_suffix != "":
+            outfname += variant_dir_suffix
+        if args.png:
+            outfname += ".png"
+        else:
+            outfname += ".pdf"
+
+        plt.savefig(outfname, dpi=300)
+        print(f"Saved {outfname}")
+        plt.close()
