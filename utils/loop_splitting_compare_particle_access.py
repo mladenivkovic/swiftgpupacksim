@@ -58,13 +58,13 @@ result data with filenames 'results_*.csv' It will read them all in and plot
 them.
 
 Sub-directories are expected to have the following file name format:
-<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_novector]
+<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_vector]
 
 The *_packed variants should contain outputs where the structs were packed,
 i.e. where the code was configured with --enable-packed-structs. The *_noflush
 variants should contain outputs where no cache flushes between packing
-operations were used (sim ran with --noflush flag). Similarly for *_novector,
-where code compiled with --disable-vectorization was used.
+operations were used (sim ran with --noflush flag). Similarly for *_vector,
+where code compiled with --enable-manual-vectorization was used.
 
 Note that the sub-directory sub-strings <EXPERIMENTNAME>, <NRTHREADS>,
 <PART_ACCESS>, and <LOOP_SPLIT> are hard-coded in this script. Modify them
@@ -155,8 +155,8 @@ if args.use_noflush:
     variant_dir_suffix += "_noflush"
     variant_label_suffix += ", no flush"
 if args.use_vector:
-    variant_dir_suffix += "_novector"
-    variant_label_suffix += ", no vector"
+    variant_dir_suffix += "_vector"
+    variant_label_suffix += ", vector"
 if args.use_packed:
     variant_dir_suffix += "_packed"
     variant_label_suffix += ", packed structs"
@@ -164,6 +164,9 @@ if args.use_packed:
 
 markers = ["o", "v", "s", "p", "P", "*"]
 linestyles = ["-", "--", ":", "-."]
+
+PART_ACCESS=["explicit-var"]
+PART_ACCESS_LABELS=["explicit var"]
 
 plotkwargs = {
     "marker": "o",
@@ -307,7 +310,7 @@ if __name__ == "__main__":
     # leftmost axes
     for ax in [ax1, ax4]:
         if normalise:
-            ax.set_ylabel(r"$t / t_{\mathrm{aos}}$")
+            ax.set_ylabel(r"$t / t^{\mathrm{part\ struct\ access}}_{\mathrm{aos,\ no\ loop\ split}}$")
         else:
             ax.set_ylabel("Timing [ms]")
 
@@ -345,5 +348,5 @@ if __name__ == "__main__":
     else:
         outfname += ".pdf"
 
-    plt.savefig(outfname, dpi=300)
+    plt.savefig(outfname, dpi=100)
     print(f"Saved {outfname}")
