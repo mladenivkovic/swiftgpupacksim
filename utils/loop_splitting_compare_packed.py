@@ -9,21 +9,21 @@ import numpy as np
 matplotlib.use("Agg")
 
 from resultdata import ResultData
-from plotting_utils import get_filelist, get_variant_labels, get_result_fname, get_result_dir, LOOP_SPLITS, LOOP_SPLIT_LABELS, PART_ACCESS, PART_ACCESS_LABELS, EXPERIMENTS, NTHREADS, mymplparams, mydpi, markers, linestyles
+from plotting_utils import get_filelist, get_variant_labels, get_result_fname, get_result_dir, LOOP_SPLITS, LOOP_SPLIT_LABELS, PART_ACCESS, PART_ACCESS_LABELS, EXPERIMENTS, mymplparams, mydpi, markers, linestyles
 
 matplotlib.rcParams.update(mymplparams)
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-Compare results using different numbers of threads for different loop
-splitting variants and different particle memory layouts for a given experiment and a given
-particle accessor variant.
+Compare packed vs not-packed results of different loop splitting variants for
+different particle memory layouts for a given experiment and a given particle
+accessor variant.
 
 By default, this plots the outputs using:
 - cache flushes between each copy operation
 - no manual vectorization
-- not packed structs
+- 72 threads
 
 See optional flags to modify which results are plotted.
 
@@ -74,6 +74,14 @@ parser.add_argument(
     help="make a .png plot instead of .pdf",
 )
 parser.add_argument(
+        "-t",
+    "--threads",
+    nargs=1,
+    dest="nthreads",
+    help="Number of threads used in experiment to use",
+    default=72,
+)
+parser.add_argument(
     "-e",
     "--equal-axis-limits",
     dest="equal_axis_limits",
@@ -89,6 +97,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 srcdir = args.srcdir
+nthreads = args.nthreads
 normalise = args.normalise
 if normalise:
     raise NotImplementedError()
@@ -96,6 +105,9 @@ if args.equal_axis_limits:
     raise NotImplementedError()
 
 variant_dir_suffix, variant_label_suffix = get_variant_labels(args.use_noflush, args.use_vector, args.use_packed)
+
+variants = [variant_dir_suffix, variant_dir_suffix + "_packed"]
+variants_labels = [variant_label_suffix, variant_label_suffix + " packed"]
 
 plotkwargs = {
     "marker": "o",
@@ -111,7 +123,7 @@ if __name__ == "__main__":
 
     # get available layouts
     layouts = []
-    firstdir = get_result_dir(srcdir, EXPERIMENTS[0], NTHREADS[0], PART_ACCESS[0], LOOP_SPLITS[0])
+    firstdir = get_result_dir(srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0])
     ls = os.listdir(firstdir)
     for f in ls:
         if f.startswith("results_") and f.endswith(".csv"):
@@ -128,7 +140,9 @@ if __name__ == "__main__":
         raise ValueError("Something went wrong determining index of AoS in array,", layouts)
 
     for experiment in EXPERIMENTS:
-        for a, access in enumerate(PART_ACCESS):
+        #  for a, access in enumerate(PART_ACCESS):
+        # TODO: FIX THIS
+        for a, access in enumerate(["part-struct"]):
 
             fig = plt.figure(figsize=(12, 6))
             ax1 = fig.add_subplot(2, 3, 1)
@@ -160,9 +174,9 @@ if __name__ == "__main__":
             #  res = ResultData(fullfname, verbose=False)
             #  normalisation = res.data_dict
 
-            for n, nthreads in enumerate(NTHREADS):
+            for v, variant in enumerate(variants):
 
-                ls = linestyles[n]
+                ls = linestyles[v]
 
                 for s, split in enumerate(LOOP_SPLITS):
                     color = "C" + str(s)
@@ -171,7 +185,7 @@ if __name__ == "__main__":
                     result_data = []
 
                     for l, layout in enumerate(layouts):
-                        fname = get_result_fname(srcdir, experiment, nthreads, access, split, variant_dir_suffix, layout)
+                        fname = get_result_fname(srcdir, experiment, nthreads, access, split, variant, layout)
                         res = ResultData(fname, verbose=False)
                         result_data.append(res)
 
@@ -194,7 +208,7 @@ if __name__ == "__main__":
                     #      forc_pack /= normalisation["pack/force"]
                     #      forc_unpack /= normalisation["unpack/force"]
 
-                    label = PART_ACCESS_LABELS[a] + " " + LOOP_SPLIT_LABELS[s] + variant_label_suffix + " " + nthreads + " threads"
+                    label = PART_ACCESS_LABELS[a] + " " + LOOP_SPLIT_LABELS[s] + variants_labels[v]
 
                     ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs)
                     ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs)
@@ -218,6 +232,7 @@ if __name__ == "__main__":
             # leftmost axes
             for ax in [ax1, ax4]:
                 if normalise:
+                    raise NotImplementedError()
                     ax.set_ylabel(r"$t / t^{\mathrm{part\ struct\ access}}_{\mathrm{aos,\ no\ loop\ split}}$")
                 else:
                     ax.set_ylabel("Timing [ms]")
@@ -246,7 +261,7 @@ if __name__ == "__main__":
             fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
             # construct output file name
-            outfname = f"loop_splitting_compare_threads_{srcdir}_{experiment}_{access}"
+            outfname = f"loop_splitting_compare_packed_{srcdir}_{experiment}_{access}"
             if variant_dir_suffix != "":
                 outfname += variant_dir_suffix
             if normalise:
