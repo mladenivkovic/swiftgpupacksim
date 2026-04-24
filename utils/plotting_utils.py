@@ -3,14 +3,19 @@
 import os
 
 LOOP_SPLITS = ["none", "by-struct", "by-element", "by-type", "by-struct-and-type"]
-LOOP_SPLIT_LABELS = ["no loop split", "loop split by struct", "loop split by element", "loop split by data type", "loop split by struct and data type"]
+LOOP_SPLIT_LABELS = [
+    "no loop split",
+    "loop split by struct",
+    "loop split by element",
+    "loop split by data type",
+    "loop split by struct and data type",
+]
 
 PART_ACCESS = ["part-struct", "explicit-var", "global-var"]
 PART_ACCESS_LABELS = ["part struct access", "explicit var access", "global var access"]
 
 EXPERIMENTS = ["Gresho256", "EAGLE12"]
 NTHREADS = ["36", "72"]
-
 
 
 # Plot parameters
@@ -42,8 +47,6 @@ mydpi = 120
 
 markers = ["o", "v", "s", "p", "P", "*"]
 linestyles = ["-", "--", ":", "-."]
-
-
 
 
 def get_filelist(srcdir: str) -> list:
@@ -82,7 +85,15 @@ def get_variant_labels(use_noflush, use_vector, use_packed):
 
     return variant_dir_suffix, variant_label_suffix
 
-def get_result_dir(srcdir, experiment_name, nthreads, access_variant, loop_split_variant, other_variant = ""):
+
+def get_result_dir(
+    srcdir,
+    experiment_name,
+    nthreads,
+    access_variant,
+    loop_split_variant,
+    other_variant="",
+):
     """
     Get the full directory path of an experiment output directory.
     """
@@ -92,26 +103,40 @@ def get_result_dir(srcdir, experiment_name, nthreads, access_variant, loop_split
         + "_"
         + str(nthreads)
         + "threads_"
-        + access_variant + "_" + loop_split_variant + other_variant
+        + access_variant
+        + "_"
+        + loop_split_variant
+        + other_variant
     )
 
     fulldirname = os.path.join(srcdir, dirname)
     if not os.path.exists(fulldirname):
-        raise FileNotFoundError(
-            f"Experiment output directory {fulldirname} not found."
-        )
+        raise FileNotFoundError(f"Experiment output directory {fulldirname} not found.")
 
     return fulldirname
 
 
-def get_result_fname(srcdir, experiment_name, nthreads, access_variant, loop_split_variant, other_variant, layout):
+def get_result_fname(
+    srcdir,
+    experiment_name,
+    nthreads,
+    access_variant,
+    loop_split_variant,
+    other_variant,
+    layout,
+):
     """
     Construct the experiment output file name.
     """
-    fulldirname = get_result_dir(srcdir, experiment_name, nthreads, access_variant, loop_split_variant, other_variant)
+    fulldirname = get_result_dir(
+        srcdir,
+        experiment_name,
+        nthreads,
+        access_variant,
+        loop_split_variant,
+        other_variant,
+    )
 
     fname = "results_" + layout + ".csv"
     fullfname = os.path.join(fulldirname, fname)
     return fullfname
-
-

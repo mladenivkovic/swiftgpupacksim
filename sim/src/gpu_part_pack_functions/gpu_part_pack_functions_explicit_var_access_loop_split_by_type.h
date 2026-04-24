@@ -66,13 +66,16 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     float rho = part_get_rho_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.x;
     part_set_rho_explicit(pd, i, rho);
 
-    float rho_dh = part_get_rho_dh_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.y;
+    float rho_dh =
+        part_get_rho_dh_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.y;
     part_set_rho_dh_explicit(pd, i, rho_dh);
 
-    float wcount = part_get_wcount_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.z;
+    float wcount =
+        part_get_wcount_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.z;
     part_set_wcount_explicit(pd, i, wcount);
 
-    float wcount_dh = part_get_wcount_dh_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.w;
+    float wcount_dh =
+        part_get_wcount_dh_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.w;
     part_set_wcount_dh_explicit(pd, i, wcount_dh);
 
     float* rot_v = part_get_rot_v_explicit(pd, i);
@@ -121,7 +124,6 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     float lu = pr.aviscmax_vsig_lapu.z + part_get_laplace_u_explicit(pd, i);
     part_set_laplace_u_explicit(pd, i, lu);
   }
-
 }
 
 /**
@@ -379,8 +381,10 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin_explicit(pd, i);
-    int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin_explicit(pd, i);
+    ps[i].timebin_minngbtimebin_pjs_pje.x =
+        (int)part_get_time_bin_explicit(pd, i);
+    int mintbin =
+        (int)part_get_timestep_limiter_min_ngb_time_bin_explicit(pd, i);
     ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
     ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;

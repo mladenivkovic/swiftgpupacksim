@@ -41,7 +41,8 @@ __attribute__((always_inline)) INLINE static int part_is_active(
  * @return 1 if the #part is active, 0 otherwise.
  */
 __attribute__((always_inline)) INLINE static int part_is_active_explicit(
-    const struct hydro_part_arrays* pd, int pind, const struct engine* restrict e) {
+    const struct hydro_part_arrays* pd, int pind,
+    const struct engine* restrict e) {
 
   const timebin_t max_active_bin = e->max_active_bin;
   const timebin_t part_bin = part_get_time_bin_explicit(pd, pind);
@@ -85,8 +86,6 @@ __attribute__((always_inline)) INLINE static int part_is_active_global(
 
   return (part_bin <= max_active_bin);
 }
-
-
 
 
 #endif

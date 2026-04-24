@@ -54,7 +54,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     const struct gpu_part_recv_d* restrict parts_buffer, const int unpack_ind,
     const int count, const struct engine* restrict e) {
 
-  const ptrdiff_t first = c->hydro.part_arrs._part - global_hydro_part_arrays._part;
+  const ptrdiff_t first =
+      c->hydro.part_arrs._part - global_hydro_part_arrays._part;
   const struct gpu_part_recv_d* restrict parts_recv = &parts_buffer[unpack_ind];
 
 #ifdef VECTORIZE
@@ -76,7 +77,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     float wcount = part_get_wcount_global(pi) + pr.rho_rhodh_wcount_wcount_dh.z;
     part_set_wcount_global(pi, wcount);
 
-    float wcount_dh = part_get_wcount_dh_global(pi) + pr.rho_rhodh_wcount_wcount_dh.w;
+    float wcount_dh =
+        part_get_wcount_dh_global(pi) + pr.rho_rhodh_wcount_wcount_dh.w;
     part_set_wcount_dh_global(pi, wcount_dh);
 
     float* rot_v = part_get_rot_v_global(pi);
@@ -103,7 +105,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_gradient(
     const struct gpu_part_recv_g* restrict parts_buffer, const int unpack_ind,
     const int count, const struct engine* e) {
 
-  const ptrdiff_t first = c->hydro.part_arrs._part - global_hydro_part_arrays._part;
+  const ptrdiff_t first =
+      c->hydro.part_arrs._part - global_hydro_part_arrays._part;
   const struct gpu_part_recv_g* restrict parts_recv = &parts_buffer[unpack_ind];
 
 #ifdef VECTORIZE
@@ -142,7 +145,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_force(
     const struct gpu_part_recv_f* restrict parts_buffer, const int unpack_ind,
     const int count, const struct engine* e) {
 
-  const ptrdiff_t first = c->hydro.part_arrs._part - global_hydro_part_arrays._part;
+  const ptrdiff_t first =
+      c->hydro.part_arrs._part - global_hydro_part_arrays._part;
   const struct gpu_part_recv_f* restrict parts_recv = &parts_buffer[unpack_ind];
 
 #ifdef VECTORIZE
@@ -191,7 +195,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 
   /* Grab handles */
   const int count = c->hydro.count;
-  const ptrdiff_t first = c->hydro.part_arrs._part - global_hydro_part_arrays._part;
+  const ptrdiff_t first =
+      c->hydro.part_arrs._part - global_hydro_part_arrays._part;
   struct gpu_part_send_d* restrict ps = &parts_buffer[pack_ind];
 
 #ifdef VECTORIZE
@@ -236,7 +241,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     const double shift[3], const int cjstart, const int cjend) {
 
   /* Grab handles */
-  const ptrdiff_t first = ci->hydro.part_arrs._part - global_hydro_part_arrays._part;
+  const ptrdiff_t first =
+      ci->hydro.part_arrs._part - global_hydro_part_arrays._part;
   const int count = ci->hydro.count;
   struct gpu_part_send_g* restrict ps = &parts_buffer[pack_ind];
 
@@ -303,7 +309,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     const double shift[3], const int cjstart, const int cjend) {
 
   const int count = ci->hydro.count;
-  const ptrdiff_t first = ci->hydro.part_arrs._part - global_hydro_part_arrays._part;
+  const ptrdiff_t first =
+      ci->hydro.part_arrs._part - global_hydro_part_arrays._part;
   struct gpu_part_send_f* restrict ps = &parts_buffer[pack_ind];
 
 #ifdef VECTORIZE

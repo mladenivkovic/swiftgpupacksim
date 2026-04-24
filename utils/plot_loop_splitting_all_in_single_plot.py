@@ -76,7 +76,8 @@ parser.add_argument(
     "--flush-vector",
     dest="plot_flush_vector",
     action="store_true",
-    help="Plot outputs where caches were flushed/not flushed and those which used manually encouraged vectorization/didn't use it",)
+    help="Plot outputs where caches were flushed/not flushed and those which used manually encouraged vectorization/didn't use it",
+)
 parser.add_argument(
     "--pack-flush",
     dest="plot_pack_flush",
@@ -150,25 +151,38 @@ PART_ACCESS_LABELS = ["part struct access", "explicit var access", "global var a
 
 
 if args.plot_flush_vector and args.plot_pack_vector:
-    raise ValueError("Can't plot --pack-vector and --flush-vector simultaneously, pick one.")
+    raise ValueError(
+        "Can't plot --pack-vector and --flush-vector simultaneously, pick one."
+    )
 if args.plot_flush_vector and args.plot_pack_flush:
-    raise ValueError("Can't plot --flush-vector and --pack-flush simultaneously, pick one.")
+    raise ValueError(
+        "Can't plot --flush-vector and --pack-flush simultaneously, pick one."
+    )
 if args.plot_pack_vector and args.plot_pack_flush:
-    raise ValueError("Can't plot --pack-vector and --pack-flush simultaneously, pick one.")
+    raise ValueError(
+        "Can't plot --pack-vector and --pack-flush simultaneously, pick one."
+    )
 if not (args.plot_flush_vector or args.plot_pack_vector or args.plot_pack_flush):
-    raise ValueError("None of --pack-vector, --pack-flush, or --flush-vector selected, I don't know what to plot. Pick one.")
+    raise ValueError(
+        "None of --pack-vector, --pack-flush, or --flush-vector selected, I don't know what to plot. Pick one."
+    )
 
 if args.plot_flush_vector:
     dir_suffixes = ["", "_noflush", "_vector", "_noflush_vector"]
     variant_labels = ["", " no flush", " vector", " no flush, vector"]
     plot_variant = "flush-vector"
 elif args.plot_pack_vector:
-    dir_suffixes = ["", "_packed", "_noflush", "_packed_noflush", ]
+    dir_suffixes = [
+        "",
+        "_packed",
+        "_noflush",
+        "_packed_noflush",
+    ]
     variant_labels = ["", " packed structs", " no flush", " packed structs, no flush"]
     plot_variant = "pack-vector"
 elif args.plot_pack_flush:
-    dir_suffixes = ["", "_packed",  "_noflush", "_packed_noflush"]
-    variant_labels = ["", " packed structs",  " no flush", " packed structs, no flush"]
+    dir_suffixes = ["", "_packed", "_noflush", "_packed_noflush"]
+    variant_labels = ["", " packed structs", " no flush", " packed structs, no flush"]
     plot_variant = "pack-flush"
 
 markers = ["o", "v", "s", "p", "P", "*"]
@@ -239,7 +253,10 @@ if __name__ == "__main__":
                                 + "_"
                                 + str(nthreads)
                                 + "threads_"
-                                + access + "_" + split + variant
+                                + access
+                                + "_"
+                                + split
+                                + variant
                             )
 
                             fulldirname = os.path.join(srcdir, dirname)
@@ -256,17 +273,22 @@ if __name__ == "__main__":
                             maxtime = max(maxtime, res.timings.max())
                             mintime = min(mintime, res.timings.min())
 
-
-                        dens_pack = [res.data_dict["pack/density"] for res in result_data]
+                        dens_pack = [
+                            res.data_dict["pack/density"] for res in result_data
+                        ]
                         dens_unpack = [
                             res.data_dict["unpack/density"] for res in result_data
                         ]
-                        grad_pack = [res.data_dict["pack/gradient"] for res in result_data]
+                        grad_pack = [
+                            res.data_dict["pack/gradient"] for res in result_data
+                        ]
                         grad_unpack = [
                             res.data_dict["unpack/gradient"] for res in result_data
                         ]
                         forc_pack = [res.data_dict["pack/force"] for res in result_data]
-                        forc_unpack = [res.data_dict["unpack/force"] for res in result_data]
+                        forc_unpack = [
+                            res.data_dict["unpack/force"] for res in result_data
+                        ]
 
                         label = PART_ACCESS_LABELS[a] + " " + LOOP_SPLIT_LABELS[s]
                         if multiple_experiments:

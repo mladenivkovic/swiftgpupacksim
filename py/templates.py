@@ -30,7 +30,7 @@ def jinja_generate_hydro_part_h(
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
     manual_struct_align: bool = False,
-    global_var_accessors: bool= False,
+    global_var_accessors: bool = False,
     testing: bool = False,
     verbose: bool = False,
 ) -> str:
