@@ -106,10 +106,30 @@ parser.add_argument(
     action="store_true",
     help="Use identical y-axis limits for all subplots",
 )
+parser.add_argument(
+    "--local-legion",
+    dest="local_legion",
+    action="store_true",
+    help="Use outputs for local test runs on lenovo legion"
+)
+parser.add_argument(
+    "--local-hp",
+    dest="local_hp",
+    action="store_true",
+    help="Use outputs for local test runs on HP"
+)
+
 
 args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
+local = args.local_legion or args.local_hp
+
+if args.equal_axis_limits:
+    raise NotImplementedError()
+if args.local_hp or args.local_legion:
+    raise ValueError("Plotting this doesn't make sense at this point.")
+
 
 variant_dir_suffix, variant_label_suffix = get_variant_labels(
     args.use_noflush, args.use_vector, args.use_packed

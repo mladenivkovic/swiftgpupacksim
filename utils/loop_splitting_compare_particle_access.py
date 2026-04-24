@@ -118,16 +118,30 @@ parser.add_argument(
     action="store_true",
     help="Normalise times using t(aos, explicit-var, no loop split)",
 )
+parser.add_argument(
+    "--local-legion",
+    dest="local_legion",
+    action="store_true",
+    help="Use outputs for local test runs on lenovo legion"
+)
+parser.add_argument(
+    "--local-hp",
+    dest="local_hp",
+    action="store_true",
+    help="Use outputs for local test runs on HP"
+)
 
 args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
 normalise = args.normalise
-local = args.local
-
-if local:
+local = args.local_legion or args.local_hp
+if args.local_hp:
     nthreads = 4
     EXPERIMENTS = ["IntelXeonGold5218_Gresho64"]
+if args.local_legion:
+    nthreads = 6
+    EXPERIMENTS = ["IntelCoffeeLake_Gresho128"]
 
 
 variant_dir_suffix, variant_label_suffix = get_variant_labels(
