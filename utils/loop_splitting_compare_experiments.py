@@ -8,42 +8,16 @@ import numpy as np
 
 matplotlib.use("Agg")
 
-from plotting_utils import get_filelist, LOOP_SPLITS, LOOP_SPLIT_LABELS, PART_ACCESS, PART_ACCESS_LABELS
 from resultdata import ResultData
+from plotting_utils import get_filelist, get_variant_labels, get_result_fname, get_result_dir, LOOP_SPLITS, LOOP_SPLIT_LABELS, PART_ACCESS, PART_ACCESS_LABELS, EXPERIMENTS, mymplparams, mydpi, markers, linestyles
 
-
-# Plot parameters
-params = {
-    "axes.labelsize": 12,
-    "axes.titlesize": 14,
-    "font.size": 12,
-    "font.family": "serif",
-    "legend.fontsize": 8,
-    "xtick.labelsize": 12,
-    "ytick.labelsize": 12,
-    "xtick.direction": "in",
-    "ytick.direction": "in",
-    "xtick.top": True,
-    "ytick.right": True,
-    "xtick.major.width": 1.5,
-    "ytick.major.width": 1.5,
-    "axes.linewidth": 1.5,
-    "text.usetex": True,
-    #  "figure.subplot.left": 0.045,
-    #  "figure.subplot.right": 0.99,
-    #  "figure.subplot.bottom": 0.05,
-    #  "figure.subplot.top": 0.99,
-    "figure.subplot.wspace": 0.0,
-    #  "figure.subplot.hspace": 0.12,
-}
-matplotlib.rcParams.update(params)
-
+matplotlib.rcParams.update(mymplparams)
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-Plot results of different loop splitting variants for different particle memory
-layouts for different experiments.
+Compare results of different experiments for loop splitting variants,
+and different particle memory layouts given a particle access.
 
 For an adequate comparable plot, the results are normalized using the times for
 layout = aos
@@ -53,7 +27,6 @@ By default, this plots the outputs using:
 - no manual vectorization
 - not packed structs
 - the runs using 72 threads
-- the `explicit-var` particle access method.
 
 See optional flags to modify which results are plotted.
 
@@ -118,29 +91,12 @@ parser.add_argument(
     action="store_true",
     help="Use identical y-axis limits for all subplots",
 )
-# TODO: Add options for other particle access variants.
 
 args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
 
-EXPERIMENTS = ["Gresho256", "EAGLE12"]
-
-variant_dir_suffix = ""
-variant_label_suffix = ""
-if args.use_noflush:
-    variant_dir_suffix += "_noflush"
-    variant_label_suffix += ", no flush"
-if args.use_vector:
-    variant_dir_suffix += "_vector"
-    variant_label_suffix += ", vector"
-if args.use_packed:
-    variant_dir_suffix += "_packed"
-    variant_label_suffix += ", packed structs"
-
-
-markers = ["o", "v", "s", "p", "P", "*"]
-linestyles = ["-", "--", ":", "-."]
+variant_dir_suffix, variant_label_suffix = get_variant_labels( args.use_noflush, args.use_vector, args.use_packed)
 
 plotkwargs = {
     "marker": "o",
@@ -156,17 +112,8 @@ if __name__ == "__main__":
 
     # get available layouts
     layouts = []
-    firstdir = (
-        EXPERIMENTS[0]
-        + "_"
-        + str(nthreads)
-        + "threads_"
-        + PART_ACCESS[0]
-        + "_"
-        + LOOP_SPLITS[0]
-    )
-    fullfirstdir = os.path.join(srcdir, firstdir)
-    ls = os.listdir(fullfirstdir)
+    firstdir = get_result_dir(srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0])
+    ls = os.listdir(firstdir)
     for f in ls:
         if f.startswith("results_") and f.endswith(".csv"):
             layout = f[len("results_") : -len(".csv")]
@@ -197,23 +144,9 @@ if __name__ == "__main__":
             ls = linestyles[e]
 
             # first, get the normalisation
-            dirname = (
-                        experiment
-                        + "_"
-                        + str(nthreads)
-                        + "threads_"
-                        + part_access + "_none" + variant_dir_suffix
-                    )
-            fulldirname = os.path.join(srcdir, dirname)
-            if not os.path.exists(fulldirname):
-                raise FileNotFoundError(
-                    f"Experiment output directory {fulldirname} not found."
-                )
 
-            # hardcode aos as reference value here
-            fname = "results_aos.csv"
-            fullfname = os.path.join(fulldirname, fname)
-            res = ResultData(fullfname, verbose=False)
+            normfname = get_result_fname(srcdir, experiment, nthreads, part_access, "none", variant_dir_suffix, "aos")
+            res = ResultData(normfname, verbose=False)
             normalisation = res.data_dict
 
             for s, split in enumerate(LOOP_SPLITS):
@@ -223,23 +156,9 @@ if __name__ == "__main__":
                 result_data = []
 
                 for l, layout in enumerate(layouts):
-                    dirname = (
-                        experiment
-                        + "_"
-                        + str(nthreads)
-                        + "threads_"
-                        + part_access + "_" + split + variant_dir_suffix
-                    )
 
-                    fulldirname = os.path.join(srcdir, dirname)
-                    if not os.path.exists(fulldirname):
-                        raise FileNotFoundError(
-                            f"Experiment output directory {fulldirname} not found."
-                        )
-
-                    fname = "results_" + layout + ".csv"
-                    fullfname = os.path.join(fulldirname, fname)
-                    res = ResultData(fullfname, verbose=False)
+                    fname = get_result_fname(srcdir, experiment, nthreads, part_access, split, variant_dir_suffix, layout)
+                    res = ResultData(fname, verbose=False)
                     result_data.append(res)
 
                     maxtime = max(maxtime, res.timings.max())
@@ -310,6 +229,6 @@ if __name__ == "__main__":
         else:
             outfname += ".pdf"
 
-        plt.savefig(outfname, dpi=300)
+        plt.savefig(outfname, dpi=mydpi)
         print(f"Saved {outfname}")
         plt.close()
