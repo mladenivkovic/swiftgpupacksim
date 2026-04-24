@@ -24,7 +24,6 @@
 #endif
 
 
-
 /**
  * @file gpu_part_pack_functions_explicit_var_access_loop_split_by_element.h
  * @brief Functions related to packing and unpacking particles to/from a cell.
@@ -73,7 +72,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
   for (int i = 0; i < count; i++) {
     if (!part_is_active_explicit(pd, i, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
-    float rho_dh = part_get_rho_dh_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.y;
+    float rho_dh =
+        part_get_rho_dh_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.y;
     part_set_rho_dh_explicit(pd, i, rho_dh);
   }
 
@@ -84,7 +84,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     if (!part_is_active_explicit(pd, i, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
-    float wcount = part_get_wcount_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.z;
+    float wcount =
+        part_get_wcount_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.z;
     part_set_wcount_explicit(pd, i, wcount);
   }
 
@@ -95,7 +96,8 @@ __attribute__((always_inline)) INLINE static void gpu_unpack_part_density(
     if (!part_is_active_explicit(pd, i, e)) continue;
     struct gpu_part_recv_d pr = parts_recv[i];
 
-    float wcount_dh = part_get_wcount_dh_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.w;
+    float wcount_dh =
+        part_get_wcount_dh_explicit(pd, i) + pr.rho_rhodh_wcount_wcount_dh.w;
     part_set_wcount_dh_explicit(pd, i, wcount_dh);
   }
 
@@ -612,14 +614,16 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin_explicit(pd, i);
+    ps[i].timebin_minngbtimebin_pjs_pje.x =
+        (int)part_get_time_bin_explicit(pd, i);
   }
 
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin_explicit(pd, i);
+    int mintbin =
+        (int)part_get_timestep_limiter_min_ngb_time_bin_explicit(pd, i);
     ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
   }
 

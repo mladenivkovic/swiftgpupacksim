@@ -9,7 +9,21 @@ import numpy as np
 matplotlib.use("Agg")
 
 from resultdata import ResultData
-from plotting_utils import get_filelist, get_variant_labels, get_result_fname, get_result_dir, LOOP_SPLITS, LOOP_SPLIT_LABELS, PART_ACCESS, PART_ACCESS_LABELS, EXPERIMENTS, mymplparams, mydpi, markers, linestyles
+from plotting_utils import (
+    get_filelist,
+    get_variant_labels,
+    get_result_fname,
+    get_result_dir,
+    LOOP_SPLITS,
+    LOOP_SPLIT_LABELS,
+    PART_ACCESS,
+    PART_ACCESS_LABELS,
+    EXPERIMENTS,
+    mymplparams,
+    mydpi,
+    markers,
+    linestyles,
+)
 
 matplotlib.rcParams.update(mymplparams)
 
@@ -51,27 +65,28 @@ manually if you need to.
 
 parser.add_argument("srcdir")
 parser.add_argument(
-        "-f",
+    "-f",
     "--no-flush",
     dest="use_noflush",
     action="store_true",
-    help="Compare to outputs where caches were NOT flushed",)
+    help="Compare to outputs where caches were NOT flushed",
+)
 parser.add_argument(
-        "-v",
+    "-v",
     "--vector",
     dest="use_vector",
     action="store_true",
     help="Compare to outputs where SIMD vectorization was enabled",
 )
 parser.add_argument(
-        "-p",
+    "-p",
     "--packed",
     dest="use_packed",
     action="store_true",
     help="Compare to outputs where structs were packed",
 )
 parser.add_argument(
-        "-t",
+    "-t",
     "--threads",
     nargs=1,
     dest="nthreads",
@@ -96,7 +111,9 @@ args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
 
-variant_dir_suffix, variant_label_suffix = get_variant_labels( args.use_noflush, args.use_vector, args.use_packed)
+variant_dir_suffix, variant_label_suffix = get_variant_labels(
+    args.use_noflush, args.use_vector, args.use_packed
+)
 
 plotkwargs = {
     "marker": "o",
@@ -112,14 +129,15 @@ if __name__ == "__main__":
 
     # get available layouts
     layouts = []
-    firstdir = get_result_dir(srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0])
+    firstdir = get_result_dir(
+        srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0]
+    )
     ls = os.listdir(firstdir)
     for f in ls:
         if f.startswith("results_") and f.endswith(".csv"):
             layout = f[len("results_") : -len(".csv")]
             layouts.append(layout)
     layouts.sort()
-
 
     for a, part_access in enumerate(PART_ACCESS):
 
@@ -145,7 +163,15 @@ if __name__ == "__main__":
 
             # first, get the normalisation
 
-            normfname = get_result_fname(srcdir, experiment, nthreads, part_access, "none", variant_dir_suffix, "aos")
+            normfname = get_result_fname(
+                srcdir,
+                experiment,
+                nthreads,
+                part_access,
+                "none",
+                variant_dir_suffix,
+                "aos",
+            )
             res = ResultData(normfname, verbose=False)
             normalisation = res.data_dict
 
@@ -157,7 +183,15 @@ if __name__ == "__main__":
 
                 for l, layout in enumerate(layouts):
 
-                    fname = get_result_fname(srcdir, experiment, nthreads, part_access, split, variant_dir_suffix, layout)
+                    fname = get_result_fname(
+                        srcdir,
+                        experiment,
+                        nthreads,
+                        part_access,
+                        split,
+                        variant_dir_suffix,
+                        layout,
+                    )
                     res = ResultData(fname, verbose=False)
                     result_data.append(res)
 
@@ -165,21 +199,82 @@ if __name__ == "__main__":
                     mintime = min(mintime, res.timings.min())
 
                 # Unpack result data by packing operation type
-                dens_pack = np.array([res.data_dict["pack/density"] for res in result_data])
-                dens_unpack = np.array([ res.data_dict["unpack/density"] for res in result_data ])
-                grad_pack = np.array([res.data_dict["pack/gradient"] for res in result_data])
-                grad_unpack = np.array([ res.data_dict["unpack/gradient"] for res in result_data ])
-                forc_pack = np.array([res.data_dict["pack/force"] for res in result_data])
-                forc_unpack = np.array([res.data_dict["unpack/force"] for res in result_data])
+                dens_pack = np.array(
+                    [res.data_dict["pack/density"] for res in result_data]
+                )
+                dens_unpack = np.array(
+                    [res.data_dict["unpack/density"] for res in result_data]
+                )
+                grad_pack = np.array(
+                    [res.data_dict["pack/gradient"] for res in result_data]
+                )
+                grad_unpack = np.array(
+                    [res.data_dict["unpack/gradient"] for res in result_data]
+                )
+                forc_pack = np.array(
+                    [res.data_dict["pack/force"] for res in result_data]
+                )
+                forc_unpack = np.array(
+                    [res.data_dict["unpack/force"] for res in result_data]
+                )
 
-                label = experiment + " " + PART_ACCESS_LABELS[a] + " " + LOOP_SPLIT_LABELS[s] + variant_label_suffix
+                label = (
+                    experiment
+                    + " "
+                    + PART_ACCESS_LABELS[a]
+                    + " "
+                    + LOOP_SPLIT_LABELS[s]
+                    + variant_label_suffix
+                )
 
-                ax1.plot(layouts, dens_pack / normalisation["pack/density"], c=color, ls=ls, label=label, **plotkwargs)
-                ax2.plot(layouts, grad_pack / normalisation["pack/gradient"], c=color, ls=ls, label=label, **plotkwargs)
-                ax3.plot(layouts, forc_pack / normalisation["pack/force"], c=color, ls=ls, label=label, **plotkwargs)
-                ax4.plot(layouts, dens_unpack / normalisation["unpack/density"], c=color, ls=ls, label=label, **plotkwargs)
-                ax5.plot(layouts, grad_unpack / normalisation["unpack/gradient"], c=color, ls=ls, label=label, **plotkwargs)
-                ax6.plot(layouts, forc_unpack / normalisation["unpack/force"], c=color, ls=ls, label=label, **plotkwargs)
+                ax1.plot(
+                    layouts,
+                    dens_pack / normalisation["pack/density"],
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
+                )
+                ax2.plot(
+                    layouts,
+                    grad_pack / normalisation["pack/gradient"],
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
+                )
+                ax3.plot(
+                    layouts,
+                    forc_pack / normalisation["pack/force"],
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
+                )
+                ax4.plot(
+                    layouts,
+                    dens_unpack / normalisation["unpack/density"],
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
+                )
+                ax5.plot(
+                    layouts,
+                    grad_unpack / normalisation["unpack/gradient"],
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
+                )
+                ax6.plot(
+                    layouts,
+                    forc_unpack / normalisation["unpack/force"],
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
+                )
 
         #  if mintime < 200.0:
         #      mintime = 0.0
@@ -195,7 +290,11 @@ if __name__ == "__main__":
 
         # leftmost axes
         for ax in [ax1, ax4]:
-            ax.set_ylabel(r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{"+f"{part_access}"+"}}$")
+            ax.set_ylabel(
+                r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{"
+                + f"{part_access}"
+                + "}}$"
+            )
 
         # top row axes
         for ax in [ax1, ax2, ax3]:
