@@ -35,3 +35,11 @@ python3  ../../utils/loop_splitting_compare_packed.py --png gn003
 # loop_splitting_compare_vector_gn003_EAGLE12_global-var.png
 python3 ../../utils/loop_splitting_compare_vector.py --png gn003
 
+# loop_splitting_compare_noflush_gn003_Gresho256_part-struct.png
+# loop_splitting_compare_noflush_gn003_Gresho256_explicit-var.png
+# loop_splitting_compare_noflush_gn003_Gresho256_global-var.png
+# loop_splitting_compare_noflush_gn003_EAGLE12_part-struct.png
+# loop_splitting_compare_noflush_gn003_EAGLE12_explicit-var.png
+# loop_splitting_compare_noflush_gn003_EAGLE12_global-var.png
+python3 ../../utils/loop_splitting_compare_noflush.py --png gn003
+

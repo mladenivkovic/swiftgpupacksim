@@ -1,2 +1,5 @@
 swiftgpupacksim
 debug.mk
+*.png
+*.pdf
+*.zip

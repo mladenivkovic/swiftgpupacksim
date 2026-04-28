@@ -221,7 +221,6 @@ if __name__ == "__main__":
                         fname = get_result_fname(
                             srcdir, experiment, nthreads, access, split, variant, layout
                         )
-                        print("Reading", fname)
                         res = ResultData(fname, verbose=False)
                         result_data.append(res)
 
@@ -262,7 +261,6 @@ if __name__ == "__main__":
                         + LOOP_SPLIT_LABELS[s]
                         + variants_labels[v]
                     )
-                    print("label:", label)
 
                     ax1.plot(
                         layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs
