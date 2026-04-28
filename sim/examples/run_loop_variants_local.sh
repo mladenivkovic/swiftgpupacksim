@@ -5,8 +5,10 @@
 set -e
 rm -f results_*.csv
 
-NODE=local
-EXPERIMENT="IntelCoffeeLake_Gresho128_6threads"
+NODE=local-legion
+# EXPERIMENT="IntelCoffeeLake_Gresho128_1thread"
+# NTHREADS=1
+EXPERIMENT="IntelCoffeeLake_Gresho128_6thread"
 NTHREADS=6
 RUN_ALL="false"
 NSTEPS=5
@@ -24,6 +26,8 @@ while [[ $# > 0 ]]; do
     -hp)
       EXPERIMENT="IntelXeonGold5218_Gresho64_4threads"
       NTHREADS=4
+      # EXPERIMENT="IntelXeonGold5218_Gresho64_1thread"
+      # NTHREADS=1
     ;;
     -a | --all)
       RUN_ALL="true"
@@ -56,10 +60,10 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
       if [[ "$RUN_ALL" == "true" ]]; then
         mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
         mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector
-        mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush
-        mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush
         mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed_vector
-        mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed_vector_noflush
+        # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush
+        # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush
+        # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed_vector_noflush
       fi
 
       for layout in aos soa upstream pack-gradient pack-force pack-shared; do
@@ -84,21 +88,21 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
           $ex"_vector" ../../data/$dir -s $NSTEPS
           mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector/
 
-          echo running "$ex"_vector ../../data/$dir --noflush -s $NSTEPS
-          $ex"_vector" ../../data/$dir --noflush -s $NSTEPS
-          mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush/
-
-          echo running "$ex"_packed ../../data/$dir --noflush -s $NSTEPS
-          $ex"_packed" ../../data/$dir --noflush -s $NSTEPS
-          mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush/
-
-          echo running "$ex"_vector_packed ../../data/$dir -s $NSTEPS
-          $ex"_vector_packed" ../../data/$dir -s $NSTEPS
-          mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_vector/
-
-          echo running "$ex"_vector_packed ../../data/$dir --noflush -s $NSTEPS
-          $ex"_vector_packed" ../../data/$dir --noflush -s $NSTEPS
-          mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_vector_noflush/
+          # echo running "$ex"_vector ../../data/$dir --noflush -s $NSTEPS
+          # $ex"_vector" ../../data/$dir --noflush -s $NSTEPS
+          # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush/
+          #
+          # echo running "$ex"_packed ../../data/$dir --noflush -s $NSTEPS
+          # $ex"_packed" ../../data/$dir --noflush -s $NSTEPS
+          # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush/
+          #
+          # echo running "$ex"_vector_packed ../../data/$dir -s $NSTEPS
+          # $ex"_vector_packed" ../../data/$dir -s $NSTEPS
+          # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_vector/
+          #
+          # echo running "$ex"_vector_packed ../../data/$dir --noflush -s $NSTEPS
+          # $ex"_vector_packed" ../../data/$dir --noflush -s $NSTEPS
+          # mv results_*.csv $NODE/"$dir"_"$part_access"_"$loop"_packed_vector_noflush/
         fi
 
       done
@@ -106,7 +110,3 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
   done
 done
 
-
-# python3 ../../utils/plot_loop_splitting_all_in_single_plot.py -l local --png --flush-vector
-# python3 ../../utils/plot_loop_splitting_all_in_single_plot.py -l local --png --packed-vector
-# python3 ../../utils/plot_loop_splitting_all_in_single_plot.py -l local --png --packed-flush
