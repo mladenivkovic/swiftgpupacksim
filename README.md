@@ -51,6 +51,17 @@ git lfs fetch --all
 git lfs checkout
 ```
 
+In case you want to convert the large files back to file pointers due to e.g.
+limited disk space, use
+
+```
+git read-tree HEAD && GIT_LFS_SKIP_SMUDGE=1 git checkout -f HEAD
+```
+
+WARNING: If you run that in a dirty working tree, you'll blow away your
+changes, so don't do that.
+
+
 ## Configuration options
 
 See `sim/README.md` for more details.
