@@ -28,7 +28,7 @@ struct hydro_part_arrays global_hydro_part_arrays;
 double flush_cache(double* garbage, int n_garbage) {
   double sum = 0.;
   for (int i = 0; i < n_garbage; i++) {
-    garbage[i] = (2. * i - 13.) * 4.;
+    garbage[i] += 2. * garbage[i] - 13.;
     sum += garbage[i];
   }
   return sum;
@@ -275,7 +275,8 @@ void run_simulation(struct parameters* params) {
 #endif
 
     /* Alloc a few MB of data and fill them with garbage to flush caches. */
-    const int n_garbage = params->no_cache_flush ? 0 : 250000;
+    /* const int n_garbage = params->no_cache_flush ? 0 : 250000; */
+    const int n_garbage = params->no_cache_flush ? 0 : 1250000;
     double* garbage = malloc(n_garbage * sizeof(double));
 
     /* Declare and allocate GPU launch control data structures which need to be
