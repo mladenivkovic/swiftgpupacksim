@@ -720,7 +720,11 @@ if test "$enable_warn" != "no"; then
     # AX_CFLAGS_WARN_ALL does not give good warning flags for the Intel compiler
     # We will do this by hand instead and only default to the macro for unknown compilers
     case "$ax_cv_c_compiler_vendor" in
-          gnu | clang | oneapi)
+          gnu )
+             CFLAGS="$CFLAGS -Wall -Wextra -Wno-unused-parameter -Wshadow -Wno-packed-not-aligned"
+          ;;
+
+    clang | oneapi)
              CFLAGS="$CFLAGS -Wall -Wextra -Wno-unused-parameter -Wshadow"
           ;;
 	  intel)
