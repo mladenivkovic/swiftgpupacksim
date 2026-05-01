@@ -59,6 +59,7 @@ for part_access in "explicit-var"; do
           echo running "$ex" ../../data/gn002/$dir
           $ex ../../data/gn002/$dir
           mv results_"$layout".csv "$outfile"
+          echo written $outfile
         else
           echo found $outfile, not rerunning
         fi
@@ -70,6 +71,7 @@ for part_access in "explicit-var"; do
         #   echo running "$ex" ../../data/gn002/$dir --noflush
         #   $ex ../../data/gn002/$dir --noflush
         #   mv results_"$layout".csv "$outfile"
+          # echo written $outfile
         # else
         #   echo found $outfile, not rerunning
         # fi
