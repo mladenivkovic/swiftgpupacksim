@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 
   /* Get content of cmdline args. */
   io_parse_cmdlineargs(argc, argv, &params);
-  validate_params(&params);
+  validate_cmdline_params(&params);
 
   /* If we're continuing, print out the banner now. */
   banner();

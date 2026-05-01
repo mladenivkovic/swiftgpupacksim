@@ -191,7 +191,7 @@ cell_get_const_hydro_parts(const struct cell* restrict c) {
  */
 static __attribute__((always_inline)) INLINE void init_cell(
     struct cell* c, int count, const struct hydro_part_arrays* all_parts,
-    int offset, omp_lock_t* part_locks) {
+    ptrdiff_t offset, omp_lock_t* part_locks) {
 
   c->loc[0] = 1.;
   c->loc[1] = 1.;
@@ -201,13 +201,15 @@ static __attribute__((always_inline)) INLINE void init_cell(
   part_arrays_set_pointer_offset(&c->hydro.part_arrs, all_parts, offset);
 
   /* Before we write into particles, lock them. */
-  for (int i = 0; i < count; i++) {
+  for (ptrdiff_t i = 0; i < count; i++) {
     omp_set_lock(&part_locks[offset + i]);
   }
 
 #if defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)
+
   /* These realisations have a single particle struct. They don't need
    * special handling here. */
+
 #elif defined(SPHENIX_SOA_PARTICLE) ||         \
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
@@ -225,7 +227,7 @@ static __attribute__((always_inline)) INLINE void init_cell(
  * Clean up after yourself. In particular, release the locks.
  */
 static __attribute__((always_inline)) INLINE void destroy_cell(
-    struct cell* c, int count, int offset, omp_lock_t* part_locks) {
+    struct cell* c, int count, ptrdiff_t offset, omp_lock_t* part_locks) {
 
   for (int i = 0; i < count; i++) {
     omp_unset_lock(&part_locks[offset + i]);
