@@ -93,11 +93,6 @@ if __name__ == "__main__":
 
         color = f"C{colind}"
         ls = "-"
-        #  if srcdir.endswith("_noflush"):
-        #      noflush = srcdir[:-len("_noflush")]
-        #      noflushind = dirlist.index(noflush)
-        #      color = f"C{noflushind}"
-            #  ls = ":"
         if not srcdir.endswith("_noflush"):
             ls = ":"
             colind += 1
