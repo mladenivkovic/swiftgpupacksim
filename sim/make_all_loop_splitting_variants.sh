@@ -33,7 +33,7 @@ for part_access in "explicit-var"; do
   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
     for layout in "aos" "soa" "upstream" "pack-gradient" "pack-force" "pack-shared"; do
 
-      SUFFIX="$NODE"_"$layout"_"$part_access"_"$loop"
+      SUFFIX="$NODE"_BIGFLUSH_"$layout"_"$part_access"_"$loop"
 
       CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access $EXTRA_CONFFLAGS
       make clean
