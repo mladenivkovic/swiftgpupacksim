@@ -52,6 +52,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
           echo running "$ex" ../../data/dine2/$dir
           $ex ../../data/dine2/$dir
           mv results_"$layout".csv "$outfile"
+          echo written $outfile
         else
           echo found $outfile, not rerunning
         fi
@@ -61,6 +62,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
           echo running "$ex"_vector ../../data/dine2/$dir
           $ex"_vector" ../../data/dine2/$dir
           mv results_"$layout".csv "$outfile"
+          echo written $outfile
         else
           echo found $outfile, not rerunning
         fi
