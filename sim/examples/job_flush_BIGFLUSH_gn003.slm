@@ -28,8 +28,9 @@ rm -f results_*.csv
 export OMP_PROC_BIND=true
 
 # for part_access in "part-struct" "global-var" "explicit-var"; do
+#   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
 for part_access in "explicit-var"; do
-  for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
+  for loop in "none"; do
 
     # Experiment reproduction directories
     # for dir in EAGLE25_72threads Gresho256_72threads EAGLE25_36threads Gresho256_36threads; do
