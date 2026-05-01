@@ -281,7 +281,7 @@ void run_simulation(struct parameters* params) {
 
     /* Alloc a few MB of data and fill them with garbage to flush caches. */
     /* const int n_garbage = params->no_cache_flush ? 0 : 250000; */
-    const int n_garbage = params->no_cache_flush ? 0 : 2500000;
+    const int n_garbage = params->no_cache_flush ? 0 : 1250000;
     if (params->verbose) {
       if (my_thread_id == 0) {
         message("Allocating garbage array: estimated %g MB total",
