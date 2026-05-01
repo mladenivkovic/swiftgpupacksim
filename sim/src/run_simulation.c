@@ -215,6 +215,9 @@ void run_simulation(struct parameters* params) {
   global_hydro_part_arrays = part_data;
 
   /* Initialise particle locks */
+  if (params->verbose)
+    message("Allocating particle omp locks: %g MB",
+        (params->nr_parts * sizeof(omp_lock_t)) * 1e-6);
   omp_lock_t* part_locks = malloc(params->nr_parts * sizeof(omp_lock_t));
   for (size_t i = 0; i < params->nr_parts; i++) omp_init_lock(&part_locks[i]);
 
@@ -222,7 +225,7 @@ void run_simulation(struct parameters* params) {
 
   /* Get devnull handle to dump garbage used for cache flushing in */
   FILE* devnull = fopen("/dev/null", "w");
-  if (devnull == NULL) error("Oh no :(");
+  if (devnull == NULL) error("Failed to open /dev/null");
 
   /* Init timers */
   /* Timers for a single step */
@@ -265,6 +268,8 @@ void run_simulation(struct parameters* params) {
 #pragma omp parallel num_threads(params->nr_threads)
   {
 
+    int my_thread_id = omp_get_thread_num();
+
     /* Double-check nothing's overwriting what we want to do. */
 #ifdef SWIFT_DEBUG_CHECKS
     int n_threads = omp_get_num_threads();
@@ -277,6 +282,16 @@ void run_simulation(struct parameters* params) {
     /* Alloc a few MB of data and fill them with garbage to flush caches. */
     /* const int n_garbage = params->no_cache_flush ? 0 : 250000; */
     const int n_garbage = params->no_cache_flush ? 0 : 1250000;
+    if (params->verbose) {
+      if (my_thread_id == 0) {
+        message("Allocating garbage array: estimated %g MB total",
+            ((unsigned long)params->nr_threads * n_garbage * sizeof(double)) * 1e-6);
+      }
+#ifdef SWIFT_DEBUG_CHECKS
+      message("Thread %d: Allocating garbage array: %g MB",
+          my_thread_id, n_garbage * sizeof(double) * 1e-6);
+#endif
+    }
     double* garbage = malloc(n_garbage * sizeof(double));
 
     /* Declare and allocate GPU launch control data structures which need to be
@@ -294,6 +309,29 @@ void run_simulation(struct parameters* params) {
     gpu_data_buffers_init(&gpu_buf_forc, &gpu_pack_params,
                           sizeof(struct gpu_part_send_f),
                           sizeof(struct gpu_part_recv_f));
+
+    if (params->verbose) {
+      if (my_thread_id == 0) {
+        message("Allocating host-side GPU part buffers: estimated %g MB total",
+          (unsigned long)params->nr_threads * gpu_pack_params.part_buffer_size * (
+                          sizeof(struct gpu_part_send_d) +
+                          sizeof(struct gpu_part_recv_d) +
+                          sizeof(struct gpu_part_send_g) +
+                          sizeof(struct gpu_part_recv_g) +
+                          sizeof(struct gpu_part_send_f) +
+                          sizeof(struct gpu_part_recv_f)) * 1e-6);
+      }
+#ifdef SWIFT_DEBUG_CHECKS
+      message("Thread %d: Allocating host-side GPU part buffers: %g MB",
+          my_thread_id, gpu_pack_params.part_buffer_size * (
+                          sizeof(struct gpu_part_send_d) +
+                          sizeof(struct gpu_part_recv_d) +
+                          sizeof(struct gpu_part_send_g) +
+                          sizeof(struct gpu_part_recv_g) +
+                          sizeof(struct gpu_part_send_f) +
+                          sizeof(struct gpu_part_recv_f)) * 1e-6);
+#endif
+    }
 
 
     /* -------------------------------------------------*/
@@ -318,9 +356,16 @@ void run_simulation(struct parameters* params) {
         io_read_logged_events_file(logfile, &packing_sequence, &n_events,
                                    params);
 
+  if (params->verbose && thread_id == 0) {
+    message("Allocated packing sequence data: estimated %g MB (total)",
+            ((unsigned long)params->nr_threads * n_events * sizeof(struct packing_data)) * 1e-6);
+  }
+
+#ifdef SWIFT_DEBUG_CHECKS
         if (params->verbose)
           message("Thread %d step %d found %d events.", thread_id, step,
                   n_events);
+#endif
 
         /* ----------------------------------------------*/
         /* Loop over recorded packing tasks.             */
