@@ -11,10 +11,12 @@ LOOP_SPLIT_LABELS = [
     "loop split by struct and data type",
 ]
 
-PART_ACCESS = ["part-struct", "explicit-var", "global-var"]
+PART_ACCESS = ["explicit-var"]
+#  PART_ACCESS = ["part-struct", "explicit-var", "global-var"]
 PART_ACCESS_LABELS = ["part struct access", "explicit var access", "global var access"]
 
-EXPERIMENTS = ["Gresho256", "EAGLE12"]
+#  EXPERIMENTS = ["Gresho256", "EAGLE12"]
+EXPERIMENTS = ["Gresho256", "EAGLE25"]
 NTHREADS = ["36", "72"]
 
 

@@ -118,9 +118,10 @@ parser.add_argument(
 
 args = parser.parse_args()
 srcdir = args.srcdir
-nthreads = args.nthreads
+nthreads = args.nthreads[0]
 normalise = args.normalise
 local = args.local_legion or args.local_hp
+
 if normalise:
     raise NotImplementedError()
 if args.equal_axis_limits:

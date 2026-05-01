@@ -59,24 +59,13 @@ if __name__ == "__main__":
 
     for f in ls:
         fulldir = os.path.join(node_root_dir, f)
+        dirlist.append(fulldir)
+
         if fulldir.endswith("_noflush") and os.path.isdir(fulldir):
-            flush = f[: -len("_noflush")]
+            flush = fulldir[: -len("_noflush")]
             if not os.path.exists(flush):
                 print(f"Didn't find corresponing dir {flush}, plotting non-matching outputs")
                 have_matching_dirs = False
-                break
-
-    for f in ls:
-        fulldir = os.path.join(node_root_dir, f)
-        if os.path.isdir(fulldir):
-            if have_matching_dirs:
-                # only keep dirs with "noflush" and find others later
-                if fulldir.endswith("_noflush"):
-                    dirlist.append(fulldir)
-            else:
-                # keep any result found
-                dirlist.append(fulldir)
-
 
     fig = plt.figure(figsize=(15, 10))
     ax1 = fig.add_subplot(2, 3, 1)
