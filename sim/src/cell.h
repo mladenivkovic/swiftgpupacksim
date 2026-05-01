@@ -14,6 +14,8 @@
 #include "swift_placeholders/cell_other_physics.h"
 #include "swift_placeholders/task.h"
 
+#undef SWIFT_LOCK_ALL_PARTS
+
 struct cell {
 
   /*! The cell location on the grid (corner nearest to the origin). */
@@ -200,10 +202,15 @@ static __attribute__((always_inline)) INLINE void init_cell(
   c->hydro.count = count;
   part_arrays_set_pointer_offset(&c->hydro.part_arrs, all_parts, offset);
 
+#ifdef SWIFT_LOCK_ALL_PARTS
   /* Before we write into particles, lock them. */
   for (ptrdiff_t i = 0; i < count; i++) {
     omp_set_lock(&part_locks[offset + i]);
   }
+#else
+  /* Lock just the first one. */
+  omp_set_lock(&part_locks[offset]);
+#endif
 
 #if defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)
 
@@ -229,7 +236,11 @@ static __attribute__((always_inline)) INLINE void init_cell(
 static __attribute__((always_inline)) INLINE void destroy_cell(
     struct cell* c, int count, ptrdiff_t offset, omp_lock_t* part_locks) {
 
+#ifdef SWIFT_LOCK_ALL_PARTS
   for (int i = 0; i < count; i++) {
     omp_unset_lock(&part_locks[offset + i]);
   }
+#else
+  omp_unset_lock(&part_locks[offset]);
+#endif
 }
