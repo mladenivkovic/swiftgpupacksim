@@ -41,13 +41,17 @@ for part_access in "explicit-var"; do
       # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
 
       NTHREADS=36
-      if [[ "$dir" == *"_72thread"* ]]; then NTHREADS=72; fi
+      LIKWID_CORES="$((NTHREADS - 1))""-""$((2 * NTHREADS - 1))"
+      if [[ "$dir" == *"_72thread"* ]]; then
+        NTHREADS=72;
+        LIKWID_CORES="0-""$((NTHREADS - 1))"
+      fi
 
       export OMP_NUM_THREADS=$NTHREADS
 
       for layout in aos soa upstream pack-gradient pack-force pack-shared; do
 
-        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"
+        ex="likwid-pin --quiet -c N:""$LIKWID_CORES"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
 
         outfile=$NODE/"$dir"_"$part_access"_"$loop"/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
