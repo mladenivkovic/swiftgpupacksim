@@ -10,6 +10,9 @@ fi
 NODE=gn003
 # NODE=milan
 
+
+MYCFLAGS="-march=native -Wno-pass-failed"
+
 # EXTRA_CONFFLAGS="--config-cache --enable-no-cuda-mallochost"
 EXTRA_CONFFLAGS="--config-cache"
 
@@ -24,6 +27,7 @@ if [ $# -gt 0 ]; then
   esac
 fi
 
+
 # for part_access in "part-struct" "global-var" "explicit-var"; do
 for part_access in "explicit-var"; do
   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
@@ -31,7 +35,7 @@ for part_access in "explicit-var"; do
 
       SUFFIX="$NODE"_"$layout"_"$part_access"_"$loop"
 
-      CFLAGS="-march=native" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access $EXTRA_CONFFLAGS
+      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access $EXTRA_CONFFLAGS
       make clean
       echo
       echo $loop $layout
@@ -42,7 +46,7 @@ for part_access in "explicit-var"; do
       echo COMPILED ./swiftgpupack_"$SUFFIX"
       echo
 
-      CFLAGS="-march=native" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas $EXTRA_CONFFLAGS
+      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas $EXTRA_CONFFLAGS
       make clean
       echo
       echo $loop $layout
@@ -53,7 +57,7 @@ for part_access in "explicit-var"; do
       echo COMPILED ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector
       echo
 
-      CFLAGS="-march=native" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-packed-structs $EXTRA_CONFFLAGS
+      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-packed-structs $EXTRA_CONFFLAGS
       make clean
       echo
       echo $loop $layout
@@ -64,7 +68,7 @@ for part_access in "explicit-var"; do
       echo COMPILED ./swiftgpupack_"$SUFFIX"_packed
       echo
 
-      CFLAGS="-march=native" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas --enable-packed-structs $EXTRA_CONFFLAGS
+      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas --enable-packed-structs $EXTRA_CONFFLAGS
       make clean
       echo
       echo $loop $layout
