@@ -10,7 +10,8 @@ fi
 NODE=gn003
 # NODE=milan
 
-EXTRA_CONFFLAGS="--config-cache --enable-no-cuda-mallochost"
+# EXTRA_CONFFLAGS="--config-cache --enable-no-cuda-mallochost"
+EXTRA_CONFFLAGS="--config-cache"
 
 if [ $# -gt 0 ]; then
   case "$1" in
@@ -23,7 +24,8 @@ if [ $# -gt 0 ]; then
   esac
 fi
 
-for part_access in "part-struct" "global-var" "explicit-var"; do
+# for part_access in "part-struct" "global-var" "explicit-var"; do
+for part_access in "explicit-var"; do
   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
     for layout in "aos" "soa" "upstream" "pack-gradient" "pack-force" "pack-shared"; do
 
