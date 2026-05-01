@@ -44,7 +44,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
 
       for layout in aos soa upstream pack-gradient pack-force pack-shared; do
 
-        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"
+        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
 
         outfile=$NODE/"$dir"_"$part_access"_"$loop"/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
