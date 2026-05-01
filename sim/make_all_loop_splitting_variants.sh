@@ -29,8 +29,9 @@ fi
 
 
 # for part_access in "part-struct" "global-var" "explicit-var"; do
+#   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
 for part_access in "explicit-var"; do
-  for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
+  for loop in "none"; do
     for layout in "aos" "soa" "upstream" "pack-gradient" "pack-force" "pack-shared"; do
 
       SUFFIX="$NODE"_BIGFLUSH_"$layout"_"$part_access"_"$loop"
@@ -46,38 +47,38 @@ for part_access in "explicit-var"; do
       echo COMPILED ./swiftgpupack_"$SUFFIX"
       echo
 
-      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas $EXTRA_CONFFLAGS
-      make clean
-      echo
-      echo $loop $layout
-      echo
-      make -j
-      mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector
-      echo
-      echo COMPILED ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector
-      echo
-
-      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-packed-structs $EXTRA_CONFFLAGS
-      make clean
-      echo
-      echo $loop $layout
-      echo
-      make -j
-      mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_packed
-      echo
-      echo COMPILED ./swiftgpupack_"$SUFFIX"_packed
-      echo
-
-      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas --enable-packed-structs $EXTRA_CONFFLAGS
-      make clean
-      echo
-      echo $loop $layout
-      echo
-      make -j
-      mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector_packed
-      echo
-      echo COMPILED ./swiftgpupack_"$SUFFIX"_vector_packed
-      echo
+      # CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas $EXTRA_CONFFLAGS
+      # make clean
+      # echo
+      # echo $loop $layout
+      # echo
+      # make -j
+      # mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector
+      # echo
+      # echo COMPILED ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector
+      # echo
+      #
+      # CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-packed-structs $EXTRA_CONFFLAGS
+      # make clean
+      # echo
+      # echo $loop $layout
+      # echo
+      # make -j
+      # mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_packed
+      # echo
+      # echo COMPILED ./swiftgpupack_"$SUFFIX"_packed
+      # echo
+      #
+      # CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas --enable-packed-structs $EXTRA_CONFFLAGS
+      # make clean
+      # echo
+      # echo $loop $layout
+      # echo
+      # make -j
+      # mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector_packed
+      # echo
+      # echo COMPILED ./swiftgpupack_"$SUFFIX"_vector_packed
+      # echo
 
     done
   done
