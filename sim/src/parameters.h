@@ -49,6 +49,6 @@ struct parameters {
 };
 
 void init_params(struct parameters* params);
-void validate_params(struct parameters* params);
+void validate_cmdline_params(struct parameters* params);
 void validate_read_params(struct parameters* params);
 void print_params(struct parameters* params);

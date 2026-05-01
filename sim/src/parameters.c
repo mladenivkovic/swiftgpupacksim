@@ -73,7 +73,7 @@ void init_params(struct parameters* params) {
 /**
  * Initial check that params are valid
  */
-void validate_params(struct parameters* params) {
+void validate_cmdline_params(struct parameters* params) {
 
   if (params->help) {
     help(0);

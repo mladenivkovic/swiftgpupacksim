@@ -176,10 +176,12 @@ void io_read_logged_events_file(const char* filename,
     error("Error rewinding file '%s'", filename);
 
   /* alloc space for data and store number of elements */
+#ifdef SWIFT_DEBUG_CHECKS
   if (params->verbose) {
-    message("Allocating packing sequence containing %d elements, size=%lu",
-            nlines, nlines * sizeof(struct packing_data));
+    message("Allocating packing sequence containing %d elements, size=%g MB",
+            nlines, (nlines * sizeof(struct packing_data)) * 1e-6);
   }
+#endif
   *packing_sequence = malloc(nlines * sizeof(struct packing_data));
   *n_elements = nlines;
 
@@ -189,12 +191,12 @@ void io_read_logged_events_file(const char* filename,
     /* Are we skipping this particular line? */
     if (!io_util_line_is_measurement_data(tempbuff)) {
 #ifdef SWIFT_DEBUG_CHECKS
-      io_util_remove_whitespace(tempbuff);
-      if (params->verbose)
-        warning(
-            "Line doesn't look like measurement line, skipping it.\n\t Line: "
-            "'%s'",
-            tempbuff);
+      /* io_util_remove_whitespace(tempbuff); */
+      /* if (params->verbose) */
+      /*   warning( */
+      /*       "Line doesn't look like measurement line, skipping it.\n\t Line: " */
+      /*       "'%s'", */
+      /*       tempbuff); */
 #endif
       continue;
     }
