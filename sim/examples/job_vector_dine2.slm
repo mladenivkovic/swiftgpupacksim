@@ -1,6 +1,6 @@
 #!/usr/bin/bash -l
 
-#SBATCH --job-name nthreads-dine2
+#SBATCH --job-name vector-dine2
 #SBATCH --time 48:00:00
 #SBATCH --partition dine2
 #SBATCH --account durham
