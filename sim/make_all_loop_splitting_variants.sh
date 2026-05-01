@@ -40,7 +40,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
       echo COMPILED ./swiftgpupack_"$SUFFIX"
       echo
 
-      CFLAGS="-march=native" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas $EXTRA_CONFFLAGS
+      CFLAGS="-march=native" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorisation-pragmas $EXTRA_CONFFLAGS
       make clean
       echo
       echo $loop $layout
@@ -61,7 +61,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
       echo COMPILED ./swiftgpupack_"$SUFFIX"_packed
       echo
 
-      CFLAGS="-march=native" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas --enable-packed-structs $EXTRA_CONFFLAGS
+      CFLAGS="-march=native" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorisation-pragmas --enable-packed-structs $EXTRA_CONFFLAGS
       make clean
       echo
       echo $loop $layout
