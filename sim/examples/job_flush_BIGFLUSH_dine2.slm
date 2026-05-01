@@ -1,0 +1,80 @@
+#!/usr/bin/bash -l
+
+#SBATCH --job-name bigflush
+#SBATCH --time 48:00:00
+#SBATCH --partition dine2
+#SBATCH --account durham
+#SBATCH --exclusive
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=64
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=mladen.ivkovic@durham.ac.uk
+
+module restore likwid_minimal
+
+# Generate executables first using `swiftgpupacksim/sim/make_all_loop_splitting_variants.sh`
+# Both on `main` branch and `bigflush` branch
+
+# NODE=local
+# NODE=gn001
+# NODE=gn002
+# NODE=gn003
+NODE=dine2_BIGFLUSH
+
+set -e
+rm -f results_*.csv
+
+export OMP_PROC_BIND=true
+
+# Get flush-noflush comparison
+echo ----------------------------------------------
+echo "JOB STAGE: FLUSH-NOFLUSH, VECTOR-NOVECTOR"
+echo ----------------------------------------------
+# for part_access in "part-struct" "global-var" "explicit-var"; do
+for part_access in "explicit-var"; do
+  for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
+
+    # Experiment reproduction directories
+    # for dir in EAGLE25_64threads Gresho256_64threads EAGLE25_32threads Gresho256_32threads; do
+    for dir in EAGLE25_64threads Gresho256_64threads; do
+
+      mkdir -p $NODE
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"
+      # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
+
+      NTHREADS=32
+      if [[ "$dir" == *"_64thread"* ]]; then NTHREADS=64; fi
+
+      export OMP_NUM_THREADS=$NTHREADS
+
+      # for layout in aos soa upstream pack-gradient pack-force pack-shared; do
+      for layout in aos soa; do
+
+        ex="likwid-pin -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"
+
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"/results_"$layout".csv
+        if [[ ! -f "$outfile" ]]; then
+          echo running "$ex" ../../data/dine2/$dir
+          $ex ../../data/dine2/$dir
+          mv results_"$layout".csv $NODE/"$dir"_"$part_access"_"$loop"/
+        else
+          echo found $outfile, not rerunning
+        fi
+
+        # we can re-use the noflush outputs from the normal run
+
+        # outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
+        # if [[ ! -f "$outfile" ]]; then
+        #   echo running "$ex" ../../data/gn002/$dir --noflush
+        #   $ex ../../data/dine2/$dir --noflush
+        #   mv results_"$layout".csv "$outfile"
+        # else
+        #   echo found $outfile, not rerunning
+        # fi
+
+      done
+    done
+  done
+done
+
