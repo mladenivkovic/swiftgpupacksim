@@ -31,11 +31,9 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
     # Experiment reproduction directories
     for dir in EAGLE25_72threads Gresho256_72threads; do
 
-      # TODO: USE NOFLUSH HERE????
-
       mkdir -p $NODE
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush
 
       NTHREADS=36
       if [[ "$dir" == *"_72thread"* ]]; then NTHREADS=72; fi
@@ -44,9 +42,13 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
 
       for layout in aos soa upstream pack-gradient pack-force pack-shared; do
 
-        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
+        # construct executable and args
+        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"
+        ex="$ex"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"
+        ex="$ex"" -s 2"
+        ex="$ex"" --noflush"
 
-        outfile=$NODE/"$dir"_"$part_access"_"$loop"/results_"$layout".csv
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/gn002/$dir
           $ex ../../data/gn002/$dir
@@ -56,7 +58,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
           echo found $outfile, not rerunning
         fi
 
-        outfile=$NODE/"$dir"_"$part_access"_"$loop"_vector/results_"$layout".csv
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_vector_noflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex"_vector ../../data/gn002/$dir
           $ex"_vector" ../../data/gn002/$dir
