@@ -4,6 +4,7 @@ import os
 import matplotlib
 from matplotlib import pyplot as plt
 import argparse
+import numpy as np
 
 matplotlib.use("Agg")
 
@@ -13,9 +14,14 @@ from resultdata import ResultData
 
 parser = argparse.ArgumentParser(
     description="""
-Plot results of a node. This script assumes that all subdirectories in the given
-`node_root_dir` will contain result data with filenames 'results_*.csv' It will
+Plot results of a 'node', i.e. a single top-level directory containing a multitude
+of subdirectories, all of which contain experiment outputs for different particle
+memory layout variants.
+
+This script assumes that all subdirectories in the given `node_root_dir` will
+contain result data with filenames 'results_*.csv' It will
 read them all in and plot them.
+
 Subdirectories are expected to have the following file name format:
 `EXPERIMENTNAME`_`NRTHREADS`threads[_noflush]
 The *_noflush variants will be overplotted with the results in subdirs with the
@@ -30,6 +36,14 @@ parser.add_argument(
 
 markers = ["o", "v", "s", "p", "P", "*"]
 
+plotkwargs = {
+    "marker": "o",
+    "lw": 2,
+    "alpha": 0.8,
+    "markersize": 5,
+}
+
+
 if __name__ == "__main__":
 
     args = parser.parse_args()
@@ -40,94 +54,137 @@ if __name__ == "__main__":
         raise FileNotFoundError(f"directory {node_root_dir} not found.")
 
     ls = os.listdir(node_root_dir)
-    noflushlist = []
-    flushlist = []
+    have_matching_dirs = True
+    dirlist = []
+
     for f in ls:
-        if f.endswith("_noflush"):
-            noflushlist.append(os.path.join(node_root_dir, f))
-
+        fulldir = os.path.join(node_root_dir, f)
+        if fulldir.endswith("_noflush") and os.path.isdir(fulldir):
             flush = f[: -len("_noflush")]
-            fullflush = os.path.join(node_root_dir, flush)
-            if not os.path.exists(fullflush):
-                raise FileNotFoundError(f"Didn't find corresponing dir {flush}")
+            if not os.path.exists(flush):
+                print(f"Didn't find corresponing dir {flush}, plotting non-matching outputs")
+                have_matching_dirs = False
+                break
 
-            flushlist.append(fullflush)
+    for f in ls:
+        fulldir = os.path.join(node_root_dir, f)
+        if os.path.isdir(fulldir):
+            if have_matching_dirs:
+                # only keep dirs with "noflush" and find others later
+                if fulldir.endswith("_noflush"):
+                    dirlist.append(fulldir)
+            else:
+                # keep any result found
+                dirlist.append(fulldir)
 
-    if len(flushlist) != 4:
-        raise ValueError(
-            f"Found {len(flushlist)} subdirs, expected 4. Adapt script to accommodate that."
-        )
 
-    fig = plt.figure(figsize=(10, 10))
-    ax1 = fig.add_subplot(2, 2, 1)
-    ax2 = fig.add_subplot(2, 2, 2)
-    ax3 = fig.add_subplot(2, 2, 3)
-    ax4 = fig.add_subplot(2, 2, 4)
+    fig = plt.figure(figsize=(15, 10))
+    ax1 = fig.add_subplot(2, 3, 1)
+    ax1.set_title("Density/Pack")
+    ax2 = fig.add_subplot(2, 3, 2)
+    ax2.set_title("Gradient/Pack")
+    ax3 = fig.add_subplot(2, 3, 3)
+    ax3.set_title("Force/Pack")
+    ax4 = fig.add_subplot(2, 3, 4)
+    ax4.set_title("Density/Unpack")
+    ax5 = fig.add_subplot(2, 3, 5)
+    ax5.set_title("Gradient/Unpack")
+    ax6 = fig.add_subplot(2, 3, 6)
+    ax6.set_title("Force/Unpack")
+
+
 
     # loop over all experiments
-    for i in range(len(flushlist)):
+    for i in range(len(dirlist)):
 
-        flushdir = flushlist[i]
-        noflushdir = noflushlist[i]
-        ax = fig.axes[i]
+        srcdir = dirlist[i]
 
-        title = os.path.basename(flushdir)
+        color = f"C{i}"
+        ls = "-"
+        if have_matching_dirs:
+            if srcdir.endswith("_noflush"):
+                noflush = srcdir[:-len("_noflush")]
+                noflushind = dirlist.index(noflush)
+                color = f"C{noflushind}"
+                ls = ":"
 
-        # do both flush + no flush
-        for j, srcdir in enumerate([flushdir, noflushdir]):
 
-            #  marker = "o"
-            marker = markers[j]
-            label_suffix = ""
-            linestyle = "-"
+        # read in data
+        filelist = get_filelist(srcdir)
+        layouts = [os.path.basename(f)[len("results_"):-len(".csv")] for f in filelist]
+        layouts.sort()
 
-            if j == 1:
-                #  marker = "x"
-                label_suffix = " no cache flush"
-                linestyle = "--"
-                if not srcdir.endswith("_noflush"):
-                    raise ValueError(f"Expected noflush dir case, got {srcdir}")
+        result_data = []
+        for layout in layouts:
 
-            # read in data
-            filelist = get_filelist(srcdir)
+            fname = os.path.join(srcdir, f"results_{layout}.csv")
+            res = ResultData(fname, verbose=False)
+            result_data.append(res)
 
-            resultlist = []
-            for f in filelist:
-                res = ResultData(f, verbose=verbose)
-                resultlist.append(res)
+        # Unpack result data by packing operation type
+        dens_pack = np.array(
+            [res.data_dict["pack/density"] for res in result_data]
+        )
+        dens_unpack = np.array(
+            [res.data_dict["unpack/density"] for res in result_data]
+        )
+        grad_pack = np.array(
+            [res.data_dict["pack/gradient"] for res in result_data]
+        )
+        grad_unpack = np.array(
+            [res.data_dict["unpack/gradient"] for res in result_data]
+        )
+        forc_pack = np.array(
+            [res.data_dict["pack/force"] for res in result_data]
+        )
+        forc_unpack = np.array(
+            [res.data_dict["unpack/force"] for res in result_data]
+        )
 
-            # find the AOS results
-            aos_index = -1
-            for i, r in enumerate(resultlist):
-                if r.layout == "aos":
-                    aos_index = i
-                    break
+        label = os.path.basename(srcdir)
 
-            if aos_index == -1:
-                raise ValueError("Didn't find AOS results")
+        ax1.plot(
+            layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs
+        )
+        ax2.plot(
+            layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs
+        )
+        ax3.plot(
+            layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs
+        )
+        ax4.plot(
+            layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
+        )
+        ax5.plot(
+            layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
+        )
+        ax6.plot(
+            layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
+        )
 
-            aos_timings = resultlist[aos_index].timings
-
-            for k, res in enumerate(resultlist):
-
-                color = "C" + str(k)
-                marker = markers[k]
-
-                relative_times = res.timings / aos_timings
-                ax.plot(
-                    res.tasks,
-                    relative_times,
-                    label=res.layout + label_suffix,
-                    marker=marker,
-                    linestyle=linestyle,
-                    color=color,
-                )
-
-        ax.set_title(title)
-        ax.tick_params(axis="x", labelrotation=45)
-        ax.legend()
+    # all axes
+    for ax in fig.axes:
+        #  ax.set_xlabel("particle data layouts")
+        ax.tick_params("x", rotation=45)
         ax.grid()
-        plt.tight_layout()
+
+
+
+    hand, lab = ax1.get_legend_handles_labels()
+    #  ncols=int(len(layouts)*0.5 + 0.5)
+    ncols = 2
+    fig.legend(
+        handles=hand,
+        labels=lab,
+        loc="lower center",
+        ncols=ncols,
+        handlelength=2.5,
+        markerscale=0.5,
+    )
+    fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
+
+
+
 
     # construct output file name
     fullpath = os.path.abspath(node_root_dir)
