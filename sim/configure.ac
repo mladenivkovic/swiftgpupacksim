@@ -197,7 +197,7 @@ if test "$enable_no_cuda_mallochost" = "yes"; then
 fi
 
 
-AC_ARG_ENABLE([vectorization],
+AC_ARG_ENABLE([vectorization-pragmas],
    [AS_HELP_STRING([--enable-vectorization-pragmas],
      [Enable manually encouraged vectorization through simd pragmas (default: no) @<:@yes/no@:>@]
    )],
