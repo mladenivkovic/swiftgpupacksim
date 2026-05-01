@@ -1,6 +1,6 @@
 #!/usr/bin/bash -l
 
-#SBATCH --job-name bigflush-dine2
+#SBATCH --job-name nthreads-dine2
 #SBATCH --time 48:00:00
 #SBATCH --partition dine2
 #SBATCH --account durham
@@ -14,31 +14,29 @@
 module restore likwid_intel2024
 
 # Generate executables first using `swiftgpupacksim/sim/make_all_loop_splitting_variants.sh`
-# Both on `main` branch and `bigflush` branch
 
 # NODE=local
 # NODE=gn001
 # NODE=gn002
 # NODE=gn003
-NODE=dine2_BIGFLUSH
+NODE=dine2
 
 set -e
 rm -f results_*.csv
 
 export OMP_PROC_BIND=true
 
-# for part_access in "part-struct" "global-var" "explicit-var"; do
-#   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
-for part_access in "explicit-var"; do
-  for loop in "none"; do
+for part_access in "part-struct" "global-var" "explicit-var"; do
+  for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
 
     # Experiment reproduction directories
-    # for dir in EAGLE25_64threads Gresho256_64threads EAGLE25_32threads Gresho256_32threads; do
     for dir in EAGLE25_64threads Gresho256_64threads; do
+
+      # TODO: USE NOFLUSH HERE????
 
       mkdir -p $NODE
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"
-      # mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector
 
       NTHREADS=32
       if [[ "$dir" == *"_64thread"* ]]; then NTHREADS=64; fi
@@ -58,16 +56,15 @@ for part_access in "explicit-var"; do
           echo found $outfile, not rerunning
         fi
 
-        # we can re-use the noflush outputs from the normal run
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_vector/results_"$layout".csv
+        if [[ ! -f "$outfile" ]]; then
+          echo running "$ex"_vector ../../data/dine2/$dir
+          $ex"_vector" ../../data/dine2/$dir
+          mv results_"$layout".csv "$outfile"
+        else
+          echo found $outfile, not rerunning
+        fi
 
-        # outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
-        # if [[ ! -f "$outfile" ]]; then
-        #   echo running "$ex" ../../data/gn002/$dir --noflush
-        #   $ex ../../data/dine2/$dir --noflush
-        #   mv results_"$layout".csv "$outfile"
-        # else
-        #   echo found $outfile, not rerunning
-        # fi
 
       done
     done

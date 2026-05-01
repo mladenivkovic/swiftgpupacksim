@@ -53,7 +53,7 @@ for part_access in "explicit-var"; do
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/gn002/$dir
           $ex ../../data/gn002/$dir
-          mv results_"$layout".csv $NODE/"$dir"_"$part_access"_"$loop"/
+          mv results_"$layout".csv "$outfile"
         else
           echo found $outfile, not rerunning
         fi
