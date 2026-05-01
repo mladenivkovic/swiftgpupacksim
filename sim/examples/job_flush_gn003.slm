@@ -33,7 +33,8 @@ for part_access in "explicit-var"; do
 
     # Experiment reproduction directories
     # for dir in EAGLE25_72threads Gresho256_72threads EAGLE25_36threads Gresho256_36threads; do
-    for dir in EAGLE25_72threads Gresho256_72threads; do
+    # for dir in EAGLE25_72threads Gresho256_72threads; do
+    for dir in EAGLE25_36threads Gresho256_36threads; do
 
       mkdir -p $NODE
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"
