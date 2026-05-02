@@ -8,6 +8,7 @@ module restore likwid_intel2024
 # NODE=gn001
 # NODE=gn002
 # NODE=gn003
+# NODE=dine2
 NODE=mad06
 
 set -e

@@ -1,0 +1,100 @@
+#!/usr/bin/bash -l
+
+#SBATCH --job-name full-gh
+#SBATCH --time 48:00:00
+#SBATCH --partition gracehopper
+#SBATCH --account do016
+#SBATCH --exclusive
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=72
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=mladen.ivkovic@durham.ac.uk
+
+module restore gpu_swift_gn002
+
+# Generate executables first using `swiftgpupacksim/sim/make_all_loop_splitting_variants.sh`
+
+# NODE=local
+# NODE=gn001
+# NODE=gn002
+NODE=gn003
+
+set -e
+rm -f results_*.csv
+
+export OMP_PROC_BIND=true
+
+for part_access in "part-struct" "global-var" "explicit-var"; do
+  for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
+
+    # Experiment reproduction directories
+    # for dir in EAGLE25_72threads Gresho256_72threads EAGLE25_36threads Gresho256_36threads; do
+    for dir in EAGLE25_72threads Gresho256_72threads; do
+
+      mkdir -p $NODE
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_packed_noflush
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_noflush
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_vector_packed_noflush
+
+      NTHREADS=36
+      if [[ "$dir" == *"_72thread"* ]]; then NTHREADS=72; fi
+
+      export OMP_NUM_THREADS=$NTHREADS
+
+      for layout in aos soa upstream pack-gradient pack-force pack-shared; do
+
+        # construct executable and args
+        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"
+        ex="$ex"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"
+
+        EXFLAGS="-s 2 --noflush"
+        EXFLAGS="$EXFLAGS"" ../../data/gn002/$dir"
+
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
+        if [[ ! -f "$outfile" ]]; then
+          echo running "$ex" "$EXFLAGS"
+          $ex $EXFLAGS
+          mv results_"$layout".csv "$outfile"
+          echo written $outfile
+        else
+          echo found $outfile, not rerunning
+        fi
+
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_packed_noflush/results_"$layout".csv
+        if [[ ! -f "$outfile" ]]; then
+          echo running "$ex"_packed "$EXFLAGS"
+          $ex"_packed" $EXFLAGS
+          mv results_"$layout".csv "$outfile"
+          echo written $outfile
+        else
+          echo found $outfile, not rerunning
+        fi
+
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_vector_noflush/results_"$layout".csv
+        if [[ ! -f "$outfile" ]]; then
+          echo running "$ex"_vector "$EXFLAGS"
+          $ex"_vector" $EXFLAGS
+          mv results_"$layout".csv "$outfile"
+          echo written $outfile
+        else
+          echo found $outfile, not rerunning
+        fi
+
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_vector_packed_noflush/results_"$layout".csv
+        if [[ ! -f "$outfile" ]]; then
+          echo running "$ex"_vector_packed "$EXFLAGS"
+          $ex"_vector_packed" $EXFLAGS
+          mv results_"$layout".csv "$outfile"
+          echo written $outfile
+        else
+          echo found $outfile, not rerunning
+        fi
+
+      done
+    done
+  done
+done
+
+
