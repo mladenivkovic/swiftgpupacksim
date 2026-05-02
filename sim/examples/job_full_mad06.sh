@@ -20,7 +20,8 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
 
     # Experiment reproduction directories
-    for dir in EAGLE25_64threads Gresho256_64threads; do
+    # for dir in EAGLE25_64threads Gresho256_64threads; do
+    for dir in EAGLE25_128threads Gresho256_128threads; do
 
       mkdir -p $NODE
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
