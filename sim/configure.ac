@@ -952,6 +952,41 @@ case "$with_loop_split" in
 esac
 
 
+AC_ARG_WITH([cache-flush],
+   [AS_HELP_STRING([--with-cache-flush=<value>],
+      [Cache flushing method between each pack/unpack operation. @<:@array, bigarray, x86. Default: array@:>@]
+   )],
+   [with_cache_flush="$withval"],
+   [with_cache_flush="array"]
+)
+
+case "$with_cache_flush" in
+   "array")
+      AC_DEFINE([SWIFT_CACHE_FLUSH_ARRAY], [1], ["Use poor man's cache flushing"])
+   ;;
+   "bigarray")
+      AC_DEFINE([SWIFT_CACHE_FLUSH_BIG_ARRAY], [1], ["Use poor man's cache flushing with big array"])
+   ;;
+   "x86")
+      AC_DEFINE([SWIFT_CACHE_FLUSH_X86], [1], ["Use x86 intinsics for cache flushing"])
+   ;;
+   *)
+      AC_MSG_ERROR([Unknown cache flushing method: $with_cache_flush])
+   ;;
+esac
+
+
+# Cache line size
+AC_ARG_WITH([cache-line-size],
+   [AS_HELP_STRING([--with-cache-line-size=<value>],
+      [SWIFT_STRUCT_ALIGNMENT to use for x86 flushing method. @<:@default: 64@:>@]
+   )],
+   [with_cache_line_size=$withval],
+   [with_cache_line_size=64]
+)
+
+AC_DEFINE_UNQUOTED([SWIFT_CACHE_LINE_SIZE], [$with_cache_line_size], [Cache line size])
+
 
 
 
