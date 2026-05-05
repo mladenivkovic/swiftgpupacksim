@@ -1,5 +1,6 @@
 #include "run_simulation.h"
 
+#include "flush_caches.h"
 #include "gpu_part_pack_functions.h"
 #include "io.h"
 #include "swift_placeholders/clocks.h"
@@ -15,26 +16,6 @@
 struct hydro_part_arrays global_hydro_part_arrays;
 
 /**
- * Flush the caches by performing meaningless operations on a large array with
- * size O(MB)
- *
- * @param garbage A large array O(MB) to fill out with garbage data to
- * flush the caches after each op
- * @param n_garbage: size of garbage array
- *
- * @return garbage_sum Some garbage double; Needed to prevent compiler from
- * optimising out a big loop doing nothing but flushing caches
- */
-double flush_cache(double* garbage, int n_garbage) {
-  double sum = 0.;
-  for (int i = 0; i < n_garbage; i++) {
-    garbage[i] += 2. * garbage[i] - 13.;
-    sum += garbage[i];
-  }
-  return sum;
-}
-
-/**
  * Perform the actual work of a single event.
  *
  * This region may be executed in parallel, so use atomics where
@@ -43,6 +24,7 @@ double flush_cache(double* garbage, int n_garbage) {
  * @param event: Recorded/logged event in measurement run to be reproduced in
  * this function
  * @param part_data: Struct holding pointers to all particle data
+ * @param n_parts: total number of particles in part_data
  * @param part_locks: Array of OpenMP lock types to lock particles individually
  * @param buf_dens: Particle buffer for density tasks
  * @param buf_grad: Particle buffer for gradient tasks
@@ -65,18 +47,19 @@ double flush_cache(double* garbage, int n_garbage) {
  */
 __attribute__((always_inline)) INLINE static double replay_event(
     const struct packing_data* event, struct hydro_part_arrays* part_data,
+    int n_parts,
     omp_lock_t* part_locks, struct gpu_offload_data* buf_dens,
     struct gpu_offload_data* buf_grad, struct gpu_offload_data* buf_forc,
     const struct engine* e, ticks timers_step[timer_count],
     double timings_log_step[timer_count], double timing_ratio_min[timer_count],
-    double timing_ratio_max[timer_count], double* garbage, int n_garbage) {
+    double timing_ratio_max[timer_count], float* garbage, int n_garbage) {
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
   init_cell(&ci, event->count, part_data, event->part_offset, part_locks);
 
   const double shift[3] = {1., 1., 1.};
-  double sum = flush_cache(garbage, n_garbage);
+  float sum = flush_cache(garbage, n_garbage, part_data, params->n_parts);
 
 #ifdef SWIFT_DEBUG_CHECKS
   if ((event->part_offset + event->count) > part_data->nr_parts)
@@ -280,19 +263,8 @@ void run_simulation(struct parameters* params) {
 #endif
 
     /* Alloc a few MB of data and fill them with garbage to flush caches. */
-    const int n_garbage = params->no_cache_flush ? 0 : 250000;
-    /* const int n_garbage = params->no_cache_flush ? 0 : 1250000; */
-    if (params->verbose) {
-      if (my_thread_id == 0) {
-        message("Allocating garbage array: estimated %g MB total",
-            ((unsigned long)params->nr_threads * n_garbage * sizeof(double)) * 1e-6);
-      }
-#ifdef SWIFT_DEBUG_CHECKS
-      message("Thread %d: Allocating garbage array: %g MB",
-          my_thread_id, n_garbage * sizeof(double) * 1e-6);
-#endif
-    }
-    double* garbage = malloc(n_garbage * sizeof(double));
+    int n_garbage = 0;
+    float* garbage = init_cache_flush(&n_garbage, params->no_cache_flush, my_thread_id, params->nr_threads, params->verbose);
 
     /* Declare and allocate GPU launch control data structures which need to be
      * in scope */
@@ -372,11 +344,11 @@ void run_simulation(struct parameters* params) {
         /* This loop corresponds to second `while (1){}` */
         /* loop in runner_main                           */
         /* ----------------------------------------------*/
-        double garbage_sum = 0.;
+        float garbage_sum = 0.;
         for (int i = 0; i < n_events; i++) {
           struct packing_data event = packing_sequence[i];
 
-          double g = replay_event(&event, &part_data, part_locks, &gpu_buf_dens,
+          float g = replay_event(&event, &part_data, params->nr_parts, part_locks, &gpu_buf_dens,
                                   &gpu_buf_grad, &gpu_buf_forc, &e, timers_step,
                                   timing_log_step, timing_ratio_min,
                                   timing_ratio_max, garbage, n_garbage);

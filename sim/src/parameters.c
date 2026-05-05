@@ -22,6 +22,19 @@ void init_params(struct parameters* params) {
   params->struct_align = SWIFT_STRUCT_ALIGNMENT;
   params->part_align = SWIFT_PART_ALIGNMENT;
 
+/* "Use poor man's cache flushing" */
+#if defined(SWIFT_CACHE_FLUSH_ARRAY)
+  char flushing_method[20] = "array";
+#elif defined(SWIFT_CACHE_FLUSH_BIG_ARRAY)
+  char flushing_method[20] = "big_array";
+/* "Use x86 intinsics for cache flushing" */
+#elif defined(SWIFT_CACHE_FLUSH_X86)
+  char flushing_method[20] = "x86";
+#else
+#error "Unknown cache flushing method"
+#endif
+  strcpy(params->cache_flushing_method, flushing_method);
+
 #if defined(SPHENIX_AOS_PARTICLE)
   char layout[20] = "aos";
 #elif defined(SPHENIX_SOA_PARTICLE)
@@ -119,6 +132,7 @@ void print_params(struct parameters* params) {
   printf("\t nr_parts:               %12lu\n", params->nr_parts);
   printf("\t nr_steps:               %12d\n", params->nr_steps);
   printf("\t cache flush:            %12d\n", !params->no_cache_flush);
+  printf("\t cache flush method:     %12s\n", params->cache_flushing_method);
   printf("\t stuct align:            %12d\n", params->struct_align);
   printf("\t part array align:       %12d\n", params->part_align);
   printf("\t memory layout:          %s\n", params->memory_layout);

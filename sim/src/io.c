@@ -257,6 +257,7 @@ void io_write_result(const ticks timers_arr[timer_count],
   fprintf(out_fp, "# nr_parts: %ld\n", params->nr_parts);
   fprintf(out_fp, "# nr_steps: %d\n", params->nr_steps);
   fprintf(out_fp, "# cache flush: %d\n", !params->no_cache_flush);
+  fprintf(out_fp, "# cache flush method: %s\n", params->cache_flushing_method);
   fprintf(out_fp, "# stuct align: %d\n", params->struct_align);
   fprintf(out_fp, "# part array align: %d\n", params->part_align);
   fprintf(out_fp, "# memory layout: %s\n", params->memory_layout);

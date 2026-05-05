@@ -35,6 +35,9 @@ struct parameters {
   /*! Particle array alignment */
   int part_align;
 
+  /*! Currently used cache flushing method */
+  char cache_flushing_method[20];
+
   /*! Currently used memory layout */
   char memory_layout[20];
 
