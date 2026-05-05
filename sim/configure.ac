@@ -239,7 +239,8 @@ AX_FUNC_POSIX_MEMALIGN
 if test "$enable_opt" = "yes" ; then
    # Choose the best flags for this compiler and architecture
    ac_test_CFLAGS="no"
-   AX_CC_MAXOPT
+   # AX_CC_MAXOPT
+   CFLAGS="-O3 -march=native"
    ac_test_CFLAGS="yes"
 
    # Check SSE & AVX support (some overlap with AX_CC_MAXOPT).
@@ -665,28 +666,28 @@ fi
 # Check if we have native exp10 and exp10f functions. If not fallback to our
 # implementations. On Apple/CLANG/Homebrew gcc we have __exp10, so also check for that
 # if the compiler is clang.
-AC_CHECK_LIB([m],[exp10], [AC_DEFINE([HAVE_EXP10],1,[The exp10 function is present.])])
-AC_CHECK_LIB([m],[exp10f], [AC_DEFINE([HAVE_EXP10F],1,[The exp10f function is present.])])
-AC_CHECK_LIB([m],[__exp10], [AC_DEFINE([HAVE___EXP10],1,[The __exp10 function is present.])])
-AC_CHECK_LIB([m],[__exp10f], [AC_DEFINE([HAVE___EXP10F],1,[The __exp10f function is present.])])
+# AC_CHECK_LIB([m],[exp10], [AC_DEFINE([HAVE_EXP10],1,[The exp10 function is present.])])
+# AC_CHECK_LIB([m],[exp10f], [AC_DEFINE([HAVE_EXP10F],1,[The exp10f function is present.])])
+# AC_CHECK_LIB([m],[__exp10], [AC_DEFINE([HAVE___EXP10],1,[The __exp10 function is present.])])
+# AC_CHECK_LIB([m],[__exp10f], [AC_DEFINE([HAVE___EXP10F],1,[The __exp10f function is present.])])
 
 # Check if we have native sincos and sincosf functions. If not fallback to our
 # implementations. On Apple/CLANG we have __sincos, so also check for that
 # if the compiler is clang.
-AC_CHECK_LIB([m],[sincos], [AC_DEFINE([HAVE_SINCOS],1,[The sincos function is present.])])
-AC_CHECK_LIB([m],[sincosf], [AC_DEFINE([HAVE_SINCOSF],1,[The sincosf function is present.])])
-if test "$ax_cv_c_compiler_vendor" = "clang"; then
-      AC_CHECK_LIB([m],[__sincos], [AC_DEFINE([HAVE___SINCOS],1,[The __sincos function is present.])])
-      AC_CHECK_LIB([m],[__sincosf], [AC_DEFINE([HAVE___SINCOSF],1,[The __sincosf function is present.])])
-fi
+# AC_CHECK_LIB([m],[sincos], [AC_DEFINE([HAVE_SINCOS],1,[The sincos function is present.])])
+# AC_CHECK_LIB([m],[sincosf], [AC_DEFINE([HAVE_SINCOSF],1,[The sincosf function is present.])])
+# if test "$ax_cv_c_compiler_vendor" = "clang"; then
+#       AC_CHECK_LIB([m],[__sincos], [AC_DEFINE([HAVE___SINCOS],1,[The __sincos function is present.])])
+#       AC_CHECK_LIB([m],[__sincosf], [AC_DEFINE([HAVE___SINCOSF],1,[The __sincosf function is present.])])
+# fi
 
 # On Apple (CLANG or Homebrew gcc), check for __sincos and __sincosf inline functions in the headers.
-AC_CHECK_HEADERS([math.h], [
-  AC_CHECK_DECLS([__sincos, __sincosf], [
-    AC_DEFINE([HAVE___SINCOS], 1, [The __sincos function is present.])
-    AC_DEFINE([HAVE___SINCOSF], 1, [The __sincosf function is present.])
-  ], [], [#include <math.h>])
-])
+# AC_CHECK_HEADERS([math.h], [
+#   AC_CHECK_DECLS([__sincos, __sincosf], [
+#     AC_DEFINE([HAVE___SINCOS], 1, [The __sincos function is present.])
+#     AC_DEFINE([HAVE___SINCOSF], 1, [The __sincosf function is present.])
+#   ], [], [#include <math.h>])
+# ])
 
 # The aocc compiler has optimized maths libraries that we should use. Check
 # any clang for this support. Note do this after the basic check for maths

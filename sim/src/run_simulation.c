@@ -24,7 +24,7 @@ struct hydro_part_arrays global_hydro_part_arrays;
  * @param event: Recorded/logged event in measurement run to be reproduced in
  * this function
  * @param part_data: Struct holding pointers to all particle data
- * @param n_parts: total number of particles in part_data
+ * @param nr_parts: total number of particles in part_data
  * @param part_locks: Array of OpenMP lock types to lock particles individually
  * @param buf_dens: Particle buffer for density tasks
  * @param buf_grad: Particle buffer for gradient tasks
@@ -47,7 +47,7 @@ struct hydro_part_arrays global_hydro_part_arrays;
  */
 __attribute__((always_inline)) INLINE static double replay_event(
     const struct packing_data* event, struct hydro_part_arrays* part_data,
-    int n_parts,
+    int nr_parts,
     omp_lock_t* part_locks, struct gpu_offload_data* buf_dens,
     struct gpu_offload_data* buf_grad, struct gpu_offload_data* buf_forc,
     const struct engine* e, ticks timers_step[timer_count],
@@ -59,7 +59,7 @@ __attribute__((always_inline)) INLINE static double replay_event(
   init_cell(&ci, event->count, part_data, event->part_offset, part_locks);
 
   const double shift[3] = {1., 1., 1.};
-  float sum = flush_cache(garbage, n_garbage, part_data, params->n_parts);
+  float sum = flush_cache(garbage, n_garbage, part_data, nr_parts);
 
 #ifdef SWIFT_DEBUG_CHECKS
   if ((event->part_offset + event->count) > part_data->nr_parts)

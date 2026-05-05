@@ -8,7 +8,7 @@ fi
 
 # NODE=dine2
 NODE=gn003
-# NODE=milan
+# NODE=mad06
 
 
 MYCFLAGS="-march=native -Wno-pass-failed"
@@ -28,8 +28,7 @@ if [ $# -gt 0 ]; then
 fi
 
 
-# for part_access in "part-struct" "global-var" "explicit-var"; do
-for part_access in "explicit-var"; do
+for part_access in "part-struct" "global-var" "explicit-var"; do
   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
     for layout in "aos" "soa" "upstream" "pack-gradient" "pack-force" "pack-shared"; do
 
