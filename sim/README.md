@@ -38,6 +38,12 @@ Building the program
                           SWIFT_PART_ALIGNMENT to use (memalign arrays of
                           particle data) [-1, 1, 32, 64, 128, 256, default: -1
                           (=same as SWIFT_STRUCT_ALIGNMENT)]
+  --with-cache-flush=<value>
+                          Cache flushing method between each pack/unpack
+                          operation. [array, bigarray, x86. Default: array]
+  --with-cache-line-size=<value>
+                          SWIFT_STRUCT_ALIGNMENT to use for x86 flushing
+                          method. [default: 64]
   ```
 
 
@@ -100,3 +106,16 @@ Build variants explanation
   - make a new loop wfor each particle data struct and split those loops
     further by struct field/member data type (`by-struct-and-type`).
 
+- `--with-cache-flush=<value>`
+  Varying methods of flushing the cache between each packing/unpacking
+  operation.
+  - `array`: Use a garbage array (~2MB) to read and write junk data from.
+  - `bigarray`: Same as `array`, but use ~10MB junk array.
+  - `x86`: Use actual x86 intrinsics and evacuate entire particle data array
+    from caches. Naturally, this only works on x86 architectures. IMPORTANT:
+    also check the `--with-cache-line-size` option below.
+
+- `--with-cache-line-size=<value>`
+  When running with `--with-cache-flush=x86`, the correct cache line size of the
+  hardware used needs to be specified. Default is 64. Check your system using
+  e.g. *     `getconf -a | grep CACHE `

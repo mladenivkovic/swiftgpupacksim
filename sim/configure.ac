@@ -979,7 +979,7 @@ esac
 # Cache line size
 AC_ARG_WITH([cache-line-size],
    [AS_HELP_STRING([--with-cache-line-size=<value>],
-      [SWIFT_STRUCT_ALIGNMENT to use for x86 flushing method. @<:@default: 64@:>@]
+      [Cache line size to use for x86 flushing method. @<:@default: 64@:>@]
    )],
    [with_cache_line_size=$withval],
    [with_cache_line_size=64]
