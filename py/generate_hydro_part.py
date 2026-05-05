@@ -15,6 +15,7 @@ from headers import (
     generate_hydro_part_header,
     generate_parts_header,
     generate_hydro_part_arrays_struct_header,
+    generate_hydro_part_arrays_flush_header,
 )
 
 
@@ -144,12 +145,19 @@ if __name__ == "__main__":
         particle_fields_d, swift_header=swift_header, verbose=verbose
     )
 
+    hydro_part_arrays_flush_header = generate_hydro_part_arrays_flush_header(
+        particle_fields_d, swift_header=swift_header, verbose=verbose
+    )
+
+
     if dry_run:
         print_separator("hydro_part_header")
         print(hydro_part_header)
         print_separator("parts_header")
         print(parts_header)
         print_separator("hydro_part_arrays_struct_header")
+        print(hydro_part_arrays_struct_header)
+        print_separator("hydro_part_arrays_flush_header")
         print(hydro_part_arrays_struct_header)
     else:
         outfile = os.path.join(outdir, "hydro_part.h")
@@ -167,5 +175,11 @@ if __name__ == "__main__":
         outfile = os.path.join(outdir, "hydro_part_arrays_struct.h")
         fp = open(outfile, "w")
         fp.write(hydro_part_arrays_struct_header)
+        fp.close()
+        print("Written", outfile)
+
+        outfile = os.path.join(outdir, "hydro_part_arrays_flush.h")
+        fp = open(outfile, "w")
+        fp.write(hydro_part_arrays_flush_header)
         fp.close()
         print("Written", outfile)

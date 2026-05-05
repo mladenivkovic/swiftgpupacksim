@@ -6,8 +6,12 @@
 
 #include "config.h"
 #include "error.h"
-#include "hydro_part.h"
+#include "hydro_part_arrays_flush.h"
 
+
+#if defined(SWIFT_CACHE_FLUSH_X86)
+#include <x86intrin.h>
+#endif
 
 /**
  * @brief Initialise a big array of meaningless floats.
@@ -60,13 +64,13 @@ __attribute__((always_inline)) inline float* init_cache_flush(int* n_garbage, ch
  * flush the caches after each op
  * @param n_garbage: size of garbage array
  * @param part_data: Struct holding pointers to all particle data
- * @param n_parts: total number of particles in part_data
+ * @param nr_parts: total number of particles in part_data
  *
  * @return garbage_sum Some garbage float; Needed to prevent compiler from
  * optimising out a big loop doing nothing but flushing caches
  */
-float flush_cache(float* garbage, int n_garbage,
- struct hydro_part_arrays* part_data, int n_parts
+__attribute__((always_inline)) INLINE static float flush_cache(float* garbage, int n_garbage,
+ struct hydro_part_arrays* part_data, size_t nr_parts
     ) {
 
 #if defined(SWIFT_CACHE_FLUSH_ARRAY) || defined(SWIFT_CACHE_FLUSH_BIG_ARRAY)
@@ -82,13 +86,12 @@ float flush_cache(float* garbage, int n_garbage,
 #elif defined(SWIFT_CACHE_FLUSH_X86)
   /* Use x86 intinsics for cache flushing */
 
-
+  hydro_part_arrays_flush_from_cache(part_data, nr_parts);
+  return 0.f;
 
 #else
 #error "Unknown cache flushing mechanism"
 #endif
-
-
 }
 
 
