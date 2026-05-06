@@ -46,7 +46,7 @@ result data with filenames 'results_*.csv' It will read them all in and plot
 them.
 
 Sub-directories are expected to have the following file name format:
-<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_vector]
+<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_vector][_noflush]
 
 The *_packed variants should contain outputs where the structs were packed,
 i.e. where the code was configured with --enable-packed-structs. The *_noflush
@@ -127,6 +127,8 @@ parser.add_argument(
 args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
+if isinstance(nthreads, list):
+    nthreads=nthreads[0]
 normalise = args.normalise
 local = args.local_legion or args.local_hp
 
@@ -142,17 +144,20 @@ if args.local_legion:
     EXPERIMENTS = ["IntelCoffeeLake_Gresho128"]
 
 
-variant_dir_suffix, variant_label_suffix = get_variant_labels(
-    args.use_noflush, args.use_vector, args.use_packed
+variant_dir_suffix_nopacked, variant_label_suffix_nopacked = get_variant_labels(
+    args.use_noflush, args.use_vector, False
+)
+variant_dir_suffix_packed, variant_label_suffix_packed = get_variant_labels(
+    args.use_noflush, args.use_vector, True
 )
 
-variants = [variant_dir_suffix, variant_dir_suffix + "_packed"]
-variants_labels = [variant_label_suffix, variant_label_suffix + " packed"]
+variants = [variant_dir_suffix_nopacked, variant_dir_suffix_packed]
+variants_labels = [variant_label_suffix_nopacked, variant_label_suffix_packed]
 
 plotkwargs = {
     "marker": "o",
     "lw": 2,
-    "alpha": 0.8,
+    "alpha": 0.6,
     "markersize": 5,
 }
 
@@ -164,7 +169,7 @@ if __name__ == "__main__":
     # get available layouts
     layouts = []
     firstdir = get_result_dir(
-        srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0]
+        srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0], other_variant=variants[0]
     )
     ls = os.listdir(firstdir)
     for f in ls:
@@ -337,8 +342,8 @@ if __name__ == "__main__":
 
             # construct output file name
             outfname = f"loop_splitting_compare_packed_{srcdir}_{experiment}_{access}"
-            if variant_dir_suffix != "":
-                outfname += variant_dir_suffix
+            if variant_dir_suffix_nopacked != "":
+                outfname += variant_dir_suffix_nopacked
             if normalise:
                 outfname += "_normalised"
             if args.png:

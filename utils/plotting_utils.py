@@ -11,8 +11,7 @@ LOOP_SPLIT_LABELS = [
     "loop split by struct and data type",
 ]
 
-PART_ACCESS = ["explicit-var"]
-#  PART_ACCESS = ["part-struct", "explicit-var", "global-var"]
+PART_ACCESS = ["part-struct", "explicit-var", "global-var"]
 PART_ACCESS_LABELS = ["part struct access", "explicit var access", "global var access"]
 
 #  EXPERIMENTS = ["Gresho256", "EAGLE12"]
@@ -75,15 +74,15 @@ def get_variant_labels(use_noflush, use_vector, use_packed):
 
     variant_dir_suffix = ""
     variant_label_suffix = ""
-    if use_noflush:
-        variant_dir_suffix += "_noflush"
-        variant_label_suffix += ", no flush"
-    if use_vector:
-        variant_dir_suffix += "_vector"
-        variant_label_suffix += ", vector"
     if use_packed:
         variant_dir_suffix += "_packed"
         variant_label_suffix += ", packed structs"
+    if use_vector:
+        variant_dir_suffix += "_vector"
+        variant_label_suffix += ", vector"
+    if use_noflush:
+        variant_dir_suffix += "_noflush"
+        variant_label_suffix += ", no flush"
 
     return variant_dir_suffix, variant_label_suffix
 
