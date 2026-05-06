@@ -1,10 +1,18 @@
 #!/bin/bash
 
 # compare_flush_variants_gn003_explicit-var_none.png
-../../utils/compare_flush_variants.py --png gn003
+python3 ../../utils/compare_flush_variants.py --png gn003
 
 # compare_flush_variants_gn003_explicit-var_none_normalised.png
-../../utils/compare_flush_variants.py --png gn003 --normalise
+python3 ../../utils/compare_flush_variants.py --png gn003 --normalise
+
+# loop_splitting_compare_packed_gn003_Gresho256_part-struct_noflush.png
+# loop_splitting_compare_packed_gn003_Gresho256_explicit-var_noflush.png
+# loop_splitting_compare_packed_gn003_Gresho256_global-var_noflush.png
+# loop_splitting_compare_packed_gn003_EAGLE25_part-struct_noflush.png
+# loop_splitting_compare_packed_gn003_EAGLE25_explicit-var_noflush.png
+# loop_splitting_compare_packed_gn003_EAGLE25_global-var_noflush.png
+python3 ../../utils/loop_splitting_compare_packed.py --png gn003 --no-flush
 
 
 # # loop_splitting_compare_part_access_gn003_EAGLE12_72threads.png
