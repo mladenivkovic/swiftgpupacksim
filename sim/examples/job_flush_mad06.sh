@@ -4,10 +4,6 @@ module restore likwid_intel2024
 
 # Generate executables first using `swiftgpupacksim/sim/make_flushing_variants.sh`
 
-# NODE=local
-# NODE=gn001
-# NODE=gn002
-# NODE=gn003
 NODE=mad06
 
 set -e
