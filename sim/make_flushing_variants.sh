@@ -6,14 +6,18 @@ if [[ ! -f ./configure ]]; then
   ./autogen.sh
 fi
 
-NODE=dine2
+NODE=local
+# NODE=dine2
 # NODE=gn003
 # NODE=mad06
 
-
 MYCFLAGS="-march=native"
-# EXTRA_CONFFLAGS="--config-cache --enable-no-cuda-mallochost"
+
 EXTRA_CONFFLAGS="--config-cache"
+
+if [[ "$NODE" == "local" ]]; then
+  EXTRA_CONFFLAGS="$EXTRA_CONFFLAGS --enable-no-cuda-mallochost"
+fi
 
 if [ $# -gt 0 ]; then
   case "$1" in

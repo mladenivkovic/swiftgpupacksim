@@ -1,14 +1,8 @@
-#!/usr/bin/bash
-
-module restore likwid_intel2024
+#!/bin/bash
 
 # Generate executables first using `swiftgpupacksim/sim/make_flushing_variants.sh`
 
-# NODE=local
-# NODE=gn001
-# NODE=gn002
-# NODE=gn003
-NODE=mad06
+NODE=local
 
 set -e
 rm -f results_*.csv
@@ -21,8 +15,9 @@ for part_access in "explicit-var"; do
   for loop in "none"; do
 
     # Experiment reproduction directories
-    # for dir in EAGLE25_64threads Gresho256_64threads EAGLE25_128threads Gresho256_128threads; do
-    for dir in EAGLE25_128threads Gresho256_128threads; do
+    # for dir in EAGLE25_64threads Gresho256_64threads EAGLE25_32threads Gresho256_32threads; do
+    # for dir in EAGLE25_64threads Gresho256_64threads; do
+    for dir in IntelCoffeeLake_Gresho128_6threads; do
 
       mkdir -p $NODE
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
@@ -30,7 +25,7 @@ for part_access in "explicit-var"; do
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_bigflush
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_x86flush
 
-      NTHREADS=128
+      NTHREADS=32
       if [[ "$dir" == *"_64thread"* ]]; then NTHREADS=64; fi
 
       export OMP_NUM_THREADS=$NTHREADS
@@ -40,8 +35,8 @@ for part_access in "explicit-var"; do
         ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_FLUSH_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2 --noflush"
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
-          echo running "$ex" ../../data/mad06/$dir
-          $ex ../../data/mad06/$dir
+          echo running "$ex" ../../data/$dir
+          $ex ../../data/local/$dir
           mv results_"$layout".csv "$outfile"
           echo written $outfile
         else
@@ -51,8 +46,8 @@ for part_access in "explicit-var"; do
         ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_FLUSH_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_flush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
-          echo running "$ex" ../../data/mad06/$dir
-          $ex ../../data/mad06/$dir
+          echo running "$ex" ../../data/$dir
+          $ex ../../data/local/$dir
           mv results_"$layout".csv "$outfile"
           echo written $outfile
         else
@@ -62,8 +57,8 @@ for part_access in "explicit-var"; do
         ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_BIGFLUSH""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_bigflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
-          echo running "$ex" ../../data/mad06/$dir
-          $ex ../../data/mad06/$dir
+          echo running "$ex" ../../data/$dir
+          $ex ../../data/local/$dir
           mv results_"$layout".csv "$outfile"
           echo written $outfile
         else
@@ -73,8 +68,8 @@ for part_access in "explicit-var"; do
         ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_FLUSHX86""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_x86flush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
-          echo running "$ex" ../../data/mad06/$dir
-          $ex ../../data/mad06/$dir
+          echo running "$ex" ../../data/$dir
+          $ex ../../data/local/$dir
           mv results_"$layout".csv "$outfile"
           echo written $outfile
         else
