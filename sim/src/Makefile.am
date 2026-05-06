@@ -97,6 +97,7 @@ nobase_noinst_HEADERS += gpu_part_pack_functions/gpu_part_pack_functions_explici
 nobase_noinst_HEADERS += gpu_part_pack_functions/gpu_part_pack_functions_explicit_var_access_loop_split_by_type.h
 nobase_noinst_HEADERS += gpu_part_pack_functions/gpu_part_pack_functions_explicit_var_access_loop_split_by_struct_and_type.h
 nobase_noinst_HEADERS += hydro_part.h
+nobase_noinst_HEADERS += hydro_part_init.h
 nobase_noinst_HEADERS += hydro_part_arrays_flush.h
 nobase_noinst_HEADERS += packing_data_struct.h
 nobase_noinst_HEADERS += parts.h
