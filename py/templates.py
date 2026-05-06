@@ -208,6 +208,7 @@ def jinja_generate_hydro_part_arrays_struct_h(
 
     return header_template
 
+
 def jinja_generate_hydro_part_arrays_flush_h(
     part_structs_d: dict,
     template_dir: str = _default_template_dir,

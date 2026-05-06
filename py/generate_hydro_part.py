@@ -149,7 +149,6 @@ if __name__ == "__main__":
         particle_fields_d, swift_header=swift_header, verbose=verbose
     )
 
-
     if dry_run:
         print_separator("hydro_part_header")
         print(hydro_part_header)
