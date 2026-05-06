@@ -83,8 +83,6 @@ if __name__ == "__main__":
     ax6 = fig.add_subplot(2, 3, 6)
     ax6.set_title("Force/Unpack")
 
-
-
     # loop over all experiments
     colind = 0
     for i in range(len(dirlist)):
@@ -97,10 +95,11 @@ if __name__ == "__main__":
             ls = ":"
             colind += 1
 
-
         # read in data
         filelist = get_filelist(srcdir)
-        layouts = [os.path.basename(f)[len("results_"):-len(".csv")] for f in filelist]
+        layouts = [
+            os.path.basename(f)[len("results_") : -len(".csv")] for f in filelist
+        ]
         layouts.sort()
 
         result_data = []
@@ -111,53 +110,29 @@ if __name__ == "__main__":
             result_data.append(res)
 
         # Unpack result data by packing operation type
-        dens_pack = np.array(
-            [res.data_dict["pack/density"] for res in result_data]
-        )
-        dens_unpack = np.array(
-            [res.data_dict["unpack/density"] for res in result_data]
-        )
-        grad_pack = np.array(
-            [res.data_dict["pack/gradient"] for res in result_data]
-        )
+        dens_pack = np.array([res.data_dict["pack/density"] for res in result_data])
+        dens_unpack = np.array([res.data_dict["unpack/density"] for res in result_data])
+        grad_pack = np.array([res.data_dict["pack/gradient"] for res in result_data])
         grad_unpack = np.array(
             [res.data_dict["unpack/gradient"] for res in result_data]
         )
-        forc_pack = np.array(
-            [res.data_dict["pack/force"] for res in result_data]
-        )
-        forc_unpack = np.array(
-            [res.data_dict["unpack/force"] for res in result_data]
-        )
+        forc_pack = np.array([res.data_dict["pack/force"] for res in result_data])
+        forc_unpack = np.array([res.data_dict["unpack/force"] for res in result_data])
 
         label = os.path.basename(srcdir)
 
-        ax1.plot(
-            layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs
-        )
-        ax2.plot(
-            layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs
-        )
-        ax3.plot(
-            layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs
-        )
-        ax4.plot(
-            layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
-        )
-        ax5.plot(
-            layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
-        )
-        ax6.plot(
-            layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
-        )
+        ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs)
+        ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs)
+        ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs)
+        ax4.plot(layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs)
+        ax5.plot(layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs)
+        ax6.plot(layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs)
 
     # all axes
     for ax in fig.axes:
         #  ax.set_xlabel("particle data layouts")
         ax.tick_params("x", rotation=45)
         ax.grid()
-
-
 
     hand, lab = ax1.get_legend_handles_labels()
     #  ncols=int(len(layouts)*0.5 + 0.5)
@@ -171,9 +146,6 @@ if __name__ == "__main__":
         markerscale=0.5,
     )
     fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
-
-
-
 
     # construct output file name
     fullpath = os.path.abspath(node_root_dir)

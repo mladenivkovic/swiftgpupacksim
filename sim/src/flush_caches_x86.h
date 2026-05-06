@@ -11,7 +11,8 @@
  *
  * https://stackoverflow.com/questions/68138772/c-function-to-flush-all-cache-lines-that-hold-an-array
  */
-__attribute__((always_inline)) INLINE void flush_cache_x86(char *ptr, size_t len){
+__attribute__((always_inline)) INLINE void flush_cache_x86(char* ptr,
+                                                           size_t len) {
   const unsigned char cacheline = SWIFT_CACHE_LINE_SIZE;
   /* ptr_end modified to contain the last byte of its last cache line */
   char* ptr_end = (char*)(((size_t)ptr + len - 1) | (cacheline - 1));
@@ -30,7 +31,8 @@ __attribute__((always_inline)) INLINE void flush_cache_x86(char *ptr, size_t len
  *
  * https://stackoverflow.com/questions/68138772/c-function-to-flush-all-cache-lines-that-hold-an-array
  */
-__attribute__((always_inline)) INLINE void flush_cache_x86_nofence(char *ptr, size_t len){
+__attribute__((always_inline)) INLINE void flush_cache_x86_nofence(char* ptr,
+                                                                   size_t len) {
   const unsigned char cacheline = SWIFT_CACHE_LINE_SIZE;
   /* ptr_end modified to contain the last byte of its last cache line */
   char* ptr_end = (char*)(((size_t)ptr + len - 1) | (cacheline - 1));
@@ -48,7 +50,7 @@ __attribute__((always_inline)) INLINE void flush_cache_x86_nofence(char *ptr, si
  *
  * https://stackoverflow.com/questions/68138772/c-function-to-flush-all-cache-lines-that-hold-an-array
  */
-__attribute__((always_inline)) INLINE void flush_cache_x86_fence(void){
+__attribute__((always_inline)) INLINE void flush_cache_x86_fence(void) {
   _mm_sfence();
 }
 

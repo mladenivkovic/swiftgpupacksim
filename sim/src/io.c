@@ -194,7 +194,8 @@ void io_read_logged_events_file(const char* filename,
       /* io_util_remove_whitespace(tempbuff); */
       /* if (params->verbose) */
       /*   warning( */
-      /*       "Line doesn't look like measurement line, skipping it.\n\t Line: " */
+      /*       "Line doesn't look like measurement line, skipping it.\n\t Line:
+       * " */
       /*       "'%s'", */
       /*       tempbuff); */
 #endif

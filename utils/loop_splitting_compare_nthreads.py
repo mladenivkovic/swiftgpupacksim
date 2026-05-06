@@ -107,13 +107,13 @@ parser.add_argument(
     "--local-legion",
     dest="local_legion",
     action="store_true",
-    help="Use outputs for local test runs on lenovo legion"
+    help="Use outputs for local test runs on lenovo legion",
 )
 parser.add_argument(
     "--local-hp",
     dest="local_hp",
     action="store_true",
-    help="Use outputs for local test runs on HP"
+    help="Use outputs for local test runs on HP",
 )
 
 args = parser.parse_args()

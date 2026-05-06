@@ -23,7 +23,9 @@
  * @param nr_threads: Total number of threads in this run
  * @param verbose: Are we talkative?
  */
-__attribute__((always_inline)) inline float* init_cache_flush(int* n_garbage, char no_cache_flush, int my_thread_id, int nr_threads, char verbose) {
+__attribute__((always_inline)) inline float* init_cache_flush(
+    int* n_garbage, char no_cache_flush, int my_thread_id, int nr_threads,
+    char verbose) {
 #ifdef SWIFT_CACHE_FLUSH_ARRAY
   const int n = no_cache_flush ? 0 : 500000;
 #elif defined SWIFT_CACHE_FLUSH_BIG_ARRAY
@@ -41,19 +43,17 @@ __attribute__((always_inline)) inline float* init_cache_flush(int* n_garbage, ch
   if (verbose) {
     if (my_thread_id == 0) {
       message("Allocating garbage array: estimated %g MB total",
-          ((unsigned long)nr_threads * n * sizeof(double)) * 1e-6);
+              ((unsigned long)nr_threads * n * sizeof(double)) * 1e-6);
     }
 #ifdef SWIFT_DEBUG_CHECKS
-    message("Thread %d: Allocating garbage array: %g MB",
-        my_thread_id, n * sizeof(float) * 1e-6);
+    message("Thread %d: Allocating garbage array: %g MB", my_thread_id,
+            n * sizeof(float) * 1e-6);
 #endif
   }
 
   float* garbage = malloc(n * sizeof(float));
   return garbage;
 }
-
-
 
 
 /**
@@ -69,9 +69,9 @@ __attribute__((always_inline)) inline float* init_cache_flush(int* n_garbage, ch
  * @return garbage_sum Some garbage float; Needed to prevent compiler from
  * optimising out a big loop doing nothing but flushing caches
  */
-__attribute__((always_inline)) INLINE static float flush_cache(float* garbage, int n_garbage,
- struct hydro_part_arrays* part_data, size_t nr_parts
-    ) {
+__attribute__((always_inline)) INLINE static float flush_cache(
+    float* garbage, int n_garbage, struct hydro_part_arrays* part_data,
+    size_t nr_parts) {
 
 #if defined(SWIFT_CACHE_FLUSH_ARRAY) || defined(SWIFT_CACHE_FLUSH_BIG_ARRAY)
 
@@ -93,7 +93,3 @@ __attribute__((always_inline)) INLINE static float flush_cache(float* garbage, i
 #error "Unknown cache flushing mechanism"
 #endif
 }
-
-
-
-

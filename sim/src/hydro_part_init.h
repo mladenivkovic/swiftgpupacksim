@@ -31,7 +31,8 @@
 #include "inline.h"
 
 
-static __attribute__((always_inline)) INLINE void hydro_part_init(struct hydro_part_arrays* part_data, long long pid) {
+static __attribute__((always_inline)) INLINE void hydro_part_init(
+    struct hydro_part_arrays* part_data, long long pid) {
 
 #ifdef SWIFT_PARTICLE_ACCESS_PART_STRUCT
 
@@ -167,7 +168,6 @@ static __attribute__((always_inline)) INLINE void hydro_part_init(struct hydro_p
 #else
 #error "Unknown particle access method"
 #endif
-
 }
 
 #endif

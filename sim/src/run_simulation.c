@@ -1,8 +1,8 @@
 #include "run_simulation.h"
 
 #include "flush_caches.h"
-#include "hydro_part_init.h"
 #include "gpu_part_pack_functions.h"
+#include "hydro_part_init.h"
 #include "io.h"
 #include "swift_placeholders/clocks.h"
 #include "swift_placeholders/cuda/gpu_offload_data.h"
@@ -49,12 +49,12 @@ struct hydro_part_arrays global_hydro_part_arrays;
  */
 __attribute__((always_inline)) INLINE static double replay_event(
     const struct packing_data* event, struct hydro_part_arrays* part_data,
-    int nr_parts,
-    omp_lock_t* part_locks, struct gpu_offload_data* buf_dens,
+    int nr_parts, omp_lock_t* part_locks, struct gpu_offload_data* buf_dens,
     struct gpu_offload_data* buf_grad, struct gpu_offload_data* buf_forc,
     const struct engine* e, ticks timers_step[timer_count],
     double timings_log_step[timer_count], double timing_ratio_min[timer_count],
-    double timing_ratio_max[timer_count], float* garbage, int n_garbage, int flush) {
+    double timing_ratio_max[timer_count], float* garbage, int n_garbage,
+    int flush) {
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
@@ -199,9 +199,10 @@ void run_simulation(struct parameters* params) {
 
 #ifdef SWIFT_PARALLEL_PARTICLE_INIT
   /* Fill data with (meaningless) values */
-  /* TODO: Do a non-parallel init if SWIFT_PARALLEL_PARTICLE_INIT is not defined. */
+  /* TODO: Do a non-parallel init if SWIFT_PARALLEL_PARTICLE_INIT is not
+   * defined. */
 #pragma omp parallel for num_threads(params->nr_threads) schedule(static)
-  for (size_t i = 0; i < params->nr_parts; i++){
+  for (size_t i = 0; i < params->nr_parts; i++) {
     hydro_part_init(&part_data, i);
   }
 #endif
@@ -212,7 +213,7 @@ void run_simulation(struct parameters* params) {
   /* Initialise particle locks */
   if (params->verbose)
     message("Allocating particle omp locks: %g MB",
-        (params->nr_parts * sizeof(omp_lock_t)) * 1e-6);
+            (params->nr_parts * sizeof(omp_lock_t)) * 1e-6);
   omp_lock_t* part_locks = malloc(params->nr_parts * sizeof(omp_lock_t));
   for (size_t i = 0; i < params->nr_parts; i++) omp_init_lock(&part_locks[i]);
 
@@ -276,7 +277,9 @@ void run_simulation(struct parameters* params) {
 
     /* Alloc a few MB of data and fill them with garbage to flush caches. */
     int n_garbage = 0;
-    float* garbage = init_cache_flush(&n_garbage, params->no_cache_flush, my_thread_id, params->nr_threads, params->verbose);
+    float* garbage =
+        init_cache_flush(&n_garbage, params->no_cache_flush, my_thread_id,
+                         params->nr_threads, params->verbose);
 
     /* Declare and allocate GPU launch control data structures which need to be
      * in scope */
@@ -297,23 +300,26 @@ void run_simulation(struct parameters* params) {
     if (params->verbose) {
       if (my_thread_id == 0) {
         message("Allocating host-side GPU part buffers: estimated %g MB total",
-          (unsigned long)params->nr_threads * gpu_pack_params.part_buffer_size * (
-                          sizeof(struct gpu_part_send_d) +
-                          sizeof(struct gpu_part_recv_d) +
-                          sizeof(struct gpu_part_send_g) +
-                          sizeof(struct gpu_part_recv_g) +
-                          sizeof(struct gpu_part_send_f) +
-                          sizeof(struct gpu_part_recv_f)) * 1e-6);
+                (unsigned long)params->nr_threads *
+                    gpu_pack_params.part_buffer_size *
+                    (sizeof(struct gpu_part_send_d) +
+                     sizeof(struct gpu_part_recv_d) +
+                     sizeof(struct gpu_part_send_g) +
+                     sizeof(struct gpu_part_recv_g) +
+                     sizeof(struct gpu_part_send_f) +
+                     sizeof(struct gpu_part_recv_f)) *
+                    1e-6);
       }
 #ifdef SWIFT_DEBUG_CHECKS
-      message("Thread %d: Allocating host-side GPU part buffers: %g MB",
-          my_thread_id, gpu_pack_params.part_buffer_size * (
-                          sizeof(struct gpu_part_send_d) +
-                          sizeof(struct gpu_part_recv_d) +
-                          sizeof(struct gpu_part_send_g) +
-                          sizeof(struct gpu_part_recv_g) +
-                          sizeof(struct gpu_part_send_f) +
-                          sizeof(struct gpu_part_recv_f)) * 1e-6);
+      message(
+          "Thread %d: Allocating host-side GPU part buffers: %g MB",
+          my_thread_id,
+          gpu_pack_params.part_buffer_size *
+              (sizeof(struct gpu_part_send_d) + sizeof(struct gpu_part_recv_d) +
+               sizeof(struct gpu_part_send_g) + sizeof(struct gpu_part_recv_g) +
+               sizeof(struct gpu_part_send_f) +
+               sizeof(struct gpu_part_recv_f)) *
+              1e-6);
 #endif
     }
 
@@ -340,10 +346,12 @@ void run_simulation(struct parameters* params) {
         io_read_logged_events_file(logfile, &packing_sequence, &n_events,
                                    params);
 
-  if (params->verbose && thread_id == 0) {
-    message("Allocated packing sequence data: estimated %g MB (total)",
-            ((unsigned long)params->nr_threads * n_events * sizeof(struct packing_data)) * 1e-6);
-  }
+        if (params->verbose && thread_id == 0) {
+          message("Allocated packing sequence data: estimated %g MB (total)",
+                  ((unsigned long)params->nr_threads * n_events *
+                   sizeof(struct packing_data)) *
+                      1e-6);
+        }
 
 #ifdef SWIFT_DEBUG_CHECKS
         if (params->verbose)
@@ -360,10 +368,11 @@ void run_simulation(struct parameters* params) {
         for (int i = 0; i < n_events; i++) {
           struct packing_data event = packing_sequence[i];
 
-          float g = replay_event(&event, &part_data, params->nr_parts, part_locks, &gpu_buf_dens,
-                                  &gpu_buf_grad, &gpu_buf_forc, &e, timers_step,
-                                  timing_log_step, timing_ratio_min,
-                                  timing_ratio_max, garbage, n_garbage, !params->no_cache_flush);
+          float g = replay_event(
+              &event, &part_data, params->nr_parts, part_locks, &gpu_buf_dens,
+              &gpu_buf_grad, &gpu_buf_forc, &e, timers_step, timing_log_step,
+              timing_ratio_min, timing_ratio_max, garbage, n_garbage,
+              !params->no_cache_flush);
           garbage_sum += g;
         }
 
