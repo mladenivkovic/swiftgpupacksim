@@ -25,8 +25,9 @@ for part_access in "explicit-var"; do
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_bigflush
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_x86flush
 
-      NTHREADS=32
-      if [[ "$dir" == *"_64thread"* ]]; then NTHREADS=64; fi
+      NTHREADS=1
+      if [[ "$dir" == *"_6threads"* ]]; then NTHREADS=6; fi
+      if [[ "$dir" == *"_4threads"* ]]; then NTHREADS=4; fi
 
       export OMP_NUM_THREADS=$NTHREADS
 
@@ -36,7 +37,7 @@ for part_access in "explicit-var"; do
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/$dir
-          $ex ../../data/local/$dir
+          $ex ../../data/$dir
           mv results_"$layout".csv "$outfile"
           echo written $outfile
         else
@@ -47,7 +48,7 @@ for part_access in "explicit-var"; do
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_flush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/$dir
-          $ex ../../data/local/$dir
+          $ex ../../data/$dir
           mv results_"$layout".csv "$outfile"
           echo written $outfile
         else
@@ -58,7 +59,7 @@ for part_access in "explicit-var"; do
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_bigflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/$dir
-          $ex ../../data/local/$dir
+          $ex ../../data/$dir
           mv results_"$layout".csv "$outfile"
           echo written $outfile
         else
@@ -69,7 +70,7 @@ for part_access in "explicit-var"; do
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_x86flush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/$dir
-          $ex ../../data/local/$dir
+          $ex ../../data/$dir
           mv results_"$layout".csv "$outfile"
           echo written $outfile
         else
