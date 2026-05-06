@@ -5,8 +5,9 @@ set -e
 if [[ ! -f ./configure ]]; then
   ./autogen.sh
 fi
-# NODE=dine2
-NODE=gn003
+
+NODE=dine2
+# NODE=gn003
 # NODE=mad06
 
 
@@ -33,49 +34,40 @@ for part_access in "explicit-var"; do
 
       SUFFIX="$NODE"_"$layout"_"$part_access"_"$loop"
 
-      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access $EXTRA_CONFFLAGS
+      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access $EXTRA_CONFFLAGS --with-cache-flush=array
       make clean
       echo
       echo $loop $layout
       echo
       make -j
-      mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"
+      mv ./swiftgpupack ./swiftgpupack_FLUSH_"$SUFFIX"
       echo
-      echo COMPILED ./swiftgpupack_"$SUFFIX"
+      echo COMPILED ./swiftgpupack_FLUSH_"$SUFFIX"
       echo
 
-      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas $EXTRA_CONFFLAGS
+      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access $EXTRA_CONFFLAGS --with-cache-flush=bigarray
       make clean
       echo
       echo $loop $layout
       echo
       make -j
-      mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector
+      mv ./swiftgpupack ./swiftgpupack_BIGFLUSH_"$SUFFIX"
       echo
-      echo COMPILED ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector
+      echo COMPILED ./swiftgpupack_BIGFLUSH_"$SUFFIX"
       echo
 
-      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-packed-structs $EXTRA_CONFFLAGS
-      make clean
-      echo
-      echo $loop $layout
-      echo
-      make -j
-      mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_packed
-      echo
-      echo COMPILED ./swiftgpupack_"$SUFFIX"_packed
-      echo
-
-      CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access --enable-vectorization-pragmas --enable-packed-structs $EXTRA_CONFFLAGS
-      make clean
-      echo
-      echo $loop $layout
-      echo
-      make -j
-      mv ./swiftgpupack ./swiftgpupack_"$SUFFIX"_vector_packed
-      echo
-      echo COMPILED ./swiftgpupack_"$SUFFIX"_vector_packed
-      echo
+      if [[ "$NODE" != gn003 ]]; then
+        CFLAGS="$MYCFLAGS" ./configure --with-particle-memory-layout="$layout" --with-loop-split=$loop --with-particle-access=$part_access $EXTRA_CONFFLAGS --with-cache-flush=x86
+        make clean
+        echo
+        echo $loop $layout
+        echo
+        make -j
+        mv ./swiftgpupack ./swiftgpupack_FLUSHX86_"$SUFFIX"
+        echo
+        echo COMPILED ./swiftgpupack_FLUSHX86_"$SUFFIX"
+        echo
+      fi
 
     done
   done
