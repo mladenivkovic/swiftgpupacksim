@@ -4,8 +4,8 @@
   */
 
 
-#ifndef SWIFT_HYDRO_PART_85eac7fb88b46d166eb3960e8baf82f490cc31dc_H
-#define SWIFT_HYDRO_PART_85eac7fb88b46d166eb3960e8baf82f490cc31dc_H
+#ifndef SWIFT_HYDRO_PART_4224096c56e36ce35d3f31237516632f4b268bf4_H
+#define SWIFT_HYDRO_PART_4224096c56e36ce35d3f31237516632f4b268bf4_H
 
  
 
@@ -631,6 +631,7 @@ static __attribute__((always_inline)) INLINE void
   struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_s->_accessor_id != p->_accessor_id)
@@ -707,6 +708,7 @@ static __attribute__((always_inline)) INLINE void
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_s->_accessor_id != p->_accessor_id)
@@ -788,6 +790,7 @@ static __attribute__((always_inline)) INLINE void
   struct part* restrict part_s = pd->_part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_s->_accessor_id != p->_accessor_id)
@@ -842,6 +845,7 @@ static __attribute__((always_inline)) INLINE void
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_s->_accessor_id != p->_accessor_id)
@@ -991,6 +995,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_id* restrict part_id_s = pd->_part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_id_s->_accessor_id != p->_accessor_id)
@@ -1067,6 +1072,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_id* restrict part_id_s = global_hydro_part_arrays._part_id + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_id_s->_accessor_id != p->_accessor_id)
@@ -1174,6 +1180,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_gpart* restrict part_gpart_s = pd->_part_gpart + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_gpart_s->_accessor_id != p->_accessor_id)
@@ -1228,6 +1235,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_gpart* restrict part_gpart_s = global_hydro_part_arrays._part_gpart + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_gpart_s->_accessor_id != p->_accessor_id)
@@ -2223,6 +2231,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_mass* restrict part_mass_s = pd->_part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_mass_s->_accessor_id != p->_accessor_id)
@@ -2299,6 +2308,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_mass* restrict part_mass_s = global_hydro_part_arrays._part_mass + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_mass_s->_accessor_id != p->_accessor_id)
@@ -2448,6 +2458,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_h* restrict part_h_s = pd->_part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_h_s->_accessor_id != p->_accessor_id)
@@ -2524,6 +2535,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_h* restrict part_h_s = global_hydro_part_arrays._part_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_h_s->_accessor_id != p->_accessor_id)
@@ -2673,6 +2685,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_u* restrict part_u_s = pd->_part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_u_s->_accessor_id != p->_accessor_id)
@@ -2749,6 +2762,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_u* restrict part_u_s = global_hydro_part_arrays._part_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_u_s->_accessor_id != p->_accessor_id)
@@ -2898,6 +2912,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_u_dt* restrict part_u_dt_s = pd->_part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_u_dt_s->_accessor_id != p->_accessor_id)
@@ -2974,6 +2989,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_u_dt* restrict part_u_dt_s = global_hydro_part_arrays._part_u_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_u_dt_s->_accessor_id != p->_accessor_id)
@@ -3123,6 +3139,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_rho* restrict part_rho_s = pd->_part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_rho_s->_accessor_id != p->_accessor_id)
@@ -3199,6 +3216,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_rho* restrict part_rho_s = global_hydro_part_arrays._part_rho + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_rho_s->_accessor_id != p->_accessor_id)
@@ -3348,6 +3366,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_div_v* restrict part_div_v_s = pd->_part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_div_v_s->_accessor_id != p->_accessor_id)
@@ -3424,6 +3443,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_div_v* restrict part_div_v_s = global_hydro_part_arrays._part_div_v + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_div_v_s->_accessor_id != p->_accessor_id)
@@ -3573,6 +3593,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_div_v_dt* restrict part_div_v_dt_s = pd->_part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_div_v_dt_s->_accessor_id != p->_accessor_id)
@@ -3649,6 +3670,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_div_v_dt* restrict part_div_v_dt_s = global_hydro_part_arrays._part_div_v_dt + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_div_v_dt_s->_accessor_id != p->_accessor_id)
@@ -3798,6 +3820,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_div_v_previous_step* restrict part_div_v_previous_step_s = pd->_part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_div_v_previous_step_s->_accessor_id != p->_accessor_id)
@@ -3874,6 +3897,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_div_v_previous_step* restrict part_div_v_previous_step_s = global_hydro_part_arrays._part_div_v_previous_step + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_div_v_previous_step_s->_accessor_id != p->_accessor_id)
@@ -4023,6 +4047,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_alpha_av* restrict part_alpha_av_s = pd->_part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_alpha_av_s->_accessor_id != p->_accessor_id)
@@ -4099,6 +4124,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_alpha_av* restrict part_alpha_av_s = global_hydro_part_arrays._part_alpha_av + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_alpha_av_s->_accessor_id != p->_accessor_id)
@@ -4248,6 +4274,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_v_sig* restrict part_v_sig_s = pd->_part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_v_sig_s->_accessor_id != p->_accessor_id)
@@ -4324,6 +4351,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_v_sig* restrict part_v_sig_s = global_hydro_part_arrays._part_v_sig + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_v_sig_s->_accessor_id != p->_accessor_id)
@@ -4473,6 +4501,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_laplace_u* restrict part_laplace_u_s = pd->_part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_laplace_u_s->_accessor_id != p->_accessor_id)
@@ -4549,6 +4578,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_laplace_u* restrict part_laplace_u_s = global_hydro_part_arrays._part_laplace_u + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_laplace_u_s->_accessor_id != p->_accessor_id)
@@ -4698,6 +4728,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_alpha_diff* restrict part_alpha_diff_s = pd->_part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_alpha_diff_s->_accessor_id != p->_accessor_id)
@@ -4774,6 +4805,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_alpha_diff* restrict part_alpha_diff_s = global_hydro_part_arrays._part_alpha_diff + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_alpha_diff_s->_accessor_id != p->_accessor_id)
@@ -4923,6 +4955,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_density1* restrict part_density1_s = pd->_part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_density1_s->_accessor_id != p->_accessor_id)
@@ -4999,6 +5032,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_density1* restrict part_density1_s = global_hydro_part_arrays._part_density1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_density1_s->_accessor_id != p->_accessor_id)
@@ -5148,6 +5182,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force1* restrict part_force1_s = pd->_part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force1_s->_accessor_id != p->_accessor_id)
@@ -5224,6 +5259,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force1* restrict part_force1_s = global_hydro_part_arrays._part_force1 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force1_s->_accessor_id != p->_accessor_id)
@@ -5373,6 +5409,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_density2* restrict part_density2_s = pd->_part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_density2_s->_accessor_id != p->_accessor_id)
@@ -5449,6 +5486,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_density2* restrict part_density2_s = global_hydro_part_arrays._part_density2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_density2_s->_accessor_id != p->_accessor_id)
@@ -5598,6 +5636,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force2* restrict part_force2_s = pd->_part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force2_s->_accessor_id != p->_accessor_id)
@@ -5674,6 +5713,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force2* restrict part_force2_s = global_hydro_part_arrays._part_force2 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force2_s->_accessor_id != p->_accessor_id)
@@ -5823,6 +5863,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_density3* restrict part_density3_s = pd->_part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_density3_s->_accessor_id != p->_accessor_id)
@@ -5899,6 +5940,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_density3* restrict part_density3_s = global_hydro_part_arrays._part_density3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_density3_s->_accessor_id != p->_accessor_id)
@@ -6048,6 +6090,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force3* restrict part_force3_s = pd->_part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force3_s->_accessor_id != p->_accessor_id)
@@ -6124,6 +6167,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force3* restrict part_force3_s = global_hydro_part_arrays._part_force3 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force3_s->_accessor_id != p->_accessor_id)
@@ -6555,6 +6599,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force4* restrict part_force4_s = pd->_part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force4_s->_accessor_id != p->_accessor_id)
@@ -6631,6 +6676,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force4* restrict part_force4_s = global_hydro_part_arrays._part_force4 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force4_s->_accessor_id != p->_accessor_id)
@@ -6780,6 +6826,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force5* restrict part_force5_s = pd->_part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force5_s->_accessor_id != p->_accessor_id)
@@ -6856,6 +6903,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force5* restrict part_force5_s = global_hydro_part_arrays._part_force5 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force5_s->_accessor_id != p->_accessor_id)
@@ -7005,6 +7053,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force6* restrict part_force6_s = pd->_part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force6_s->_accessor_id != p->_accessor_id)
@@ -7081,6 +7130,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_force6* restrict part_force6_s = global_hydro_part_arrays._part_force6 + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_force6_s->_accessor_id != p->_accessor_id)
@@ -7230,6 +7280,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -7306,6 +7357,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -7453,6 +7505,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -7529,6 +7582,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -7676,6 +7730,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -7752,6 +7807,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -7899,6 +7955,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -7975,6 +8032,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -8122,6 +8180,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -8198,6 +8257,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -8345,6 +8405,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -8421,6 +8482,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -8568,6 +8630,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -8644,6 +8707,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -8791,6 +8855,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -8867,6 +8932,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -9014,6 +9080,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -9090,6 +9157,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -9237,6 +9305,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = pd->_part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -9313,6 +9382,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_additional_structs* restrict part_additional_structs_s = global_hydro_part_arrays._part_additional_structs + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_additional_structs_s->_accessor_id != p->_accessor_id)
@@ -9462,6 +9532,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_rt_time_data* restrict part_rt_time_data_s = pd->_part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_rt_time_data_s->_accessor_id != p->_accessor_id)
@@ -9538,6 +9609,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_rt_time_data* restrict part_rt_time_data_s = global_hydro_part_arrays._part_rt_time_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_rt_time_data_s->_accessor_id != p->_accessor_id)
@@ -9687,6 +9759,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_depth_h* restrict part_depth_h_s = pd->_part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_depth_h_s->_accessor_id != p->_accessor_id)
@@ -9763,6 +9836,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_depth_h* restrict part_depth_h_s = global_hydro_part_arrays._part_depth_h + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_depth_h_s->_accessor_id != p->_accessor_id)
@@ -9912,6 +9986,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_time_bin* restrict part_time_bin_s = pd->_part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_time_bin_s->_accessor_id != p->_accessor_id)
@@ -9988,6 +10063,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_time_bin* restrict part_time_bin_s = global_hydro_part_arrays._part_time_bin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_time_bin_s->_accessor_id != p->_accessor_id)
@@ -10137,6 +10213,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_limiter_data* restrict part_limiter_data_s = pd->_part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_limiter_data_s->_accessor_id != p->_accessor_id)
@@ -10213,6 +10290,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_limiter_data* restrict part_limiter_data_s = global_hydro_part_arrays._part_limiter_data + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_limiter_data_s->_accessor_id != p->_accessor_id)
@@ -10389,6 +10467,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_ti_drift* restrict part_ti_drift_s = pd->_part_ti_drift + pind;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_ti_drift_s->_accessor_id != p->_accessor_id)
@@ -10479,6 +10558,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_ti_drift* restrict part_ti_drift_s = global_hydro_part_arrays._part_ti_drift + pind;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_ti_drift_s->_accessor_id != p->_accessor_id)
@@ -10656,6 +10736,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_ti_kick* restrict part_ti_kick_s = pd->_part_ti_kick + pind;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_ti_kick_s->_accessor_id != p->_accessor_id)
@@ -10746,6 +10827,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_ti_kick* restrict part_ti_kick_s = global_hydro_part_arrays._part_ti_kick + pind;
 
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_ti_kick_s->_accessor_id != p->_accessor_id)
@@ -10923,6 +11005,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -11013,6 +11096,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -11188,6 +11272,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -11278,6 +11363,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -11453,6 +11539,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -11543,6 +11630,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -11718,6 +11806,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -11808,6 +11897,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -11983,6 +12073,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -12073,6 +12164,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -12248,6 +12340,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -12338,6 +12431,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -12513,6 +12607,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -12603,6 +12698,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -12778,6 +12874,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -12868,6 +12965,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -13043,6 +13141,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -13133,6 +13232,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -13308,6 +13408,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -13398,6 +13499,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -13573,6 +13675,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -13663,6 +13766,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -13838,6 +13942,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -13928,6 +14033,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -14103,6 +14209,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -14193,6 +14300,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -14368,6 +14476,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -14458,6 +14567,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -14633,6 +14743,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = pd->_part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -14723,6 +14834,7 @@ static __attribute__((always_inline)) INLINE void
   struct part_debugging* restrict part_debugging_s = global_hydro_part_arrays._part_debugging + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if(part_debugging_s->_accessor_id != p->_accessor_id)
@@ -14738,4 +14850,4 @@ static __attribute__((always_inline)) INLINE void
 
 
 
-#endif /* SWIFT_HYDRO_PART_85eac7fb88b46d166eb3960e8baf82f490cc31dc_H */
+#endif /* SWIFT_HYDRO_PART_4224096c56e36ce35d3f31237516632f4b268bf4_H */
