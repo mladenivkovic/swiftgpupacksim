@@ -4,11 +4,6 @@ module restore likwid_intel2024
 
 # Generate executables first using `swiftgpupacksim/sim/make_all_loop_splitting_variants.sh`
 
-# NODE=local
-# NODE=gn001
-# NODE=gn002
-# NODE=gn003
-# NODE=dine2
 NODE=mad06
 
 set -e
