@@ -13,16 +13,18 @@
 #ifdef SWIFT_CACHE_FLUSH_X86
 /**
  * @brief flushes all particle data from caches.
- *
+ * 
  * @param part_data: Array containing all particle data
  * @param nr_parts: Number of particles in part_data array.
  */
-__attribute__((always_inline)) INLINE static void hydro_part_arrays_flush_from_cache(
+__attribute__((always_inline)) INLINE void hydro_part_arrays_flush_from_cache(
   struct hydro_part_arrays* part_data, size_t nr_parts) {
 
 
-	size_t len_part = nr_parts / sizeof(struct part) * sizeof(char);
-	flush_cache_x86_nofence((char*)part_data->_part, len_part);
+  size_t len_part = sizeof(struct part) > 0 ? 
+		nr_parts / sizeof(struct part) * sizeof(char) :
+		0;
+  flush_cache_x86_nofence((char*)part_data->_part, len_part);
 
 
 
