@@ -42,6 +42,7 @@ struct hydro_part_arrays global_hydro_part_arrays;
  * @param garbage A large array O(MB) to fill out with garbage data to flush
  * the caches after each op
  * @param n_garbage: size of garbage array
+ * @param flush_cache: Whether to flush caches
  *
  * @return garbage_sum Some garbage double; Needed to prevent compiler from
  * optimising out a big loop doing nothing but flushing caches
@@ -53,14 +54,15 @@ __attribute__((always_inline)) INLINE static double replay_event(
     struct gpu_offload_data* buf_grad, struct gpu_offload_data* buf_forc,
     const struct engine* e, ticks timers_step[timer_count],
     double timings_log_step[timer_count], double timing_ratio_min[timer_count],
-    double timing_ratio_max[timer_count], float* garbage, int n_garbage) {
+    double timing_ratio_max[timer_count], float* garbage, int n_garbage, int flush) {
 
   /* Get cell and fill out necessary fields */
   struct cell ci;
   init_cell(&ci, event->count, part_data, event->part_offset, part_locks);
 
   const double shift[3] = {1., 1., 1.};
-  float sum = flush_cache(garbage, n_garbage, part_data, nr_parts);
+  float sum = 1.f;
+  if (flush) flush_cache(garbage, n_garbage, part_data, nr_parts);
 
 #ifdef SWIFT_DEBUG_CHECKS
   if ((event->part_offset + event->count) > part_data->nr_parts)
@@ -361,7 +363,7 @@ void run_simulation(struct parameters* params) {
           float g = replay_event(&event, &part_data, params->nr_parts, part_locks, &gpu_buf_dens,
                                   &gpu_buf_grad, &gpu_buf_forc, &e, timers_step,
                                   timing_log_step, timing_ratio_min,
-                                  timing_ratio_max, garbage, n_garbage);
+                                  timing_ratio_max, garbage, n_garbage, !params->no_cache_flush);
           garbage_sum += g;
         }
 
