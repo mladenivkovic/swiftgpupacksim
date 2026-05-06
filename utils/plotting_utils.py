@@ -95,10 +95,14 @@ def get_result_dir(
     access_variant,
     loop_split_variant,
     other_variant="",
+    check_dir_exists=True,
 ):
     """
     Get the full directory path of an experiment output directory.
     """
+
+    if other_variant != "" and not other_variant.startswith("_"):
+        other_variant = "_" + other_variant
 
     dirname = (
         experiment_name
@@ -112,7 +116,7 @@ def get_result_dir(
     )
 
     fulldirname = os.path.join(srcdir, dirname)
-    if not os.path.exists(fulldirname):
+    if check_dir_exists and not os.path.exists(fulldirname):
         raise FileNotFoundError(f"Experiment output directory {fulldirname} not found.")
 
     return fulldirname
