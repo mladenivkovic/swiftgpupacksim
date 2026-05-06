@@ -1,6 +1,7 @@
 #include "run_simulation.h"
 
 #include "flush_caches.h"
+#include "hydro_part_init.h"
 #include "gpu_part_pack_functions.h"
 #include "io.h"
 #include "swift_placeholders/clocks.h"
@@ -193,6 +194,11 @@ void run_simulation(struct parameters* params) {
   /* Allocate data to work on */
   struct hydro_part_arrays part_data;
   init_part_arrays(&part_data, params->nr_parts);
+
+  /* Fill data with (meaningless) values */
+  for (size_t i = 0; i < params->nr_parts; i++){
+    hydro_part_init(&part_data, i);
+  }
 
   /* Copy pointers over to the global data */
   global_hydro_part_arrays = part_data;
