@@ -212,6 +212,10 @@ static __attribute__((always_inline)) INLINE void init_cell(
   omp_set_lock(&part_locks[offset]);
 #endif
 
+#if defined(SWIFT_PARTICLE_ACCESS_PART_STRUCT)
+
+  /* Add correct particle metadata */
+
 #if defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)
 
   /* These realisations have a single particle struct. They don't need
@@ -228,6 +232,8 @@ static __attribute__((always_inline)) INLINE void init_cell(
 #else
 #error "particle handling for this memory layout not implemented"
 #endif
+
+#endif /* defined SWIFT_PARTICLE_ACCESS_PART_STRUCT */
 }
 
 /**

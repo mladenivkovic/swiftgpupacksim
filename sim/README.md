@@ -44,6 +44,7 @@ Building the program
   --with-cache-line-size=<value>
                           SWIFT_STRUCT_ALIGNMENT to use for x86 flushing
                           method. [default: 64]
+  --enable-parallel-init  Enable parallel particle initialisation [no/yes]
   ```
 
 
@@ -119,3 +120,10 @@ Build variants explanation
   When running with `--with-cache-flush=x86`, the correct cache line size of the
   hardware used needs to be specified. Default is 64. Check your system using
   e.g. *     `getconf -a | grep CACHE `
+
+- `--enable-parallel-init`
+  Enable parallel particle initialisation. Main purpose of this is to fiddle
+  with the First Touch Principle: This should ensure/encourage particle data to
+  be more evenly distributed in memory closer to the cores the threads are
+  running on by initialising (first-touching) the particle data in parallel.
+

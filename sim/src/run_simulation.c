@@ -195,10 +195,14 @@ void run_simulation(struct parameters* params) {
   struct hydro_part_arrays part_data;
   init_part_arrays(&part_data, params->nr_parts);
 
+#ifdef SWIFT_PARALLEL_PARTICLE_INIT
   /* Fill data with (meaningless) values */
+  /* TODO: Do a non-parallel init if SWIFT_PARALLEL_PARTICLE_INIT is not defined. */
+#pragma omp parallel for num_threads(params->nr_threads) schedule(static)
   for (size_t i = 0; i < params->nr_parts; i++){
     hydro_part_init(&part_data, i);
   }
+#endif
 
   /* Copy pointers over to the global data */
   global_hydro_part_arrays = part_data;
