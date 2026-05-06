@@ -265,8 +265,8 @@ void run_simulation(struct parameters* params) {
 
     int my_thread_id = omp_get_thread_num();
 
-    /* Double-check nothing's overwriting what we want to do. */
 #ifdef SWIFT_DEBUG_CHECKS
+    /* Double-check nothing's overwriting what we want to do. */
     int n_threads = omp_get_num_threads();
     if (n_threads != params->nr_threads) {
       error("Started a parallel region with %d threads instead of %d",

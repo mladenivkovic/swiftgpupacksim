@@ -240,7 +240,7 @@ if test "$enable_opt" = "yes" ; then
    # Choose the best flags for this compiler and architecture
    ac_test_CFLAGS="no"
    # AX_CC_MAXOPT
-   CFLAGS="-O3 -march=native"
+   CFLAGS="$CFLAGS -O3 -march=native"
    ac_test_CFLAGS="yes"
 
    # Check SSE & AVX support (some overlap with AX_CC_MAXOPT).
