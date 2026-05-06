@@ -59,7 +59,7 @@ for part_access in "explicit-var"; do
           echo found $outfile, not rerunning
         fi
 
-        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_BIGFLUSH""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
+        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_BIGFLUSH_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_bigflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/mad06/$dir
@@ -70,7 +70,7 @@ for part_access in "explicit-var"; do
           echo found $outfile, not rerunning
         fi
 
-        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_FLUSHX86""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
+        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_FLUSHX86_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2"
         outfile=$NODE/"$dir"_"$part_access"_"$loop"_x86flush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/mad06/$dir
