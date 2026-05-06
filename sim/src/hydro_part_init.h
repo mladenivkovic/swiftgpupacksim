@@ -33,6 +33,8 @@
 
 static __attribute__((always_inline)) INLINE void hydro_part_init(struct hydro_part_arrays* part_data, long long pid) {
 
+#ifdef SWIFT_PARTICLE_ACCESS_PART_STRUCT
+
 #if defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)
 
   /* These realisations have a single particle struct. They don't need
@@ -87,6 +89,85 @@ static __attribute__((always_inline)) INLINE void hydro_part_init(struct hydro_p
   part_set_alpha_visc_max_ngb(p, 30.f);
   part_set_depth_h(p, 1);
   part_set_time_bin(p, 2);
+
+#elif defined(SWIFT_PARTICLE_ACCESS_EXPLICIT_VAR)
+
+  part_set_id_explicit(part_data, pid, pid);
+  part_set_gpart_explicit(part_data, pid, NULL);
+  part_set_x_ind_explicit(part_data, pid, 0, 1.);
+  part_set_x_ind_explicit(part_data, pid, 1, 2.);
+  part_set_x_ind_explicit(part_data, pid, 2, 3.);
+  part_set_a_hydro_ind_explicit(part_data, pid, 0, 4.f);
+  part_set_a_hydro_ind_explicit(part_data, pid, 1, 5.f);
+  part_set_a_hydro_ind_explicit(part_data, pid, 2, 6.f);
+  part_set_mass_explicit(part_data, pid, 7.f);
+  part_set_h_explicit(part_data, pid, 8.f);
+  part_set_u_explicit(part_data, pid, 9.f);
+  part_set_u_dt_explicit(part_data, pid, 10.f);
+  part_set_rho_explicit(part_data, pid, 11.f);
+  part_set_div_v_explicit(part_data, pid, 12.f);
+  part_set_div_v_dt_explicit(part_data, pid, 13.f);
+  part_set_div_v_previous_step_explicit(part_data, pid, 14.f);
+  part_set_alpha_av_explicit(part_data, pid, 15.f);
+  part_set_v_sig_explicit(part_data, pid, 16.f);
+  part_set_laplace_u_explicit(part_data, pid, 17.f);
+  part_set_alpha_diff_explicit(part_data, pid, 18.f);
+  part_set_wcount_explicit(part_data, pid, 19.f);
+  part_set_wcount_dh_explicit(part_data, pid, 20.f);
+  part_set_rho_dh_explicit(part_data, pid, 21.f);
+  part_set_rot_v_ind_explicit(part_data, pid, 0, 22.f);
+  part_set_rot_v_ind_explicit(part_data, pid, 1, 23.f);
+  part_set_rot_v_ind_explicit(part_data, pid, 2, 24.f);
+  part_set_f_gradh_explicit(part_data, pid, 25.f);
+  part_set_pressure_explicit(part_data, pid, 26.f);
+  part_set_soundspeed_explicit(part_data, pid, 27.f);
+  part_set_h_dt_explicit(part_data, pid, 28.f);
+  part_set_balsara_explicit(part_data, pid, 29.f);
+  part_set_alpha_visc_max_ngb_explicit(part_data, pid, 30.f);
+  part_set_depth_h_explicit(part_data, pid, 1);
+  part_set_time_bin_explicit(part_data, pid, 2);
+
+#elif defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR)
+
+  part_set_id_global(pid, pid);
+  part_set_gpart_global(pid, NULL);
+  part_set_x_ind_global(pid, 0, 1.);
+  part_set_x_ind_global(pid, 1, 2.);
+  part_set_x_ind_global(pid, 2, 3.);
+  part_set_a_hydro_ind_global(pid, 0, 4.f);
+  part_set_a_hydro_ind_global(pid, 1, 5.f);
+  part_set_a_hydro_ind_global(pid, 2, 6.f);
+  part_set_mass_global(pid, 7.f);
+  part_set_h_global(pid, 8.f);
+  part_set_u_global(pid, 9.f);
+  part_set_u_dt_global(pid, 10.f);
+  part_set_rho_global(pid, 11.f);
+  part_set_div_v_global(pid, 12.f);
+  part_set_div_v_dt_global(pid, 13.f);
+  part_set_div_v_previous_step_global(pid, 14.f);
+  part_set_alpha_av_global(pid, 15.f);
+  part_set_v_sig_global(pid, 16.f);
+  part_set_laplace_u_global(pid, 17.f);
+  part_set_alpha_diff_global(pid, 18.f);
+  part_set_wcount_global(pid, 19.f);
+  part_set_wcount_dh_global(pid, 20.f);
+  part_set_rho_dh_global(pid, 21.f);
+  part_set_rot_v_ind_global(pid, 0, 22.f);
+  part_set_rot_v_ind_global(pid, 1, 23.f);
+  part_set_rot_v_ind_global(pid, 2, 24.f);
+  part_set_f_gradh_global(pid, 25.f);
+  part_set_pressure_global(pid, 26.f);
+  part_set_soundspeed_global(pid, 27.f);
+  part_set_h_dt_global(pid, 28.f);
+  part_set_balsara_global(pid, 29.f);
+  part_set_alpha_visc_max_ngb_global(pid, 30.f);
+  part_set_depth_h_global(pid, 1);
+  part_set_time_bin_global(pid, 2);
+
+#else
+#error "Unknown particle access method"
+#endif
+
 }
 
 #endif

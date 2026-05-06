@@ -757,9 +757,7 @@ if test "$enable_warn" != "no"; then
 fi
 
 
-# Add warning flags by default, if these can be used. Option =error adds
-# -Werror to GCC, clang and Intel.  Note do this last as compiler tests may
-# become errors, if that's an issue don't use CFLAGS for these, use an AC_SUBST().
+# Spit out optimization reports
 AC_ARG_ENABLE([optreport],
    [AS_HELP_STRING([--enable-optreport],
      [Enable optimization reports, if compiler is known @<:@error/no/yes)@:>@]
@@ -987,6 +985,19 @@ AC_ARG_WITH([cache-line-size],
 )
 
 AC_DEFINE_UNQUOTED([SWIFT_CACHE_LINE_SIZE], [$with_cache_line_size], [Cache line size])
+
+
+AC_ARG_ENABLE([parallel-init],
+   [AS_HELP_STRING([--enable-parallel-init],
+     [Enable parallel particle initialisation @<:@no/yes@:>@]
+   )],
+   [enable_parallel_init="$enableval"],
+   [enable_parallel_init="no"]
+)
+if test "$enable_parallel_init" != "no"; then
+  AC_DEFINE([SWIFT_PARALLEL_PARTICLE_INIT], [1], [Enable parallel particle initialisation])
+fi
+
 
 
 
