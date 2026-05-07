@@ -180,8 +180,8 @@ if __name__ == "__main__":
     # get available layouts
     layouts = []
     firstdir = get_result_dir(
-        srcdir, EXPERIMENTS[0], NTHREADS[-1], access_variant, loop_split
-    )
+        srcdir, EXPERIMENTS[0], NTHREADS[-1], access_variant, loop_split, variant_dir_suffix
+        )
     ls = os.listdir(firstdir)
     for f in ls:
         if f.startswith("results_") and f.endswith(".csv"):
