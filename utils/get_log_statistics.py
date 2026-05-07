@@ -45,7 +45,7 @@ for f in ls:
 nsteps = len(fstepcount)
 nthreads = len(fthreadcount)
 
-print(f"Found {nthreads} threads and {nsteps} steps")
+if verbose: print(f"Found {nthreads} threads and {nsteps} steps")
 
 
 subtypes_all = None
@@ -116,8 +116,6 @@ for step in range(nsteps):
     if subtypes_all is None:
         subtypes_all = np.copy(subtypes)
     else:
-        print(subtypes_all.shape)
-        print(subtypes.shape)
         subtypes_all = np.concatenate((subtypes_all, subtypes))
     if types_all is None:
         types_all = np.copy(types)
