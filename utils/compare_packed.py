@@ -30,8 +30,8 @@ matplotlib.rcParams.update(mymplparams)
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-Compare packed vs not-packed results of different loop splitting variants for
-different particle memory layouts for a given experiment and a given particle
+Compare packed vs not-packed results for different particle memory layouts for
+and differnet loop splitting variants for a given experiment, and a given particle
 accessor variant.
 
 By default, this plots the outputs using:
