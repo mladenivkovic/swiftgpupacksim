@@ -36,7 +36,12 @@ for part_access in "explicit-var"; do
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
 
       NTHREADS=128
-      if [[ "$dir" == *"_64thread"* ]]; then NTHREADS=64; fi
+      if [[ "$dir" == *"_128threads"* ]]; then NTHREADS=128; fi
+      if [[ "$dir" == *"_64threads"* ]]; then NTHREADS=64; fi
+      if [[ "$dir" == *"_32threads"* ]]; then NTHREADS=32; fi
+      if [[ "$dir" == *"_16threads"* ]]; then NTHREADS=16; fi
+      if [[ "$dir" == *"_8threads"* ]]; then NTHREADS=8; fi
+      if [[ "$dir" == *"_4threads"* ]]; then NTHREADS=4; fi
 
       export OMP_NUM_THREADS=$NTHREADS
 
