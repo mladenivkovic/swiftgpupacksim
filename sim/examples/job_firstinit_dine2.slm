@@ -32,8 +32,8 @@ for part_access in "explicit-var"; do
     for dir in EAGLE25_64threads Gresho256_64threads; do
 
       mkdir -p $NODE
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"
-      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_firstinit
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush_firstinit
 
       NTHREADS=32
       if [[ "$dir" == *"_64thread"* ]]; then NTHREADS=64; fi
@@ -43,7 +43,7 @@ for part_access in "explicit-var"; do
       for layout in aos soa upstream pack-gradient pack-force pack-shared; do
 
         ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_NOFIRSTINIT_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2 --noflush"
-        outfile=$NODE/"$dir"_"$part_access"_"$loop"/results_"$layout".csv
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/dine2/$dir
           $ex ../../data/dine2/$dir
@@ -54,7 +54,7 @@ for part_access in "explicit-var"; do
         fi
 
         ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"" ../swiftgpupack_PARALLELINIT_""$NODE"_"$layout"_"$part_access"_"$loop"" -s 2 --noflush"
-        outfile=$NODE/"$dir"_"$part_access"_"$loop"_firstinit/results_"$layout".csv
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush_firstinit/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
           echo running "$ex" ../../data/dine2/$dir
           $ex ../../data/dine2/$dir
