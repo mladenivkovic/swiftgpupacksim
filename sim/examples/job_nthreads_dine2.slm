@@ -50,6 +50,7 @@ for part_access in "explicit-var"; do
       if [[ "$dir" == *"_16threads"* ]]; then NTHREADS=16; fi
       if [[ "$dir" == *"_8threads"* ]]; then NTHREADS=8; fi
       if [[ "$dir" == *"_4threads"* ]]; then NTHREADS=4; fi
+      if [[ "$dir" == *"_1thread"* ]]; then NTHREADS=1; fi
 
       export OMP_NUM_THREADS=$NTHREADS
 
