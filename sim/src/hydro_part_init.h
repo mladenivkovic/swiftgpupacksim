@@ -48,8 +48,8 @@ static __attribute__((always_inline)) INLINE void hydro_part_init(
 
   /* Split structs need initialisation of array pointer + their index in that
    * array */
-  part_data._part[pid]._cell_offset = pid;
-  part_data._part[pid]._cell_part_arrays = part_data;
+  part_data->_part[pid]._cell_offset = pid;
+  part_data->_part[pid]._cell_part_arrays = part_data;
 #else
 #error "particle handling for this memory layout not implemented"
 #endif
