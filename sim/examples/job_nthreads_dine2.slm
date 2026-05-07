@@ -1,7 +1,7 @@
 #!/usr/bin/bash -l
 
 #SBATCH --job-name nthreads-dine2
-#SBATCH --time 48:00:00
+#SBATCH --time 24:00:00
 #SBATCH --partition dine2
 #SBATCH --account durham
 #SBATCH --exclusive
@@ -44,8 +44,12 @@ for part_access in "explicit-var"; do
       mkdir -p $NODE
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
 
-      NTHREADS=32
-      if [[ "$dir" == *"_64thread"* ]]; then NTHREADS=64; fi
+      NTHREADS=64
+      if [[ "$dir" == *"_64threads"* ]]; then NTHREADS=64; fi
+      if [[ "$dir" == *"_32threads"* ]]; then NTHREADS=32; fi
+      if [[ "$dir" == *"_16threads"* ]]; then NTHREADS=16; fi
+      if [[ "$dir" == *"_8threads"* ]]; then NTHREADS=8; fi
+      if [[ "$dir" == *"_4threads"* ]]; then NTHREADS=4; fi
 
       export OMP_NUM_THREADS=$NTHREADS
 
