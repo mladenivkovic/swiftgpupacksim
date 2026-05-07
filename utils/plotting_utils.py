@@ -47,7 +47,7 @@ mymplparams = {
 mydpi = 120
 
 markers = ["o", "v", "s", "p", "P", "*"]
-linestyles = ["-", "--", ":", "-."]
+linestyles = ["-", ":", "--", "-."]
 
 
 def get_filelist(srcdir: str) -> list:

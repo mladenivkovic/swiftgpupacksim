@@ -12,7 +12,9 @@
 # loop_splitting_compare_packed_dine2_EAGLE25_part-struct_noflush.png
 # loop_splitting_compare_packed_dine2_EAGLE25_explicit-var_noflush.png
 # loop_splitting_compare_packed_dine2_EAGLE25_global-var_noflush.png
-python3 ../../utils/compare_packed.py --png dine2 --no-flush -t 64
+python3 ../../utils/loop_splitting_compare_packed.py --png dine2 --no-flush -t 64
 
+# loop_splitting_compare_packed_dine2_global-var_noflush_relative.png
+python3 ../../utils/loop_splitting_compare_packed_relative.py --png dine2 --no-flush -t 64
 
 
