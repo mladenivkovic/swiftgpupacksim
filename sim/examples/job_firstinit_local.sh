@@ -2,7 +2,7 @@
 
 # Generate executables first using `swiftgpupacksim/sim/make_first_init_variants.sh`
 
-NODE=local
+NODE=local-legion
 
 set -e
 rm -f results_*.csv
