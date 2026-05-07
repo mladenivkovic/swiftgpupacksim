@@ -28,13 +28,28 @@ for part_access in "explicit-var"; do
   for loop in "none"; do
 
     # Experiment reproduction directories
-    for dir in EAGLE25_72threads Gresho256_72threads EAGLE25_36threads Gresho256_36threads; do
+    for dir in \
+      EAGLE25_72threads \
+      EAGLE25_36threads \
+      EAGLE25_18threads \
+      EAGLE25_9threads \
+      EAGLE25_1threads \
+      Gresho256_72threads \
+      Gresho256_36threads \
+      Gresho256_18threads \
+      Gresho256_9threads \
+      Gresho256_1threads \
+      ; do
 
       mkdir -p $NODE
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
 
-      NTHREADS=36
+      NTHREADS=72
       if [[ "$dir" == *"_72thread"* ]]; then NTHREADS=72; fi
+      if [[ "$dir" == *"_36thread"* ]]; then NTHREADS=36; fi
+      if [[ "$dir" == *"_18thread"* ]]; then NTHREADS=18; fi
+      if [[ "$dir" == *"_9thread"* ]]; then NTHREADS=9; fi
+      if [[ "$dir" == *"_1thread"* ]]; then NTHREADS=1; fi
 
       export OMP_NUM_THREADS=$NTHREADS
 

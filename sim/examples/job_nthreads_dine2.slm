@@ -28,7 +28,18 @@ for part_access in "explicit-var"; do
   for loop in "none"; do
 
     # Experiment reproduction directories
-    for dir in EAGLE25_64threads Gresho256_64threads EAGLE25_32threads Gresho256_32threads; do
+    for dir in \
+      EAGLE25_64threads \
+      EAGLE25_32threads \
+      EAGLE25_16threads \
+      EAGLE25_8threads \
+      EAGLE25_4threads \
+      Gresho256_64threads \
+      Gresho256_32threads \
+      Gresho256_16threads \
+      Gresho256_8threads \
+      Gresho256_4threads \
+      ; do
 
       mkdir -p $NODE
       mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
