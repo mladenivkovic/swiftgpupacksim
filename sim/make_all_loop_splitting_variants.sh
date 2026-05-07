@@ -16,6 +16,15 @@ MYCFLAGS="-march=native -Wno-pass-failed"
 # EXTRA_CONFFLAGS="--config-cache --enable-no-cuda-mallochost"
 EXTRA_CONFFLAGS="--config-cache"
 
+if [[ "$NODE" == "local" ]]; then
+  EXTRA_CONFFLAGS="$EXTRA_CONFFLAGS --enable-no-cuda-mallochost"
+fi
+
+if [[ "$NODE" == "mad06" ]]; then
+  MYCFLAGS="$MYCFLAGS -Wno-unused-command-line-argument"
+fi
+
+
 if [ $# -gt 0 ]; then
   case "$1" in
   -d | d | debug | DEBUG )
