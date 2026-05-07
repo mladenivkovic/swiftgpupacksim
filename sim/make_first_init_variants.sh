@@ -8,8 +8,8 @@ fi
 
 # NODE=local
 # NODE=dine2
-# NODE=gn003
-NODE=mad06
+NODE=gn003
+# NODE=mad06
 
 MYCFLAGS="-march=native"
 
@@ -33,6 +33,8 @@ if [ $# -gt 0 ]; then
     ;;
   esac
 fi
+
+rm -f config.cache
 
 # for part_access in "part-struct" "global-var" "explicit-var"; do
   # for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do

@@ -13,7 +13,6 @@ NODE=gn003
 
 MYCFLAGS="-march=native -Wno-pass-failed"
 
-# EXTRA_CONFFLAGS="--config-cache --enable-no-cuda-mallochost"
 EXTRA_CONFFLAGS="--config-cache"
 
 if [[ "$NODE" == "local" ]]; then
@@ -36,6 +35,7 @@ if [ $# -gt 0 ]; then
   esac
 fi
 
+rm -f config.cache
 
 for part_access in "part-struct" "global-var" "explicit-var"; do
   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
