@@ -34,11 +34,13 @@ for part_access in "explicit-var"; do
       EAGLE25_16threads \
       EAGLE25_8threads \
       EAGLE25_4threads \
+      EAGLE25_1threads \
       Gresho256_64threads \
       Gresho256_32threads \
       Gresho256_16threads \
       Gresho256_8threads \
       Gresho256_4threads \
+      Gresho256_1threads \
       ; do
 
       mkdir -p $NODE
