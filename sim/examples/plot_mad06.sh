@@ -12,6 +12,10 @@
 # loop_splitting_compare_packed_mad06_EAGLE25_part-struct_noflush.png
 # loop_splitting_compare_packed_mad06_EAGLE25_explicit-var_noflush.png
 # loop_splitting_compare_packed_mad06_EAGLE25_global-var_noflush.png
-python3 ../../utils/compare_packed.py --png mad06 --no-flush -t 128
+python3 ../../utils/loop_splitting_compare_packed.py --png mad06 --no-flush -t 128
+
+# loop_splitting_compare_packed_mad06_global-var_noflush_relative.png
+python3 ../../utils/loop_splitting_compare_packed_relative.py --png mad06 --no-flush -t 128
+
 
 
