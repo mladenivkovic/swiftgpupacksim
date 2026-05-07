@@ -125,6 +125,14 @@ if normalise:
     raise NotImplementedError()
 if args.equal_axis_limits:
     raise NotImplementedError()
+
+if srcdir.endswith("gn003") or srcdir.endswith("gn003/"):
+    NTHREADS=[1, 9, 18, 36, 72]
+elif srcdir.endswith("dine2") or srcdir.endswith("dine2/"):
+    NTHREADS=[4, 8, 16, 32, 64]
+elif srcdir.endswith("mad06") or srcdir.endswith("mad06/"):
+    NTHREADS=[4, 8, 16, 32, 64, 128]
+
 if args.local_hp:
     NTHREADS = [4]
     EXPERIMENTS = ["IntelXeonGold5218_Gresho64"]
@@ -152,7 +160,7 @@ if __name__ == "__main__":
     # get available layouts
     layouts = []
     firstdir = get_result_dir(
-        srcdir, EXPERIMENTS[0], NTHREADS[0], PART_ACCESS[0], LOOP_SPLITS[0]
+        srcdir, EXPERIMENTS[0], NTHREADS[-1], PART_ACCESS[0], LOOP_SPLITS[0]
     )
     ls = os.listdir(firstdir)
     for f in ls:

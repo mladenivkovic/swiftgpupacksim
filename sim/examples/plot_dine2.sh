@@ -21,3 +21,7 @@ python3 ../../utils/loop_splitting_compare_packed_relative.py --png dine2 --no-f
 # compare_firstinit_dine2_explicit-var_none.png
 # ../../utils/compare_firstinit.py --png -t 64 dine2 --no-flush
 
+# TODO
+# compare_nthreads_dine2_explicit-var_none.png
+# ../../utils/compare_nthreads.py --png -t 64 dine2 --no-flush
+

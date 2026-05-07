@@ -19,6 +19,7 @@ from plotting_utils import (
     PART_ACCESS,
     PART_ACCESS_LABELS,
     EXPERIMENTS,
+    NTHREADS,
     mymplparams,
     mydpi,
     markers,
@@ -30,16 +31,14 @@ matplotlib.rcParams.update(mymplparams)
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-Compare results of using parallel first initialisation vs not doing that for
-different particle memory layouts for different experiments, a given loop
+Compare results of using different numbers of threads for different
+particle memory layouts for different experiments, for a given loop
 splitting variant, and a given particle accessor variant.
 
 By default, this plots the outputs using:
 - cache flushes between each copy operation
 - no manual vectorization
-- 72 threads
-- "explicit-var" access method
-- "none" loop split
+- not packed structs
 
 See optional flags to modify which results are plotted.
 
@@ -48,7 +47,7 @@ result data with filenames 'results_*.csv' It will read them all in and plot
 them.
 
 Sub-directories are expected to have the following file name format:
-<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_vector][_noflush]
+<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_vector]
 
 The *_packed variants should contain outputs where the structs were packed,
 i.e. where the code was configured with --enable-packed-structs. The *_noflush
@@ -91,12 +90,11 @@ parser.add_argument(
     help="make a .png plot instead of .pdf",
 )
 parser.add_argument(
-    "-t",
-    "--threads",
-    nargs=1,
-    dest="nthreads",
-    help="Number of threads used in experiment to use",
-    default=72,
+    "-e",
+    "--equal-axis-limits",
+    dest="equal_axis_limits",
+    action="store_true",
+    help="Use identical y-axis limits for all subplots",
 )
 parser.add_argument(
     "-a",
@@ -115,13 +113,6 @@ parser.add_argument(
     help="Loop splitting variant to use",
     choices=LOOP_SPLITS,
     default="none",
-)
-parser.add_argument(
-    "-e",
-    "--equal-axis-limits",
-    dest="equal_axis_limits",
-    action="store_true",
-    help="Use identical y-axis limits for all subplots",
 )
 parser.add_argument(
     "-n",
@@ -143,12 +134,8 @@ parser.add_argument(
     help="Use outputs for local test runs on HP",
 )
 
-
 args = parser.parse_args()
 srcdir = args.srcdir
-nthreads = args.nthreads
-if isinstance(nthreads, list):
-    nthreads=nthreads[0]
 normalise = args.normalise
 access_variant = args.access_variant
 loop_split = args.loop_split
@@ -158,11 +145,19 @@ if normalise:
     raise NotImplementedError()
 if args.equal_axis_limits:
     raise NotImplementedError()
+
+if srcdir.endswith("gn003") or srcdir.endswith("gn003/"):
+    NTHREADS=[1, 9, 18, 36, 72]
+elif srcdir.endswith("dine2") or srcdir.endswith("dine2/"):
+    NTHREADS=[4, 8, 16, 32, 64]
+elif srcdir.endswith("mad06") or srcdir.endswith("mad06/"):
+    NTHREADS=[4, 8, 16, 32, 64, 128]
+
 if args.local_hp:
-    nthreads = 4
+    NTHREADS = [4]
     EXPERIMENTS = ["IntelXeonGold5218_Gresho64"]
 if args.local_legion:
-    nthreads = 6
+    NTHREADS = [6]
     EXPERIMENTS = ["IntelCoffeeLake_Gresho128"]
 
 
@@ -170,13 +165,10 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
     args.use_noflush, args.use_vector, args.use_packed
 )
 
-variants = [variant_dir_suffix, variant_dir_suffix + "_firstinit"]
-variants_labels = [variant_label_suffix, variant_label_suffix + ", parallel particle initialisation"]
-
 plotkwargs = {
     "marker": "o",
     "lw": 2,
-    "alpha": 0.6,
+    "alpha": 0.8,
     "markersize": 5,
 }
 
@@ -188,7 +180,7 @@ if __name__ == "__main__":
     # get available layouts
     layouts = []
     firstdir = get_result_dir(
-        srcdir, EXPERIMENTS[0], nthreads, access_variant, loop_split, other_variant=variants[0]
+        srcdir, EXPERIMENTS[0], NTHREADS[-1], access_variant, loop_split
     )
     ls = os.listdir(firstdir)
     for f in ls:
@@ -226,18 +218,37 @@ if __name__ == "__main__":
 
     for e, experiment in enumerate(EXPERIMENTS):
 
-        color = "C" + str(e)
+        ls = linestyles[e]
 
-        for v, variant in enumerate(variants):
+        # first, get normalisation: Compare to access="part-struct", loop-split = "none"
+        #  dirname = ( experiment + "_" + str(nthreads) + "threads_part-struct_none" + variant_dir_suffix)
+        #  fulldirname = os.path.join(srcdir, dirname)
+        #  if not os.path.exists(fulldirname):
+        #      raise FileNotFoundError(
+        #          f"Experiment output directory {fulldirname} not found."
+        #      )
+        #
+        #  fname = "results_aos.csv"
+        #  fullfname = os.path.join(fulldirname, fname)
+        #  res = ResultData(fullfname, verbose=False)
+        #  normalisation = res.data_dict
 
-            ls = linestyles[v]
+        for n, nthreads in enumerate(NTHREADS):
+
+            color = "C" + str(n)
 
             # Now get result data for all layouts
             result_data = []
 
             for l, layout in enumerate(layouts):
                 fname = get_result_fname(
-                    srcdir, experiment, nthreads, access_variant, loop_split, variant, layout
+                    srcdir,
+                    experiment,
+                    nthreads,
+                    access_variant,
+                    loop_split,
+                    variant_dir_suffix,
+                    layout,
                 )
                 res = ResultData(fname, verbose=False)
                 result_data.append(res)
@@ -278,7 +289,10 @@ if __name__ == "__main__":
                 PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
                 + " "
                 + LOOP_SPLIT_LABELS[LOOP_SPLITS.index(loop_split)]
-                + variants_labels[v]
+                + variant_label_suffix
+                + " "
+                + str(nthreads)
+                + " threads"
             )
 
             ax1.plot(
@@ -315,7 +329,6 @@ if __name__ == "__main__":
     # leftmost axes
     for ax in [ax1, ax4]:
         if normalise:
-            raise NotImplementedError()
             ax.set_ylabel(
                 r"$t / t^{\mathrm{part\ struct\ access}}_{\mathrm{aos,\ no\ loop\ split}}$"
             )
@@ -346,7 +359,7 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"compare_firstinit_{srcdir}_{access_variant}"
+    outfname = f"compare_nthreads_{srcdir}_{access_variant}"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if normalise:

@@ -21,6 +21,10 @@ python3 ../../utils/loop_splitting_compare_packed_relative.py --png gn003 --no-f
 # compare_firstinit_gn003_explicit-var_none.png
 # ../../utils/compare_firstinit.py --png gn003 --no-flush
 
+# TODO
+# compare_nthreads_gn003_explicit-var_none.png
+# ../../utils/compare_nthreads.py --png gn003 --no-flush
+
 
 # # loop_splitting_compare_part_access_gn003_EAGLE12_72threads.png
 # # loop_splitting_compare_part_access_gn003_Gresho256_72threads.png
