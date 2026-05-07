@@ -28,108 +28,83 @@ struct part {
   /*! Particle unique ID */
   long long _id;
 
+  /*! Particle density */
+  float _rho;
+
+  /*! Balsara switch */
+  float _balsara;
+
   /*! Pointer to corresponding gravity part */
   struct gpart* _gpart;
-
-  /*! the particle position */
-  double _x[3];
 
   /*! Particle predicted velocity */
   float _v[3];
 
+  /*! Time derivative of the internal energy */
+  float _u_dt;
+
+  /*! Particle velocity divergence from previous step */
+  float _div_v_previous_step;
+
   /*! Particle acceleration */
   float _a_hydro[3];
-
-  /*! Particle mass */
-  float _mass;
-
-  /*! Particle smoothing length */
-  float _h;
 
   /*! Particle internal energy */
   float _u;
 
-  /*! Time derivative of the internal energy */
-  float _u_dt;
+  /*! Particle velocity divergence */
+  float _div_v;
 
-  /*! Particle density */
-  float _rho;
+  /*! Particle soundspeed */
+  float _soundspeed;
 
-  /*! store viscosity information in a separate struct */
-  struct {
+  /*! Particle smoothing length */
+  float _h;
 
-    /*! Particle velocity divergence */
-    float _div_v;
+  /*! Time differential of velocity divergence */
+  float _div_v_dt;
 
-    /*! Time differential of velocity divergence */
-    float _div_v_dt;
+  /*! Particle mass */
+  float _mass;
 
-    /*! Particle velocity divergence from previous step */
-    float _div_v_previous_step;
+  /*! Particle velocity curl */
+  float _rot_v[3];
 
-    /*! Artificial viscosity parameter */
-    float _alpha_av;
+  /*! Signal velocity */
+  float _v_sig;
 
-    /*! Signal velocity */
-    float _v_sig;
+  /*! del^2 u, a smoothed quantity */
+  float _laplace_u;
 
-   }_viscosity;
+  /*! Neighbour number count */
+  float _wcount;
 
-  /*! Store thermal diffusion information in a separate struct */
-  struct {
+  /*! Time derivative of smoothing length */
+  float _h_dt;
 
-    /*! del^2 u, a smoothed quantity */
-    float _laplace_u;
+  /*! Thermal diffusion coefficient */
+  float _alpha_diff;
 
-    /*! Thermal diffusion coefficient */
-    float _alpha_diff;
+  /*! Derivative of density with respect to h */
+  float _rho_dh;
 
-   }_diffusion;
+  /*! the particle position */
+  double _x[3];
 
-  /*! Store density/force specific stuff */
-  union {
+  /*! 'Grad h' term -- only partial in P-U */
+  float _f_gradh;
 
-    /*! Structure for the variables only used in the density loop over neighbours Quantities in this sub-structure should only be accessed in the density loop over neighbours and the ghost task */
-    struct {
+  /*! Artificial viscosity parameter */
+  float _alpha_av;
 
-      /*! Neighbour number count */
-      float _wcount;
+  /*! Particle pressure */
+  float _pressure;
 
-      /*! Derivative of the neighbour number with respect to h */
-      float _wcount_dh;
+  /*! Derivative of the neighbour number with respect to h */
+  float _wcount_dh;
 
-      /*! Derivative of density with respect to h */
-      float _rho_dh;
-
-      /*! Particle velocity curl */
-      float _rot_v[3];
-
-     }_density;
-
-    /*! Structure for the variables only used in the force loop over neighbours Quantities in this sub-structure should only be accessed in the force loop over neighbours and the ghost, drift and kick tasks */
-    struct {
-
-      /*! 'Grad h' term -- only partial in P-U */
-      float _f_gradh;
-
-      /*! Particle pressure */
-      float _pressure;
-
-      /*! Particle soundspeed */
-      float _soundspeed;
-
-      /*! Time derivative of smoothing length */
-      float _h_dt;
-
-      /*! Balsara switch */
-      float _balsara;
-
-      /*! Maximal alpha (viscosity) over neighbours */
-      float _alpha_visc_max_ngb;
-
-     }_force;
-
-   };
+  /*! Maximal alpha (viscosity) over neighbours */
+  float _alpha_visc_max_ngb;
 
   /*! Additional data used for adaptive softening */
   struct adaptive_softening_part_data _adaptive_softening_data;
@@ -391,6 +366,264 @@ static __attribute__((always_inline)) INLINE void
 
 
 /**
+ * @brief get rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho(const struct part *restrict p) {
+  return p->_rho;
+}
+
+/**
+ * @brief get a pointer to rho, Particle density.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_p(struct part *restrict p) {
+  return &p->_rho;
+}
+
+/**
+ * @brief get read-only access to pointer to rho,
+ * Particle density.
+ * If you need write access to rho, use part_get_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_p(const struct part *restrict p) {
+  return &p->_rho;
+}
+
+/**
+ * @brief set the value of rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho(struct part *restrict p, const float rho) {
+  p->_rho = rho;
+}
+
+
+/**
+ * @brief get rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_rho;
+}
+
+/**
+ * @brief get a pointer to rho, Particle density.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_rho;
+}
+
+/**
+ * @brief get read-only access to pointer to rho,
+ * Particle density.
+ * If you need write access to rho, use part_get_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_rho;
+}
+
+/**
+ * @brief set the value of rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_rho = rho;
+}
+
+
+/**
+ * @brief get rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_rho;
+}
+
+/**
+ * @brief get a pointer to rho, Particle density.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_rho;
+}
+
+/**
+ * @brief get read-only access to pointer to rho,
+ * Particle density.
+ * If you need write access to rho, use part_get_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_rho;
+}
+
+/**
+ * @brief set the value of rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho_global(const ptrdiff_t pind, const float rho) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_rho = rho;
+}
+
+
+
+
+/**
+ * @brief get balsara, Balsara switch.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_balsara(const struct part *restrict p) {
+  return p->_balsara;
+}
+
+/**
+ * @brief get a pointer to balsara, Balsara switch.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to balsara. If you need read-only access to balsara, use part_get_const_balsara_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_balsara_p(struct part *restrict p) {
+  return &p->_balsara;
+}
+
+/**
+ * @brief get read-only access to pointer to balsara,
+ * Balsara switch.
+ * If you need write access to balsara, use part_get_balsara_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_balsara_p(const struct part *restrict p) {
+  return &p->_balsara;
+}
+
+/**
+ * @brief set the value of balsara, Balsara switch.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_balsara(struct part *restrict p, const float balsara) {
+  p->_balsara = balsara;
+}
+
+
+/**
+ * @brief get balsara, Balsara switch.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_balsara_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_balsara;
+}
+
+/**
+ * @brief get a pointer to balsara, Balsara switch.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to balsara. If you need read-only access to balsara, use part_get_const_balsara_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_balsara_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_balsara;
+}
+
+/**
+ * @brief get read-only access to pointer to balsara,
+ * Balsara switch.
+ * If you need write access to balsara, use part_get_balsara_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_balsara_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_balsara;
+}
+
+/**
+ * @brief set the value of balsara, Balsara switch.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_balsara_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float balsara) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_balsara = balsara;
+}
+
+
+/**
+ * @brief get balsara, Balsara switch.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_balsara_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_balsara;
+}
+
+/**
+ * @brief get a pointer to balsara, Balsara switch.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to balsara. If you need read-only access to balsara, use part_get_const_balsara_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_balsara_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_balsara;
+}
+
+/**
+ * @brief get read-only access to pointer to balsara,
+ * Balsara switch.
+ * If you need write access to balsara, use part_get_balsara_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_balsara_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_balsara;
+}
+
+/**
+ * @brief set the value of balsara, Balsara switch.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_balsara_global(const ptrdiff_t pind, const float balsara) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_balsara = balsara;
+}
+
+
+
+
+/**
  * @brief get gpart, Pointer to corresponding gravity part.
  */
 static __attribute__((always_inline)) INLINE struct gpart*
@@ -474,166 +707,6 @@ static __attribute__((always_inline)) INLINE void
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
   part_s->_gpart = gpart;
-}
-
-
-
-
-/**
- * @brief get x, the particle position,
- * for read and write access. For read-only access, use
- * part_get_const_x() instead.
- */
-static __attribute__((always_inline)) INLINE double*
-  part_get_x(struct part *restrict p) {
-  return p->_x;
-}
-
-/**
- * @brief get x, the particle position, for read-only access.
- */
-static __attribute__((always_inline)) INLINE const double*
-  part_get_const_x(const struct part *restrict p) {
-  return p->_x;
-}
-
-/**
- * @brief get x, the particle position, by index.
- */
-static __attribute__((always_inline)) INLINE double
-  part_get_x_ind(const struct part *restrict p, const int i) {
-  return p->_x[i];
-}
-
-/**
- * @brief set all values of x, the particle position,
- * from an array.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_x(struct part *restrict p, const double x[3]) {
-  p->_x[0] = x[0];
-  p->_x[1] = x[1];
-  p->_x[2] = x[2];
-}
-
-/**
- * @brief set the value of x, the particle position, by index.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_x_ind(struct part *restrict p, const int i, const double x) {
-  p->_x[i] = x;
-}
-
-
-/**
- * @brief get x, the particle position,
- * for read and write access. For read-only access, use
- * part_get_const_x() instead.
- */
-static __attribute__((always_inline)) INLINE double*
-  part_get_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return part_s->_x;
-}
-
-/**
- * @brief get x, the particle position, for read-only access.
- */
-static __attribute__((always_inline)) INLINE const double*
-  part_get_const_x_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_x;
-}
-
-/**
- * @brief get x, the particle position, by index.
- */
-static __attribute__((always_inline)) INLINE double
-  part_get_x_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_x[i];
-}
-
-/**
- * @brief set all values of x, the particle position,
- * from an array.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const double x[3]) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_x[0] = x[0];
-  part_s->_x[1] = x[1];
-  part_s->_x[2] = x[2];
-}
-
-/**
- * @brief set the value of x, the particle position, by index.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_x_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const double x) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_x[i] = x;
-}
-
-
-/**
- * @brief get x, the particle position,
- * for read and write access. For read-only access, use
- * part_get_const_x() instead.
- */
-static __attribute__((always_inline)) INLINE double*
-  part_get_x_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_x;
-}
-
-/**
- * @brief get x, the particle position, for read-only access.
- */
-static __attribute__((always_inline)) INLINE const double*
-  part_get_const_x_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_x;
-}
-
-/**
- * @brief get x, the particle position, by index.
- */
-static __attribute__((always_inline)) INLINE double
-  part_get_x_ind_global(const ptrdiff_t pind, const int i) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_x[i];
-}
-
-/**
- * @brief set all values of x, the particle position,
- * from an array.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_x_global(const ptrdiff_t pind, const double x[3]) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_x[0] = x[0];
-  part_s->_x[1] = x[1];
-  part_s->_x[2] = x[2];
-}
-
-/**
- * @brief set the value of x, the particle position, by index i.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_x_ind_global(const ptrdiff_t pind, const int i, const double x) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_x[i] = x;
 }
 
 
@@ -800,6 +873,264 @@ static __attribute__((always_inline)) INLINE void
 
 
 /**
+ * @brief get u_dt, Time derivative of the internal energy.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_u_dt(const struct part *restrict p) {
+  return p->_u_dt;
+}
+
+/**
+ * @brief get a pointer to u_dt, Time derivative of the internal energy.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to u_dt. If you need read-only access to u_dt, use part_get_const_u_dt_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_u_dt_p(struct part *restrict p) {
+  return &p->_u_dt;
+}
+
+/**
+ * @brief get read-only access to pointer to u_dt,
+ * Time derivative of the internal energy.
+ * If you need write access to u_dt, use part_get_u_dt_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_u_dt_p(const struct part *restrict p) {
+  return &p->_u_dt;
+}
+
+/**
+ * @brief set the value of u_dt, Time derivative of the internal energy.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_u_dt(struct part *restrict p, const float u_dt) {
+  p->_u_dt = u_dt;
+}
+
+
+/**
+ * @brief get u_dt, Time derivative of the internal energy.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_u_dt_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_u_dt;
+}
+
+/**
+ * @brief get a pointer to u_dt, Time derivative of the internal energy.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to u_dt. If you need read-only access to u_dt, use part_get_const_u_dt_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_u_dt_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_u_dt;
+}
+
+/**
+ * @brief get read-only access to pointer to u_dt,
+ * Time derivative of the internal energy.
+ * If you need write access to u_dt, use part_get_u_dt_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_u_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_u_dt;
+}
+
+/**
+ * @brief set the value of u_dt, Time derivative of the internal energy.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_u_dt_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float u_dt) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_u_dt = u_dt;
+}
+
+
+/**
+ * @brief get u_dt, Time derivative of the internal energy.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_u_dt_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_u_dt;
+}
+
+/**
+ * @brief get a pointer to u_dt, Time derivative of the internal energy.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to u_dt. If you need read-only access to u_dt, use part_get_const_u_dt_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_u_dt_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_u_dt;
+}
+
+/**
+ * @brief get read-only access to pointer to u_dt,
+ * Time derivative of the internal energy.
+ * If you need write access to u_dt, use part_get_u_dt_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_u_dt_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_u_dt;
+}
+
+/**
+ * @brief set the value of u_dt, Time derivative of the internal energy.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_u_dt_global(const ptrdiff_t pind, const float u_dt) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_u_dt = u_dt;
+}
+
+
+
+
+/**
+ * @brief get div_v_previous_step, Particle velocity divergence from previous step.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_div_v_previous_step(const struct part *restrict p) {
+  return p->_div_v_previous_step;
+}
+
+/**
+ * @brief get a pointer to div_v_previous_step, Particle velocity divergence from previous step.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to div_v_previous_step. If you need read-only access to div_v_previous_step, use part_get_const_div_v_previous_step_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_div_v_previous_step_p(struct part *restrict p) {
+  return &p->_div_v_previous_step;
+}
+
+/**
+ * @brief get read-only access to pointer to div_v_previous_step,
+ * Particle velocity divergence from previous step.
+ * If you need write access to div_v_previous_step, use part_get_div_v_previous_step_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_div_v_previous_step_p(const struct part *restrict p) {
+  return &p->_div_v_previous_step;
+}
+
+/**
+ * @brief set the value of div_v_previous_step, Particle velocity divergence from previous step.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_div_v_previous_step(struct part *restrict p, const float div_v_previous_step) {
+  p->_div_v_previous_step = div_v_previous_step;
+}
+
+
+/**
+ * @brief get div_v_previous_step, Particle velocity divergence from previous step.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_div_v_previous_step_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_div_v_previous_step;
+}
+
+/**
+ * @brief get a pointer to div_v_previous_step, Particle velocity divergence from previous step.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to div_v_previous_step. If you need read-only access to div_v_previous_step, use part_get_const_div_v_previous_step_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_div_v_previous_step_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_div_v_previous_step;
+}
+
+/**
+ * @brief get read-only access to pointer to div_v_previous_step,
+ * Particle velocity divergence from previous step.
+ * If you need write access to div_v_previous_step, use part_get_div_v_previous_step_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_div_v_previous_step_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_div_v_previous_step;
+}
+
+/**
+ * @brief set the value of div_v_previous_step, Particle velocity divergence from previous step.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_div_v_previous_step_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float div_v_previous_step) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_div_v_previous_step = div_v_previous_step;
+}
+
+
+/**
+ * @brief get div_v_previous_step, Particle velocity divergence from previous step.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_div_v_previous_step_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_div_v_previous_step;
+}
+
+/**
+ * @brief get a pointer to div_v_previous_step, Particle velocity divergence from previous step.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to div_v_previous_step. If you need read-only access to div_v_previous_step, use part_get_const_div_v_previous_step_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_div_v_previous_step_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_div_v_previous_step;
+}
+
+/**
+ * @brief get read-only access to pointer to div_v_previous_step,
+ * Particle velocity divergence from previous step.
+ * If you need write access to div_v_previous_step, use part_get_div_v_previous_step_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_div_v_previous_step_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_div_v_previous_step;
+}
+
+/**
+ * @brief set the value of div_v_previous_step, Particle velocity divergence from previous step.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_div_v_previous_step_global(const ptrdiff_t pind, const float div_v_previous_step) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_div_v_previous_step = div_v_previous_step;
+}
+
+
+
+
+/**
  * @brief get a_hydro, Particle acceleration,
  * for read and write access. For read-only access, use
  * part_get_const_a_hydro() instead.
@@ -960,129 +1291,387 @@ static __attribute__((always_inline)) INLINE void
 
 
 /**
- * @brief get mass, Particle mass.
+ * @brief get u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_mass(const struct part *restrict p) {
-  return p->_mass;
+  part_get_u(const struct part *restrict p) {
+  return p->_u;
 }
 
 /**
- * @brief get a pointer to mass, Particle mass.
+ * @brief get a pointer to u, Particle internal energy.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to mass. If you need read-only access to mass, use part_get_const_mass_p() instead.
+ * to u. If you need read-only access to u, use part_get_const_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_mass_p(struct part *restrict p) {
-  return &p->_mass;
+  part_get_u_p(struct part *restrict p) {
+  return &p->_u;
 }
 
 /**
- * @brief get read-only access to pointer to mass,
- * Particle mass.
- * If you need write access to mass, use part_get_mass_p() instead.
+ * @brief get read-only access to pointer to u,
+ * Particle internal energy.
+ * If you need write access to u, use part_get_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_mass_p(const struct part *restrict p) {
-  return &p->_mass;
+  part_get_const_u_p(const struct part *restrict p) {
+  return &p->_u;
 }
 
 /**
- * @brief set the value of mass, Particle mass.
+ * @brief set the value of u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_mass(struct part *restrict p, const float mass) {
-  p->_mass = mass;
+  part_set_u(struct part *restrict p, const float u) {
+  p->_u = u;
 }
 
 
 /**
- * @brief get mass, Particle mass.
+ * @brief get u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_mass_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_u_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_mass;
+  return part_s->_u;
 }
 
 /**
- * @brief get a pointer to mass, Particle mass.
+ * @brief get a pointer to u, Particle internal energy.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to mass. If you need read-only access to mass, use part_get_const_mass_p() instead.
+ * to u. If you need read-only access to u, use part_get_const_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_mass_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_u_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_mass;
+  return &part_s->_u;
 }
 
 /**
- * @brief get read-only access to pointer to mass,
- * Particle mass.
- * If you need write access to mass, use part_get_mass_p() instead.
+ * @brief get read-only access to pointer to u,
+ * Particle internal energy.
+ * If you need write access to u, use part_get_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_mass_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_const_u_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_mass;
+  return &part_s->_u;
 }
 
 /**
- * @brief set the value of mass, Particle mass.
+ * @brief set the value of u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_mass_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float mass) {
+  part_set_u_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float u) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_mass = mass;
+  part_s->_u = u;
 }
 
 
 /**
- * @brief get mass, Particle mass.
+ * @brief get u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_mass_global(const ptrdiff_t pind) {
+  part_get_u_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_mass;
+  return part_s->_u;
 }
 
 /**
- * @brief get a pointer to mass, Particle mass.
+ * @brief get a pointer to u, Particle internal energy.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to mass. If you need read-only access to mass, use part_get_const_mass_p() instead.
+ * to u. If you need read-only access to u, use part_get_const_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_mass_p_global(const ptrdiff_t pind) {
+  part_get_u_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_mass;
+  return &part_s->_u;
 }
 
 /**
- * @brief get read-only access to pointer to mass,
- * Particle mass.
- * If you need write access to mass, use part_get_mass_p() instead.
+ * @brief get read-only access to pointer to u,
+ * Particle internal energy.
+ * If you need write access to u, use part_get_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_mass_p_global(const ptrdiff_t pind) {
+  part_get_const_u_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_mass;
+  return &part_s->_u;
 }
 
 /**
- * @brief set the value of mass, Particle mass.
+ * @brief set the value of u, Particle internal energy.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_mass_global(const ptrdiff_t pind, const float mass) {
+  part_set_u_global(const ptrdiff_t pind, const float u) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_mass = mass;
+  part_s->_u = u;
+}
+
+
+
+
+/**
+ * @brief get div_v, Particle velocity divergence.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_div_v(const struct part *restrict p) {
+  return p->_div_v;
+}
+
+/**
+ * @brief get a pointer to div_v, Particle velocity divergence.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to div_v. If you need read-only access to div_v, use part_get_const_div_v_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_div_v_p(struct part *restrict p) {
+  return &p->_div_v;
+}
+
+/**
+ * @brief get read-only access to pointer to div_v,
+ * Particle velocity divergence.
+ * If you need write access to div_v, use part_get_div_v_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_div_v_p(const struct part *restrict p) {
+  return &p->_div_v;
+}
+
+/**
+ * @brief set the value of div_v, Particle velocity divergence.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_div_v(struct part *restrict p, const float div_v) {
+  p->_div_v = div_v;
+}
+
+
+/**
+ * @brief get div_v, Particle velocity divergence.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_div_v_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_div_v;
+}
+
+/**
+ * @brief get a pointer to div_v, Particle velocity divergence.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to div_v. If you need read-only access to div_v, use part_get_const_div_v_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_div_v_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_div_v;
+}
+
+/**
+ * @brief get read-only access to pointer to div_v,
+ * Particle velocity divergence.
+ * If you need write access to div_v, use part_get_div_v_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_div_v_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_div_v;
+}
+
+/**
+ * @brief set the value of div_v, Particle velocity divergence.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_div_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float div_v) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_div_v = div_v;
+}
+
+
+/**
+ * @brief get div_v, Particle velocity divergence.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_div_v_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_div_v;
+}
+
+/**
+ * @brief get a pointer to div_v, Particle velocity divergence.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to div_v. If you need read-only access to div_v, use part_get_const_div_v_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_div_v_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_div_v;
+}
+
+/**
+ * @brief get read-only access to pointer to div_v,
+ * Particle velocity divergence.
+ * If you need write access to div_v, use part_get_div_v_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_div_v_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_div_v;
+}
+
+/**
+ * @brief set the value of div_v, Particle velocity divergence.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_div_v_global(const ptrdiff_t pind, const float div_v) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_div_v = div_v;
+}
+
+
+
+
+/**
+ * @brief get soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_soundspeed(const struct part *restrict p) {
+  return p->_soundspeed;
+}
+
+/**
+ * @brief get a pointer to soundspeed, Particle soundspeed.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_soundspeed_p(struct part *restrict p) {
+  return &p->_soundspeed;
+}
+
+/**
+ * @brief get read-only access to pointer to soundspeed,
+ * Particle soundspeed.
+ * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_soundspeed_p(const struct part *restrict p) {
+  return &p->_soundspeed;
+}
+
+/**
+ * @brief set the value of soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_soundspeed(struct part *restrict p, const float soundspeed) {
+  p->_soundspeed = soundspeed;
+}
+
+
+/**
+ * @brief get soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_soundspeed_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_soundspeed;
+}
+
+/**
+ * @brief get a pointer to soundspeed, Particle soundspeed.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_soundspeed_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_soundspeed;
+}
+
+/**
+ * @brief get read-only access to pointer to soundspeed,
+ * Particle soundspeed.
+ * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_soundspeed_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_soundspeed;
+}
+
+/**
+ * @brief set the value of soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_soundspeed_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float soundspeed) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_soundspeed = soundspeed;
+}
+
+
+/**
+ * @brief get soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_soundspeed_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_soundspeed;
+}
+
+/**
+ * @brief get a pointer to soundspeed, Particle soundspeed.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_soundspeed_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_soundspeed;
+}
+
+/**
+ * @brief get read-only access to pointer to soundspeed,
+ * Particle soundspeed.
+ * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_soundspeed_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_soundspeed;
+}
+
+/**
+ * @brief set the value of soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_soundspeed_global(const ptrdiff_t pind, const float soundspeed) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_soundspeed = soundspeed;
 }
 
 
@@ -1218,525 +1807,11 @@ static __attribute__((always_inline)) INLINE void
 
 
 /**
- * @brief get u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u(const struct part *restrict p) {
-  return p->_u;
-}
-
-/**
- * @brief get a pointer to u, Particle internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u. If you need read-only access to u, use part_get_const_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_p(struct part *restrict p) {
-  return &p->_u;
-}
-
-/**
- * @brief get read-only access to pointer to u,
- * Particle internal energy.
- * If you need write access to u, use part_get_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_p(const struct part *restrict p) {
-  return &p->_u;
-}
-
-/**
- * @brief set the value of u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u(struct part *restrict p, const float u) {
-  p->_u = u;
-}
-
-
-/**
- * @brief get u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_u;
-}
-
-/**
- * @brief get a pointer to u, Particle internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u. If you need read-only access to u, use part_get_const_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_u;
-}
-
-/**
- * @brief get read-only access to pointer to u,
- * Particle internal energy.
- * If you need write access to u, use part_get_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_u;
-}
-
-/**
- * @brief set the value of u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float u) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_u = u;
-}
-
-
-/**
- * @brief get u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_u;
-}
-
-/**
- * @brief get a pointer to u, Particle internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u. If you need read-only access to u, use part_get_const_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_u;
-}
-
-/**
- * @brief get read-only access to pointer to u,
- * Particle internal energy.
- * If you need write access to u, use part_get_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_u;
-}
-
-/**
- * @brief set the value of u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u_global(const ptrdiff_t pind, const float u) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_u = u;
-}
-
-
-
-
-/**
- * @brief get u_dt, Time derivative of the internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u_dt(const struct part *restrict p) {
-  return p->_u_dt;
-}
-
-/**
- * @brief get a pointer to u_dt, Time derivative of the internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u_dt. If you need read-only access to u_dt, use part_get_const_u_dt_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_dt_p(struct part *restrict p) {
-  return &p->_u_dt;
-}
-
-/**
- * @brief get read-only access to pointer to u_dt,
- * Time derivative of the internal energy.
- * If you need write access to u_dt, use part_get_u_dt_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_dt_p(const struct part *restrict p) {
-  return &p->_u_dt;
-}
-
-/**
- * @brief set the value of u_dt, Time derivative of the internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u_dt(struct part *restrict p, const float u_dt) {
-  p->_u_dt = u_dt;
-}
-
-
-/**
- * @brief get u_dt, Time derivative of the internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u_dt_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_u_dt;
-}
-
-/**
- * @brief get a pointer to u_dt, Time derivative of the internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u_dt. If you need read-only access to u_dt, use part_get_const_u_dt_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_dt_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_u_dt;
-}
-
-/**
- * @brief get read-only access to pointer to u_dt,
- * Time derivative of the internal energy.
- * If you need write access to u_dt, use part_get_u_dt_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_u_dt;
-}
-
-/**
- * @brief set the value of u_dt, Time derivative of the internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u_dt_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float u_dt) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_u_dt = u_dt;
-}
-
-
-/**
- * @brief get u_dt, Time derivative of the internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u_dt_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_u_dt;
-}
-
-/**
- * @brief get a pointer to u_dt, Time derivative of the internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u_dt. If you need read-only access to u_dt, use part_get_const_u_dt_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_dt_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_u_dt;
-}
-
-/**
- * @brief get read-only access to pointer to u_dt,
- * Time derivative of the internal energy.
- * If you need write access to u_dt, use part_get_u_dt_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_dt_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_u_dt;
-}
-
-/**
- * @brief set the value of u_dt, Time derivative of the internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u_dt_global(const ptrdiff_t pind, const float u_dt) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_u_dt = u_dt;
-}
-
-
-
-
-/**
- * @brief get rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho(const struct part *restrict p) {
-  return p->_rho;
-}
-
-/**
- * @brief get a pointer to rho, Particle density.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_p(struct part *restrict p) {
-  return &p->_rho;
-}
-
-/**
- * @brief get read-only access to pointer to rho,
- * Particle density.
- * If you need write access to rho, use part_get_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_p(const struct part *restrict p) {
-  return &p->_rho;
-}
-
-/**
- * @brief set the value of rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho(struct part *restrict p, const float rho) {
-  p->_rho = rho;
-}
-
-
-/**
- * @brief get rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_rho;
-}
-
-/**
- * @brief get a pointer to rho, Particle density.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_rho;
-}
-
-/**
- * @brief get read-only access to pointer to rho,
- * Particle density.
- * If you need write access to rho, use part_get_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_rho;
-}
-
-/**
- * @brief set the value of rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_rho = rho;
-}
-
-
-/**
- * @brief get rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_rho;
-}
-
-/**
- * @brief get a pointer to rho, Particle density.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_rho;
-}
-
-/**
- * @brief get read-only access to pointer to rho,
- * Particle density.
- * If you need write access to rho, use part_get_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_rho;
-}
-
-/**
- * @brief set the value of rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho_global(const ptrdiff_t pind, const float rho) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_rho = rho;
-}
-
-
-
-
-/**
- * @brief get div_v, Particle velocity divergence.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_div_v(const struct part *restrict p) {
-  return p->_viscosity._div_v;
-}
-
-/**
- * @brief get a pointer to div_v, Particle velocity divergence.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to div_v. If you need read-only access to div_v, use part_get_const_div_v_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_p(struct part *restrict p) {
-  return &p->_viscosity._div_v;
-}
-
-/**
- * @brief get read-only access to pointer to div_v,
- * Particle velocity divergence.
- * If you need write access to div_v, use part_get_div_v_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_p(const struct part *restrict p) {
-  return &p->_viscosity._div_v;
-}
-
-/**
- * @brief set the value of div_v, Particle velocity divergence.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_div_v(struct part *restrict p, const float div_v) {
-  p->_viscosity._div_v = div_v;
-}
-
-
-/**
- * @brief get div_v, Particle velocity divergence.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_div_v_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_viscosity._div_v;
-}
-
-/**
- * @brief get a pointer to div_v, Particle velocity divergence.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to div_v. If you need read-only access to div_v, use part_get_const_div_v_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._div_v;
-}
-
-/**
- * @brief get read-only access to pointer to div_v,
- * Particle velocity divergence.
- * If you need write access to div_v, use part_get_div_v_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._div_v;
-}
-
-/**
- * @brief set the value of div_v, Particle velocity divergence.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_div_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float div_v) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_viscosity._div_v = div_v;
-}
-
-
-/**
- * @brief get div_v, Particle velocity divergence.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_div_v_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_viscosity._div_v;
-}
-
-/**
- * @brief get a pointer to div_v, Particle velocity divergence.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to div_v. If you need read-only access to div_v, use part_get_const_div_v_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._div_v;
-}
-
-/**
- * @brief get read-only access to pointer to div_v,
- * Particle velocity divergence.
- * If you need write access to div_v, use part_get_div_v_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._div_v;
-}
-
-/**
- * @brief set the value of div_v, Particle velocity divergence.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_div_v_global(const ptrdiff_t pind, const float div_v) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_viscosity._div_v = div_v;
-}
-
-
-/**
  * @brief get div_v_dt, Time differential of velocity divergence.
  */
 static __attribute__((always_inline)) INLINE float
   part_get_div_v_dt(const struct part *restrict p) {
-  return p->_viscosity._div_v_dt;
+  return p->_div_v_dt;
 }
 
 /**
@@ -1746,7 +1821,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_div_v_dt_p(struct part *restrict p) {
-  return &p->_viscosity._div_v_dt;
+  return &p->_div_v_dt;
 }
 
 /**
@@ -1756,7 +1831,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_div_v_dt_p(const struct part *restrict p) {
-  return &p->_viscosity._div_v_dt;
+  return &p->_div_v_dt;
 }
 
 /**
@@ -1764,7 +1839,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_div_v_dt(struct part *restrict p, const float div_v_dt) {
-  p->_viscosity._div_v_dt = div_v_dt;
+  p->_div_v_dt = div_v_dt;
 }
 
 
@@ -1775,7 +1850,7 @@ static __attribute__((always_inline)) INLINE float
   part_get_div_v_dt_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_viscosity._div_v_dt;
+  return part_s->_div_v_dt;
 }
 
 /**
@@ -1787,7 +1862,7 @@ static __attribute__((always_inline)) INLINE float*
   part_get_div_v_dt_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._div_v_dt;
+  return &part_s->_div_v_dt;
 }
 
 /**
@@ -1799,7 +1874,7 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_div_v_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._div_v_dt;
+  return &part_s->_div_v_dt;
 }
 
 /**
@@ -1809,7 +1884,7 @@ static __attribute__((always_inline)) INLINE void
   part_set_div_v_dt_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float div_v_dt) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_viscosity._div_v_dt = div_v_dt;
+  part_s->_div_v_dt = div_v_dt;
 }
 
 
@@ -1820,7 +1895,7 @@ static __attribute__((always_inline)) INLINE float
   part_get_div_v_dt_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_viscosity._div_v_dt;
+  return part_s->_div_v_dt;
 }
 
 /**
@@ -1832,7 +1907,7 @@ static __attribute__((always_inline)) INLINE float*
   part_get_div_v_dt_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._div_v_dt;
+  return &part_s->_div_v_dt;
 }
 
 /**
@@ -1844,7 +1919,7 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_div_v_dt_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._div_v_dt;
+  return &part_s->_div_v_dt;
 }
 
 /**
@@ -1854,1028 +1929,139 @@ static __attribute__((always_inline)) INLINE void
   part_set_div_v_dt_global(const ptrdiff_t pind, const float div_v_dt) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_viscosity._div_v_dt = div_v_dt;
+  part_s->_div_v_dt = div_v_dt;
 }
 
 
+
+
 /**
- * @brief get div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief get mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_previous_step(const struct part *restrict p) {
-  return p->_viscosity._div_v_previous_step;
+  part_get_mass(const struct part *restrict p) {
+  return p->_mass;
 }
 
 /**
- * @brief get a pointer to div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief get a pointer to mass, Particle mass.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to div_v_previous_step. If you need read-only access to div_v_previous_step, use part_get_const_div_v_previous_step_p() instead.
+ * to mass. If you need read-only access to mass, use part_get_const_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_previous_step_p(struct part *restrict p) {
-  return &p->_viscosity._div_v_previous_step;
+  part_get_mass_p(struct part *restrict p) {
+  return &p->_mass;
 }
 
 /**
- * @brief get read-only access to pointer to div_v_previous_step,
- * Particle velocity divergence from previous step.
- * If you need write access to div_v_previous_step, use part_get_div_v_previous_step_p() instead.
+ * @brief get read-only access to pointer to mass,
+ * Particle mass.
+ * If you need write access to mass, use part_get_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_previous_step_p(const struct part *restrict p) {
-  return &p->_viscosity._div_v_previous_step;
+  part_get_const_mass_p(const struct part *restrict p) {
+  return &p->_mass;
 }
 
 /**
- * @brief set the value of div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief set the value of mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_previous_step(struct part *restrict p, const float div_v_previous_step) {
-  p->_viscosity._div_v_previous_step = div_v_previous_step;
+  part_set_mass(struct part *restrict p, const float mass) {
+  p->_mass = mass;
 }
 
 
 /**
- * @brief get div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief get mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_previous_step_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_mass_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_viscosity._div_v_previous_step;
+  return part_s->_mass;
 }
 
 /**
- * @brief get a pointer to div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief get a pointer to mass, Particle mass.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to div_v_previous_step. If you need read-only access to div_v_previous_step, use part_get_const_div_v_previous_step_p() instead.
+ * to mass. If you need read-only access to mass, use part_get_const_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_previous_step_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_mass_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._div_v_previous_step;
+  return &part_s->_mass;
 }
 
 /**
- * @brief get read-only access to pointer to div_v_previous_step,
- * Particle velocity divergence from previous step.
- * If you need write access to div_v_previous_step, use part_get_div_v_previous_step_p() instead.
+ * @brief get read-only access to pointer to mass,
+ * Particle mass.
+ * If you need write access to mass, use part_get_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_previous_step_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_const_mass_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._div_v_previous_step;
+  return &part_s->_mass;
 }
 
 /**
- * @brief set the value of div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief set the value of mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_previous_step_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float div_v_previous_step) {
+  part_set_mass_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float mass) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_viscosity._div_v_previous_step = div_v_previous_step;
+  part_s->_mass = mass;
 }
 
 
 /**
- * @brief get div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief get mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_div_v_previous_step_global(const ptrdiff_t pind) {
+  part_get_mass_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_viscosity._div_v_previous_step;
+  return part_s->_mass;
 }
 
 /**
- * @brief get a pointer to div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief get a pointer to mass, Particle mass.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to div_v_previous_step. If you need read-only access to div_v_previous_step, use part_get_const_div_v_previous_step_p() instead.
+ * to mass. If you need read-only access to mass, use part_get_const_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_div_v_previous_step_p_global(const ptrdiff_t pind) {
+  part_get_mass_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._div_v_previous_step;
+  return &part_s->_mass;
 }
 
 /**
- * @brief get read-only access to pointer to div_v_previous_step,
- * Particle velocity divergence from previous step.
- * If you need write access to div_v_previous_step, use part_get_div_v_previous_step_p() instead.
+ * @brief get read-only access to pointer to mass,
+ * Particle mass.
+ * If you need write access to mass, use part_get_mass_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_div_v_previous_step_p_global(const ptrdiff_t pind) {
+  part_get_const_mass_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._div_v_previous_step;
+  return &part_s->_mass;
 }
 
 /**
- * @brief set the value of div_v_previous_step, Particle velocity divergence from previous step.
+ * @brief set the value of mass, Particle mass.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_div_v_previous_step_global(const ptrdiff_t pind, const float div_v_previous_step) {
+  part_set_mass_global(const ptrdiff_t pind, const float mass) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_viscosity._div_v_previous_step = div_v_previous_step;
+  part_s->_mass = mass;
 }
 
 
-/**
- * @brief get alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av(const struct part *restrict p) {
-  return p->_viscosity._alpha_av;
-}
-
-/**
- * @brief get a pointer to alpha_av, Artificial viscosity parameter.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p(struct part *restrict p) {
-  return &p->_viscosity._alpha_av;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_av,
- * Artificial viscosity parameter.
- * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p(const struct part *restrict p) {
-  return &p->_viscosity._alpha_av;
-}
-
-/**
- * @brief set the value of alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av(struct part *restrict p, const float alpha_av) {
-  p->_viscosity._alpha_av = alpha_av;
-}
-
-
-/**
- * @brief get alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_viscosity._alpha_av;
-}
-
-/**
- * @brief get a pointer to alpha_av, Artificial viscosity parameter.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._alpha_av;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_av,
- * Artificial viscosity parameter.
- * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._alpha_av;
-}
-
-/**
- * @brief set the value of alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_av) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_viscosity._alpha_av = alpha_av;
-}
-
-
-/**
- * @brief get alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_viscosity._alpha_av;
-}
-
-/**
- * @brief get a pointer to alpha_av, Artificial viscosity parameter.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._alpha_av;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_av,
- * Artificial viscosity parameter.
- * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._alpha_av;
-}
-
-/**
- * @brief set the value of alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av_global(const ptrdiff_t pind, const float alpha_av) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_viscosity._alpha_av = alpha_av;
-}
-
-
-/**
- * @brief get v_sig, Signal velocity.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_v_sig(const struct part *restrict p) {
-  return p->_viscosity._v_sig;
-}
-
-/**
- * @brief get a pointer to v_sig, Signal velocity.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to v_sig. If you need read-only access to v_sig, use part_get_const_v_sig_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_v_sig_p(struct part *restrict p) {
-  return &p->_viscosity._v_sig;
-}
-
-/**
- * @brief get read-only access to pointer to v_sig,
- * Signal velocity.
- * If you need write access to v_sig, use part_get_v_sig_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_v_sig_p(const struct part *restrict p) {
-  return &p->_viscosity._v_sig;
-}
-
-/**
- * @brief set the value of v_sig, Signal velocity.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_v_sig(struct part *restrict p, const float v_sig) {
-  p->_viscosity._v_sig = v_sig;
-}
-
-
-/**
- * @brief get v_sig, Signal velocity.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_v_sig_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_viscosity._v_sig;
-}
-
-/**
- * @brief get a pointer to v_sig, Signal velocity.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to v_sig. If you need read-only access to v_sig, use part_get_const_v_sig_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_v_sig_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._v_sig;
-}
-
-/**
- * @brief get read-only access to pointer to v_sig,
- * Signal velocity.
- * If you need write access to v_sig, use part_get_v_sig_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_v_sig_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_viscosity._v_sig;
-}
-
-/**
- * @brief set the value of v_sig, Signal velocity.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_v_sig_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float v_sig) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_viscosity._v_sig = v_sig;
-}
-
-
-/**
- * @brief get v_sig, Signal velocity.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_v_sig_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_viscosity._v_sig;
-}
-
-/**
- * @brief get a pointer to v_sig, Signal velocity.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to v_sig. If you need read-only access to v_sig, use part_get_const_v_sig_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_v_sig_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._v_sig;
-}
-
-/**
- * @brief get read-only access to pointer to v_sig,
- * Signal velocity.
- * If you need write access to v_sig, use part_get_v_sig_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_v_sig_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_viscosity._v_sig;
-}
-
-/**
- * @brief set the value of v_sig, Signal velocity.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_v_sig_global(const ptrdiff_t pind, const float v_sig) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_viscosity._v_sig = v_sig;
-}
-
-
-
-
-/**
- * @brief get laplace_u, del^2 u, a smoothed quantity.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_laplace_u(const struct part *restrict p) {
-  return p->_diffusion._laplace_u;
-}
-
-/**
- * @brief get a pointer to laplace_u, del^2 u, a smoothed quantity.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to laplace_u. If you need read-only access to laplace_u, use part_get_const_laplace_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_laplace_u_p(struct part *restrict p) {
-  return &p->_diffusion._laplace_u;
-}
-
-/**
- * @brief get read-only access to pointer to laplace_u,
- * del^2 u, a smoothed quantity.
- * If you need write access to laplace_u, use part_get_laplace_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_laplace_u_p(const struct part *restrict p) {
-  return &p->_diffusion._laplace_u;
-}
-
-/**
- * @brief set the value of laplace_u, del^2 u, a smoothed quantity.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_laplace_u(struct part *restrict p, const float laplace_u) {
-  p->_diffusion._laplace_u = laplace_u;
-}
-
-
-/**
- * @brief get laplace_u, del^2 u, a smoothed quantity.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_laplace_u_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_diffusion._laplace_u;
-}
-
-/**
- * @brief get a pointer to laplace_u, del^2 u, a smoothed quantity.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to laplace_u. If you need read-only access to laplace_u, use part_get_const_laplace_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_laplace_u_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_diffusion._laplace_u;
-}
-
-/**
- * @brief get read-only access to pointer to laplace_u,
- * del^2 u, a smoothed quantity.
- * If you need write access to laplace_u, use part_get_laplace_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_laplace_u_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_diffusion._laplace_u;
-}
-
-/**
- * @brief set the value of laplace_u, del^2 u, a smoothed quantity.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_laplace_u_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float laplace_u) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_diffusion._laplace_u = laplace_u;
-}
-
-
-/**
- * @brief get laplace_u, del^2 u, a smoothed quantity.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_laplace_u_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_diffusion._laplace_u;
-}
-
-/**
- * @brief get a pointer to laplace_u, del^2 u, a smoothed quantity.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to laplace_u. If you need read-only access to laplace_u, use part_get_const_laplace_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_laplace_u_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_diffusion._laplace_u;
-}
-
-/**
- * @brief get read-only access to pointer to laplace_u,
- * del^2 u, a smoothed quantity.
- * If you need write access to laplace_u, use part_get_laplace_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_laplace_u_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_diffusion._laplace_u;
-}
-
-/**
- * @brief set the value of laplace_u, del^2 u, a smoothed quantity.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_laplace_u_global(const ptrdiff_t pind, const float laplace_u) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_diffusion._laplace_u = laplace_u;
-}
-
-
-/**
- * @brief get alpha_diff, Thermal diffusion coefficient.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_diff(const struct part *restrict p) {
-  return p->_diffusion._alpha_diff;
-}
-
-/**
- * @brief get a pointer to alpha_diff, Thermal diffusion coefficient.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_diff. If you need read-only access to alpha_diff, use part_get_const_alpha_diff_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_diff_p(struct part *restrict p) {
-  return &p->_diffusion._alpha_diff;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_diff,
- * Thermal diffusion coefficient.
- * If you need write access to alpha_diff, use part_get_alpha_diff_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_diff_p(const struct part *restrict p) {
-  return &p->_diffusion._alpha_diff;
-}
-
-/**
- * @brief set the value of alpha_diff, Thermal diffusion coefficient.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_diff(struct part *restrict p, const float alpha_diff) {
-  p->_diffusion._alpha_diff = alpha_diff;
-}
-
-
-/**
- * @brief get alpha_diff, Thermal diffusion coefficient.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_diff_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_diffusion._alpha_diff;
-}
-
-/**
- * @brief get a pointer to alpha_diff, Thermal diffusion coefficient.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_diff. If you need read-only access to alpha_diff, use part_get_const_alpha_diff_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_diff_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_diffusion._alpha_diff;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_diff,
- * Thermal diffusion coefficient.
- * If you need write access to alpha_diff, use part_get_alpha_diff_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_diff_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_diffusion._alpha_diff;
-}
-
-/**
- * @brief set the value of alpha_diff, Thermal diffusion coefficient.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_diff_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_diff) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_diffusion._alpha_diff = alpha_diff;
-}
-
-
-/**
- * @brief get alpha_diff, Thermal diffusion coefficient.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_diff_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_diffusion._alpha_diff;
-}
-
-/**
- * @brief get a pointer to alpha_diff, Thermal diffusion coefficient.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_diff. If you need read-only access to alpha_diff, use part_get_const_alpha_diff_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_diff_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_diffusion._alpha_diff;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_diff,
- * Thermal diffusion coefficient.
- * If you need write access to alpha_diff, use part_get_alpha_diff_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_diff_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_diffusion._alpha_diff;
-}
-
-/**
- * @brief set the value of alpha_diff, Thermal diffusion coefficient.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_diff_global(const ptrdiff_t pind, const float alpha_diff) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_diffusion._alpha_diff = alpha_diff;
-}
-
-
-
-
-/**
- * @brief get wcount, Neighbour number count.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_wcount(const struct part *restrict p) {
-  return p->_density._wcount;
-}
-
-/**
- * @brief get a pointer to wcount, Neighbour number count.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to wcount. If you need read-only access to wcount, use part_get_const_wcount_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_p(struct part *restrict p) {
-  return &p->_density._wcount;
-}
-
-/**
- * @brief get read-only access to pointer to wcount,
- * Neighbour number count.
- * If you need write access to wcount, use part_get_wcount_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_p(const struct part *restrict p) {
-  return &p->_density._wcount;
-}
-
-/**
- * @brief set the value of wcount, Neighbour number count.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_wcount(struct part *restrict p, const float wcount) {
-  p->_density._wcount = wcount;
-}
-
-
-/**
- * @brief get wcount, Neighbour number count.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_wcount_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_density._wcount;
-}
-
-/**
- * @brief get a pointer to wcount, Neighbour number count.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to wcount. If you need read-only access to wcount, use part_get_const_wcount_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_density._wcount;
-}
-
-/**
- * @brief get read-only access to pointer to wcount,
- * Neighbour number count.
- * If you need write access to wcount, use part_get_wcount_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_density._wcount;
-}
-
-/**
- * @brief set the value of wcount, Neighbour number count.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_wcount_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float wcount) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_density._wcount = wcount;
-}
-
-
-/**
- * @brief get wcount, Neighbour number count.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_wcount_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_density._wcount;
-}
-
-/**
- * @brief get a pointer to wcount, Neighbour number count.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to wcount. If you need read-only access to wcount, use part_get_const_wcount_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_density._wcount;
-}
-
-/**
- * @brief get read-only access to pointer to wcount,
- * Neighbour number count.
- * If you need write access to wcount, use part_get_wcount_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_density._wcount;
-}
-
-/**
- * @brief set the value of wcount, Neighbour number count.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_wcount_global(const ptrdiff_t pind, const float wcount) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_density._wcount = wcount;
-}
-
-
-/**
- * @brief get wcount_dh, Derivative of the neighbour number with respect to h.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_wcount_dh(const struct part *restrict p) {
-  return p->_density._wcount_dh;
-}
-
-/**
- * @brief get a pointer to wcount_dh, Derivative of the neighbour number with respect to h.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to wcount_dh. If you need read-only access to wcount_dh, use part_get_const_wcount_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_dh_p(struct part *restrict p) {
-  return &p->_density._wcount_dh;
-}
-
-/**
- * @brief get read-only access to pointer to wcount_dh,
- * Derivative of the neighbour number with respect to h.
- * If you need write access to wcount_dh, use part_get_wcount_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_dh_p(const struct part *restrict p) {
-  return &p->_density._wcount_dh;
-}
-
-/**
- * @brief set the value of wcount_dh, Derivative of the neighbour number with respect to h.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_wcount_dh(struct part *restrict p, const float wcount_dh) {
-  p->_density._wcount_dh = wcount_dh;
-}
-
-
-/**
- * @brief get wcount_dh, Derivative of the neighbour number with respect to h.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_wcount_dh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_density._wcount_dh;
-}
-
-/**
- * @brief get a pointer to wcount_dh, Derivative of the neighbour number with respect to h.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to wcount_dh. If you need read-only access to wcount_dh, use part_get_const_wcount_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_dh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_density._wcount_dh;
-}
-
-/**
- * @brief get read-only access to pointer to wcount_dh,
- * Derivative of the neighbour number with respect to h.
- * If you need write access to wcount_dh, use part_get_wcount_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_dh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_density._wcount_dh;
-}
-
-/**
- * @brief set the value of wcount_dh, Derivative of the neighbour number with respect to h.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_wcount_dh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float wcount_dh) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_density._wcount_dh = wcount_dh;
-}
-
-
-/**
- * @brief get wcount_dh, Derivative of the neighbour number with respect to h.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_wcount_dh_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_density._wcount_dh;
-}
-
-/**
- * @brief get a pointer to wcount_dh, Derivative of the neighbour number with respect to h.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to wcount_dh. If you need read-only access to wcount_dh, use part_get_const_wcount_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_wcount_dh_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_density._wcount_dh;
-}
-
-/**
- * @brief get read-only access to pointer to wcount_dh,
- * Derivative of the neighbour number with respect to h.
- * If you need write access to wcount_dh, use part_get_wcount_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_wcount_dh_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_density._wcount_dh;
-}
-
-/**
- * @brief set the value of wcount_dh, Derivative of the neighbour number with respect to h.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_wcount_dh_global(const ptrdiff_t pind, const float wcount_dh) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_density._wcount_dh = wcount_dh;
-}
-
-
-/**
- * @brief get rho_dh, Derivative of density with respect to h.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho_dh(const struct part *restrict p) {
-  return p->_density._rho_dh;
-}
-
-/**
- * @brief get a pointer to rho_dh, Derivative of density with respect to h.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho_dh. If you need read-only access to rho_dh, use part_get_const_rho_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_dh_p(struct part *restrict p) {
-  return &p->_density._rho_dh;
-}
-
-/**
- * @brief get read-only access to pointer to rho_dh,
- * Derivative of density with respect to h.
- * If you need write access to rho_dh, use part_get_rho_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_dh_p(const struct part *restrict p) {
-  return &p->_density._rho_dh;
-}
-
-/**
- * @brief set the value of rho_dh, Derivative of density with respect to h.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho_dh(struct part *restrict p, const float rho_dh) {
-  p->_density._rho_dh = rho_dh;
-}
-
-
-/**
- * @brief get rho_dh, Derivative of density with respect to h.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho_dh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_density._rho_dh;
-}
-
-/**
- * @brief get a pointer to rho_dh, Derivative of density with respect to h.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho_dh. If you need read-only access to rho_dh, use part_get_const_rho_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_dh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_density._rho_dh;
-}
-
-/**
- * @brief get read-only access to pointer to rho_dh,
- * Derivative of density with respect to h.
- * If you need write access to rho_dh, use part_get_rho_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_dh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_density._rho_dh;
-}
-
-/**
- * @brief set the value of rho_dh, Derivative of density with respect to h.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho_dh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho_dh) {
-
-  struct part* restrict part_s = pd->_part + pind;
-  part_s->_density._rho_dh = rho_dh;
-}
-
-
-/**
- * @brief get rho_dh, Derivative of density with respect to h.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho_dh_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_density._rho_dh;
-}
-
-/**
- * @brief get a pointer to rho_dh, Derivative of density with respect to h.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho_dh. If you need read-only access to rho_dh, use part_get_const_rho_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_dh_p_global(const ptrdiff_t pind) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_density._rho_dh;
-}
-
-/**
- * @brief get read-only access to pointer to rho_dh,
- * Derivative of density with respect to h.
- * If you need write access to rho_dh, use part_get_rho_dh_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_dh_p_global(const ptrdiff_t pind) {
-
-  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_density._rho_dh;
-}
-
-/**
- * @brief set the value of rho_dh, Derivative of density with respect to h.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho_dh_global(const ptrdiff_t pind, const float rho_dh) {
-
-  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_density._rho_dh = rho_dh;
-}
 
 
 /**
@@ -2885,7 +2071,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_rot_v(struct part *restrict p) {
-  return p->_density._rot_v;
+  return p->_rot_v;
 }
 
 /**
@@ -2893,7 +2079,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_rot_v(const struct part *restrict p) {
-  return p->_density._rot_v;
+  return p->_rot_v;
 }
 
 /**
@@ -2901,7 +2087,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE float
   part_get_rot_v_ind(const struct part *restrict p, const int i) {
-  return p->_density._rot_v[i];
+  return p->_rot_v[i];
 }
 
 /**
@@ -2910,9 +2096,9 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE void
   part_set_rot_v(struct part *restrict p, const float rot_v[3]) {
-  p->_density._rot_v[0] = rot_v[0];
-  p->_density._rot_v[1] = rot_v[1];
-  p->_density._rot_v[2] = rot_v[2];
+  p->_rot_v[0] = rot_v[0];
+  p->_rot_v[1] = rot_v[1];
+  p->_rot_v[2] = rot_v[2];
 }
 
 /**
@@ -2920,7 +2106,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_rot_v_ind(struct part *restrict p, const int i, const float rot_v) {
-  p->_density._rot_v[i] = rot_v;
+  p->_rot_v[i] = rot_v;
 }
 
 
@@ -2933,7 +2119,7 @@ static __attribute__((always_inline)) INLINE float*
   part_get_rot_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return part_s->_density._rot_v;
+  return part_s->_rot_v;
 }
 
 /**
@@ -2943,7 +2129,7 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_rot_v_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_density._rot_v;
+  return part_s->_rot_v;
 }
 
 /**
@@ -2953,7 +2139,7 @@ static __attribute__((always_inline)) INLINE float
   part_get_rot_v_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_density._rot_v[i];
+  return part_s->_rot_v[i];
 }
 
 /**
@@ -2964,9 +2150,9 @@ static __attribute__((always_inline)) INLINE void
   part_set_rot_v_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rot_v[3]) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_density._rot_v[0] = rot_v[0];
-  part_s->_density._rot_v[1] = rot_v[1];
-  part_s->_density._rot_v[2] = rot_v[2];
+  part_s->_rot_v[0] = rot_v[0];
+  part_s->_rot_v[1] = rot_v[1];
+  part_s->_rot_v[2] = rot_v[2];
 }
 
 /**
@@ -2976,7 +2162,7 @@ static __attribute__((always_inline)) INLINE void
   part_set_rot_v_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const float rot_v) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_density._rot_v[i] = rot_v;
+  part_s->_rot_v[i] = rot_v;
 }
 
 
@@ -2989,7 +2175,7 @@ static __attribute__((always_inline)) INLINE float*
   part_get_rot_v_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_density._rot_v;
+  return part_s->_rot_v;
 }
 
 /**
@@ -2999,7 +2185,7 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_rot_v_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_density._rot_v;
+  return part_s->_rot_v;
 }
 
 /**
@@ -3009,7 +2195,7 @@ static __attribute__((always_inline)) INLINE float
   part_get_rot_v_ind_global(const ptrdiff_t pind, const int i) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_density._rot_v[i];
+  return part_s->_rot_v[i];
 }
 
 /**
@@ -3020,9 +2206,9 @@ static __attribute__((always_inline)) INLINE void
   part_set_rot_v_global(const ptrdiff_t pind, const float rot_v[3]) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_density._rot_v[0] = rot_v[0];
-  part_s->_density._rot_v[1] = rot_v[1];
-  part_s->_density._rot_v[2] = rot_v[2];
+  part_s->_rot_v[0] = rot_v[0];
+  part_s->_rot_v[1] = rot_v[1];
+  part_s->_rot_v[2] = rot_v[2];
 }
 
 /**
@@ -3032,389 +2218,397 @@ static __attribute__((always_inline)) INLINE void
   part_set_rot_v_ind_global(const ptrdiff_t pind, const int i, const float rot_v) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_density._rot_v[i] = rot_v;
+  part_s->_rot_v[i] = rot_v;
 }
 
 
+
+
 /**
- * @brief get f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief get v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_f_gradh(const struct part *restrict p) {
-  return p->_force._f_gradh;
+  part_get_v_sig(const struct part *restrict p) {
+  return p->_v_sig;
 }
 
 /**
- * @brief get a pointer to f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief get a pointer to v_sig, Signal velocity.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to f_gradh. If you need read-only access to f_gradh, use part_get_const_f_gradh_p() instead.
+ * to v_sig. If you need read-only access to v_sig, use part_get_const_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_f_gradh_p(struct part *restrict p) {
-  return &p->_force._f_gradh;
+  part_get_v_sig_p(struct part *restrict p) {
+  return &p->_v_sig;
 }
 
 /**
- * @brief get read-only access to pointer to f_gradh,
- * 'Grad h' term -- only partial in P-U.
- * If you need write access to f_gradh, use part_get_f_gradh_p() instead.
+ * @brief get read-only access to pointer to v_sig,
+ * Signal velocity.
+ * If you need write access to v_sig, use part_get_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_f_gradh_p(const struct part *restrict p) {
-  return &p->_force._f_gradh;
+  part_get_const_v_sig_p(const struct part *restrict p) {
+  return &p->_v_sig;
 }
 
 /**
- * @brief set the value of f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief set the value of v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_f_gradh(struct part *restrict p, const float f_gradh) {
-  p->_force._f_gradh = f_gradh;
+  part_set_v_sig(struct part *restrict p, const float v_sig) {
+  p->_v_sig = v_sig;
 }
 
 
 /**
- * @brief get f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief get v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_f_gradh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_v_sig_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_force._f_gradh;
+  return part_s->_v_sig;
 }
 
 /**
- * @brief get a pointer to f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief get a pointer to v_sig, Signal velocity.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to f_gradh. If you need read-only access to f_gradh, use part_get_const_f_gradh_p() instead.
+ * to v_sig. If you need read-only access to v_sig, use part_get_const_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_f_gradh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_v_sig_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._f_gradh;
+  return &part_s->_v_sig;
 }
 
 /**
- * @brief get read-only access to pointer to f_gradh,
- * 'Grad h' term -- only partial in P-U.
- * If you need write access to f_gradh, use part_get_f_gradh_p() instead.
+ * @brief get read-only access to pointer to v_sig,
+ * Signal velocity.
+ * If you need write access to v_sig, use part_get_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_f_gradh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_const_v_sig_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._f_gradh;
+  return &part_s->_v_sig;
 }
 
 /**
- * @brief set the value of f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief set the value of v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_f_gradh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float f_gradh) {
+  part_set_v_sig_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float v_sig) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_force._f_gradh = f_gradh;
+  part_s->_v_sig = v_sig;
 }
 
 
 /**
- * @brief get f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief get v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_f_gradh_global(const ptrdiff_t pind) {
+  part_get_v_sig_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_force._f_gradh;
+  return part_s->_v_sig;
 }
 
 /**
- * @brief get a pointer to f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief get a pointer to v_sig, Signal velocity.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to f_gradh. If you need read-only access to f_gradh, use part_get_const_f_gradh_p() instead.
+ * to v_sig. If you need read-only access to v_sig, use part_get_const_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_f_gradh_p_global(const ptrdiff_t pind) {
+  part_get_v_sig_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._f_gradh;
+  return &part_s->_v_sig;
 }
 
 /**
- * @brief get read-only access to pointer to f_gradh,
- * 'Grad h' term -- only partial in P-U.
- * If you need write access to f_gradh, use part_get_f_gradh_p() instead.
+ * @brief get read-only access to pointer to v_sig,
+ * Signal velocity.
+ * If you need write access to v_sig, use part_get_v_sig_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_f_gradh_p_global(const ptrdiff_t pind) {
+  part_get_const_v_sig_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._f_gradh;
+  return &part_s->_v_sig;
 }
 
 /**
- * @brief set the value of f_gradh, 'Grad h' term -- only partial in P-U.
+ * @brief set the value of v_sig, Signal velocity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_f_gradh_global(const ptrdiff_t pind, const float f_gradh) {
+  part_set_v_sig_global(const ptrdiff_t pind, const float v_sig) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_force._f_gradh = f_gradh;
+  part_s->_v_sig = v_sig;
 }
 
 
+
+
 /**
- * @brief get pressure, Particle pressure.
+ * @brief get laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_pressure(const struct part *restrict p) {
-  return p->_force._pressure;
+  part_get_laplace_u(const struct part *restrict p) {
+  return p->_laplace_u;
 }
 
 /**
- * @brief get a pointer to pressure, Particle pressure.
+ * @brief get a pointer to laplace_u, del^2 u, a smoothed quantity.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to pressure. If you need read-only access to pressure, use part_get_const_pressure_p() instead.
+ * to laplace_u. If you need read-only access to laplace_u, use part_get_const_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_pressure_p(struct part *restrict p) {
-  return &p->_force._pressure;
+  part_get_laplace_u_p(struct part *restrict p) {
+  return &p->_laplace_u;
 }
 
 /**
- * @brief get read-only access to pointer to pressure,
- * Particle pressure.
- * If you need write access to pressure, use part_get_pressure_p() instead.
+ * @brief get read-only access to pointer to laplace_u,
+ * del^2 u, a smoothed quantity.
+ * If you need write access to laplace_u, use part_get_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_pressure_p(const struct part *restrict p) {
-  return &p->_force._pressure;
+  part_get_const_laplace_u_p(const struct part *restrict p) {
+  return &p->_laplace_u;
 }
 
 /**
- * @brief set the value of pressure, Particle pressure.
+ * @brief set the value of laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_pressure(struct part *restrict p, const float pressure) {
-  p->_force._pressure = pressure;
+  part_set_laplace_u(struct part *restrict p, const float laplace_u) {
+  p->_laplace_u = laplace_u;
 }
 
 
 /**
- * @brief get pressure, Particle pressure.
+ * @brief get laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_pressure_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_laplace_u_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_force._pressure;
+  return part_s->_laplace_u;
 }
 
 /**
- * @brief get a pointer to pressure, Particle pressure.
+ * @brief get a pointer to laplace_u, del^2 u, a smoothed quantity.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to pressure. If you need read-only access to pressure, use part_get_const_pressure_p() instead.
+ * to laplace_u. If you need read-only access to laplace_u, use part_get_const_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_pressure_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_laplace_u_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._pressure;
+  return &part_s->_laplace_u;
 }
 
 /**
- * @brief get read-only access to pointer to pressure,
- * Particle pressure.
- * If you need write access to pressure, use part_get_pressure_p() instead.
+ * @brief get read-only access to pointer to laplace_u,
+ * del^2 u, a smoothed quantity.
+ * If you need write access to laplace_u, use part_get_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_pressure_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_const_laplace_u_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._pressure;
+  return &part_s->_laplace_u;
 }
 
 /**
- * @brief set the value of pressure, Particle pressure.
+ * @brief set the value of laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_pressure_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float pressure) {
+  part_set_laplace_u_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float laplace_u) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_force._pressure = pressure;
+  part_s->_laplace_u = laplace_u;
 }
 
 
 /**
- * @brief get pressure, Particle pressure.
+ * @brief get laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_pressure_global(const ptrdiff_t pind) {
+  part_get_laplace_u_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_force._pressure;
+  return part_s->_laplace_u;
 }
 
 /**
- * @brief get a pointer to pressure, Particle pressure.
+ * @brief get a pointer to laplace_u, del^2 u, a smoothed quantity.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to pressure. If you need read-only access to pressure, use part_get_const_pressure_p() instead.
+ * to laplace_u. If you need read-only access to laplace_u, use part_get_const_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_pressure_p_global(const ptrdiff_t pind) {
+  part_get_laplace_u_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._pressure;
+  return &part_s->_laplace_u;
 }
 
 /**
- * @brief get read-only access to pointer to pressure,
- * Particle pressure.
- * If you need write access to pressure, use part_get_pressure_p() instead.
+ * @brief get read-only access to pointer to laplace_u,
+ * del^2 u, a smoothed quantity.
+ * If you need write access to laplace_u, use part_get_laplace_u_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_pressure_p_global(const ptrdiff_t pind) {
+  part_get_const_laplace_u_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._pressure;
+  return &part_s->_laplace_u;
 }
 
 /**
- * @brief set the value of pressure, Particle pressure.
+ * @brief set the value of laplace_u, del^2 u, a smoothed quantity.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_pressure_global(const ptrdiff_t pind, const float pressure) {
+  part_set_laplace_u_global(const ptrdiff_t pind, const float laplace_u) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_force._pressure = pressure;
+  part_s->_laplace_u = laplace_u;
 }
 
 
+
+
 /**
- * @brief get soundspeed, Particle soundspeed.
+ * @brief get wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_soundspeed(const struct part *restrict p) {
-  return p->_force._soundspeed;
+  part_get_wcount(const struct part *restrict p) {
+  return p->_wcount;
 }
 
 /**
- * @brief get a pointer to soundspeed, Particle soundspeed.
+ * @brief get a pointer to wcount, Neighbour number count.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ * to wcount. If you need read-only access to wcount, use part_get_const_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_soundspeed_p(struct part *restrict p) {
-  return &p->_force._soundspeed;
+  part_get_wcount_p(struct part *restrict p) {
+  return &p->_wcount;
 }
 
 /**
- * @brief get read-only access to pointer to soundspeed,
- * Particle soundspeed.
- * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ * @brief get read-only access to pointer to wcount,
+ * Neighbour number count.
+ * If you need write access to wcount, use part_get_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_soundspeed_p(const struct part *restrict p) {
-  return &p->_force._soundspeed;
+  part_get_const_wcount_p(const struct part *restrict p) {
+  return &p->_wcount;
 }
 
 /**
- * @brief set the value of soundspeed, Particle soundspeed.
+ * @brief set the value of wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_soundspeed(struct part *restrict p, const float soundspeed) {
-  p->_force._soundspeed = soundspeed;
+  part_set_wcount(struct part *restrict p, const float wcount) {
+  p->_wcount = wcount;
 }
 
 
 /**
- * @brief get soundspeed, Particle soundspeed.
+ * @brief get wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_soundspeed_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_wcount_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_force._soundspeed;
+  return part_s->_wcount;
 }
 
 /**
- * @brief get a pointer to soundspeed, Particle soundspeed.
+ * @brief get a pointer to wcount, Neighbour number count.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ * to wcount. If you need read-only access to wcount, use part_get_const_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_soundspeed_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_wcount_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._soundspeed;
+  return &part_s->_wcount;
 }
 
 /**
- * @brief get read-only access to pointer to soundspeed,
- * Particle soundspeed.
- * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ * @brief get read-only access to pointer to wcount,
+ * Neighbour number count.
+ * If you need write access to wcount, use part_get_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_soundspeed_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_const_wcount_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._soundspeed;
+  return &part_s->_wcount;
 }
 
 /**
- * @brief set the value of soundspeed, Particle soundspeed.
+ * @brief set the value of wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_soundspeed_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float soundspeed) {
+  part_set_wcount_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float wcount) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_force._soundspeed = soundspeed;
+  part_s->_wcount = wcount;
 }
 
 
 /**
- * @brief get soundspeed, Particle soundspeed.
+ * @brief get wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_soundspeed_global(const ptrdiff_t pind) {
+  part_get_wcount_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_force._soundspeed;
+  return part_s->_wcount;
 }
 
 /**
- * @brief get a pointer to soundspeed, Particle soundspeed.
+ * @brief get a pointer to wcount, Neighbour number count.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ * to wcount. If you need read-only access to wcount, use part_get_const_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_soundspeed_p_global(const ptrdiff_t pind) {
+  part_get_wcount_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._soundspeed;
+  return &part_s->_wcount;
 }
 
 /**
- * @brief get read-only access to pointer to soundspeed,
- * Particle soundspeed.
- * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ * @brief get read-only access to pointer to wcount,
+ * Neighbour number count.
+ * If you need write access to wcount, use part_get_wcount_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_soundspeed_p_global(const ptrdiff_t pind) {
+  part_get_const_wcount_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._soundspeed;
+  return &part_s->_wcount;
 }
 
 /**
- * @brief set the value of soundspeed, Particle soundspeed.
+ * @brief set the value of wcount, Neighbour number count.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_soundspeed_global(const ptrdiff_t pind, const float soundspeed) {
+  part_set_wcount_global(const ptrdiff_t pind, const float wcount) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_force._soundspeed = soundspeed;
+  part_s->_wcount = wcount;
 }
+
+
 
 
 /**
@@ -3422,7 +2616,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_h_dt(const struct part *restrict p) {
-  return p->_force._h_dt;
+  return p->_h_dt;
 }
 
 /**
@@ -3432,7 +2626,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_h_dt_p(struct part *restrict p) {
-  return &p->_force._h_dt;
+  return &p->_h_dt;
 }
 
 /**
@@ -3442,7 +2636,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_h_dt_p(const struct part *restrict p) {
-  return &p->_force._h_dt;
+  return &p->_h_dt;
 }
 
 /**
@@ -3450,7 +2644,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_h_dt(struct part *restrict p, const float h_dt) {
-  p->_force._h_dt = h_dt;
+  p->_h_dt = h_dt;
 }
 
 
@@ -3461,7 +2655,7 @@ static __attribute__((always_inline)) INLINE float
   part_get_h_dt_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_force._h_dt;
+  return part_s->_h_dt;
 }
 
 /**
@@ -3473,7 +2667,7 @@ static __attribute__((always_inline)) INLINE float*
   part_get_h_dt_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._h_dt;
+  return &part_s->_h_dt;
 }
 
 /**
@@ -3485,7 +2679,7 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_h_dt_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._h_dt;
+  return &part_s->_h_dt;
 }
 
 /**
@@ -3495,7 +2689,7 @@ static __attribute__((always_inline)) INLINE void
   part_set_h_dt_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float h_dt) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_force._h_dt = h_dt;
+  part_s->_h_dt = h_dt;
 }
 
 
@@ -3506,7 +2700,7 @@ static __attribute__((always_inline)) INLINE float
   part_get_h_dt_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_force._h_dt;
+  return part_s->_h_dt;
 }
 
 /**
@@ -3518,7 +2712,7 @@ static __attribute__((always_inline)) INLINE float*
   part_get_h_dt_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._h_dt;
+  return &part_s->_h_dt;
 }
 
 /**
@@ -3530,7 +2724,7 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_h_dt_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._h_dt;
+  return &part_s->_h_dt;
 }
 
 /**
@@ -3540,135 +2734,944 @@ static __attribute__((always_inline)) INLINE void
   part_set_h_dt_global(const ptrdiff_t pind, const float h_dt) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_force._h_dt = h_dt;
+  part_s->_h_dt = h_dt;
 }
 
 
+
+
 /**
- * @brief get balsara, Balsara switch.
+ * @brief get alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_balsara(const struct part *restrict p) {
-  return p->_force._balsara;
+  part_get_alpha_diff(const struct part *restrict p) {
+  return p->_alpha_diff;
 }
 
 /**
- * @brief get a pointer to balsara, Balsara switch.
+ * @brief get a pointer to alpha_diff, Thermal diffusion coefficient.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to balsara. If you need read-only access to balsara, use part_get_const_balsara_p() instead.
+ * to alpha_diff. If you need read-only access to alpha_diff, use part_get_const_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_balsara_p(struct part *restrict p) {
-  return &p->_force._balsara;
+  part_get_alpha_diff_p(struct part *restrict p) {
+  return &p->_alpha_diff;
 }
 
 /**
- * @brief get read-only access to pointer to balsara,
- * Balsara switch.
- * If you need write access to balsara, use part_get_balsara_p() instead.
+ * @brief get read-only access to pointer to alpha_diff,
+ * Thermal diffusion coefficient.
+ * If you need write access to alpha_diff, use part_get_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_balsara_p(const struct part *restrict p) {
-  return &p->_force._balsara;
+  part_get_const_alpha_diff_p(const struct part *restrict p) {
+  return &p->_alpha_diff;
 }
 
 /**
- * @brief set the value of balsara, Balsara switch.
+ * @brief set the value of alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_balsara(struct part *restrict p, const float balsara) {
-  p->_force._balsara = balsara;
+  part_set_alpha_diff(struct part *restrict p, const float alpha_diff) {
+  p->_alpha_diff = alpha_diff;
 }
 
 
 /**
- * @brief get balsara, Balsara switch.
+ * @brief get alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_balsara_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_alpha_diff_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_force._balsara;
+  return part_s->_alpha_diff;
 }
 
 /**
- * @brief get a pointer to balsara, Balsara switch.
+ * @brief get a pointer to alpha_diff, Thermal diffusion coefficient.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to balsara. If you need read-only access to balsara, use part_get_const_balsara_p() instead.
+ * to alpha_diff. If you need read-only access to alpha_diff, use part_get_const_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_balsara_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_alpha_diff_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._balsara;
+  return &part_s->_alpha_diff;
 }
 
 /**
- * @brief get read-only access to pointer to balsara,
- * Balsara switch.
- * If you need write access to balsara, use part_get_balsara_p() instead.
+ * @brief get read-only access to pointer to alpha_diff,
+ * Thermal diffusion coefficient.
+ * If you need write access to alpha_diff, use part_get_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_balsara_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+  part_get_const_alpha_diff_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._balsara;
+  return &part_s->_alpha_diff;
 }
 
 /**
- * @brief set the value of balsara, Balsara switch.
+ * @brief set the value of alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_balsara_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float balsara) {
+  part_set_alpha_diff_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_diff) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_force._balsara = balsara;
+  part_s->_alpha_diff = alpha_diff;
 }
 
 
 /**
- * @brief get balsara, Balsara switch.
+ * @brief get alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_balsara_global(const ptrdiff_t pind) {
+  part_get_alpha_diff_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_force._balsara;
+  return part_s->_alpha_diff;
 }
 
 /**
- * @brief get a pointer to balsara, Balsara switch.
+ * @brief get a pointer to alpha_diff, Thermal diffusion coefficient.
  * Use this only if you need to modify the value, i.e. if you need write access
- * to balsara. If you need read-only access to balsara, use part_get_const_balsara_p() instead.
+ * to alpha_diff. If you need read-only access to alpha_diff, use part_get_const_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_balsara_p_global(const ptrdiff_t pind) {
+  part_get_alpha_diff_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._balsara;
+  return &part_s->_alpha_diff;
 }
 
 /**
- * @brief get read-only access to pointer to balsara,
- * Balsara switch.
- * If you need write access to balsara, use part_get_balsara_p() instead.
+ * @brief get read-only access to pointer to alpha_diff,
+ * Thermal diffusion coefficient.
+ * If you need write access to alpha_diff, use part_get_alpha_diff_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_balsara_p_global(const ptrdiff_t pind) {
+  part_get_const_alpha_diff_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._balsara;
+  return &part_s->_alpha_diff;
 }
 
 /**
- * @brief set the value of balsara, Balsara switch.
+ * @brief set the value of alpha_diff, Thermal diffusion coefficient.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_balsara_global(const ptrdiff_t pind, const float balsara) {
+  part_set_alpha_diff_global(const ptrdiff_t pind, const float alpha_diff) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_force._balsara = balsara;
+  part_s->_alpha_diff = alpha_diff;
 }
+
+
+
+
+/**
+ * @brief get rho_dh, Derivative of density with respect to h.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho_dh(const struct part *restrict p) {
+  return p->_rho_dh;
+}
+
+/**
+ * @brief get a pointer to rho_dh, Derivative of density with respect to h.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho_dh. If you need read-only access to rho_dh, use part_get_const_rho_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_dh_p(struct part *restrict p) {
+  return &p->_rho_dh;
+}
+
+/**
+ * @brief get read-only access to pointer to rho_dh,
+ * Derivative of density with respect to h.
+ * If you need write access to rho_dh, use part_get_rho_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_dh_p(const struct part *restrict p) {
+  return &p->_rho_dh;
+}
+
+/**
+ * @brief set the value of rho_dh, Derivative of density with respect to h.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho_dh(struct part *restrict p, const float rho_dh) {
+  p->_rho_dh = rho_dh;
+}
+
+
+/**
+ * @brief get rho_dh, Derivative of density with respect to h.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho_dh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_rho_dh;
+}
+
+/**
+ * @brief get a pointer to rho_dh, Derivative of density with respect to h.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho_dh. If you need read-only access to rho_dh, use part_get_const_rho_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_dh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_rho_dh;
+}
+
+/**
+ * @brief get read-only access to pointer to rho_dh,
+ * Derivative of density with respect to h.
+ * If you need write access to rho_dh, use part_get_rho_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_dh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_rho_dh;
+}
+
+/**
+ * @brief set the value of rho_dh, Derivative of density with respect to h.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho_dh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho_dh) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_rho_dh = rho_dh;
+}
+
+
+/**
+ * @brief get rho_dh, Derivative of density with respect to h.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho_dh_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_rho_dh;
+}
+
+/**
+ * @brief get a pointer to rho_dh, Derivative of density with respect to h.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho_dh. If you need read-only access to rho_dh, use part_get_const_rho_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_dh_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_rho_dh;
+}
+
+/**
+ * @brief get read-only access to pointer to rho_dh,
+ * Derivative of density with respect to h.
+ * If you need write access to rho_dh, use part_get_rho_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_dh_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_rho_dh;
+}
+
+/**
+ * @brief set the value of rho_dh, Derivative of density with respect to h.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho_dh_global(const ptrdiff_t pind, const float rho_dh) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_rho_dh = rho_dh;
+}
+
+
+
+
+/**
+ * @brief get x, the particle position,
+ * for read and write access. For read-only access, use
+ * part_get_const_x() instead.
+ */
+static __attribute__((always_inline)) INLINE double*
+  part_get_x(struct part *restrict p) {
+  return p->_x;
+}
+
+/**
+ * @brief get x, the particle position, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const double*
+  part_get_const_x(const struct part *restrict p) {
+  return p->_x;
+}
+
+/**
+ * @brief get x, the particle position, by index.
+ */
+static __attribute__((always_inline)) INLINE double
+  part_get_x_ind(const struct part *restrict p, const int i) {
+  return p->_x[i];
+}
+
+/**
+ * @brief set all values of x, the particle position,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_x(struct part *restrict p, const double x[3]) {
+  p->_x[0] = x[0];
+  p->_x[1] = x[1];
+  p->_x[2] = x[2];
+}
+
+/**
+ * @brief set the value of x, the particle position, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_x_ind(struct part *restrict p, const int i, const double x) {
+  p->_x[i] = x;
+}
+
+
+/**
+ * @brief get x, the particle position,
+ * for read and write access. For read-only access, use
+ * part_get_const_x() instead.
+ */
+static __attribute__((always_inline)) INLINE double*
+  part_get_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return part_s->_x;
+}
+
+/**
+ * @brief get x, the particle position, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const double*
+  part_get_const_x_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_x;
+}
+
+/**
+ * @brief get x, the particle position, by index.
+ */
+static __attribute__((always_inline)) INLINE double
+  part_get_x_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_x[i];
+}
+
+/**
+ * @brief set all values of x, the particle position,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const double x[3]) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_x[0] = x[0];
+  part_s->_x[1] = x[1];
+  part_s->_x[2] = x[2];
+}
+
+/**
+ * @brief set the value of x, the particle position, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_x_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const double x) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_x[i] = x;
+}
+
+
+/**
+ * @brief get x, the particle position,
+ * for read and write access. For read-only access, use
+ * part_get_const_x() instead.
+ */
+static __attribute__((always_inline)) INLINE double*
+  part_get_x_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_x;
+}
+
+/**
+ * @brief get x, the particle position, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const double*
+  part_get_const_x_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_x;
+}
+
+/**
+ * @brief get x, the particle position, by index.
+ */
+static __attribute__((always_inline)) INLINE double
+  part_get_x_ind_global(const ptrdiff_t pind, const int i) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_x[i];
+}
+
+/**
+ * @brief set all values of x, the particle position,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_x_global(const ptrdiff_t pind, const double x[3]) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_x[0] = x[0];
+  part_s->_x[1] = x[1];
+  part_s->_x[2] = x[2];
+}
+
+/**
+ * @brief set the value of x, the particle position, by index i.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_x_ind_global(const ptrdiff_t pind, const int i, const double x) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_x[i] = x;
+}
+
+
+
+
+/**
+ * @brief get f_gradh, 'Grad h' term -- only partial in P-U.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_f_gradh(const struct part *restrict p) {
+  return p->_f_gradh;
+}
+
+/**
+ * @brief get a pointer to f_gradh, 'Grad h' term -- only partial in P-U.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to f_gradh. If you need read-only access to f_gradh, use part_get_const_f_gradh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_f_gradh_p(struct part *restrict p) {
+  return &p->_f_gradh;
+}
+
+/**
+ * @brief get read-only access to pointer to f_gradh,
+ * 'Grad h' term -- only partial in P-U.
+ * If you need write access to f_gradh, use part_get_f_gradh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_f_gradh_p(const struct part *restrict p) {
+  return &p->_f_gradh;
+}
+
+/**
+ * @brief set the value of f_gradh, 'Grad h' term -- only partial in P-U.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_f_gradh(struct part *restrict p, const float f_gradh) {
+  p->_f_gradh = f_gradh;
+}
+
+
+/**
+ * @brief get f_gradh, 'Grad h' term -- only partial in P-U.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_f_gradh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_f_gradh;
+}
+
+/**
+ * @brief get a pointer to f_gradh, 'Grad h' term -- only partial in P-U.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to f_gradh. If you need read-only access to f_gradh, use part_get_const_f_gradh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_f_gradh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_f_gradh;
+}
+
+/**
+ * @brief get read-only access to pointer to f_gradh,
+ * 'Grad h' term -- only partial in P-U.
+ * If you need write access to f_gradh, use part_get_f_gradh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_f_gradh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_f_gradh;
+}
+
+/**
+ * @brief set the value of f_gradh, 'Grad h' term -- only partial in P-U.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_f_gradh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float f_gradh) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_f_gradh = f_gradh;
+}
+
+
+/**
+ * @brief get f_gradh, 'Grad h' term -- only partial in P-U.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_f_gradh_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_f_gradh;
+}
+
+/**
+ * @brief get a pointer to f_gradh, 'Grad h' term -- only partial in P-U.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to f_gradh. If you need read-only access to f_gradh, use part_get_const_f_gradh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_f_gradh_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_f_gradh;
+}
+
+/**
+ * @brief get read-only access to pointer to f_gradh,
+ * 'Grad h' term -- only partial in P-U.
+ * If you need write access to f_gradh, use part_get_f_gradh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_f_gradh_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_f_gradh;
+}
+
+/**
+ * @brief set the value of f_gradh, 'Grad h' term -- only partial in P-U.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_f_gradh_global(const ptrdiff_t pind, const float f_gradh) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_f_gradh = f_gradh;
+}
+
+
+
+
+/**
+ * @brief get alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_alpha_av(const struct part *restrict p) {
+  return p->_alpha_av;
+}
+
+/**
+ * @brief get a pointer to alpha_av, Artificial viscosity parameter.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_alpha_av_p(struct part *restrict p) {
+  return &p->_alpha_av;
+}
+
+/**
+ * @brief get read-only access to pointer to alpha_av,
+ * Artificial viscosity parameter.
+ * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_alpha_av_p(const struct part *restrict p) {
+  return &p->_alpha_av;
+}
+
+/**
+ * @brief set the value of alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_alpha_av(struct part *restrict p, const float alpha_av) {
+  p->_alpha_av = alpha_av;
+}
+
+
+/**
+ * @brief get alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_alpha_av_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_alpha_av;
+}
+
+/**
+ * @brief get a pointer to alpha_av, Artificial viscosity parameter.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_alpha_av_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_alpha_av;
+}
+
+/**
+ * @brief get read-only access to pointer to alpha_av,
+ * Artificial viscosity parameter.
+ * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_alpha_av_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_alpha_av;
+}
+
+/**
+ * @brief set the value of alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_alpha_av_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_av) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_alpha_av = alpha_av;
+}
+
+
+/**
+ * @brief get alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_alpha_av_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_alpha_av;
+}
+
+/**
+ * @brief get a pointer to alpha_av, Artificial viscosity parameter.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_alpha_av_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_alpha_av;
+}
+
+/**
+ * @brief get read-only access to pointer to alpha_av,
+ * Artificial viscosity parameter.
+ * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_alpha_av_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_alpha_av;
+}
+
+/**
+ * @brief set the value of alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_alpha_av_global(const ptrdiff_t pind, const float alpha_av) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_alpha_av = alpha_av;
+}
+
+
+
+
+/**
+ * @brief get pressure, Particle pressure.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_pressure(const struct part *restrict p) {
+  return p->_pressure;
+}
+
+/**
+ * @brief get a pointer to pressure, Particle pressure.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to pressure. If you need read-only access to pressure, use part_get_const_pressure_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_pressure_p(struct part *restrict p) {
+  return &p->_pressure;
+}
+
+/**
+ * @brief get read-only access to pointer to pressure,
+ * Particle pressure.
+ * If you need write access to pressure, use part_get_pressure_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_pressure_p(const struct part *restrict p) {
+  return &p->_pressure;
+}
+
+/**
+ * @brief set the value of pressure, Particle pressure.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_pressure(struct part *restrict p, const float pressure) {
+  p->_pressure = pressure;
+}
+
+
+/**
+ * @brief get pressure, Particle pressure.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_pressure_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_pressure;
+}
+
+/**
+ * @brief get a pointer to pressure, Particle pressure.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to pressure. If you need read-only access to pressure, use part_get_const_pressure_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_pressure_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_pressure;
+}
+
+/**
+ * @brief get read-only access to pointer to pressure,
+ * Particle pressure.
+ * If you need write access to pressure, use part_get_pressure_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_pressure_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_pressure;
+}
+
+/**
+ * @brief set the value of pressure, Particle pressure.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_pressure_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float pressure) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_pressure = pressure;
+}
+
+
+/**
+ * @brief get pressure, Particle pressure.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_pressure_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_pressure;
+}
+
+/**
+ * @brief get a pointer to pressure, Particle pressure.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to pressure. If you need read-only access to pressure, use part_get_const_pressure_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_pressure_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_pressure;
+}
+
+/**
+ * @brief get read-only access to pointer to pressure,
+ * Particle pressure.
+ * If you need write access to pressure, use part_get_pressure_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_pressure_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_pressure;
+}
+
+/**
+ * @brief set the value of pressure, Particle pressure.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_pressure_global(const ptrdiff_t pind, const float pressure) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_pressure = pressure;
+}
+
+
+
+
+/**
+ * @brief get wcount_dh, Derivative of the neighbour number with respect to h.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_wcount_dh(const struct part *restrict p) {
+  return p->_wcount_dh;
+}
+
+/**
+ * @brief get a pointer to wcount_dh, Derivative of the neighbour number with respect to h.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to wcount_dh. If you need read-only access to wcount_dh, use part_get_const_wcount_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_wcount_dh_p(struct part *restrict p) {
+  return &p->_wcount_dh;
+}
+
+/**
+ * @brief get read-only access to pointer to wcount_dh,
+ * Derivative of the neighbour number with respect to h.
+ * If you need write access to wcount_dh, use part_get_wcount_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_wcount_dh_p(const struct part *restrict p) {
+  return &p->_wcount_dh;
+}
+
+/**
+ * @brief set the value of wcount_dh, Derivative of the neighbour number with respect to h.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_wcount_dh(struct part *restrict p, const float wcount_dh) {
+  p->_wcount_dh = wcount_dh;
+}
+
+
+/**
+ * @brief get wcount_dh, Derivative of the neighbour number with respect to h.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_wcount_dh_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return part_s->_wcount_dh;
+}
+
+/**
+ * @brief get a pointer to wcount_dh, Derivative of the neighbour number with respect to h.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to wcount_dh. If you need read-only access to wcount_dh, use part_get_const_wcount_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_wcount_dh_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_wcount_dh;
+}
+
+/**
+ * @brief get read-only access to pointer to wcount_dh,
+ * Derivative of the neighbour number with respect to h.
+ * If you need write access to wcount_dh, use part_get_wcount_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_wcount_dh_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = pd->_part + pind;
+  return &part_s->_wcount_dh;
+}
+
+/**
+ * @brief set the value of wcount_dh, Derivative of the neighbour number with respect to h.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_wcount_dh_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float wcount_dh) {
+
+  struct part* restrict part_s = pd->_part + pind;
+  part_s->_wcount_dh = wcount_dh;
+}
+
+
+/**
+ * @brief get wcount_dh, Derivative of the neighbour number with respect to h.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_wcount_dh_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return part_s->_wcount_dh;
+}
+
+/**
+ * @brief get a pointer to wcount_dh, Derivative of the neighbour number with respect to h.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to wcount_dh. If you need read-only access to wcount_dh, use part_get_const_wcount_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_wcount_dh_p_global(const ptrdiff_t pind) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_wcount_dh;
+}
+
+/**
+ * @brief get read-only access to pointer to wcount_dh,
+ * Derivative of the neighbour number with respect to h.
+ * If you need write access to wcount_dh, use part_get_wcount_dh_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_wcount_dh_p_global(const ptrdiff_t pind) {
+
+  const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  return &part_s->_wcount_dh;
+}
+
+/**
+ * @brief set the value of wcount_dh, Derivative of the neighbour number with respect to h.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_wcount_dh_global(const ptrdiff_t pind, const float wcount_dh) {
+
+  struct part* restrict part_s = global_hydro_part_arrays._part + pind;
+  part_s->_wcount_dh = wcount_dh;
+}
+
+
 
 
 /**
@@ -3676,7 +3679,7 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE float
   part_get_alpha_visc_max_ngb(const struct part *restrict p) {
-  return p->_force._alpha_visc_max_ngb;
+  return p->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3686,7 +3689,7 @@ static __attribute__((always_inline)) INLINE float
  */
 static __attribute__((always_inline)) INLINE float*
   part_get_alpha_visc_max_ngb_p(struct part *restrict p) {
-  return &p->_force._alpha_visc_max_ngb;
+  return &p->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3696,7 +3699,7 @@ static __attribute__((always_inline)) INLINE float*
  */
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_alpha_visc_max_ngb_p(const struct part *restrict p) {
-  return &p->_force._alpha_visc_max_ngb;
+  return &p->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3704,7 +3707,7 @@ static __attribute__((always_inline)) INLINE const float*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_alpha_visc_max_ngb(struct part *restrict p, const float alpha_visc_max_ngb) {
-  p->_force._alpha_visc_max_ngb = alpha_visc_max_ngb;
+  p->_alpha_visc_max_ngb = alpha_visc_max_ngb;
 }
 
 
@@ -3715,7 +3718,7 @@ static __attribute__((always_inline)) INLINE float
   part_get_alpha_visc_max_ngb_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return part_s->_force._alpha_visc_max_ngb;
+  return part_s->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3727,7 +3730,7 @@ static __attribute__((always_inline)) INLINE float*
   part_get_alpha_visc_max_ngb_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._alpha_visc_max_ngb;
+  return &part_s->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3739,7 +3742,7 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_alpha_visc_max_ngb_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
   const struct part* restrict part_s = pd->_part + pind;
-  return &part_s->_force._alpha_visc_max_ngb;
+  return &part_s->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3749,7 +3752,7 @@ static __attribute__((always_inline)) INLINE void
   part_set_alpha_visc_max_ngb_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_visc_max_ngb) {
 
   struct part* restrict part_s = pd->_part + pind;
-  part_s->_force._alpha_visc_max_ngb = alpha_visc_max_ngb;
+  part_s->_alpha_visc_max_ngb = alpha_visc_max_ngb;
 }
 
 
@@ -3760,7 +3763,7 @@ static __attribute__((always_inline)) INLINE float
   part_get_alpha_visc_max_ngb_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return part_s->_force._alpha_visc_max_ngb;
+  return part_s->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3772,7 +3775,7 @@ static __attribute__((always_inline)) INLINE float*
   part_get_alpha_visc_max_ngb_p_global(const ptrdiff_t pind) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._alpha_visc_max_ngb;
+  return &part_s->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3784,7 +3787,7 @@ static __attribute__((always_inline)) INLINE const float*
   part_get_const_alpha_visc_max_ngb_p_global(const ptrdiff_t pind) {
 
   const struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  return &part_s->_force._alpha_visc_max_ngb;
+  return &part_s->_alpha_visc_max_ngb;
 }
 
 /**
@@ -3794,7 +3797,7 @@ static __attribute__((always_inline)) INLINE void
   part_set_alpha_visc_max_ngb_global(const ptrdiff_t pind, const float alpha_visc_max_ngb) {
 
   struct part* restrict part_s = global_hydro_part_arrays._part + pind;
-  part_s->_force._alpha_visc_max_ngb = alpha_visc_max_ngb;
+  part_s->_alpha_visc_max_ngb = alpha_visc_max_ngb;
 }
 
 

@@ -38,10 +38,18 @@ struct part {
 
 } SWIFT_STRUCT_ALIGN_PART;
 
-struct x_h_v_m {
+struct x_h_v_m_double {
   /*! the particle position */
   double _x[3];
 
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
+
+} SWIFT_STRUCT_ALIGN_X_H_V_M_DOUBLE;
+
+struct x_h_v_m {
   /*! Particle smoothing length */
   float _h;
 
@@ -100,9 +108,25 @@ struct force_pack {
   /*! Thermal diffusion coefficient */
   float _alpha_diff;
 
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
+
+} SWIFT_STRUCT_ALIGN_FORCE_PACK;
+
+struct force_pack_timebin {
   /*! Time-step length */
   timebin_t _time_bin;
 
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
+
+} SWIFT_STRUCT_ALIGN_FORCE_PACK_TIMEBIN;
+
+struct force_pack_limiter {
   /*! Time-step limiter information */
   struct timestep_limiter_data _limiter_data;
 
@@ -111,7 +135,7 @@ struct force_pack {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN_FORCE_PACK;
+} SWIFT_STRUCT_ALIGN_FORCE_PACK_LIMITER;
 
 struct density_unpack {
   /*! Derivative of density with respect to h */
@@ -634,15 +658,15 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE double*
   part_get_x(struct part *restrict p) {
-  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -650,15 +674,15 @@ static __attribute__((always_inline)) INLINE double*
  */
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_x(const struct part *restrict p) {
-  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -666,15 +690,15 @@ static __attribute__((always_inline)) INLINE const double*
  */
 static __attribute__((always_inline)) INLINE double
   part_get_x_ind(const struct part *restrict p, const int i) {
-  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x[i];
+  return x_h_v_m_double_s->_x[i];
 }
 
 /**
@@ -683,17 +707,17 @@ static __attribute__((always_inline)) INLINE double
  */
 static __attribute__((always_inline)) INLINE void
   part_set_x(struct part *restrict p, const double x[3]) {
-  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[0] = x[0];
-  x_h_v_m_s->_x[1] = x[1];
-  x_h_v_m_s->_x[2] = x[2];
+  x_h_v_m_double_s->_x[0] = x[0];
+  x_h_v_m_double_s->_x[1] = x[1];
+  x_h_v_m_double_s->_x[2] = x[2];
 }
 
 /**
@@ -701,15 +725,15 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_x_ind(struct part *restrict p, const int i, const double x) {
-  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[i] = x;
+  x_h_v_m_double_s->_x[i] = x;
 }
 
 
@@ -721,16 +745,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE double*
   part_get_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -739,16 +763,16 @@ static __attribute__((always_inline)) INLINE double*
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_x_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -757,16 +781,16 @@ static __attribute__((always_inline)) INLINE const double*
 static __attribute__((always_inline)) INLINE double
   part_get_x_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
 
-  const struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x[i];
+  return x_h_v_m_double_s->_x[i];
 }
 
 /**
@@ -776,18 +800,18 @@ static __attribute__((always_inline)) INLINE double
 static __attribute__((always_inline)) INLINE void
   part_set_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const double x[3]) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[0] = x[0];
-  x_h_v_m_s->_x[1] = x[1];
-  x_h_v_m_s->_x[2] = x[2];
+  x_h_v_m_double_s->_x[0] = x[0];
+  x_h_v_m_double_s->_x[1] = x[1];
+  x_h_v_m_double_s->_x[2] = x[2];
 }
 
 /**
@@ -796,16 +820,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE void
   part_set_x_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const double x) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[i] = x;
+  x_h_v_m_double_s->_x[i] = x;
 }
 
 
@@ -817,16 +841,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE double*
   part_get_x_global(const ptrdiff_t pind) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -835,16 +859,16 @@ static __attribute__((always_inline)) INLINE double*
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_x_global(const ptrdiff_t pind) {
 
-  const struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -853,16 +877,16 @@ static __attribute__((always_inline)) INLINE const double*
 static __attribute__((always_inline)) INLINE double
   part_get_x_ind_global(const ptrdiff_t pind, const int i) {
 
-  const struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x[i];
+  return x_h_v_m_double_s->_x[i];
 }
 
 /**
@@ -872,18 +896,18 @@ static __attribute__((always_inline)) INLINE double
 static __attribute__((always_inline)) INLINE void
   part_set_x_global(const ptrdiff_t pind, const double x[3]) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[0] = x[0];
-  x_h_v_m_s->_x[1] = x[1];
-  x_h_v_m_s->_x[2] = x[2];
+  x_h_v_m_double_s->_x[0] = x[0];
+  x_h_v_m_double_s->_x[1] = x[1];
+  x_h_v_m_double_s->_x[2] = x[2];
 }
 
 /**
@@ -892,17 +916,19 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE void
   part_set_x_ind_global(const ptrdiff_t pind, const int i, const double x) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[i] = x;
+  x_h_v_m_double_s->_x[i] = x;
 }
+
+
 
 
 
@@ -4116,20 +4142,22 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
+
 /**
  * @brief get time_bin, Time-step length.
  */
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_time_bin(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = p->_cell_part_arrays->_force_pack_timebin + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_time_bin;
+  return force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4139,15 +4167,15 @@ static __attribute__((always_inline)) INLINE timebin_t
  */
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_time_bin_p(struct part *restrict p) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack_timebin* restrict force_pack_timebin_s = p->_cell_part_arrays->_force_pack_timebin + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4157,15 +4185,15 @@ static __attribute__((always_inline)) INLINE timebin_t*
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_time_bin_p(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = p->_cell_part_arrays->_force_pack_timebin + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4173,15 +4201,15 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_time_bin(struct part *restrict p, const timebin_t time_bin) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack_timebin* restrict force_pack_timebin_s = p->_cell_part_arrays->_force_pack_timebin + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_time_bin = time_bin;
+  force_pack_timebin_s->_time_bin = time_bin;
 }
 
 
@@ -4191,16 +4219,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_time_bin_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = pd->_force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_time_bin;
+  return force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4211,16 +4239,16 @@ static __attribute__((always_inline)) INLINE timebin_t
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_time_bin_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  struct force_pack_timebin* restrict force_pack_timebin_s = pd->_force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4231,16 +4259,16 @@ static __attribute__((always_inline)) INLINE timebin_t*
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_time_bin_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = pd->_force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4249,16 +4277,16 @@ static __attribute__((always_inline)) INLINE const timebin_t*
 static __attribute__((always_inline)) INLINE void
   part_set_time_bin_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const timebin_t time_bin) {
 
-  struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  struct force_pack_timebin* restrict force_pack_timebin_s = pd->_force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_time_bin = time_bin;
+  force_pack_timebin_s->_time_bin = time_bin;
 }
 
 
@@ -4268,16 +4296,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_time_bin_global(const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = global_hydro_part_arrays._force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_time_bin;
+  return force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4288,16 +4316,16 @@ static __attribute__((always_inline)) INLINE timebin_t
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_time_bin_p_global(const ptrdiff_t pind) {
 
-  struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  struct force_pack_timebin* restrict force_pack_timebin_s = global_hydro_part_arrays._force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4308,16 +4336,16 @@ static __attribute__((always_inline)) INLINE timebin_t*
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_time_bin_p_global(const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = global_hydro_part_arrays._force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4326,17 +4354,19 @@ static __attribute__((always_inline)) INLINE const timebin_t*
 static __attribute__((always_inline)) INLINE void
   part_set_time_bin_global(const ptrdiff_t pind, const timebin_t time_bin) {
 
-  struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  struct force_pack_timebin* restrict force_pack_timebin_s = global_hydro_part_arrays._force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_time_bin = time_bin;
+  force_pack_timebin_s->_time_bin = time_bin;
 }
+
+
 
 
 
@@ -4346,15 +4376,15 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
   part_get_limiter_data(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = p->_cell_part_arrays->_force_pack_limiter + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_limiter_data;
+  return force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4364,15 +4394,15 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
   part_get_limiter_data_p(struct part *restrict p) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack_limiter* restrict force_pack_limiter_s = p->_cell_part_arrays->_force_pack_limiter + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4382,15 +4412,15 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
  */
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
   part_get_const_limiter_data_p(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = p->_cell_part_arrays->_force_pack_limiter + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4398,15 +4428,15 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_limiter_data(struct part *restrict p, const struct timestep_limiter_data limiter_data) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack_limiter* restrict force_pack_limiter_s = p->_cell_part_arrays->_force_pack_limiter + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_limiter_data = limiter_data;
+  force_pack_limiter_s->_limiter_data = limiter_data;
 }
 
 
@@ -4416,16 +4446,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
   part_get_limiter_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = pd->_force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_limiter_data;
+  return force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4436,16 +4466,16 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
   part_get_limiter_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  struct force_pack_limiter* restrict force_pack_limiter_s = pd->_force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4456,16 +4486,16 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
   part_get_const_limiter_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = pd->_force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4474,16 +4504,16 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
 static __attribute__((always_inline)) INLINE void
   part_set_limiter_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct timestep_limiter_data limiter_data) {
 
-  struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  struct force_pack_limiter* restrict force_pack_limiter_s = pd->_force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_limiter_data = limiter_data;
+  force_pack_limiter_s->_limiter_data = limiter_data;
 }
 
 
@@ -4493,16 +4523,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
   part_get_limiter_data_global(const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = global_hydro_part_arrays._force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_limiter_data;
+  return force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4513,16 +4543,16 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
   part_get_limiter_data_p_global(const ptrdiff_t pind) {
 
-  struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  struct force_pack_limiter* restrict force_pack_limiter_s = global_hydro_part_arrays._force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4533,16 +4563,16 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
   part_get_const_limiter_data_p_global(const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = global_hydro_part_arrays._force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4551,16 +4581,16 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
 static __attribute__((always_inline)) INLINE void
   part_set_limiter_data_global(const ptrdiff_t pind, const struct timestep_limiter_data limiter_data) {
 
-  struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  struct force_pack_limiter* restrict force_pack_limiter_s = global_hydro_part_arrays._force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_limiter_data = limiter_data;
+  force_pack_limiter_s->_limiter_data = limiter_data;
 }
 
 
