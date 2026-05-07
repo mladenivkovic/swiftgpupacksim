@@ -3,7 +3,7 @@
 #include "config.h"
 #include "inline.h"
 
-/* #ifdef SWIFT_CACHE_FLUSH_X86 */
+#ifdef SWIFT_CACHE_FLUSH_X86
 #include <x86intrin.h>
 
 /**
@@ -55,4 +55,4 @@ __attribute__((always_inline)) INLINE void flush_cache_x86_fence(void) {
 }
 
 
-/* #endif */
+#endif
