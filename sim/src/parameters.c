@@ -45,8 +45,12 @@ void init_params(struct parameters* params) {
   char layout[20] = "pack-gradient";
 #elif defined(SPHENIX_PACK_FORCE_PARTICLE)
   char layout[20] = "pack-force";
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+  char layout[20] = "pack-force-type";
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
   char layout[20] = "pack-shared";
+#elif defined(SPHENIX_RANDOM_ORDER_PARTICLE)
+  char layout[20] = "random-order";
 #else
 #error "Unknown particle memory layout"
 #endif

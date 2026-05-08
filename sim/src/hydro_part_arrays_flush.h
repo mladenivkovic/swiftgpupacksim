@@ -34,10 +34,14 @@
 #include "realisations/soa/hydro_part_arrays_flush.h"
 #elif defined(SPHENIX_UPSTREAM_PARTICLE)
 #include "realisations/upstream/hydro_part_arrays_flush.h"
+#elif defined(SPHENIX_RANDOM_ORDER_PARTICLE)
+#include "realisations/random_order/hydro_part_arrays_flush.h"
 #elif defined(SPHENIX_PACK_GRADIENT_PARTICLE)
 #include "realisations/pack_gradient/hydro_part_arrays_flush.h"
 #elif defined(SPHENIX_PACK_FORCE_PARTICLE)
 #include "realisations/pack_force/hydro_part_arrays_flush.h"
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+#include "realisations/pack_force_type/hydro_part_arrays_flush.h"
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
 #include "realisations/pack_shared/hydro_part_arrays_flush.h"
 #else

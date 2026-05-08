@@ -230,6 +230,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   struct gpu_part_send_d* restrict ps = &parts_buffer[pack_ind];
 
   /* All three of them use a common `struct x_h_v_m`. */
+  /* force-pack-type also splits data by type. */
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -343,13 +344,14 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.y = cjend;
   }
 
-#elif defined(SPHENIX_PACK_FORCE_PARTICLE)
+#elif (defined(SPHENIX_PACK_FORCE_PARTICLE) || \
+  defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE))
 
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    /* struct force_gradient_share_pack */
+    /* struct force_pack */
 
     ps[i].u_rho_c_avisc.x = part_get_u_explicit(pd, i);
     ps[i].u_rho_c_avisc.y = part_get_rho_explicit(pd, i);
@@ -538,6 +540,49 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     /* struct force_pack */
+    ps[i].timebin_minngbtimebin_pjs_pje.x =
+        (int)part_get_time_bin_explicit(pd, i);
+    int mintbin =
+        (int)part_get_timestep_limiter_min_ngb_time_bin_explicit(pd, i);
+    ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
+    ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
+    ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
+  }
+
+
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+
+    ps[i].u_rho_f_p.x = part_get_u_explicit(pd, i);
+    ps[i].u_rho_f_p.y = part_get_rho_explicit(pd, i);
+    ps[i].u_rho_f_p.z = part_get_f_gradh_explicit(pd, i);
+    ps[i].u_rho_f_p.w = part_get_pressure_explicit(pd, i);
+
+    ps[i].bals_c_avisc_adiff.x = part_get_balsara_explicit(pd, i);
+    ps[i].bals_c_avisc_adiff.y = part_get_soundspeed_explicit(pd, i);
+    ps[i].bals_c_avisc_adiff.z = part_get_alpha_av_explicit(pd, i);
+    ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff_explicit(pd, i);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack_timebin */
+    ps[i].timebin_minngbtimebin_pjs_pje.x =
+        (int)part_get_time_bin_explicit(pd, i);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack_limiter */
     ps[i].timebin_minngbtimebin_pjs_pje.x =
         (int)part_get_time_bin_explicit(pd, i);
     int mintbin =

@@ -12,8 +12,12 @@
 #include "realisations/pack_gradient/parts.h"
 #elif defined(SPHENIX_PACK_FORCE_PARTICLE)
 #include "realisations/pack_force/parts.h"
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+#include "realisations/pack_force_type/parts.h"
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
 #include "realisations/pack_shared/parts.h"
+#elif defined(SPHENIX_RANDOM_ORDER_PARTICLE)
+#include "realisations/random_order/parts.h"
 #else
 #error "Unknown memory layout realisation"
 #endif
