@@ -37,7 +37,7 @@ fi
 
 rm -f config.cache
 
-for layout in aos soa upstream pack-gradient pack-force pack-shared; do
+for layout in aos soa upstream pack-gradient pack-force pack-shared pack-force-type random-order; do
   for align in 1 2 4 8 16 32 64; do
     CFLAGS="$MYCFLAGS" ./configure --config-cache --with-particle-memory-layout="$layout" --with-struct-align=$align $EXTRA_CONFFLAGS
     make clean

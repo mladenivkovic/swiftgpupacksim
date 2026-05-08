@@ -40,7 +40,7 @@ rm -f config.cache
   # for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
 for part_access in "explicit-var"; do
   for loop in "none"; do
-    for layout in "aos" "soa" "upstream" "pack-gradient" "pack-force" "pack-shared"; do
+    for layout in "aos" "soa" "upstream" "pack-gradient" "pack-force" "pack-shared" "pack-force-type" "random-order"; do
 
       SUFFIX="$NODE"_"$layout"_"$part_access"_"$loop"
 
