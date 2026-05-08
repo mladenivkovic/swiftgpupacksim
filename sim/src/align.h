@@ -241,7 +241,7 @@
 #define SWIFT_STRUCT_ALIGN_OTHERS \
   __attribute__((packed, aligned(SWIFT_STRUCT_ALIGNMENT_OTHERS)))
 
-#if deffined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+#if defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
   /* Additions for PACK_FORCE_TYPE */
 
 #define SWIFT_STRUCT_ALIGN_X_H_V_M_DOUBLE \
