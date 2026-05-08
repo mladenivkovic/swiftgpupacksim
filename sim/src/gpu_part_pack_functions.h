@@ -30,9 +30,9 @@
 
 #if defined(SWIFT_LOOP_SPLIT_NONE) ||                                         \
     (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_AOS_PARTICLE)) || \
-    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&                                   \
-     defined(SPHENIX_UPSTREAM_PARTICLE))
-/* If all particle data is in a single struct, than splitting loop "by struct"
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_UPSTREAM_PARTICLE)) || \
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT) && defined(SPHENIX_RANDOM_ORDER_PARTICLE))
+/* If all particle data is in a single struct, then splitting loop "by struct"
  * is equivalent to not splitting the loop at all. */
 #define USE_LOOP_SPLIT_NONE 1
 #endif
@@ -41,15 +41,18 @@
     (defined(SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE) && \
      defined(SPHENIX_AOS_PARTICLE)) ||               \
     (defined(SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE) && \
-     defined(SPHENIX_UPSTREAM_PARTICLE))
-/* If all particle data is in a single struct, than splitting loop "by struct"
- * is equivalent to not splitting the loop at all */
+     defined(SPHENIX_UPSTREAM_PARTICLE)) ||          \
+    (defined(SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE) && \
+     defined(SPHENIX_RANDOM_ORDER_PARTICLE))
+/* If all particle data is in a single struct, then splitting loop additionally
+ * "by struct" is equivalent to not splitting the loop at all */
 #define USE_LOOP_SPLIT_BY_TYPE 1
 #endif
 
 #if defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&      \
     (defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
      defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) ||    \
      defined(SPHENIX_PACK_SHARED_PARTICLE))
 /* Only use this for particle data memory layouts where particle is split
  * into several sub-structs, but not fully SoA. */
@@ -59,6 +62,7 @@
 #if defined(SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE) && \
     (defined(SPHENIX_PACK_GRADIENT_PARTICLE) ||     \
      defined(SPHENIX_PACK_FORCE_PARTICLE) ||        \
+     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) ||   \
      defined(SPHENIX_PACK_SHARED_PARTICLE))
 
 /* Only use this for particle data memory layouts where particle is split

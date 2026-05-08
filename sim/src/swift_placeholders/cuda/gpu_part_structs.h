@@ -75,7 +75,8 @@ struct gpu_part_send_g {
   float4 vx_m;
 
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
 
   /*! Internal energy, density, particle soundspeed, alpha constant for
    * viscosity */

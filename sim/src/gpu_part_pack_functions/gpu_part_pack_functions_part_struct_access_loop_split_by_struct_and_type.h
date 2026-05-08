@@ -230,6 +230,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   struct gpu_part_send_d* restrict ps = &parts_buffer[pack_ind];
 
   /* All three of them use a common `struct x_h_v_m`. */
+  /* force-pack-type also splits data by type. */
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -391,6 +392,44 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.x = cjstart;
     ps[i].pjs_pje.y = cjend;
   }
+
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_c_avisc.x = part_get_u(p);
+    ps[i].u_rho_c_avisc.y = part_get_rho(p);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct gradient_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].aviscmax_vsig_lapu.x = part_get_alpha_visc_max_ngb(p);
+    ps[i].aviscmax_vsig_lapu.y = part_get_v_sig(p);
+    ps[i].aviscmax_vsig_lapu.z = part_get_laplace_u(p);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    ps[i].pjs_pje.x = cjstart;
+    ps[i].pjs_pje.y = cjend;
+  }
+
 
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
 
@@ -575,6 +614,50 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     const struct part* restrict p = &parts[i];
 
     ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
+    int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
+    ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
+    ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
+    ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
+  }
+
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+
+    const struct part* restrict p = &parts[i];
+
+    ps[i].u_rho_f_p.x = part_get_u(p);
+    ps[i].u_rho_f_p.y = part_get_rho(p);
+    ps[i].u_rho_f_p.z = part_get_f_gradh(p);
+    ps[i].u_rho_f_p.w = part_get_pressure(p);
+
+    ps[i].bals_c_avisc_adiff.x = part_get_balsara(p);
+    ps[i].bals_c_avisc_adiff.y = part_get_soundspeed(p);
+    ps[i].bals_c_avisc_adiff.z = part_get_alpha_av(p);
+    ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff(p);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack_timebin */
+    const struct part* restrict p = &parts[i];
+    ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin(p);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack_limiter + additional integers*/
+
+    const struct part* restrict p = &parts[i];
+
     int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin(p);
     ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
     ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;

@@ -36,7 +36,7 @@ static __attribute__((always_inline)) INLINE void hydro_part_init(
 
 #ifdef SWIFT_PARTICLE_ACCESS_PART_STRUCT
 
-#if defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE)
+#if defined(SPHENIX_AOS_PARTICLE) || defined(SPHENIX_UPSTREAM_PARTICLE) || defined(SPHENIX_RANDOM_ORDER_PARTICLE)
 
   /* These realisations have a single particle struct. They don't need
    * special handling here. */
@@ -44,6 +44,7 @@ static __attribute__((always_inline)) INLINE void hydro_part_init(
 #elif defined(SPHENIX_SOA_PARTICLE) ||         \
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) ||    \
     defined(SPHENIX_PACK_SHARED_PARTICLE)
 
   /* Split structs need initialisation of array pointer + their index in that

@@ -42,10 +42,10 @@
 #include "realisations/pack_gradient/hydro_part.h"
 #elif defined(SPHENIX_PACK_FORCE_PARTICLE)
 #include "realisations/pack_force/hydro_part.h"
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+#include "realisations/pack_force_type/hydro_part.h"
 #elif defined(SPHENIX_PACK_SHARED_PARTICLE)
 #include "realisations/pack_shared/hydro_part.h"
-#elif defined(SPHENIX_PACK_TYPE_PARTICLE)
-#include "realisations/pack_type/hydro_part.h"
 #else
 #error "Unknown memory layout realisation"
 #endif

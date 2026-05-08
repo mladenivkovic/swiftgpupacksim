@@ -398,7 +398,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.x = part_get_u_global(pi);
 #else
     ps[i].u_rho_c_aviscmax.x = part_get_u_global(pi);
@@ -411,7 +412,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.y = part_get_rho_global(pi);
 #else
     ps[i].u_rho_c_aviscmax.y = part_get_rho_global(pi);
@@ -424,7 +426,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.z = part_get_soundspeed_global(pi);
 #else
     ps[i].u_rho_c_aviscmax.z = part_get_soundspeed_global(pi);
@@ -437,7 +440,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.w = part_get_alpha_av_global(pi);
 #else
     ps[i].u_rho_c_aviscmax.w = part_get_alpha_visc_max_ngb_global(pi);
@@ -450,7 +454,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].aviscmax_vsig_lapu.x = part_get_alpha_visc_max_ngb_global(pi);
 #else
     ps[i].avisc_vsig_lapu.x = part_get_alpha_av_global(pi);
@@ -463,7 +468,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].aviscmax_vsig_lapu.y = part_get_v_sig_global(pi);
 #else
     ps[i].avisc_vsig_lapu.y = part_get_v_sig_global(pi);
@@ -476,7 +482,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].aviscmax_vsig_lapu.z = part_get_laplace_u_global(pi);
 #else
     ps[i].avisc_vsig_lapu.z = part_get_laplace_u_global(pi);
