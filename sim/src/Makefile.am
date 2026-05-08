@@ -113,6 +113,10 @@ nobase_noinst_HEADERS += realisations/pack_force/hydro_part.h
 nobase_noinst_HEADERS += realisations/pack_force/hydro_part_arrays_struct.h
 nobase_noinst_HEADERS += realisations/pack_force/hydro_part_arrays_flush.h
 nobase_noinst_HEADERS += realisations/pack_force/parts.h
+nobase_noinst_HEADERS += realisations/pack_force_type/hydro_part.h
+nobase_noinst_HEADERS += realisations/pack_force_type/hydro_part_arrays_struct.h
+nobase_noinst_HEADERS += realisations/pack_force_type/hydro_part_arrays_flush.h
+nobase_noinst_HEADERS += realisations/pack_force_type/parts.h
 nobase_noinst_HEADERS += realisations/pack_gradient/hydro_part.h
 nobase_noinst_HEADERS += realisations/pack_gradient/hydro_part_arrays_struct.h
 nobase_noinst_HEADERS += realisations/pack_gradient/hydro_part_arrays_flush.h
@@ -129,6 +133,10 @@ nobase_noinst_HEADERS += realisations/upstream/hydro_part.h
 nobase_noinst_HEADERS += realisations/upstream/hydro_part_arrays_struct.h
 nobase_noinst_HEADERS += realisations/upstream/hydro_part_arrays_flush.h
 nobase_noinst_HEADERS += realisations/upstream/parts.h
+nobase_noinst_HEADERS += realisations/random_order/hydro_part.h
+nobase_noinst_HEADERS += realisations/random_order/hydro_part_arrays_struct.h
+nobase_noinst_HEADERS += realisations/random_order/hydro_part_arrays_flush.h
+nobase_noinst_HEADERS += realisations/random_order/parts.h
 
 
 
