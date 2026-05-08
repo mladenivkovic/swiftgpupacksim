@@ -46,7 +46,7 @@ for part_access in "explicit-var"; do
 
       export OMP_NUM_THREADS=$NTHREADS
 
-      for layout in aos soa upstream pack-gradient pack-force pack-shared; do
+      for layout in aos soa upstream pack-gradient pack-force pack-shared pack-force-type random-order; do
 
         # construct executable and args
         ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"
