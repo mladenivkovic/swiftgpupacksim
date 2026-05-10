@@ -19,6 +19,8 @@ from plotting_utils import (
     PART_ACCESS,
     PART_ACCESS_LABELS,
     EXPERIMENTS,
+    LAYOUTS_TO_USE,
+    LAYOUTS_TO_USE_MINIMAL,
     mymplparams,
     mydpi,
     markers,
@@ -134,6 +136,8 @@ parser.add_argument(
 args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
+if isinstance(nthreads, list):
+    nthreads = nthreads[0]
 normalise = args.normalise
 local = args.local_legion or args.local_hp
 if args.local_hp:
@@ -155,6 +159,8 @@ plotkwargs = {
     "markersize": 5,
 }
 
+layouts = LAYOUTS_TO_USE
+
 if __name__ == "__main__":
 
     if not os.path.exists(srcdir):
@@ -163,26 +169,28 @@ if __name__ == "__main__":
     for experiment in EXPERIMENTS:
 
         # get available layouts
-        layouts = []
-        firstdir = get_result_dir(
-            srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0]
-        )
-        ls = os.listdir(firstdir)
-        for f in ls:
-            if f.startswith("results_") and f.endswith(".csv"):
-                layout = f[len("results_") : -len(".csv")]
-                layouts.append(layout)
-        layouts.sort()
+        #  layouts = []
+        #  firstdir = get_result_dir(
+        #      srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0]
+        #  )
+        #  ls = os.listdir(firstdir)
+        #  for f in ls:
+        #      if f.startswith("results_") and f.endswith(".csv"):
+        #          layout = f[len("results_") : -len(".csv")]
+        #          layouts.append(layout)
+        #  layouts.sort()
 
-        aos_ind = -1
-        for i in range(len(layouts)):
-            if layouts[i] == "aos":
-                aos_ind = i
-                break
-        if aos_ind == -1:
-            raise ValueError(
-                "Something went wrong determining index of AoS in array,", layouts
-            )
+        #  aos_ind = -1
+        #  for i in range(len(layouts)):
+        #      if layouts[i] == "aos":
+        #          aos_ind = i
+        #          break
+        #  if aos_ind == -1:
+        #      raise ValueError(
+        #          "Something went wrong determining index of AoS in array,", layouts
+        #      )
+
+        aos_ind = layouts.index("aos")
 
         fig = plt.figure(figsize=(12, 6))
         ax1 = fig.add_subplot(2, 3, 1)

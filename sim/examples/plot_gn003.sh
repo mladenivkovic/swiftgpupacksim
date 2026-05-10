@@ -1,30 +1,37 @@
 #!/bin/bash
 
-# compare_flush_variants_gn003_explicit-var_none.png
-python3 ../../utils/compare_flush_variants.py --png gn003
+# compare_part_access_gn003_72threads_noflush_normalised.png
+# python3 ../../utils/compare_particle_access.py --png --no-flush gn003 --normalise
+python3 ../../utils/compare_particle_access.py --no-flush gn003 --normalise
 
-# compare_flush_variants_gn003_explicit-var_none_normalised.png
-python3 ../../utils/compare_flush_variants.py --png gn003 --normalise
 
-# loop_splitting_compare_packed_gn003_Gresho256_part-struct_noflush.png
-# loop_splitting_compare_packed_gn003_Gresho256_explicit-var_noflush.png
-# loop_splitting_compare_packed_gn003_Gresho256_global-var_noflush.png
-# loop_splitting_compare_packed_gn003_EAGLE25_part-struct_noflush.png
-# loop_splitting_compare_packed_gn003_EAGLE25_explicit-var_noflush.png
-# loop_splitting_compare_packed_gn003_EAGLE25_global-var_noflush.png
-python3 ../../utils/loop_splitting_compare_packed.py --png gn003 --no-flush
 
-# loop_splitting_compare_packed_gn003_global-var_noflush_relative.png
-python3 ../../utils/loop_splitting_compare_packed_relative.py --png gn003 --no-flush
+# # compare_flush_variants_gn003_explicit-var_none.png
+# python3 ../../utils/compare_flush_variants.py --png gn003
+#
+# # compare_flush_variants_gn003_explicit-var_none_normalised.png
+# python3 ../../utils/compare_flush_variants.py --png gn003 --normalise
+#
+# # loop_splitting_compare_packed_gn003_Gresho256_part-struct_noflush.png
+# # loop_splitting_compare_packed_gn003_Gresho256_explicit-var_noflush.png
+# # loop_splitting_compare_packed_gn003_Gresho256_global-var_noflush.png
+# # loop_splitting_compare_packed_gn003_EAGLE25_part-struct_noflush.png
+# # loop_splitting_compare_packed_gn003_EAGLE25_explicit-var_noflush.png
+# # loop_splitting_compare_packed_gn003_EAGLE25_global-var_noflush.png
+# python3 ../../utils/loop_splitting_compare_packed.py --png gn003 --no-flush
+#
+# # loop_splitting_compare_packed_gn003_global-var_noflush_relative.png
+# python3 ../../utils/loop_splitting_compare_packed_relative.py --png gn003 --no-flush
+#
+# # TODO
+# # compare_firstinit_gn003_explicit-var_none.png
+# # ../../utils/compare_firstinit.py --png gn003 --no-flush
+#
+# # TODO
+# # compare_nthreads_gn003_explicit-var_none.png
+# # ../../utils/compare_nthreads.py --png gn003 --no-flush
 
-# TODO
-# compare_firstinit_gn003_explicit-var_none.png
-# ../../utils/compare_firstinit.py --png gn003 --no-flush
-
-# TODO
-# compare_nthreads_gn003_explicit-var_none.png
-# ../../utils/compare_nthreads.py --png gn003 --no-flush
-
+# -------------------------------------------------------------------------------
 
 # # loop_splitting_compare_part_access_gn003_EAGLE12_72threads.png
 # # loop_splitting_compare_part_access_gn003_Gresho256_72threads.png

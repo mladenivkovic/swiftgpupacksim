@@ -34,6 +34,13 @@ class ResultData:
         self.layout = self._get_layout_from_filename()
         self.tasks, self.timings, self.data_dict = self._read_results_from_file()
 
+        self.total_time = (self.data_dict["pack/density"] +
+            self.data_dict["unpack/density"] +
+            self.data_dict["pack/gradient"] +
+            self.data_dict["unpack/gradient"] +
+            self.data_dict["pack/force"] +
+            self.data_dict["unpack/force"])
+
         return
 
     def _get_layout_from_filename(self):
