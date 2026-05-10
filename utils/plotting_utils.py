@@ -66,7 +66,7 @@ mymplparams = {
     #  "figure.subplot.right": 0.99,
     #  "figure.subplot.bottom": 0.05,
     #  "figure.subplot.top": 0.99,
-    "figure.subplot.wspace": 0.0,
+    #  "figure.subplot.wspace": 0.0,
     #  "figure.subplot.hspace": 0.12,
 }
 

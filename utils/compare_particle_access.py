@@ -19,7 +19,6 @@ from plotting_utils import (
     PART_ACCESS,
     PART_ACCESS_LABELS,
     EXPERIMENTS,
-    NTHREADS,
     LAYOUTS_TO_USE,
     LAYOUTS_TO_USE_MINIMAL,
     mymplparams,
@@ -33,14 +32,15 @@ matplotlib.rcParams.update(mymplparams)
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-Compare results of using different numbers of threads for different
+Compare results of using different access variants for different
 particle memory layouts for different experiments, for a given loop
-splitting variant, and a given particle accessor variant.
+splitting variant.
 
 By default, this plots the outputs using:
 - cache flushes between each copy operation
 - no manual vectorization
 - not packed structs
+- the runs using 72 threads
 
 See optional flags to modify which results are plotted.
 
@@ -86,6 +86,14 @@ parser.add_argument(
     help="Compare to outputs where structs were packed",
 )
 parser.add_argument(
+    "-t",
+    "--threads",
+    nargs=1,
+    dest="nthreads",
+    help="Number of threads used in experiment to use",
+    default=72,
+)
+parser.add_argument(
     "--png",
     dest="png",
     action="store_true",
@@ -97,6 +105,25 @@ parser.add_argument(
     dest="equal_axis_limits",
     action="store_true",
     help="Use identical y-axis limits for all subplots",
+)
+parser.add_argument(
+    "-n",
+    "--normalise",
+    dest="normalise",
+    action="store_true",
+    help="Normalise times using t(aos, explicit-var, no loop split)",
+)
+parser.add_argument(
+    "--local-legion",
+    dest="local_legion",
+    action="store_true",
+    help="Use outputs for local test runs on lenovo legion",
+)
+parser.add_argument(
+    "--local-hp",
+    dest="local_hp",
+    action="store_true",
+    help="Use outputs for local test runs on HP",
 )
 parser.add_argument(
     "-a",
@@ -116,51 +143,23 @@ parser.add_argument(
     choices=LOOP_SPLITS,
     default="none",
 )
-parser.add_argument(
-    "-n",
-    "--normalise",
-    dest="normalise",
-    action="store_true",
-    help="Normalise times using t(aos, no loop split)",
-)
-parser.add_argument(
-    "--local-legion",
-    dest="local_legion",
-    action="store_true",
-    help="Use outputs for local test runs on lenovo legion",
-)
-parser.add_argument(
-    "--local-hp",
-    dest="local_hp",
-    action="store_true",
-    help="Use outputs for local test runs on HP",
-)
 
 args = parser.parse_args()
 srcdir = args.srcdir
+nthreads = args.nthreads
+if isinstance(nthreads, list):
+    nthreads = nthreads[0]
 normalise = args.normalise
-access_variant = args.access_variant
 loop_split = args.loop_split
-#  layouts = LAYOUTS_TO_USE
-layouts = LAYOUTS_TO_USE_MINIMAL
+#  layouts = LAYOUTS_TO_USE_MINIMAL
+layouts = LAYOUTS_TO_USE
 local = args.local_legion or args.local_hp
 
-
-if args.equal_axis_limits:
-    raise NotImplementedError()
-
-if srcdir.endswith("gn003") or srcdir.endswith("gn003/"):
-    NTHREADS=[1, 9, 18, 36, 72]
-elif srcdir.endswith("dine2") or srcdir.endswith("dine2/"):
-    NTHREADS=[4, 8, 16, 32, 64]
-elif srcdir.endswith("mad06") or srcdir.endswith("mad06/"):
-    NTHREADS=[4, 8, 16, 32, 64, 128]
-
 if args.local_hp:
-    NTHREADS = [4]
+    nthreads = 4
     EXPERIMENTS = ["IntelXeonGold5218_Gresho64"]
 if args.local_legion:
-    NTHREADS = [6]
+    nthreads = 6
     EXPERIMENTS = ["IntelCoffeeLake_Gresho128"]
 
 
@@ -175,32 +174,11 @@ plotkwargs = {
     "markersize": 5,
 }
 
+
 if __name__ == "__main__":
 
     if not os.path.exists(srcdir):
         raise FileNotFoundError(f"directory {srcdir} not found.")
-
-    # get available layouts
-    #  layouts = []
-    #  firstdir = get_result_dir(
-    #      srcdir, EXPERIMENTS[0], NTHREADS[-1], access_variant, loop_split, variant_dir_suffix
-    #      )
-    #  ls = os.listdir(firstdir)
-    #  for f in ls:
-    #      if f.startswith("results_") and f.endswith(".csv"):
-    #          layout = f[len("results_") : -len(".csv")]
-    #          layouts.append(layout)
-    #  layouts.sort()
-
-    #  aos_ind = -1
-    #  for i in range(len(layouts)):
-    #      if layouts[i] == "aos":
-    #          aos_ind = i
-    #          break
-    #  if aos_ind == -1:
-    #      raise ValueError(
-    #          "Something went wrong determining index of AoS in array,", layouts
-    #      )
 
     aos_ind = layouts.index("aos")
 
@@ -221,23 +199,39 @@ if __name__ == "__main__":
     maxtime = -1.0
     mintime = 1e32
 
+
     for e, experiment in enumerate(EXPERIMENTS):
 
         ls = linestyles[e]
 
-        for n, nthreads in enumerate(NTHREADS):
+        # first, grab normalisation:
+        # AoS part-struct for this experiment
+        fname_norm = get_result_fname(
+                    srcdir,
+                    experiment,
+                    nthreads,
+                    "part-struct",
+                    loop_split,
+                    variant_dir_suffix,
+                    "aos",
+                )
+        res = ResultData(fname_norm, verbose=False)
+        normalisation = res.data_dict
 
-            color = "C" + str(n)
+        for a, access in enumerate(PART_ACCESS):
+
+            color = "C" + str(a)
 
             # Now get result data for all layouts
             result_data = []
 
             for l, layout in enumerate(layouts):
+
                 fname = get_result_fname(
                     srcdir,
                     experiment,
                     nthreads,
-                    access_variant,
+                    access,
                     loop_split,
                     variant_dir_suffix,
                     layout,
@@ -248,7 +242,6 @@ if __name__ == "__main__":
                 maxtime = max(maxtime, res.timings.max())
                 mintime = min(mintime, res.timings.min())
 
-            normalisation = result_data[aos_ind].data_dict
 
             # Unpack result data by packing operation type
             dens_pack = np.array(
@@ -280,24 +273,15 @@ if __name__ == "__main__":
 
             label = (
                     experiment + " " +
-                PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
-                + " "
-                + LOOP_SPLIT_LABELS[LOOP_SPLITS.index(loop_split)]
-                + variant_label_suffix
-                + " "
-                + str(nthreads)
-                + " threads"
+                PART_ACCESS_LABELS[a]
+                #  + " "
+                #  + LOOP_SPLIT_LABELS[s]
+                #  + variant_label_suffix
             )
 
-            ax1.plot(
-                layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax2.plot(
-                layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax3.plot(
-                layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
+            ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs)
             ax4.plot(
                 layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
             )
@@ -313,8 +297,8 @@ if __name__ == "__main__":
 
     # all axes
     for ax in fig.axes:
-        ax.set_xlabel("particle data layouts")
-        ax.tick_params("x", rotation=45)
+        #  ax.set_xlabel("particle data layouts")
+        ax.tick_params("x", rotation=90)
         ax.grid()
         #  ax.legend()
         if args.equal_axis_limits:
@@ -341,7 +325,7 @@ if __name__ == "__main__":
 
     hand, lab = ax1.get_legend_handles_labels()
     #  ncols=int(len(layouts)*0.5 + 0.5)
-    ncols = 2
+    ncols = 3
     fig.legend(
         handles=hand,
         labels=lab,
@@ -349,11 +333,12 @@ if __name__ == "__main__":
         ncols=ncols,
         handlelength=2.5,
         markerscale=0.5,
+        fontsize="medium",
     )
-    fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
+    fig.tight_layout(w_pad=1, rect=(0.01, 0.07, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"compare_nthreads_{srcdir}_{access_variant}"
+    outfname = f"compare_part_access_{srcdir}_{nthreads}threads"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if normalise:
@@ -365,4 +350,3 @@ if __name__ == "__main__":
 
     plt.savefig(outfname, dpi=mydpi)
     print(f"Saved {outfname}")
-    plt.close()
