@@ -20,6 +20,8 @@ from plotting_utils import (
     PART_ACCESS_LABELS,
     EXPERIMENTS,
     NTHREADS,
+    NODES,
+    NODE_LABELS,
     LAYOUTS_TO_USE,
     LAYOUTS_TO_USE_MINIMAL,
     mymplparams,
@@ -34,8 +36,8 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
 Compare results of using different numbers of threads for different
-particle memory layouts for different experiments, for a given loop
-splitting variant, and a given particle accessor variant.
+particle memory layouts for different experiments across different nodes, for a
+given loop splitting variant, and a given particle accessor variant.
 
 By default, this plots the outputs using:
 - cache flushes between each copy operation
@@ -44,9 +46,9 @@ By default, this plots the outputs using:
 
 See optional flags to modify which results are plotted.
 
-This script assumes that all subdirectories in the given `srcdir` will contain
-result data with filenames 'results_*.csv' It will read them all in and plot
-them.
+This script assumes that all subdirectories in the hardcoded `NODES` will
+contain result data with filenames 'results_*.csv' It will read them all in and
+plot them.
 
 Sub-directories are expected to have the following file name format:
 <EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_vector]
@@ -63,7 +65,6 @@ manually if you need to.
 """,
 )
 
-parser.add_argument("srcdir")
 parser.add_argument(
     "-f",
     "--no-flush",
@@ -137,29 +138,20 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
-srcdir = args.srcdir
 normalise = args.normalise
 access_variant = args.access_variant
 loop_split = args.loop_split
-#  layouts = LAYOUTS_TO_USE
-layouts = LAYOUTS_TO_USE_MINIMAL
 local = args.local_legion or args.local_hp
-
 
 if args.equal_axis_limits:
     raise NotImplementedError()
 
-if srcdir.endswith("gn003") or srcdir.endswith("gn003/"):
-    NTHREADS=[1, 9, 18, 36, 72]
-elif srcdir.endswith("dine2") or srcdir.endswith("dine2/"):
-    NTHREADS=[4, 8, 16, 32, 64]
-elif srcdir.endswith("mad06") or srcdir.endswith("mad06/"):
-    NTHREADS=[4, 8, 16, 32, 64, 128]
-
 if args.local_hp:
+    raise NotImplementedError()
     NTHREADS = [4]
     EXPERIMENTS = ["IntelXeonGold5218_Gresho64"]
 if args.local_legion:
+    raise NotImplementedError()
     NTHREADS = [6]
     EXPERIMENTS = ["IntelCoffeeLake_Gresho128"]
 
@@ -175,32 +167,10 @@ plotkwargs = {
     "markersize": 5,
 }
 
+#  layouts = LAYOUTS_TO_USE
+layouts = LAYOUTS_TO_USE_MINIMAL
+
 if __name__ == "__main__":
-
-    if not os.path.exists(srcdir):
-        raise FileNotFoundError(f"directory {srcdir} not found.")
-
-    # get available layouts
-    #  layouts = []
-    #  firstdir = get_result_dir(
-    #      srcdir, EXPERIMENTS[0], NTHREADS[-1], access_variant, loop_split, variant_dir_suffix
-    #      )
-    #  ls = os.listdir(firstdir)
-    #  for f in ls:
-    #      if f.startswith("results_") and f.endswith(".csv"):
-    #          layout = f[len("results_") : -len(".csv")]
-    #          layouts.append(layout)
-    #  layouts.sort()
-
-    #  aos_ind = -1
-    #  for i in range(len(layouts)):
-    #      if layouts[i] == "aos":
-    #          aos_ind = i
-    #          break
-    #  if aos_ind == -1:
-    #      raise ValueError(
-    #          "Something went wrong determining index of AoS in array,", layouts
-    #      )
 
     aos_ind = layouts.index("aos")
 
@@ -221,92 +191,118 @@ if __name__ == "__main__":
     maxtime = -1.0
     mintime = 1e32
 
-    for e, experiment in enumerate(EXPERIMENTS):
+    lsind = 0
+    for srcdir in NODES:
 
-        ls = linestyles[e]
+        if srcdir.endswith("gn003") or srcdir.endswith("gn003/"):
+            NTHREADS=[1, 9, 18, 36, 72]
+        elif srcdir.endswith("dine2") or srcdir.endswith("dine2/"):
+            NTHREADS=[4, 8, 16, 32, 64]
+        elif srcdir.endswith("mad06") or srcdir.endswith("mad06/"):
+            NTHREADS=[4, 8, 16, 32, 64, 128]
 
-        for n, nthreads in enumerate(NTHREADS):
 
-            color = "C" + str(n)
+        for e, experiment in enumerate(EXPERIMENTS):
 
-            # Now get result data for all layouts
-            result_data = []
+            ls = linestyles[lsind]
+            lsind += 1
 
-            for l, layout in enumerate(layouts):
-                fname = get_result_fname(
-                    srcdir,
-                    experiment,
-                    nthreads,
-                    access_variant,
-                    loop_split,
-                    variant_dir_suffix,
-                    layout,
+            # first, get normalisation: Compare to access="part-struct", loop-split = "none"
+            #  dirname = ( experiment + "_" + str(nthreads) + "threads_part-struct_none" + variant_dir_suffix)
+            #  fulldirname = os.path.join(srcdir, dirname)
+            #  if not os.path.exists(fulldirname):
+            #      raise FileNotFoundError(
+            #          f"Experiment output directory {fulldirname} not found."
+            #      )
+            #
+            #  fname = "results_aos.csv"
+            #  fullfname = os.path.join(fulldirname, fname)
+            #  res = ResultData(fullfname, verbose=False)
+            #  normalisation = res.data_dict
+
+            for n, nthreads in enumerate(NTHREADS):
+
+                color = "C" + str(n)
+
+                # Now get result data for all layouts
+                result_data = []
+
+                for l, layout in enumerate(layouts):
+                    fname = get_result_fname(
+                        srcdir,
+                        experiment,
+                        nthreads,
+                        access_variant,
+                        loop_split,
+                        variant_dir_suffix,
+                        layout,
+                    )
+                    res = ResultData(fname, verbose=False)
+                    result_data.append(res)
+
+                    maxtime = max(maxtime, res.timings.max())
+                    mintime = min(mintime, res.timings.min())
+
+                normalisation = result_data[aos_ind].data_dict
+
+                # Unpack result data by packing operation type
+                dens_pack = np.array(
+                    [res.data_dict["pack/density"] for res in result_data]
                 )
-                res = ResultData(fname, verbose=False)
-                result_data.append(res)
+                dens_unpack = np.array(
+                    [res.data_dict["unpack/density"] for res in result_data]
+                )
+                grad_pack = np.array(
+                    [res.data_dict["pack/gradient"] for res in result_data]
+                )
+                grad_unpack = np.array(
+                    [res.data_dict["unpack/gradient"] for res in result_data]
+                )
+                forc_pack = np.array(
+                    [res.data_dict["pack/force"] for res in result_data]
+                )
+                forc_unpack = np.array(
+                    [res.data_dict["unpack/force"] for res in result_data]
+                )
 
-                maxtime = max(maxtime, res.timings.max())
-                mintime = min(mintime, res.timings.min())
+                if normalise:
+                    dens_pack /= normalisation["pack/density"]
+                    dens_unpack /= normalisation["unpack/density"]
+                    grad_pack /= normalisation["pack/gradient"]
+                    grad_unpack /= normalisation["unpack/gradient"]
+                    forc_pack /= normalisation["pack/force"]
+                    forc_unpack /= normalisation["unpack/force"]
 
-            normalisation = result_data[aos_ind].data_dict
+                label = (
+                        NODE_LABELS[srcdir] + " " +
+                        experiment + " "
+                    #  PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
+                    #  + " "
+                    #  + LOOP_SPLIT_LABELS[LOOP_SPLITS.index(loop_split)]
+                    #  + variant_label_suffix
+                    #  + " "
+                    + str(nthreads)
+                    + " threads"
+                )
 
-            # Unpack result data by packing operation type
-            dens_pack = np.array(
-                [res.data_dict["pack/density"] for res in result_data]
-            )
-            dens_unpack = np.array(
-                [res.data_dict["unpack/density"] for res in result_data]
-            )
-            grad_pack = np.array(
-                [res.data_dict["pack/gradient"] for res in result_data]
-            )
-            grad_unpack = np.array(
-                [res.data_dict["unpack/gradient"] for res in result_data]
-            )
-            forc_pack = np.array(
-                [res.data_dict["pack/force"] for res in result_data]
-            )
-            forc_unpack = np.array(
-                [res.data_dict["unpack/force"] for res in result_data]
-            )
-
-            if normalise:
-                dens_pack /= normalisation["pack/density"]
-                dens_unpack /= normalisation["unpack/density"]
-                grad_pack /= normalisation["pack/gradient"]
-                grad_unpack /= normalisation["unpack/gradient"]
-                forc_pack /= normalisation["pack/force"]
-                forc_unpack /= normalisation["unpack/force"]
-
-            label = (
-                    experiment + " " +
-                PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
-                + " "
-                + LOOP_SPLIT_LABELS[LOOP_SPLITS.index(loop_split)]
-                + variant_label_suffix
-                + " "
-                + str(nthreads)
-                + " threads"
-            )
-
-            ax1.plot(
-                layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax2.plot(
-                layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax3.plot(
-                layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax4.plot(
-                layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax5.plot(
-                layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax6.plot(
-                layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
+                ax1.plot(
+                    layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs
+                )
+                ax2.plot(
+                    layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs
+                )
+                ax3.plot(
+                    layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs
+                )
+                ax4.plot(
+                    layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
+                )
+                ax5.plot(
+                    layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
+                )
+                ax6.plot(
+                    layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
+                )
 
     #  if mintime < 200.0:
     #      mintime = 0.0
@@ -325,7 +321,7 @@ if __name__ == "__main__":
     for ax in [ax1, ax4]:
         if normalise:
             ax.set_ylabel(
-                r"$t / t_{\mathrm{aos}}$"
+                r"$t / t^{\mathrm{part\ struct\ access}}_{\mathrm{aos,\ no\ loop\ split}}$"
             )
         else:
             ax.set_ylabel("Timing [ms]")
@@ -342,7 +338,8 @@ if __name__ == "__main__":
 
     hand, lab = ax1.get_legend_handles_labels()
     #  ncols=int(len(layouts)*0.5 + 0.5)
-    ncols = 2
+    #  ncols = 2
+    ncols = 4
     fig.legend(
         handles=hand,
         labels=lab,
@@ -354,7 +351,7 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"compare_nthreads_{srcdir}_{access_variant}"
+    outfname = f"compare_nthreads_nodes_{srcdir}_{access_variant}"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if normalise:

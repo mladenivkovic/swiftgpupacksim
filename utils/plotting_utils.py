@@ -18,6 +18,38 @@ PART_ACCESS_LABELS = ["part struct access", "explicit var access", "global var a
 EXPERIMENTS = ["Gresho256", "EAGLE25"]
 NTHREADS = ["36", "72"]
 
+#  NODES = ["dine2", "gn003"]
+NODES = ["dine2_5steps", "gn003_5steps"]
+NODE_LABELS = {
+        "dine2": "dine2",
+        "dine2_5steps": "dine2",
+        "gn003": "gracehopper",
+        "gn003_5steps": "gracehopper",
+        }
+
+LAYOUTS_TO_USE = [
+        "aos",
+        "random-order",
+        "pack-gradient",
+        "pack-shared",
+        "pack-force",
+        "pack-force-type",
+        "soa",
+        #  "upstream",
+        ]
+
+LAYOUTS_TO_USE_MINIMAL = [
+        "aos",
+        #  "random-order",
+        "pack-gradient",
+        "pack-shared",
+        "pack-force",
+        #  "pack-force-type",
+        "soa",
+        #  "upstream",
+        ]
+
+
 
 # Plot parameters
 mymplparams = {
@@ -40,7 +72,7 @@ mymplparams = {
     #  "figure.subplot.right": 0.99,
     #  "figure.subplot.bottom": 0.05,
     #  "figure.subplot.top": 0.99,
-    "figure.subplot.wspace": 0.0,
+    #  "figure.subplot.wspace": 0.0,
     #  "figure.subplot.hspace": 0.12,
 }
 
