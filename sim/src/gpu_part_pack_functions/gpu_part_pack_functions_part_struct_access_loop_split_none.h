@@ -258,6 +258,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.x = part_get_u(p);
     ps[i].u_rho_c_avisc.y = part_get_rho(p);
@@ -325,6 +326,8 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].vx_m.w = part_get_mass(p);
 
 #if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE)
     ps[i].u_rho_c_avisc.x = part_get_u(p);
     ps[i].u_rho_c_avisc.y = part_get_rho(p);

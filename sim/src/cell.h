@@ -223,9 +223,11 @@ static __attribute__((always_inline)) INLINE void init_cell(
 
 #elif defined(SPHENIX_SOA_PARTICLE) ||           \
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) ||   \
+    defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||      \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) || \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)
   for (int i = 0; i < count; i++) {
     c->hydro.part_arrs._part[i]._cell_offset = i;
     c->hydro.part_arrs._part[i]._cell_part_arrays = &c->hydro.part_arrs;
