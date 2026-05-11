@@ -371,6 +371,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.x = part_get_u_explicit(pd, i);
 #else
@@ -384,6 +385,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.y = part_get_rho_explicit(pd, i);
 #else
@@ -397,6 +399,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.z = part_get_soundspeed_explicit(pd, i);
 #else
@@ -410,6 +413,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].u_rho_c_avisc.w = part_get_alpha_av_explicit(pd, i);
 #else
@@ -423,6 +427,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].aviscmax_vsig_lapu.x = part_get_alpha_visc_max_ngb_explicit(pd, i);
 #else
@@ -436,6 +441,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].aviscmax_vsig_lapu.y = part_get_v_sig_explicit(pd, i);
 #else
@@ -449,6 +455,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
 #if defined(SPHENIX_PACK_FORCE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
     ps[i].aviscmax_vsig_lapu.z = part_get_laplace_u_explicit(pd, i);
 #else

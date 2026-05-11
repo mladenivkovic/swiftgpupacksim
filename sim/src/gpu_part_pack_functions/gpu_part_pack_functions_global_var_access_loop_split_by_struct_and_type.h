@@ -335,7 +335,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].vx_m.w = part_get_mass_global(pi);
   }
 
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE)
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
@@ -432,7 +432,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   }
 
 
-#elif defined(SPHENIX_PACK_SHARED_PARTICLE)
+#elif defined(SPHENIX_PACK_SHARED_PARTICLE) || defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -581,6 +581,57 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
 
+#elif defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (ptrdiff_t i = 0; i < count; i++) {
+    ptrdiff_t pi = i + first;
+    /* struct gradient_pack */
+
+    ps[i].u_rho_c_avisc.x = part_get_u_global(pi);
+    ps[i].u_rho_c_avisc.y = part_get_rho_global(pi);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed_global(pi);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av_global(pi);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (ptrdiff_t i = 0; i < count; i++) {
+    ptrdiff_t pi = i + first;
+    /* struct force_pack */
+
+    ps[i].f_p_balsara_adiff.x = part_get_f_gradh_global(pi);
+    ps[i].f_p_balsara_adiff.y = part_get_pressure_global(pi);
+    ps[i].f_p_balsara_adiff.z = part_get_balsara_global(pi);
+    ps[i].f_p_balsara_adiff.w = part_get_alpha_diff_global(pi);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (ptrdiff_t i = 0; i < count; i++) {
+    ptrdiff_t pi = i + first;
+    /* struct force_pack */
+
+    ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin_global(pi);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (ptrdiff_t i = 0; i < count; i++) {
+    ptrdiff_t pi = i + first;
+    /* struct force_pack */
+    int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin_global(pi);
+    ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
+    ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
+    ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
+  }
+
+
 #elif defined(SPHENIX_PACK_FORCE_PARTICLE)
 
 #ifdef VECTORIZE
@@ -699,6 +750,58 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
+
+#elif defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (ptrdiff_t i = 0; i < count; i++) {
+    ptrdiff_t pi = i + first;
+    /* struct force_gradient_pack_shared */
+
+    ps[i].u_rho_c_avisc.x = part_get_u_global(pi);
+    ps[i].u_rho_c_avisc.y = part_get_rho_global(pi);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed_global(pi);
+    ps[i].u_rho_c_avisc.z = part_get_alpha_av_global(pi);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (ptrdiff_t i = 0; i < count; i++) {
+    ptrdiff_t pi = i + first;
+    /* struct force_pack */
+
+    ps[i].f_p_balsara_adiff.x = part_get_f_gradh_global(pi);
+    ps[i].f_p_balsara_adiff.y = part_get_pressure_global(pi);
+    ps[i].f_p_balsara_adiff.z = part_get_balsara_global(pi);
+    ps[i].f_p_balsara_adiff.w = part_get_alpha_diff_global(pi);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (ptrdiff_t i = 0; i < count; i++) {
+    ptrdiff_t pi = i + first;
+    /* struct force_pack */
+
+    ps[i].timebin_minngbtimebin_pjs_pje.x = (int)part_get_time_bin_global(pi);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (ptrdiff_t i = 0; i < count; i++) {
+    ptrdiff_t pi = i + first;
+    /* struct force_pack */
+
+    int mintbin = (int)part_get_timestep_limiter_min_ngb_time_bin_global(pi);
+    ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
+    ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
+    ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
+  }
+
 
 #else
   /* should only be SPHENIX_PACK_SHARED_PARTICLE, SPHENIX_PACK_FORCE_PARTICLE,

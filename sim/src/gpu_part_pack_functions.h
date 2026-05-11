@@ -49,10 +49,12 @@
 #define USE_LOOP_SPLIT_BY_TYPE 1
 #endif
 
-#if defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&      \
-    (defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
-     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
-     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) ||    \
+#if defined(SWIFT_LOOP_SPLIT_BY_STRUCT) &&           \
+    (defined(SPHENIX_PACK_GRADIENT_PARTICLE)      || \
+     defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || \
+     defined(SPHENIX_PACK_FORCE_PARTICLE)         || \
+     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)    || \
+     defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)   || \
      defined(SPHENIX_PACK_SHARED_PARTICLE))
 /* Only use this for particle data memory layouts where particle is split
  * into several sub-structs, but not fully SoA. */
@@ -61,8 +63,10 @@
 
 #if defined(SWIFT_LOOP_SPLIT_BY_STRUCT_AND_TYPE) && \
     (defined(SPHENIX_PACK_GRADIENT_PARTICLE) ||     \
+     defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || \
      defined(SPHENIX_PACK_FORCE_PARTICLE) ||        \
      defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) ||   \
+     defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)   || \
      defined(SPHENIX_PACK_SHARED_PARTICLE))
 
 /* Only use this for particle data memory layouts where particle is split

@@ -320,7 +320,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].vx_m.w = part_get_mass_explicit(pd, i);
   }
 
-#if defined(SPHENIX_PACK_GRADIENT_PARTICLE)
+#if defined(SPHENIX_PACK_GRADIENT_PARTICLE) || defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE)
 #ifdef VECTORIZE
 #pragma omp simd
 #endif
@@ -378,7 +378,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ps[i].pjs_pje.y = cjend;
   }
 
-#elif defined(SPHENIX_PACK_SHARED_PARTICLE)
+#elif defined(SPHENIX_PACK_SHARED_PARTICLE) || defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)
 
 #ifdef VECTORIZE
 #pragma omp simd
@@ -550,7 +550,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   }
 
 
-#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) || defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)
 
 #ifdef VECTORIZE
 #pragma omp simd

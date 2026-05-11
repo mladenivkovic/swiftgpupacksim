@@ -38,10 +38,18 @@ struct part {
 
 } SWIFT_STRUCT_ALIGN_PART;
 
-struct x_h_v_m {
+struct x_h_v_m_double {
   /*! the particle position */
   double _x[3];
 
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
+
+} SWIFT_STRUCT_ALIGN_X_H_V_M_DOUBLE;
+
+struct x_h_v_m {
   /*! Particle smoothing length */
   float _h;
 
@@ -59,20 +67,8 @@ struct x_h_v_m {
 } SWIFT_STRUCT_ALIGN_X_H_V_M;
 
 struct gradient_pack {
-  /*! Particle internal energy */
-  float _u;
-
-  /*! Particle density */
-  float _rho;
-
-  /*! Particle soundspeed */
-  float _soundspeed;
-
   /*! Maximal alpha (viscosity) over neighbours */
   float _alpha_visc_max_ngb;
-
-  /*! Artificial viscosity parameter */
-  float _alpha_av;
 
   /*! Signal velocity */
   float _v_sig;
@@ -100,9 +96,25 @@ struct force_pack {
   /*! Thermal diffusion coefficient */
   float _alpha_diff;
 
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
+
+} SWIFT_STRUCT_ALIGN_FORCE_PACK;
+
+struct force_pack_timebin {
   /*! Time-step length */
   timebin_t _time_bin;
 
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
+
+} SWIFT_STRUCT_ALIGN_FORCE_PACK_TIMEBIN;
+
+struct force_pack_limiter {
   /*! Time-step limiter information */
   struct timestep_limiter_data _limiter_data;
 
@@ -111,7 +123,27 @@ struct force_pack {
   long long _accessor_id;
 #endif
 
-} SWIFT_STRUCT_ALIGN_FORCE_PACK;
+} SWIFT_STRUCT_ALIGN_FORCE_PACK_LIMITER;
+
+struct force_gradient_pack_shared {
+  /*! Particle internal energy */
+  float _u;
+
+  /*! Particle density */
+  float _rho;
+
+  /*! Particle soundspeed */
+  float _soundspeed;
+
+  /*! Artificial viscosity parameter */
+  float _alpha_av;
+
+#ifdef SWIFT_DEBUG_CHECKS
+  /*! This particle's accessor ID, identical for all structs associated with this particle. */
+  long long _accessor_id;
+#endif
+
+} SWIFT_STRUCT_ALIGN_FORCE_GRADIENT_PACK_SHARED;
 
 struct density_unpack {
   /*! Derivative of density with respect to h */
@@ -634,15 +666,15 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE double*
   part_get_x(struct part *restrict p) {
-  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -650,15 +682,15 @@ static __attribute__((always_inline)) INLINE double*
  */
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_x(const struct part *restrict p) {
-  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -666,15 +698,15 @@ static __attribute__((always_inline)) INLINE const double*
  */
 static __attribute__((always_inline)) INLINE double
   part_get_x_ind(const struct part *restrict p, const int i) {
-  const struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x[i];
+  return x_h_v_m_double_s->_x[i];
 }
 
 /**
@@ -683,17 +715,17 @@ static __attribute__((always_inline)) INLINE double
  */
 static __attribute__((always_inline)) INLINE void
   part_set_x(struct part *restrict p, const double x[3]) {
-  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[0] = x[0];
-  x_h_v_m_s->_x[1] = x[1];
-  x_h_v_m_s->_x[2] = x[2];
+  x_h_v_m_double_s->_x[0] = x[0];
+  x_h_v_m_double_s->_x[1] = x[1];
+  x_h_v_m_double_s->_x[2] = x[2];
 }
 
 /**
@@ -701,15 +733,15 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE void
   part_set_x_ind(struct part *restrict p, const int i, const double x) {
-  struct x_h_v_m* restrict x_h_v_m_s = p->_cell_part_arrays->_x_h_v_m + p->_cell_offset;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = p->_cell_part_arrays->_x_h_v_m_double + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[i] = x;
+  x_h_v_m_double_s->_x[i] = x;
 }
 
 
@@ -721,16 +753,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE double*
   part_get_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -739,16 +771,16 @@ static __attribute__((always_inline)) INLINE double*
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_x_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -757,16 +789,16 @@ static __attribute__((always_inline)) INLINE const double*
 static __attribute__((always_inline)) INLINE double
   part_get_x_ind_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i) {
 
-  const struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x[i];
+  return x_h_v_m_double_s->_x[i];
 }
 
 /**
@@ -776,18 +808,18 @@ static __attribute__((always_inline)) INLINE double
 static __attribute__((always_inline)) INLINE void
   part_set_x_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const double x[3]) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[0] = x[0];
-  x_h_v_m_s->_x[1] = x[1];
-  x_h_v_m_s->_x[2] = x[2];
+  x_h_v_m_double_s->_x[0] = x[0];
+  x_h_v_m_double_s->_x[1] = x[1];
+  x_h_v_m_double_s->_x[2] = x[2];
 }
 
 /**
@@ -796,16 +828,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE void
   part_set_x_ind_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const int i, const double x) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = pd->_x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = pd->_x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[i] = x;
+  x_h_v_m_double_s->_x[i] = x;
 }
 
 
@@ -817,16 +849,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE double*
   part_get_x_global(const ptrdiff_t pind) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -835,16 +867,16 @@ static __attribute__((always_inline)) INLINE double*
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_x_global(const ptrdiff_t pind) {
 
-  const struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x;
+  return x_h_v_m_double_s->_x;
 }
 
 /**
@@ -853,16 +885,16 @@ static __attribute__((always_inline)) INLINE const double*
 static __attribute__((always_inline)) INLINE double
   part_get_x_ind_global(const ptrdiff_t pind, const int i) {
 
-  const struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  const struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  return x_h_v_m_s->_x[i];
+  return x_h_v_m_double_s->_x[i];
 }
 
 /**
@@ -872,18 +904,18 @@ static __attribute__((always_inline)) INLINE double
 static __attribute__((always_inline)) INLINE void
   part_set_x_global(const ptrdiff_t pind, const double x[3]) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[0] = x[0];
-  x_h_v_m_s->_x[1] = x[1];
-  x_h_v_m_s->_x[2] = x[2];
+  x_h_v_m_double_s->_x[0] = x[0];
+  x_h_v_m_double_s->_x[1] = x[1];
+  x_h_v_m_double_s->_x[2] = x[2];
 }
 
 /**
@@ -892,17 +924,19 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE void
   part_set_x_ind_global(const ptrdiff_t pind, const int i, const double x) {
 
-  struct x_h_v_m* restrict x_h_v_m_s = global_hydro_part_arrays._x_h_v_m + pind;
+  struct x_h_v_m_double* restrict x_h_v_m_double_s = global_hydro_part_arrays._x_h_v_m_double + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(x_h_v_m_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", x_h_v_m_s->_accessor_id, p->_accessor_id);
+  if(x_h_v_m_double_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", x_h_v_m_double_s->_accessor_id, p->_accessor_id);
 #endif
-  x_h_v_m_s->_x[i] = x;
+  x_h_v_m_double_s->_x[i] = x;
 }
+
+
 
 
 
@@ -1640,681 +1674,6 @@ static __attribute__((always_inline)) INLINE void
 
 
 /**
- * @brief get u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u(const struct part *restrict p) {
-  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_u;
-}
-
-/**
- * @brief get a pointer to u, Particle internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u. If you need read-only access to u, use part_get_const_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_p(struct part *restrict p) {
-  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_u;
-}
-
-/**
- * @brief get read-only access to pointer to u,
- * Particle internal energy.
- * If you need write access to u, use part_get_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_p(const struct part *restrict p) {
-  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_u;
-}
-
-/**
- * @brief set the value of u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u(struct part *restrict p, const float u) {
-  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_u = u;
-}
-
-
-/**
- * @brief get u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_u;
-}
-
-/**
- * @brief get a pointer to u, Particle internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u. If you need read-only access to u, use part_get_const_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_u;
-}
-
-/**
- * @brief get read-only access to pointer to u,
- * Particle internal energy.
- * If you need write access to u, use part_get_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_u;
-}
-
-/**
- * @brief set the value of u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float u) {
-
-  struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_u = u;
-}
-
-
-/**
- * @brief get u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_u_global(const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_u;
-}
-
-/**
- * @brief get a pointer to u, Particle internal energy.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to u. If you need read-only access to u, use part_get_const_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_u_p_global(const ptrdiff_t pind) {
-
-  struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_u;
-}
-
-/**
- * @brief get read-only access to pointer to u,
- * Particle internal energy.
- * If you need write access to u, use part_get_u_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_u_p_global(const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_u;
-}
-
-/**
- * @brief set the value of u, Particle internal energy.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_u_global(const ptrdiff_t pind, const float u) {
-
-  struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_u = u;
-}
-
-
-
-
-/**
- * @brief get rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho(const struct part *restrict p) {
-  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_rho;
-}
-
-/**
- * @brief get a pointer to rho, Particle density.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_p(struct part *restrict p) {
-  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_rho;
-}
-
-/**
- * @brief get read-only access to pointer to rho,
- * Particle density.
- * If you need write access to rho, use part_get_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_p(const struct part *restrict p) {
-  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_rho;
-}
-
-/**
- * @brief set the value of rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho(struct part *restrict p, const float rho) {
-  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_rho = rho;
-}
-
-
-/**
- * @brief get rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_rho;
-}
-
-/**
- * @brief get a pointer to rho, Particle density.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_rho;
-}
-
-/**
- * @brief get read-only access to pointer to rho,
- * Particle density.
- * If you need write access to rho, use part_get_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_rho;
-}
-
-/**
- * @brief set the value of rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho) {
-
-  struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_rho = rho;
-}
-
-
-/**
- * @brief get rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_rho_global(const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_rho;
-}
-
-/**
- * @brief get a pointer to rho, Particle density.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_rho_p_global(const ptrdiff_t pind) {
-
-  struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_rho;
-}
-
-/**
- * @brief get read-only access to pointer to rho,
- * Particle density.
- * If you need write access to rho, use part_get_rho_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_rho_p_global(const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_rho;
-}
-
-/**
- * @brief set the value of rho, Particle density.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_rho_global(const ptrdiff_t pind, const float rho) {
-
-  struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_rho = rho;
-}
-
-
-
-
-/**
- * @brief get soundspeed, Particle soundspeed.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_soundspeed(const struct part *restrict p) {
-  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief get a pointer to soundspeed, Particle soundspeed.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_soundspeed_p(struct part *restrict p) {
-  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief get read-only access to pointer to soundspeed,
- * Particle soundspeed.
- * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_soundspeed_p(const struct part *restrict p) {
-  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief set the value of soundspeed, Particle soundspeed.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_soundspeed(struct part *restrict p, const float soundspeed) {
-  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_soundspeed = soundspeed;
-}
-
-
-/**
- * @brief get soundspeed, Particle soundspeed.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_soundspeed_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief get a pointer to soundspeed, Particle soundspeed.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_soundspeed_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief get read-only access to pointer to soundspeed,
- * Particle soundspeed.
- * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_soundspeed_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief set the value of soundspeed, Particle soundspeed.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_soundspeed_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float soundspeed) {
-
-  struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_soundspeed = soundspeed;
-}
-
-
-/**
- * @brief get soundspeed, Particle soundspeed.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_soundspeed_global(const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief get a pointer to soundspeed, Particle soundspeed.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_soundspeed_p_global(const ptrdiff_t pind) {
-
-  struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief get read-only access to pointer to soundspeed,
- * Particle soundspeed.
- * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_soundspeed_p_global(const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_soundspeed;
-}
-
-/**
- * @brief set the value of soundspeed, Particle soundspeed.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_soundspeed_global(const ptrdiff_t pind, const float soundspeed) {
-
-  struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_soundspeed = soundspeed;
-}
-
-
-
-
-/**
  * @brief get alpha_visc_max_ngb, Maximal alpha (viscosity) over neighbours.
  */
 static __attribute__((always_inline)) INLINE float
@@ -2534,231 +1893,6 @@ static __attribute__((always_inline)) INLINE void
     error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
 #endif
   gradient_pack_s->_alpha_visc_max_ngb = alpha_visc_max_ngb;
-}
-
-
-
-
-/**
- * @brief get alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av(const struct part *restrict p) {
-  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief get a pointer to alpha_av, Artificial viscosity parameter.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p(struct part *restrict p) {
-  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_av,
- * Artificial viscosity parameter.
- * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p(const struct part *restrict p) {
-  const struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief set the value of alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av(struct part *restrict p, const float alpha_av) {
-  struct gradient_pack* restrict gradient_pack_s = p->_cell_part_arrays->_gradient_pack + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_alpha_av = alpha_av;
-}
-
-
-/**
- * @brief get alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief get a pointer to alpha_av, Artificial viscosity parameter.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_av,
- * Artificial viscosity parameter.
- * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief set the value of alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_av) {
-
-  struct gradient_pack* restrict gradient_pack_s = pd->_gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = pd->_part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_alpha_av = alpha_av;
-}
-
-
-/**
- * @brief get alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE float
-  part_get_alpha_av_global(const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief get a pointer to alpha_av, Artificial viscosity parameter.
- * Use this only if you need to modify the value, i.e. if you need write access
- * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE float*
-  part_get_alpha_av_p_global(const ptrdiff_t pind) {
-
-  struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief get read-only access to pointer to alpha_av,
- * Artificial viscosity parameter.
- * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
- */
-static __attribute__((always_inline)) INLINE const float*
-  part_get_const_alpha_av_p_global(const ptrdiff_t pind) {
-
-  const struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  return &gradient_pack_s->_alpha_av;
-}
-
-/**
- * @brief set the value of alpha_av, Artificial viscosity parameter.
- */
-static __attribute__((always_inline)) INLINE void
-  part_set_alpha_av_global(const ptrdiff_t pind, const float alpha_av) {
-
-  struct gradient_pack* restrict gradient_pack_s = global_hydro_part_arrays._gradient_pack + pind;
-#ifdef SWIFT_DEBUG_CHECKS
-  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
-  swift_assert(p->_accessor_id != 0);
-  /* Make sure we're accessing the correct data */
-  if(gradient_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", gradient_pack_s->_accessor_id, p->_accessor_id);
-#endif
-  gradient_pack_s->_alpha_av = alpha_av;
 }
 
 
@@ -4116,20 +3250,22 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
+
 /**
  * @brief get time_bin, Time-step length.
  */
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_time_bin(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = p->_cell_part_arrays->_force_pack_timebin + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_time_bin;
+  return force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4139,15 +3275,15 @@ static __attribute__((always_inline)) INLINE timebin_t
  */
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_time_bin_p(struct part *restrict p) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack_timebin* restrict force_pack_timebin_s = p->_cell_part_arrays->_force_pack_timebin + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4157,15 +3293,15 @@ static __attribute__((always_inline)) INLINE timebin_t*
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_time_bin_p(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = p->_cell_part_arrays->_force_pack_timebin + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4173,15 +3309,15 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_time_bin(struct part *restrict p, const timebin_t time_bin) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack_timebin* restrict force_pack_timebin_s = p->_cell_part_arrays->_force_pack_timebin + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_time_bin = time_bin;
+  force_pack_timebin_s->_time_bin = time_bin;
 }
 
 
@@ -4191,16 +3327,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_time_bin_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = pd->_force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_time_bin;
+  return force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4211,16 +3347,16 @@ static __attribute__((always_inline)) INLINE timebin_t
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_time_bin_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  struct force_pack_timebin* restrict force_pack_timebin_s = pd->_force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4231,16 +3367,16 @@ static __attribute__((always_inline)) INLINE timebin_t*
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_time_bin_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = pd->_force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4249,16 +3385,16 @@ static __attribute__((always_inline)) INLINE const timebin_t*
 static __attribute__((always_inline)) INLINE void
   part_set_time_bin_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const timebin_t time_bin) {
 
-  struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  struct force_pack_timebin* restrict force_pack_timebin_s = pd->_force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_time_bin = time_bin;
+  force_pack_timebin_s->_time_bin = time_bin;
 }
 
 
@@ -4268,16 +3404,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_time_bin_global(const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = global_hydro_part_arrays._force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_time_bin;
+  return force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4288,16 +3424,16 @@ static __attribute__((always_inline)) INLINE timebin_t
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_time_bin_p_global(const ptrdiff_t pind) {
 
-  struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  struct force_pack_timebin* restrict force_pack_timebin_s = global_hydro_part_arrays._force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4308,16 +3444,16 @@ static __attribute__((always_inline)) INLINE timebin_t*
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_time_bin_p_global(const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  const struct force_pack_timebin* restrict force_pack_timebin_s = global_hydro_part_arrays._force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_time_bin;
+  return &force_pack_timebin_s->_time_bin;
 }
 
 /**
@@ -4326,17 +3462,19 @@ static __attribute__((always_inline)) INLINE const timebin_t*
 static __attribute__((always_inline)) INLINE void
   part_set_time_bin_global(const ptrdiff_t pind, const timebin_t time_bin) {
 
-  struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  struct force_pack_timebin* restrict force_pack_timebin_s = global_hydro_part_arrays._force_pack_timebin + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_timebin_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_timebin_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_time_bin = time_bin;
+  force_pack_timebin_s->_time_bin = time_bin;
 }
+
+
 
 
 
@@ -4346,15 +3484,15 @@ static __attribute__((always_inline)) INLINE void
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
   part_get_limiter_data(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = p->_cell_part_arrays->_force_pack_limiter + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_limiter_data;
+  return force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4364,15 +3502,15 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
  */
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
   part_get_limiter_data_p(struct part *restrict p) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack_limiter* restrict force_pack_limiter_s = p->_cell_part_arrays->_force_pack_limiter + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4382,15 +3520,15 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
  */
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
   part_get_const_limiter_data_p(const struct part *restrict p) {
-  const struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = p->_cell_part_arrays->_force_pack_limiter + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4398,15 +3536,15 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
  */
 static __attribute__((always_inline)) INLINE void
   part_set_limiter_data(struct part *restrict p, const struct timestep_limiter_data limiter_data) {
-  struct force_pack* restrict force_pack_s = p->_cell_part_arrays->_force_pack + p->_cell_offset;
+  struct force_pack_limiter* restrict force_pack_limiter_s = p->_cell_part_arrays->_force_pack_limiter + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_limiter_data = limiter_data;
+  force_pack_limiter_s->_limiter_data = limiter_data;
 }
 
 
@@ -4416,16 +3554,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
   part_get_limiter_data_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = pd->_force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_limiter_data;
+  return force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4436,16 +3574,16 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
   part_get_limiter_data_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  struct force_pack_limiter* restrict force_pack_limiter_s = pd->_force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4456,16 +3594,16 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
   part_get_const_limiter_data_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = pd->_force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4474,16 +3612,16 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
 static __attribute__((always_inline)) INLINE void
   part_set_limiter_data_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const struct timestep_limiter_data limiter_data) {
 
-  struct force_pack* restrict force_pack_s = pd->_force_pack + pind;
+  struct force_pack_limiter* restrict force_pack_limiter_s = pd->_force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = pd->_part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_limiter_data = limiter_data;
+  force_pack_limiter_s->_limiter_data = limiter_data;
 }
 
 
@@ -4493,16 +3631,16 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data
   part_get_limiter_data_global(const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = global_hydro_part_arrays._force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return force_pack_s->_limiter_data;
+  return force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4513,16 +3651,16 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data
 static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
   part_get_limiter_data_p_global(const ptrdiff_t pind) {
 
-  struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  struct force_pack_limiter* restrict force_pack_limiter_s = global_hydro_part_arrays._force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4533,16 +3671,16 @@ static __attribute__((always_inline)) INLINE struct timestep_limiter_data*
 static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
   part_get_const_limiter_data_p_global(const ptrdiff_t pind) {
 
-  const struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  const struct force_pack_limiter* restrict force_pack_limiter_s = global_hydro_part_arrays._force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  return &force_pack_s->_limiter_data;
+  return &force_pack_limiter_s->_limiter_data;
 }
 
 /**
@@ -4551,16 +3689,918 @@ static __attribute__((always_inline)) INLINE const struct timestep_limiter_data*
 static __attribute__((always_inline)) INLINE void
   part_set_limiter_data_global(const ptrdiff_t pind, const struct timestep_limiter_data limiter_data) {
 
-  struct force_pack* restrict force_pack_s = global_hydro_part_arrays._force_pack + pind;
+  struct force_pack_limiter* restrict force_pack_limiter_s = global_hydro_part_arrays._force_pack_limiter + pind;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_hydro_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
-  if(force_pack_s->_accessor_id != p->_accessor_id)
-    error("Accessor IDs not equal: %lld %lld", force_pack_s->_accessor_id, p->_accessor_id);
+  if(force_pack_limiter_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_pack_limiter_s->_accessor_id, p->_accessor_id);
 #endif
-  force_pack_s->_limiter_data = limiter_data;
+  force_pack_limiter_s->_limiter_data = limiter_data;
+}
+
+
+
+
+
+
+/**
+ * @brief get u, Particle internal energy.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_u(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief get a pointer to u, Particle internal energy.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to u. If you need read-only access to u, use part_get_const_u_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_u_p(struct part *restrict p) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief get read-only access to pointer to u,
+ * Particle internal energy.
+ * If you need write access to u, use part_get_u_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_u_p(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief set the value of u, Particle internal energy.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_u(struct part *restrict p, const float u) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_u = u;
+}
+
+
+/**
+ * @brief get u, Particle internal energy.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_u_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief get a pointer to u, Particle internal energy.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to u. If you need read-only access to u, use part_get_const_u_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_u_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief get read-only access to pointer to u,
+ * Particle internal energy.
+ * If you need write access to u, use part_get_u_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_u_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief set the value of u, Particle internal energy.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_u_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float u) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_u = u;
+}
+
+
+/**
+ * @brief get u, Particle internal energy.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_u_global(const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief get a pointer to u, Particle internal energy.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to u. If you need read-only access to u, use part_get_const_u_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_u_p_global(const ptrdiff_t pind) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief get read-only access to pointer to u,
+ * Particle internal energy.
+ * If you need write access to u, use part_get_u_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_u_p_global(const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_u;
+}
+
+/**
+ * @brief set the value of u, Particle internal energy.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_u_global(const ptrdiff_t pind, const float u) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_u = u;
+}
+
+
+
+
+/**
+ * @brief get rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief get a pointer to rho, Particle density.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_p(struct part *restrict p) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief get read-only access to pointer to rho,
+ * Particle density.
+ * If you need write access to rho, use part_get_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_p(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief set the value of rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho(struct part *restrict p, const float rho) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_rho = rho;
+}
+
+
+/**
+ * @brief get rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief get a pointer to rho, Particle density.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief get read-only access to pointer to rho,
+ * Particle density.
+ * If you need write access to rho, use part_get_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief set the value of rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float rho) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_rho = rho;
+}
+
+
+/**
+ * @brief get rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_rho_global(const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief get a pointer to rho, Particle density.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to rho. If you need read-only access to rho, use part_get_const_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_rho_p_global(const ptrdiff_t pind) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief get read-only access to pointer to rho,
+ * Particle density.
+ * If you need write access to rho, use part_get_rho_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_rho_p_global(const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_rho;
+}
+
+/**
+ * @brief set the value of rho, Particle density.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_rho_global(const ptrdiff_t pind, const float rho) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_rho = rho;
+}
+
+
+
+
+/**
+ * @brief get soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_soundspeed(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief get a pointer to soundspeed, Particle soundspeed.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_soundspeed_p(struct part *restrict p) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief get read-only access to pointer to soundspeed,
+ * Particle soundspeed.
+ * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_soundspeed_p(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief set the value of soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_soundspeed(struct part *restrict p, const float soundspeed) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_soundspeed = soundspeed;
+}
+
+
+/**
+ * @brief get soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_soundspeed_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief get a pointer to soundspeed, Particle soundspeed.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_soundspeed_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief get read-only access to pointer to soundspeed,
+ * Particle soundspeed.
+ * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_soundspeed_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief set the value of soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_soundspeed_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float soundspeed) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_soundspeed = soundspeed;
+}
+
+
+/**
+ * @brief get soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_soundspeed_global(const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief get a pointer to soundspeed, Particle soundspeed.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to soundspeed. If you need read-only access to soundspeed, use part_get_const_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_soundspeed_p_global(const ptrdiff_t pind) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief get read-only access to pointer to soundspeed,
+ * Particle soundspeed.
+ * If you need write access to soundspeed, use part_get_soundspeed_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_soundspeed_p_global(const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_soundspeed;
+}
+
+/**
+ * @brief set the value of soundspeed, Particle soundspeed.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_soundspeed_global(const ptrdiff_t pind, const float soundspeed) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_soundspeed = soundspeed;
+}
+
+
+
+
+/**
+ * @brief get alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_alpha_av(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief get a pointer to alpha_av, Artificial viscosity parameter.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_alpha_av_p(struct part *restrict p) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief get read-only access to pointer to alpha_av,
+ * Artificial viscosity parameter.
+ * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_alpha_av_p(const struct part *restrict p) {
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief set the value of alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_alpha_av(struct part *restrict p, const float alpha_av) {
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = p->_cell_part_arrays->_force_gradient_pack_shared + p->_cell_offset;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_alpha_av = alpha_av;
+}
+
+
+/**
+ * @brief get alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_alpha_av_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief get a pointer to alpha_av, Artificial viscosity parameter.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_alpha_av_p_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief get read-only access to pointer to alpha_av,
+ * Artificial viscosity parameter.
+ * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_alpha_av_p_explicit(const struct hydro_part_arrays *restrict pd, const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief set the value of alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_alpha_av_explicit(struct hydro_part_arrays *restrict pd, const ptrdiff_t pind, const float alpha_av) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = pd->_force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = pd->_part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_alpha_av = alpha_av;
+}
+
+
+/**
+ * @brief get alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE float
+  part_get_alpha_av_global(const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief get a pointer to alpha_av, Artificial viscosity parameter.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to alpha_av. If you need read-only access to alpha_av, use part_get_const_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE float*
+  part_get_alpha_av_p_global(const ptrdiff_t pind) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief get read-only access to pointer to alpha_av,
+ * Artificial viscosity parameter.
+ * If you need write access to alpha_av, use part_get_alpha_av_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const float*
+  part_get_const_alpha_av_p_global(const ptrdiff_t pind) {
+
+  const struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  return &force_gradient_pack_shared_s->_alpha_av;
+}
+
+/**
+ * @brief set the value of alpha_av, Artificial viscosity parameter.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_alpha_av_global(const ptrdiff_t pind, const float alpha_av) {
+
+  struct force_gradient_pack_shared* restrict force_gradient_pack_shared_s = global_hydro_part_arrays._force_gradient_pack_shared + pind;
+#ifdef SWIFT_DEBUG_CHECKS
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if(force_gradient_pack_shared_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", force_gradient_pack_shared_s->_accessor_id, p->_accessor_id);
+#endif
+  force_gradient_pack_shared_s->_alpha_av = alpha_av;
 }
 
 
