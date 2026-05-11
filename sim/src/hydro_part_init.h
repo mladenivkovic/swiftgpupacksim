@@ -43,9 +43,11 @@ static __attribute__((always_inline)) INLINE void hydro_part_init(
 
 #elif defined(SPHENIX_SOA_PARTICLE) ||         \
     defined(SPHENIX_PACK_GRADIENT_PARTICLE) || \
+    defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_FORCE_PARTICLE) ||    \
     defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) ||    \
-    defined(SPHENIX_PACK_SHARED_PARTICLE)
+    defined(SPHENIX_PACK_SHARED_PARTICLE) || \
+    defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)
 
   /* Split structs need initialisation of array pointer + their index in that
    * array */
