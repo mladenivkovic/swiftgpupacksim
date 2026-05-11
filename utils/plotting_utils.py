@@ -18,8 +18,14 @@ PART_ACCESS_LABELS = ["part struct access", "explicit var access", "global var a
 EXPERIMENTS = ["Gresho256", "EAGLE25"]
 NTHREADS = ["36", "72"]
 
-NODES = ["dine2", "gn003"]
-NODE_LABELS = {"dine2": "dine2", "gn003": "gracehopper"}
+#  NODES = ["dine2", "gn003"]
+NODES = ["dine2_5steps", "gn003_5steps"]
+NODE_LABELS = {
+        "dine2": "dine2",
+        "dine2_5steps": "dine2",
+        "gn003": "gracehopper",
+        "gn003_5steps": "gracehopper",
+        }
 
 LAYOUTS_TO_USE = [
         "aos",
