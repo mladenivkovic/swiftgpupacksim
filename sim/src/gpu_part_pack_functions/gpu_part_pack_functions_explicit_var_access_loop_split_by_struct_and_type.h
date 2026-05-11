@@ -516,6 +516,57 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
 
+
+#elif defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct gradient_pack */
+
+    ps[i].u_rho_c_avisc.x = part_get_u_explicit(pd, i);
+    ps[i].u_rho_c_avisc.y = part_get_rho_explicit(pd, i);
+    ps[i].u_rho_c_avisc.z = part_get_soundspeed_explicit(pd, i);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av_explicit(pd, i);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack */
+
+    ps[i].f_p_balsara_adiff.x = part_get_f_gradh_explicit(pd, i);
+    ps[i].f_p_balsara_adiff.y = part_get_pressure_explicit(pd, i);
+    ps[i].f_p_balsara_adiff.z = part_get_balsara_explicit(pd, i);
+    ps[i].f_p_balsara_adiff.w = part_get_alpha_diff_explicit(pd, i);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack_timebin */
+
+    ps[i].timebin_minngbtimebin_pjs_pje.x =
+        (int)part_get_time_bin_explicit(pd, i);
+  }
+
+#ifdef VECTORIZE
+#pragma omp simd
+#endif
+  for (int i = 0; i < count; i++) {
+    /* struct force_pack_limiter */
+
+    int mintbin =
+        (int)part_get_timestep_limiter_min_ngb_time_bin_explicit(pd, i);
+    ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
+    ps[i].timebin_minngbtimebin_pjs_pje.z = cjstart;
+    ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
+  }
+
+
 #elif defined(SPHENIX_PACK_FORCE_PARTICLE)
 
 #ifdef VECTORIZE
@@ -549,8 +600,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
 
-
-#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE) || defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE)
+#elif defined(SPHENIX_PACK_FORCE_TYPE_PARTICLE)
 
 #ifdef VECTORIZE
 #pragma omp simd
