@@ -2,7 +2,11 @@
 
 # compare_part_access_gn003_72threads_noflush_normalised.png
 # python3 ../../utils/compare_particle_access.py --png --no-flush gn003 --normalise
-python3 ../../utils/compare_particle_access.py --no-flush gn003 --normalise
+python3 ../../utils/compare_particle_access.py --no-flush gn003_5steps --normalise
+
+# loop_splitting_compare_total_time_gn003_72threads_noflush.png
+# python3 ../../utils/loop_splitting_compare_total_times.py --png --no-flush gn003
+python3 ../../utils/loop_splitting_compare_total_times.py --no-flush gn003_5steps
 
 
 

@@ -2,7 +2,10 @@
 
 # compare_part_access_dine2_64threads_noflush_normalised.png
 # python3 ../../utils/compare_particle_access.py --png --no-flush -t 64 dine2 --normalise
-python3 ../../utils/compare_particle_access.py --no-flush -t 64 dine2 --normalise
+python3 ../../utils/compare_particle_access.py --no-flush -t 64 dine2_5steps --normalise
+
+# loop_splitting_compare_total_time_dine2_64threads_noflush.pdf
+python3 ../../utils/loop_splitting_compare_total_times.py --no-flush -t 64 dine2_5steps
 
 
 # python3 ../../utils/loop_splitting_compare_particle_access.py --png dine2 --no-flush -t 64
