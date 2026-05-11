@@ -298,7 +298,8 @@ if __name__ == "__main__":
     # all axes
     for ax in fig.axes:
         #  ax.set_xlabel("particle data layouts")
-        ax.tick_params("x", rotation=90)
+        #  ax.tick_params("x", rotation=90)
+        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
         ax.grid()
         #  ax.legend()
         if args.equal_axis_limits:

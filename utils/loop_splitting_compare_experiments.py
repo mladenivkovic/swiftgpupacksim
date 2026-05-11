@@ -19,6 +19,8 @@ from plotting_utils import (
     PART_ACCESS,
     PART_ACCESS_LABELS,
     EXPERIMENTS,
+    LAYOUTS_TO_USE,
+    LAYOUTS_TO_USE_MINIMAL,
     mymplparams,
     mydpi,
     markers,
@@ -148,16 +150,16 @@ if __name__ == "__main__":
         raise FileNotFoundError(f"directory {srcdir} not found.")
 
     # get available layouts
-    layouts = []
-    firstdir = get_result_dir(
-        srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0]
-    )
-    ls = os.listdir(firstdir)
-    for f in ls:
-        if f.startswith("results_") and f.endswith(".csv"):
-            layout = f[len("results_") : -len(".csv")]
-            layouts.append(layout)
-    layouts.sort()
+    layouts = LAYOUTS_TO_USE
+    #  firstdir = get_result_dir(
+    #      srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0], variant_dir_suffix,
+    #  )
+    #  ls = os.listdir(firstdir)
+    #  for f in ls:
+    #      if f.startswith("results_") and f.endswith(".csv"):
+    #          layout = f[len("results_") : -len(".csv")]
+    #          layouts.append(layout)
+    #  layouts.sort()
 
     for a, part_access in enumerate(PART_ACCESS):
 
@@ -187,7 +189,8 @@ if __name__ == "__main__":
                 srcdir,
                 experiment,
                 nthreads,
-                part_access,
+                "part-struct",
+                #  part_access,
                 "none",
                 variant_dir_suffix,
                 "aos",
@@ -302,7 +305,7 @@ if __name__ == "__main__":
         # all axes
         for ax in fig.axes:
             ax.set_xlabel("particle data layouts")
-            ax.tick_params("x", rotation=45)
+            ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
             ax.grid()
             #  ax.legend()
             if args.equal_axis_limits:
