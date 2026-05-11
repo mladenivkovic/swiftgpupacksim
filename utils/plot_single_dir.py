@@ -53,7 +53,8 @@ if __name__ == "__main__":
         relative_times = res.timings / aos_timings
         ax.plot(res.tasks, relative_times, label=res.layout, marker="o")
 
-    ax.tick_params(axis="x", labelrotation=45)
+    #  ax.tick_params(axis="x", labelrotation=45)
+    ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
     ax.legend()
     ax.grid()
     plt.tight_layout()

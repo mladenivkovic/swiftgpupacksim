@@ -18,12 +18,11 @@ from plotting_utils import (
     LOOP_SPLIT_LABELS,
     PART_ACCESS,
     PART_ACCESS_LABELS,
-    LAYOUTS_TO_USE,
     EXPERIMENTS,
+    LAYOUTS_TO_USE,
+    LAYOUTS_TO_USE_MINIMAL,
     mymplparams,
     mydpi,
-    markers,
-    linestyles,
 )
 
 matplotlib.rcParams.update(mymplparams)
@@ -31,11 +30,11 @@ matplotlib.rcParams.update(mymplparams)
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-Compare total times of different experiments for loop splitting variants,
-and different particle memory layouts given a particle access.
+Identify best runtime among loop splitting variants in a heatmap for varying
+access methods and memory layouts.
 
 For an adequate comparable plot, the results are normalized using the times for
-layout = aos
+layout = aos and access variant = part-struct.
 
 By default, this plots the outputs using:
 - cache flushes between each copy operation
@@ -126,8 +125,13 @@ srcdir = args.srcdir
 nthreads = args.nthreads
 if isinstance(nthreads, list):
     nthreads = nthreads[0]
+layouts = LAYOUTS_TO_USE
+#  layouts = LAYOUTS_TO_USE_MINIMAL
+
 local = args.local_legion or args.local_hp
 
+if local:
+    raise NotImplementedError()
 if args.equal_axis_limits:
     raise NotImplementedError()
 if args.local_hp or args.local_legion:
@@ -138,45 +142,51 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
     args.use_noflush, args.use_vector, args.use_packed
 )
 
-plotkwargs = {
-    "marker": "o",
-    "lw": 2,
-    "alpha": 0.6,
-    "markersize": 5,
-}
+
+def plot_heatmap(ax, heatmap):
+
+    im = ax.imshow(heatmap, cmap="viridis_r")
+    ax.set_xticks(range(len(PART_ACCESS)), labels=PART_ACCESS_LABELS, rotation=30, ha="right", rotation_mode="anchor")
+    ax.set_yticks(range(len(layouts)), labels=layouts,)
+
+    maxval = heatmap.max()
+    mean = heatmap.mean()
+
+    # add text annotations
+    for l in range(len(layouts)):
+        for s in range(len(PART_ACCESS)):
+            colour = "black"
+            if heatmap[l,s] > 0.5 * (maxval + mean):
+                colour = "white"
+            text = ax.text(s, l, f"{heatmap[l,s]:.2f}", ha="center", va="center", color=colour)
+
+    return im
+
+
+
+
 
 if __name__ == "__main__":
 
     if not os.path.exists(srcdir):
         raise FileNotFoundError(f"directory {srcdir} not found.")
 
-    # get available layouts
-    layouts = LAYOUTS_TO_USE
-#      firstdir = get_result_dir(
-    #      srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0]
-    #  )
-    #  ls = os.listdir(firstdir)
-    #  for f in ls:
-    #      if f.startswith("results_") and f.endswith(".csv"):
-    #          layout = f[len("results_") : -len(".csv")]
-    #          layouts.append(layout)
-#      layouts.sort()
-
-    fig = plt.figure(figsize=(12, 5))
+    fig = plt.figure(figsize=(14, 9))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
 
-    #  maxtime = -1.0
-    #  mintime = 1e32
 
     for e, experiment in enumerate(EXPERIMENTS):
+
         ax = axes[e]
         ax.set_title(experiment)
+        print("EXPERIMENT:", experiment)
+        print("-------------------------------")
+        print()
 
-        # first, get the normalisation
-        # AoS part-struct no-loop-split for this experiment
-        fname_norm = get_result_fname(
+        # get reference value
+        reffname = get_result_fname(
             srcdir,
             experiment,
             nthreads,
@@ -185,93 +195,78 @@ if __name__ == "__main__":
             variant_dir_suffix,
             "aos",
         )
-        res = ResultData(fname_norm, verbose=False)
-        normalisation = res.total_time
+        res = ResultData(reffname, verbose=False)
+        ref_total_time = res.total_time
 
+        heatmap = np.zeros((len(layouts), len(PART_ACCESS)))
 
-        for a, part_access in enumerate(PART_ACCESS):
+        for a, access in enumerate(PART_ACCESS):
 
-            ls = linestyles[a]
+            for l, layout in enumerate(layouts):
 
-            for s, split in enumerate(LOOP_SPLITS):
-
-                color = "C" + str(s)
-
-                # Get result data for all layouts
                 result_data = []
-
-                for l, layout in enumerate(layouts):
+                for s, split in enumerate(LOOP_SPLITS):
 
                     fname = get_result_fname(
                         srcdir,
                         experiment,
                         nthreads,
-                        part_access,
+                        access,
                         split,
                         variant_dir_suffix,
                         layout,
                     )
                     res = ResultData(fname, verbose=False)
-                    result_data.append(res.total_time)
+                    result_data.append(res)
 
-                    #  maxtime = max(maxtime, res.timings.max())
-                    #  mintime = min(mintime, res.timings.min())
-
-                results = np.array(result_data)
-                label = (
-                    #  experiment
-                    #  + " " +
-                    PART_ACCESS_LABELS[a]
-                    + ", "
-                    + LOOP_SPLIT_LABELS[s]
-                    #  + variant_label_suffix
+                # Unpack result data by packing operation type
+                dens_pack = np.array(
+                    [r.data_dict["pack/density"] for r in result_data]
                 )
-
-                ax.plot(
-                    layouts,
-                    results/normalisation,
-                    c=color,
-                    ls=ls,
-                    label=label,
-                    **plotkwargs,
+                dens_unpack = np.array(
+                    [r.data_dict["unpack/density"] for r in result_data]
                 )
+                grad_pack = np.array(
+                    [r.data_dict["pack/gradient"] for r in result_data]
+                )
+                grad_unpack = np.array(
+                    [r.data_dict["unpack/gradient"] for r in result_data]
+                )
+                forc_pack = np.array(
+                    [r.data_dict["pack/force"] for r in result_data]
+                )
+                forc_unpack = np.array(
+                    [r.data_dict["unpack/force"] for r in result_data]
+                    )
 
-    #  if mintime < 200.0:
-    #      mintime = 0.0
+                dp_best = dens_pack.argmin()
+                du_best = dens_unpack.argmin()
+                gp_best = grad_pack.argmin()
+                gu_best = grad_unpack.argmin()
+                fp_best = forc_pack.argmin()
+                fu_best = forc_unpack.argmin()
 
-    # all axes
-    for ax in fig.axes:
-        #  ax.set_xlabel("particle data layouts")
-        #  ax.tick_params("x", rotation=90)
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
-        ax.grid(which="both")
-        #  ax.legend()
-        if args.equal_axis_limits:
-            ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
+                print("")
+                print("-- ", access, "-", layout)
+                print("---- dens pack  :", LOOP_SPLITS[dp_best])
+                print("---- dens unpack:", LOOP_SPLITS[du_best])
+                print("---- grad pack  :", LOOP_SPLITS[gp_best])
+                print("---- grad unpack:", LOOP_SPLITS[gu_best])
+                print("---- forc pack  :", LOOP_SPLITS[fp_best])
+                print("---- forc unpack:", LOOP_SPLITS[fu_best])
+                print("")
 
-        ax.set_ylabel(
-            r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{part-struct}}$"
-        )
+                heatmap[l, a] = (dens_pack[dp_best] + dens_unpack[du_best] + grad_pack[gp_best] + grad_unpack[gu_best] + forc_pack[fp_best] + forc_unpack[fu_best])
+                heatmap[l, a] /= ref_total_time
 
-    # the others
-        #  if args.equal_axis_limits:
-        #      ax.set_yticklabels([])
 
-    hand, lab = ax1.get_legend_handles_labels()
-    #  ncols=int(len(layouts)*0.5 + 0.5)
-    ncols = 3
-    fig.legend(
-        handles=hand,
-        labels=lab,
-        loc="lower center",
-        ncols=ncols,
-        handlelength=4.5,
-        markerscale=0.75,
-    )
-    fig.tight_layout(w_pad=0.5, rect=(0.01, 0.16, 0.99, 0.99))
+
+        im = plot_heatmap(ax, heatmap)
+
+    fig.tight_layout(w_pad=0, rect=(0.01, 0.01, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"loop_splitting_compare_total_time_{srcdir}_{nthreads}threads"
+    outfname = f"loop_splitting_best_times_heatmap_{srcdir}_{nthreads}threads"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if args.png:
