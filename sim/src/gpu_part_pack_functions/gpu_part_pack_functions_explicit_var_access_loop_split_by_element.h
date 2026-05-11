@@ -634,10 +634,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_TYPE_PARTICLE) || \
     defined(SPHENIX_PACK_SHARED_PARTICLE)
-    ps[i].f_p_balsara_adiff.z = part_get_balsara_explicit(pd, i);
-#else
-    ps[i].bals_c_avisc_adiff.z = part_get_alpha_av_explicit(pd, i);
-#endif
     ps[i].f_p_balsara_adiff.w = part_get_alpha_diff_explicit(pd, i);
 #else
     ps[i].bals_c_avisc_adiff.w = part_get_alpha_diff_explicit(pd, i);
