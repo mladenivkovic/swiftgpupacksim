@@ -794,7 +794,7 @@ fi
 # Memory layout
 AC_ARG_WITH([particle-memory-layout],
    [AS_HELP_STRING([--with-particle-memory-layout=<method>],
-      [Particle memory layout to use @<:@aos, soa, upstream, pack-gradient, pack-force, pack-shared, pack-force-type, random-order; default: aos@:>@]
+      [Particle memory layout to use @<:@aos, soa, upstream, pack-gradient, pack-gradient-type, pack-force, pack-force-type, pack-shared, pack-shared-type, random-order; default: aos@:>@]
    )],
    [with_layout="$withval"],
    [with_layout="aos"]
@@ -813,14 +813,20 @@ case "$with_layout" in
    pack-gradient)
       AC_DEFINE([SPHENIX_PACK_GRADIENT_PARTICLE], [1], [SWIFT particle layout prioritizing packing and gradient loop])
    ;;
+   pack-gradient-type)
+      AC_DEFINE([SPHENIX_PACK_GRADIENT_TYPE_PARTICLE], [1], [SWIFT particle layout prioritizing packing and gradient loop. Struct are furthermore split by data type.])
+   ;;
    pack-force)
       AC_DEFINE([SPHENIX_PACK_FORCE_PARTICLE], [1], [SWIFT particle layout prioritizing packing and force loop])
+   ;;
+   pack-force-type)
+      AC_DEFINE([SPHENIX_PACK_FORCE_TYPE_PARTICLE], [1], [SWIFT particle layout prioritizing packing and force loop. Structs are furthermore split by data type.])
    ;;
    pack-shared)
       AC_DEFINE([SPHENIX_PACK_SHARED_PARTICLE], [1], [SWIFT particle layout prioritizing packing, shared quantities for force and gradient in separate struct])
    ;;
-   pack-force-type)
-      AC_DEFINE([SPHENIX_PACK_FORCE_TYPE_PARTICLE], [1], [SWIFT particle layout prioritizing packing and force loop. Structs are furthermore split by data type.])
+   pack-shared-type)
+      AC_DEFINE([SPHENIX_PACK_SHARED_TYPE_PARTICLE], [1], [SWIFT particle layout prioritizing packing, shared quantities for force and gradient in separate struct. Structs are furthermore split by data type.])
    ;;
    random-order)
       AC_DEFINE([SPHENIX_RANDOM_ORDER_PARTICLE], [1], [SWIFT AOS particle with randomized member order])

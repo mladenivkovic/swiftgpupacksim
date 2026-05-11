@@ -1,3 +1,0 @@
-- adapt source code for all instances of new SPHENIX_*_PARTICLE
-- add new files to Makefile.am
-- add to make_all*sh scripts, job scripts
