@@ -131,7 +131,7 @@ static __attribute__((always_inline)) INLINE void hydro_part_init(
   part_set_depth_h_explicit(part_data, pid, 1);
   part_set_time_bin_explicit(part_data, pid, 2);
 
-#elif defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR)
+#elif defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR) || defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR_THREADLOCAL)
 
   part_set_id_global(pid, pid);
   part_set_gpart_global(pid, NULL);

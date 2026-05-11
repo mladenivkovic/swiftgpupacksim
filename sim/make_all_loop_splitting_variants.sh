@@ -37,7 +37,7 @@ fi
 
 rm -f config.cache
 
-for part_access in "part-struct" "global-var" "explicit-var"; do
+for part_access in "part-struct" "global-var" "explicit-var" "global-var-threadlocal"; do
   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
     for layout in "aos" "soa" "upstream" "pack-gradient" "pack-force" "pack-shared" "pack-force-type" "random-order" "pack-gradient-type" "pack-shared-type"; do
 
