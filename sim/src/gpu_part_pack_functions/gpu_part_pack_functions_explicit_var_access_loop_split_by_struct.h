@@ -566,7 +566,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].timebin_minngbtimebin_pjs_pje.w = cjend;
   }
 
-#if defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE)
+#elif defined(SPHENIX_PACK_GRADIENT_TYPE_PARTICLE)
 
 #ifdef VECTORIZE
 #pragma omp simd
