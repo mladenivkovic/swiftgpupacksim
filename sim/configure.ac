@@ -924,6 +924,9 @@ case "$with_part_access" in
    "global-var")
       AC_DEFINE([SWIFT_PARTICLE_ACCESS_GLOBAL_VAR], [1], [Use global variable + index to access particle data])
    ;;
+   "global-var-threadlocal")
+      AC_DEFINE([SWIFT_PARTICLE_ACCESS_GLOBAL_VAR_THREADLOCAL], [1], [Use global variable + index to access particle data. Global variable is threadlocal])
+   ;;
    "explicit-var")
       AC_DEFINE([SWIFT_PARTICLE_ACCESS_EXPLICIT_VAR], [1], [Use local variable explicitly passed as argument + index to access particle data])
    ;;

@@ -323,6 +323,10 @@ void run_simulation(struct parameters* params) {
 #endif
     }
 
+#ifdef SWIFT_PARTICLE_ACCESS_GLOBAL_VAR_THREADLOCAL
+    /* Make a threadlocal copy of global part_data */
+    struct hydro_part_arrays part_data_local_copy = part_data;
+#endif
 
     /* -------------------------------------------------*/
     /* Loop over recorded simulation steps              */
@@ -368,12 +372,22 @@ void run_simulation(struct parameters* params) {
         for (int i = 0; i < n_events; i++) {
           struct packing_data event = packing_sequence[i];
 
+#ifdef SWIFT_PARTICLE_ACCESS_GLOBAL_VAR_THREADLOCAL
+          /* Pass pointer to threadlocal copy of &part_data */
+          float g = replay_event(
+              &event, &part_data_local_copy, params->nr_parts, part_locks, &gpu_buf_dens,
+              &gpu_buf_grad, &gpu_buf_forc, &e, timers_step, timing_log_step,
+              timing_ratio_min, timing_ratio_max, garbage, n_garbage,
+              !params->no_cache_flush);
+#else
           float g = replay_event(
               &event, &part_data, params->nr_parts, part_locks, &gpu_buf_dens,
               &gpu_buf_grad, &gpu_buf_forc, &e, timers_step, timing_log_step,
               timing_ratio_min, timing_ratio_max, garbage, n_garbage,
               !params->no_cache_flush);
+#endif
           garbage_sum += g;
+
         }
 
         /* Write it into nothingness. */

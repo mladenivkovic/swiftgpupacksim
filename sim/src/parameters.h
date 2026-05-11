@@ -42,7 +42,7 @@ struct parameters {
   char memory_layout[20];
 
   /*! Currently used particle access variant */
-  char access_variant[20];
+  char access_variant[30];
 
   /*! Currently used loop splitting variant */
   char loop_split[20];

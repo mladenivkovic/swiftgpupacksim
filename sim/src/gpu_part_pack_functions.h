@@ -102,7 +102,7 @@
 #endif /* Loop splitting variants */
 
 
-#elif defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR)
+#elif defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR) || defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR_THREADLOCAL)
 
 #if defined(USE_LOOP_SPLIT_NONE)
 #include "gpu_part_pack_functions/gpu_part_pack_functions_global_var_access_loop_split_none.h"

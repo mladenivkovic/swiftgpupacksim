@@ -61,11 +61,13 @@ void init_params(struct parameters* params) {
   strcpy(params->memory_layout, layout);
 
 #if defined(SWIFT_PARTICLE_ACCESS_PART_STRUCT)
-  char access_variant[20] = "part-struct";
+  char access_variant[30] = "part-struct";
 #elif defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR)
-  char access_variant[20] = "global-var";
+  char access_variant[30] = "global-var";
+#elif defined(SWIFT_PARTICLE_ACCESS_GLOBAL_VAR_THREADLOCAL)
+  char access_variant[30] = "global-var-threadlocal";
 #elif defined(SWIFT_PARTICLE_ACCESS_EXPLICIT_VAR)
-  char access_variant[20] = "explicit-var";
+  char access_variant[30] = "explicit-var";
 #else
 #error "Unknown particle access variant"
 #endif
