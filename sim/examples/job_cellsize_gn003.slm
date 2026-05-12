@@ -43,7 +43,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
         ex="$ex"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"
 
         EXFLAGS="--noflush"
-        EXFLAGS="$EXFLAGS"" ../../data/gn003/$dir"
+        EXFLAGS="$EXFLAGS"" ../../data/gn002/$dir"
 
         outfile=$OUTDIR/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
