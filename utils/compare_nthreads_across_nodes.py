@@ -20,7 +20,6 @@ from plotting_utils import (
     PART_ACCESS_LABELS,
     EXPERIMENTS,
     NTHREADS,
-    NODES,
     NODE_LABELS,
     LAYOUTS_TO_USE,
     LAYOUTS_TO_USE_MINIMAL,
@@ -148,13 +147,14 @@ if args.equal_axis_limits:
 
 if args.local_hp:
     raise NotImplementedError()
-    NTHREADS = [4]
-    EXPERIMENTS = ["IntelXeonGold5218_Gresho64"]
+    #  NTHREADS = [4]
+    #  EXPERIMENTS = ["IntelXeonGold5218_Gresho64"]
 if args.local_legion:
     raise NotImplementedError()
-    NTHREADS = [6]
-    EXPERIMENTS = ["IntelCoffeeLake_Gresho128"]
+    #  NTHREADS = [6]
+    #  EXPERIMENTS = ["IntelCoffeeLake_Gresho128"]
 
+NODES = ["dine2", "gn003"]
 
 variant_dir_suffix, variant_label_suffix = get_variant_labels(
     args.use_noflush, args.use_vector, args.use_packed

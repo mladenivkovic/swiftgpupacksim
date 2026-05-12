@@ -132,21 +132,19 @@ def get_result_dir(
 ):
     """
     Get the full directory path of an experiment output directory.
+    Set nthreads to negative if you want to avoid it being included in the dirname.
     """
 
     if other_variant != "" and not other_variant.startswith("_"):
         other_variant = "_" + other_variant
 
-    dirname = (
-        experiment_name
-        + "_"
-        + str(nthreads)
-        + "threads_"
-        + access_variant
-        + "_"
-        + loop_split_variant
-        + other_variant
-    )
+    dirname = experiment_name + "_"
+
+    if isinstance(nthreads, str):
+        nthreads = int(nthreads)
+    if nthreads > 0:
+        dirname += str(nthreads) + "threads_"
+    dirname+= access_variant + "_" + loop_split_variant + other_variant
 
     fulldirname = os.path.join(srcdir, dirname)
     if check_dir_exists and not os.path.exists(fulldirname):
