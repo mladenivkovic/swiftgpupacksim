@@ -1,0 +1,3 @@
+nr_threads: 1
+nr_parts: 10000000
+nr_steps: 1
