@@ -31,9 +31,11 @@ LAYOUTS_TO_USE = [
         "aos",
         "random-order",
         "pack-gradient",
-        "pack-shared",
         "pack-force",
+        "pack-shared",
+        "pack-gradient-type",
         "pack-force-type",
+        "pack-shared-type",
         "soa",
         #  "upstream",
         ]
