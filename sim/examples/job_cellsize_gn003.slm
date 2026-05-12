@@ -27,12 +27,13 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
   for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
 
     # Experiment reproduction directories
-    for dir in TestCellSize_64 TestCellSize_128 TestCellSize_512 TestCellSize_2048; do
+    # for dir in TestCellSize_64 TestCellSize_128 TestCellSize_512 TestCellSize_2048; do
+    for dir in TestCellSize64_72threads TestCellSize128_72threads TestCellSize512_72threads TestCellSize2048_72threads; do
 
       mkdir -p $OUTDIR
       mkdir -p $OUTDIR/"$dir"_"$part_access"_"$loop"_noflush
 
-      NTHREADS=1
+      NTHREADS=72
       export OMP_NUM_THREADS=$NTHREADS
 
       for layout in aos soa upstream pack-gradient pack-force pack-shared pack-force-type random-order pack-gradient-type pack-shared-type; do
@@ -42,7 +43,7 @@ for part_access in "part-struct" "global-var" "explicit-var"; do
         ex="$ex"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"
 
         EXFLAGS="--noflush"
-        EXFLAGS="$EXFLAGS"" ../../data/$dir"
+        EXFLAGS="$EXFLAGS"" ../../data/gn003/$dir"
 
         outfile=$OUTDIR/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
         if [[ ! -f "$outfile" ]]; then
