@@ -1,0 +1,61 @@
+#!/usr/bin/bash -l
+
+#SBATCH --job-name cellsize-dine2
+#SBATCH --time 12:00:00
+#SBATCH --partition dine2
+#SBATCH --account durham
+#SBATCH --exclusive
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=64
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=mladen.ivkovic@durham.ac.uk
+
+module restore likwid_intel2024
+
+# Generate executables first using `swiftgpupacksim/sim/make_all_loop_splitting_variants.sh`
+
+NODE=dine2
+
+set -e
+rm -f results_*.csv
+
+export OMP_PROC_BIND=true
+
+for part_access in "part-struct" "global-var" "explicit-var"; do
+  for loop in "none" "by-struct" "by-element" "by-type" "by-struct-and-type"; do
+
+    # Experiment reproduction directories
+    for dir in TestCellSize_64 TestCellSize_128 TestCellSize_512 TestCellSize_2048; do
+
+      mkdir -p $NODE
+      mkdir -p $NODE/"$dir"_"$part_access"_"$loop"_noflush
+
+      NTHREADS=1
+      export OMP_NUM_THREADS=$NTHREADS
+
+      for layout in aos soa upstream pack-gradient pack-force pack-shared pack-force-type random-order pack-gradient-type pack-shared-type; do
+
+        # construct executable and args
+        ex="likwid-pin --quiet -c N:0-""$((NTHREADS - 1))"
+        ex="$ex"" ../swiftgpupack_""$NODE"_"$layout"_"$part_access"_"$loop"
+
+        EXFLAGS="--noflush"
+        EXFLAGS="$EXFLAGS"" ../../data/$dir"
+
+        outfile=$NODE/"$dir"_"$part_access"_"$loop"_noflush/results_"$layout".csv
+        if [[ ! -f "$outfile" ]]; then
+          echo running "$ex" "$EXFLAGS"
+          $ex $EXFLAGS
+          mv results_"$layout".csv "$outfile"
+          echo written $outfile
+        else
+          echo found $outfile, not rerunning
+        fi
+
+      done
+    done
+  done
+done
+
+
