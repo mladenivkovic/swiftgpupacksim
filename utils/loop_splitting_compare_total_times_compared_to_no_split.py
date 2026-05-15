@@ -34,36 +34,7 @@ matplotlib.rcParams.update(mymplparams)
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-Compare total times of different experiments for loop splitting variants,
-and different particle memory layouts given a particle access.
-
-For an adequate comparable plot, the results are normalized using the times for
-layout = aos
-
-By default, this plots the outputs using:
-- cache flushes between each copy operation
-- no manual vectorization
-- not packed structs
-- the runs using 72 threads
-
-See optional flags to modify which results are plotted.
-
-This script assumes that all subdirectories in the given `srcdir` will contain
-result data with filenames 'results_*.csv' It will read them all in and plot
-them.
-
-Sub-directories are expected to have the following file name format:
-<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_vector]
-
-The *_packed variants should contain outputs where the structs were packed,
-i.e. where the code was configured with --enable-packed-structs. The *_noflush
-variants should contain outputs where no cache flushes between packing
-operations were used (sim ran with --noflush flag). Similarly for *_vector,
-where code compiled with --enable-manual-vectorization was used.
-
-Note that the sub-directory sub-strings <EXPERIMENTNAME>, <NRTHREADS>,
-<PART_ACCESS>, and <LOOP_SPLIT> are hard-coded in this script. Modify them
-manually if you need to.
+    TODO
 """,
 )
 
@@ -177,25 +148,12 @@ if __name__ == "__main__":
         ax = axes[e]
         ax.set_title(experiment)
 
-        # first, get the normalisation
-        # AoS part-struct no-loop-split for this experiment
-        fname_norm = get_result_fname(
-            srcdir,
-            experiment,
-            nthreads,
-            "part-struct",
-            "none",
-            variant_dir_suffix,
-            "aos",
-        )
-        res = ResultData(fname_norm, verbose=False)
-        normalisation = res.total_time
-
 
         for a, part_access in enumerate(PART_ACCESS):
 
             ls = linestyles[a]
             marker = markers[a]
+
 
             for s, split in enumerate(LOOP_SPLITS):
 
@@ -205,6 +163,21 @@ if __name__ == "__main__":
                 result_data = []
 
                 for l, layout in enumerate(layouts):
+
+                    # first, get the normalisation
+                    # part-struct no-loop-split for this experiment for this layout
+                    fname_norm = get_result_fname(
+                        srcdir,
+                        experiment,
+                        nthreads,
+                        part_access,
+                        "none",
+                        variant_dir_suffix,
+                        layout,
+                    )
+                    res = ResultData(fname_norm, verbose=False)
+                    normalisation = res.total_time
+
 
                     fname = get_result_fname(
                         srcdir,
@@ -216,7 +189,7 @@ if __name__ == "__main__":
                         layout,
                     )
                     res = ResultData(fname, verbose=False)
-                    result_data.append(res.total_time)
+                    result_data.append(res.total_time / normalisation)
 
                     #  maxtime = max(maxtime, res.timings.max())
                     #  mintime = min(mintime, res.timings.min())
@@ -233,7 +206,7 @@ if __name__ == "__main__":
 
                 ax.plot(
                     layouts,
-                    results/normalisation,
+                    results,
                     c=color,
                     ls=ls,
                     marker=marker,
@@ -255,12 +228,12 @@ if __name__ == "__main__":
             ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
 
         ax.set_ylabel(
-            r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{part-struct}}$"
+            r"$t / t_{\mathrm{\ no\ loop\ split}}$"#^{\mathrm{part-struct}}$"
         )
         if NODE_LABELS[srcdir] == "gracehopper":
-            ax.annotate(NODE_LABELS[srcdir], xy=(0.05, 0.06), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
+            ax.annotate(NODE_LABELS[srcdir], xy=(0.03, 0.90), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
         else:
-            ax.annotate(NODE_LABELS[srcdir], xy=(0.85, 0.9), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
+            ax.annotate(NODE_LABELS[srcdir], xy=(0.5, 0.9), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large", ha="center")
 
     # the others
         #  if args.equal_axis_limits:
@@ -281,7 +254,7 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=0.5, rect=(0.0, 0.12, 1.0, 1.0))
 
     # construct output file name
-    outfname = f"loop_splitting_compare_total_time_{srcdir}_{nthreads}threads"
+    outfname = f"loop_splitting_compare_relative_total_time_{srcdir}_{nthreads}threads"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if args.png:
