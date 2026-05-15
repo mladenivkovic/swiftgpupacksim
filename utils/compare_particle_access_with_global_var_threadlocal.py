@@ -16,8 +16,6 @@ from plotting_utils import (
     get_result_dir,
     LOOP_SPLITS,
     LOOP_SPLIT_LABELS,
-    PART_ACCESS,
-    PART_ACCESS_LABELS,
     EXPERIMENTS,
     LAYOUTS_TO_USE,
     LAYOUTS_TO_USE_MINIMAL,
@@ -32,34 +30,7 @@ matplotlib.rcParams.update(mymplparams)
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-Compare results of using different access variants for different
-particle memory layouts for different experiments, for a given loop
-splitting variant.
-
-By default, this plots the outputs using:
-- cache flushes between each copy operation
-- no manual vectorization
-- not packed structs
-- the runs using 72 threads
-
-See optional flags to modify which results are plotted.
-
-This script assumes that all subdirectories in the given `srcdir` will contain
-result data with filenames 'results_*.csv' It will read them all in and plot
-them.
-
-Sub-directories are expected to have the following file name format:
-<EXPERIMENTNAME>_<NRTHREADS>threads_<PART_ACCESS>_<LOOP_SPLIT>[_packed][_noflush][_vector]
-
-The *_packed variants should contain outputs where the structs were packed,
-i.e. where the code was configured with --enable-packed-structs. The *_noflush
-variants should contain outputs where no cache flushes between packing
-operations were used (sim ran with --noflush flag). Similarly for *_vector,
-where code compiled with --enable-manual-vectorization was used.
-
-Note that the sub-directory sub-strings <EXPERIMENTNAME>, <NRTHREADS>,
-<PART_ACCESS>, and <LOOP_SPLIT> are hard-coded in this script. Modify them
-manually if you need to.
+    TODO
 """,
 )
 
@@ -159,11 +130,15 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 )
 
 plotkwargs = {
-    #  "marker": "o",
+    "marker": "o",
     "lw": 2,
     "alpha": 0.8,
     "markersize": 5,
 }
+
+
+PART_ACCESS = ["explicit-var", "global-var", "global-var-threadlocal"]
+PART_ACCESS_LABELS = ["explicit var access", "global var access", "threadlocal global var"]
 
 
 if __name__ == "__main__":
@@ -194,7 +169,6 @@ if __name__ == "__main__":
     for e, experiment in enumerate(EXPERIMENTS):
 
         ls = linestyles[e]
-        marker = markers[e]
 
         # first, grab normalisation:
         # AoS part-struct for this experiment
@@ -202,7 +176,8 @@ if __name__ == "__main__":
                     srcdir,
                     experiment,
                     nthreads,
-                    "part-struct",
+                    #  "part-struct",
+                    "explicit-var",
                     loop_split,
                     variant_dir_suffix,
                     "aos",
@@ -271,13 +246,17 @@ if __name__ == "__main__":
                 #  + variant_label_suffix
             )
 
-            ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
-            ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
-            ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
-            ax4.plot( layouts, dens_unpack, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
-            ax5.plot( layouts, grad_unpack, c=color, ls=ls, label=label, marker=marker,  **plotkwargs)
+            ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax4.plot(
+                layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
+            )
+            ax5.plot(
+                layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
+            )
             ax6.plot(
-                layouts, forc_unpack, c=color, ls=ls, label=label,  marker=marker, **plotkwargs
+                layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
             )
 
     #  if mintime < 200.0:
@@ -321,7 +300,7 @@ if __name__ == "__main__":
         loc="lower center",
         ncols=ncols,
         handlelength=2.5,
-        markerscale=1.0,
+        markerscale=0.5,
         fontsize="medium",
     )
     fig.tight_layout(w_pad=1, rect=(0.01, 0.07, 0.99, 0.99))
