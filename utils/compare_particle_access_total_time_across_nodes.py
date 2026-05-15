@@ -180,7 +180,7 @@ plotkwargs = {
 
 if __name__ == "__main__":
 
-    fig = plt.figure(figsize=(10, 4))
+    fig = plt.figure(figsize=(10, 3))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
@@ -277,7 +277,7 @@ if __name__ == "__main__":
 
         if normalise:
             ax.set_ylabel(
-                r"$t / t^{\mathrm{part\ struct}}_{\mathrm{aos}}$"
+                r"$t / t^{\mathrm{part-struct}}_{\mathrm{aos}}$"
             )
         else:
             ax.set_ylabel("Timing [ms]")
@@ -300,7 +300,7 @@ if __name__ == "__main__":
         markerscale=1.,
         fontsize="medium",
     )
-    fig.tight_layout(w_pad=1, rect=(0.01, 0.12, 0.99, 0.99))
+    fig.tight_layout(w_pad=1, rect=(0.01, 0.16, 0.99, 0.99))
 
     # construct output file name
     outfname = f"compare_part_access_total_across_nodes"

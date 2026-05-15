@@ -16,6 +16,7 @@ from plotting_utils import (
     get_result_dir,
     LOOP_SPLITS,
     LOOP_SPLIT_LABELS,
+    LOOP_SPLIT_AXIS_LABELS,
     PART_ACCESS,
     PART_ACCESS_LABELS,
     LAYOUTS_TO_USE,
@@ -255,7 +256,8 @@ if __name__ == "__main__":
             ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
 
         ax.set_ylabel(
-            r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{part-struct}}$"
+            r"$t / t_{\mathrm{aos,\ by-particle}}^{\mathrm{part-struct}}$"
+            #  r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{part-struct}}$"
         )
         if NODE_LABELS[srcdir] == "gracehopper":
             ax.annotate(NODE_LABELS[srcdir], xy=(0.05, 0.06), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
