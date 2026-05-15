@@ -8,7 +8,7 @@ python3 ../../utils/compare_particle_access.py --no-flush gn003_5steps --normali
 # python3 ../../utils/loop_splitting_compare_total_times.py --png --no-flush gn003
 python3 ../../utils/loop_splitting_compare_total_times.py --no-flush gn003_5steps
 
-
+python3 ../../utils/loop_splitting_compare_total_times_compared_to_no_split.py --no-flush gn003_5steps
 
 # # compare_flush_variants_gn003_explicit-var_none.png
 # python3 ../../utils/compare_flush_variants.py --png gn003

@@ -168,7 +168,7 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 )
 
 plotkwargs = {
-    "marker": "o",
+    #  "marker": "o",
     "lw": 2,
     "alpha": 0.8,
     "markersize": 5,
@@ -203,6 +203,7 @@ if __name__ == "__main__":
     for e, experiment in enumerate(EXPERIMENTS):
 
         ls = linestyles[e]
+        marker = markers[e]
 
         # first, grab normalisation:
         # AoS part-struct for this experiment
@@ -279,17 +280,13 @@ if __name__ == "__main__":
                 #  + variant_label_suffix
             )
 
-            ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs)
-            ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs)
-            ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs)
-            ax4.plot(
-                layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax5.plot(
-                layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
+            ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
+            ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
+            ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
+            ax4.plot( layouts, dens_unpack, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
+            ax5.plot( layouts, grad_unpack, c=color, ls=ls, label=label, marker=marker,  **plotkwargs)
             ax6.plot(
-                layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
+                layouts, forc_unpack, c=color, ls=ls, label=label,  marker=marker, **plotkwargs
             )
 
     #  if mintime < 200.0:
@@ -333,7 +330,7 @@ if __name__ == "__main__":
         loc="lower center",
         ncols=ncols,
         handlelength=2.5,
-        markerscale=0.5,
+        markerscale=1.0,
         fontsize="medium",
     )
     fig.tight_layout(w_pad=1, rect=(0.01, 0.07, 0.99, 0.99))

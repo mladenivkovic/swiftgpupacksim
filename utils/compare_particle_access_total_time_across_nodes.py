@@ -171,7 +171,7 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 )
 
 plotkwargs = {
-    "marker": "o",
+    #  "marker": "o",
     "lw": 2,
     "alpha": 0.8,
     "markersize": 5,
@@ -207,6 +207,7 @@ if __name__ == "__main__":
         for e, experiment in enumerate(EXPERIMENTS):
 
             ls = linestyles[e]
+            marker=markers[e]
 
             # first, grab normalisation:
             # AoS part-struct for this experiment
@@ -246,8 +247,6 @@ if __name__ == "__main__":
                     #  maxtime = max(maxtime, res.timings.max())
                     #  mintime = min(mintime, res.timings.min())
 
-
-                # Unpack result data by packing operation type
                 results = np.array(result_data)
 
                 if normalise:
@@ -261,7 +260,7 @@ if __name__ == "__main__":
                     #  + variant_label_suffix
                 )
 
-                ax.plot(layouts, results, c=color, ls=ls, label=label, **plotkwargs)
+                ax.plot(layouts, results, c=color, ls=ls, label=label, marker=marker,**plotkwargs)
 
     #  if mintime < 200.0:
     #      mintime = 0.0
@@ -276,10 +275,9 @@ if __name__ == "__main__":
         #      ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
         ax.set_ylim(0.60, 1.3)
 
-        # leftmost axes
         if normalise:
             ax.set_ylabel(
-                r"$t / t_{\mathrm{aos}}$"
+                r"$t / t^{\mathrm{part\ struct}}_{\mathrm{aos}}$"
             )
         else:
             ax.set_ylabel("Timing [ms]")
@@ -299,7 +297,7 @@ if __name__ == "__main__":
         loc="lower center",
         ncols=ncols,
         handlelength=2.5,
-        markerscale=0.5,
+        markerscale=1.,
         fontsize="medium",
     )
     fig.tight_layout(w_pad=1, rect=(0.01, 0.12, 0.99, 0.99))

@@ -80,7 +80,7 @@ mymplparams = {
 
 mydpi = 120
 
-markers = ["o", "v", "s", "p", "P", "*"]
+markers = ["o", "s", "D", "X", "p", "P", "^","*"]
 linestyles = ["-", ":", "--", "-."]
 
 

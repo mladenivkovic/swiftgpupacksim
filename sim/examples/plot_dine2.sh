@@ -7,6 +7,7 @@ python3 ../../utils/compare_particle_access.py --no-flush -t 64 dine2_5steps --n
 # loop_splitting_compare_total_time_dine2_64threads_noflush.pdf
 python3 ../../utils/loop_splitting_compare_total_times.py --no-flush -t 64 dine2_5steps
 
+python3 ../../utils/loop_splitting_compare_total_times_compared_to_no_split.py --no-flush -t 64 dine2_5steps
 
 # python3 ../../utils/loop_splitting_compare_particle_access.py --png dine2 --no-flush -t 64
 

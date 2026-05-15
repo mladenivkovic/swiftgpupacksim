@@ -21,20 +21,22 @@ from plotting_utils import (
     EXPERIMENTS,
     LAYOUTS_TO_USE,
     LAYOUTS_TO_USE_MINIMAL,
+    NODES,
+    NODE_LABELS,
     mymplparams,
     mydpi,
     markers,
     linestyles,
 )
 
+
 matplotlib.rcParams.update(mymplparams)
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="""
-    Compare results of the "cellsize tests" for different nodes
-    for a given loop splitting method.
-    """,
+    TODO
+""",
 )
 
 parser.add_argument(
@@ -79,30 +81,43 @@ parser.add_argument(
     action="store_true",
     help="Use identical y-axis limits for all subplots",
 )
-#  parser.add_argument(
-#      "-a",
-#      "--access",
-#      nargs=1,
-#      dest="access_variant",
-#      help="Particle access variant to use",
-#      choices=PART_ACCESS,
-#      default="explicit-var",
-#  )
 parser.add_argument(
-    "-l",
-    "--loop",
+    "--local-legion",
+    dest="local_legion",
+    action="store_true",
+    help="Use outputs for local test runs on lenovo legion",
+)
+parser.add_argument(
+    "--local-hp",
+    dest="local_hp",
+    action="store_true",
+    help="Use outputs for local test runs on HP",
+)
+parser.add_argument(
+    "-a",
+    "--access",
     nargs=1,
-    dest="loop_split",
-    help="Loop splitting variant to use",
-    choices=LOOP_SPLITS,
-    default="none",
+    dest="access_variant",
+    help="Particle access variant to use",
+    choices=PART_ACCESS,
+    default="explicit-var",
     type=str,
 )
 
 args = parser.parse_args()
-loop_split = args.loop_split
-#  layouts = LAYOUTS_TO_USE_MINIMAL
-layouts = LAYOUTS_TO_USE
+# nthreads = args.nthreads
+local = args.local_legion or args.local_hp
+access_variant=args.access_variant
+if isinstance(access_variant, list):
+    access_variant = access_variant[0]
+
+if args.equal_axis_limits:
+    raise NotImplementedError()
+if args.local_hp or args.local_legion:
+    raise ValueError("Plotting this doesn't make sense at this point.")
+if local:
+    raise NotImplementedError
+
 
 variant_dir_suffix, variant_label_suffix = get_variant_labels(
     args.use_noflush, args.use_vector, args.use_packed
@@ -111,34 +126,15 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 plotkwargs = {
     #  "marker": "o",
     "lw": 2,
-    "alpha": 0.8,
+    "alpha": 0.6,
     "markersize": 5,
 }
 
-NODES = ["dine2_cellsize", "gn003_cellsize"]
-NODE_LABELS = {"dine2_cellsize": "dine2", "gn003_cellsize":"gracehopper"}
-
-EXPERIMENTS = [
-    "TestCellSize64",
-    "TestCellSize128",
-    "TestCellSize512",
-    #  "TestCellSize1024",
-    "TestCellSize2048",
-    ]
-EXPERIMENT_LABLES = [
-        "N=64",
-        "N=128",
-        "N=512",
-        #  "N=1024",
-        "N=2048"
-        ]
-
-
-
+layouts = LAYOUTS_TO_USE
 
 if __name__ == "__main__":
 
-    fig = plt.figure(figsize=(11, 4))
+    fig = plt.figure(figsize=(10, 4))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
@@ -151,39 +147,39 @@ if __name__ == "__main__":
         if not os.path.exists(srcdir):
             raise FileNotFoundError(f"directory {srcdir} not found.")
 
-        nthreads = -1
-        if os.path.basename(srcdir).startswith("gn003"):
-            nthreads = 72
-        elif os.path.basename(srcdir).startswith("dine2"):
-            nthreads = 64
-
         ax = axes[n]
         ax.set_title(NODE_LABELS[srcdir])
 
+        if srcdir.startswith("dine2"):
+            nthreads = 64
+        elif srcdir.startswith("gn003"):
+            nthreads = 72
+        else:
+            raise NotImplementedError
+
         for e, experiment in enumerate(EXPERIMENTS):
 
-            color = "C" + str(e)
+            ls = linestyles[e]
+            marker=markers[e]
 
             # first, grab normalisation:
             # AoS part-struct for this experiment
-            fname_norm = get_result_fname(
+            normfname = get_result_fname(
                         srcdir,
                         experiment,
                         nthreads,
-                        "part-struct",
-                        loop_split,
+                        access_variant,
+                        "none",
                         variant_dir_suffix,
                         "aos",
                     )
-            res = ResultData(fname_norm, verbose=False)
+            res = ResultData(normfname, verbose=False)
             normalisation = res.total_time
 
-            for a, access in enumerate(PART_ACCESS):
+            for s, split in enumerate(LOOP_SPLITS):
+                color = "C" + str(s)
 
-                ls = linestyles[a]
-                marker = markers[a]
-
-                # Now get result data for all layouts
+                # Get result data for all layouts
                 result_data = []
 
                 for l, layout in enumerate(layouts):
@@ -192,8 +188,8 @@ if __name__ == "__main__":
                         srcdir,
                         experiment,
                         nthreads,
-                        access,
-                        loop_split,
+                        access_variant,
+                        split,
                         variant_dir_suffix,
                         layout,
                     )
@@ -203,64 +199,51 @@ if __name__ == "__main__":
                     #  maxtime = max(maxtime, res.timings.max())
                     #  mintime = min(mintime, res.timings.min())
 
-
-                # Unpack result data by packing operation type
                 results = np.array(result_data)
-
                 results /= normalisation
 
                 label = (
-                        EXPERIMENT_LABLES[e] + " " +
-                    PART_ACCESS_LABELS[a]
+                    experiment
                     #  + " "
-                    #  + LOOP_SPLIT_LABELS[s]
+                    #  + PART_ACCESS_LABELS[a]
+                    + " "
+                    + LOOP_SPLIT_LABELS[s]
                     #  + variant_label_suffix
                 )
 
-                ax.plot(layouts, results, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
+                ax.plot(layouts, results, c=color, ls=ls, label=label, marker=marker,**plotkwargs)
 
     #  if mintime < 200.0:
     #      mintime = 0.0
 
-    for ax in axes:
+    # all axes
+    for ax in fig.axes:
         #  ax.set_xlabel("particle data layouts")
-        #  ax.tick_params("x", rotation=90)
+        #  ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
         ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
         ax.grid(which="both")
         #  ax.legend()
         #  if args.equal_axis_limits:
         #      ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
-        #  ax.set_ylim(0.50, 1.3)
 
-        # leftmost axes
-        ax.set_ylabel(
-            r"$t / t^{\mathrm{part\ struct}}_{\mathrm{aos}}$"
-        )
-        #  else:
-        #      ax.set_ylabel("Timing [ms]")
-
-        # the others
-        #  for ax in [ax2, ax3, ax5, ax6]:
-        #      if args.equal_axis_limits:
-        #          ax.set_yticklabels([])
+        ax.set_ylabel(r"$t / t^{\mathrm{none}}_{\mathrm{aos}}$")
 
 
     hand, lab = ax1.get_legend_handles_labels()
     #  ncols=int(len(layouts)*0.5 + 0.5)
-    ncols = len(EXPERIMENTS)
+    ncols = 3
     fig.legend(
         handles=hand,
         labels=lab,
         loc="lower center",
         ncols=ncols,
-        handlelength=2.5,
-        markerscale=1.0,
-        fontsize="medium",
+        handlelength=4.5,
+        markerscale=1.,
     )
-    fig.tight_layout(w_pad=1, rect=(0.01, 0.16, 0.99, 0.99))
+    fig.tight_layout(w_pad=0.5, rect=(0.01, 0.16, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"compare_cellsize_across_nodes"
+    outfname = f"compare_loop_splitting_total_times_across_nodes_{access_variant}"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if args.png:
@@ -270,3 +253,4 @@ if __name__ == "__main__":
 
     plt.savefig(outfname, dpi=mydpi)
     print(f"Saved {outfname}")
+    plt.close()
