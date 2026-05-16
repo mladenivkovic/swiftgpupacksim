@@ -28,10 +28,10 @@ NTHREADS = ["36", "72"]
 #  NODES = ["dine2", "gn003"]
 NODES = ["dine2_5steps", "gn003_5steps"]
 NODE_LABELS = {
-        "dine2": "dine2",
-        "dine2_5steps": "dine2",
-        "gn003": "gracehopper",
-        "gn003_5steps": "gracehopper",
+        "dine2": "Intel+A30",
+        "dine2_5steps": "Intel+A30",
+        "gn003": "Grace Hopper",
+        "gn003_5steps": "Grace Hopper",
         }
 
 LAYOUTS_TO_USE = [
@@ -43,7 +43,7 @@ LAYOUTS_TO_USE = [
         "pack-gradient-type",
         "pack-force-type",
         "pack-shared-type",
-        "soa",
+        #  "soa",
         #  "upstream",
         ]
 
