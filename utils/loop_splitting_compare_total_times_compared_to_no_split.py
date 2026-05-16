@@ -149,7 +149,7 @@ if __name__ == "__main__":
 
     for e, experiment in enumerate(EXPERIMENTS):
         ax = axes[e]
-        ax.set_title(experiment)
+        ax.set_title(experiment + ", " + NODE_LABELS[srcdir])
 
 
         for a, part_access in enumerate(PART_ACCESS):
@@ -234,10 +234,10 @@ if __name__ == "__main__":
             r"$t / t_{\mathrm{by-particle}}$"#^{\mathrm{part-struct}}$"
             #  r"$t / t_{\mathrm{\ no\ loop\ split}}$"#^{\mathrm{part-struct}}$"
         )
-        if NODE_LABELS[srcdir] == "gracehopper":
-            ax.annotate(NODE_LABELS[srcdir], xy=(0.03, 0.83), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
-        else:
-            ax.annotate(NODE_LABELS[srcdir], xy=(0.83, 0.83), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large", ha="center")
+        #  if NODE_LABELS[srcdir] == "gracehopper":
+        #      ax.annotate(NODE_LABELS[srcdir], xy=(0.03, 0.83), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
+        #  else:
+        #      ax.annotate(NODE_LABELS[srcdir], xy=(0.83, 0.83), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large", ha="center")
 
         if NODE_LABELS[srcdir] == "gracehopper":
             ax.set_yticks([0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5])
