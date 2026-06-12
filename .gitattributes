@@ -2,3 +2,8 @@ data/IntelXeonGold5218_Gresho64_1thread/* filter=lfs diff=lfs merge=lfs -text
 data/IntelXeonGold5218_Gresho64_4threads/* filter=lfs diff=lfs merge=lfs -text
 data/IntelCoffeeLake_Gresho128_1thread/* filter=lfs diff=lfs merge=lfs -text
 data/IntelCoffeeLake_Gresho128_6threads/* filter=lfs diff=lfs merge=lfs -text
+data/TestCellSize_64/* filter=lfs diff=lfs merge=lfs -text
+data/TestCellSize_128/* filter=lfs diff=lfs merge=lfs -text
+data/TestCellSize_512/* filter=lfs diff=lfs merge=lfs -text
+data/TestCellSize_1024/* filter=lfs diff=lfs merge=lfs -text
+data/TestCellSize_2048/* filter=lfs diff=lfs merge=lfs -text
