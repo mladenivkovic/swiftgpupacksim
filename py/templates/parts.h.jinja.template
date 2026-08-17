@@ -98,7 +98,7 @@ static __attribute__((always_inline)) INLINE void clear_parts(struct hydro_part_
  * as offsets to the global particle array.
  */
 __attribute__((always_inline)) INLINE static void part_arrays_set_pointer_offset(
-  struct hydro_part_arrays* dest, const struct hydro_part_arrays* src, ptrdiff_t offset
+  struct hydro_part_arrays* dest, const struct hydro_part_arrays* src, size_t offset
   ){
 {# dest->_{{STRUCT_NAME}} = src->_{{STRUCT_NAME}} + offset; #}
 {% for STRUCT_NAME in STRUCT_NAMES %}
