@@ -2,10 +2,14 @@
 /**
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
+{%- if HAS_IFDEF and IS_STRUCT %}
+{#- we can't return a struct which is undefined because it's hidden behind a macro, so we have to hide the entire API. -#}
+#ifdef {{IFDEF}}
+{%- endif %}
 static __attribute__((always_inline)) INLINE {{TYPE}}
-  part_get_{{NAME}}_global(const size_t pind) {
+  part_get_{{NAME}}{{API_SUFFIX}}(const size_t pind) {
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
@@ -28,22 +32,29 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
   return {{ROOT_STRUCT}}_s->_{{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %} {# return some default val if function contents are hidden behind macro #}
+{%- if HAS_IFDEF and not IS_STRUCT %} {# return some default val if function contents are hidden behind macro #}
 #else
   return {{IFDEF_RETURN_VAL}};
 #endif
 {%- endif %}
 }
+{% if HAS_IFDEF and IS_STRUCT -%}
+#endif
+{%- endif %}
 
 /**
  * @brief get a pointer to {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to {{NAME}}. If you need read-only access to {{NAME}}, use part_get_const_{{NAME}}_p() instead.
  */
+{% if HAS_IFDEF and IS_STRUCT %}
+{#- we can't return a struct which is undefined because it's hidden behind a macro, so we have to hide the entire API. -#}
+#ifdef {{IFDEF}}
+{%- endif -%}
 static __attribute__((always_inline)) INLINE {{TYPE}}*
-  part_get_{{NAME}}_p_global(const size_t pind) {
+  part_get_{{NAME}}_p{{API_SUFFIX}}(const size_t pind) {
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
@@ -66,12 +77,15 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
   return &{{ROOT_STRUCT}}_s->_{{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF and not IS_STRUCT %}
 #else
   return NULL;
 #endif
 {%- endif %}
 }
+{% if HAS_IFDEF and IS_STRUCT -%}
+#endif
+{%- endif %}
 {%- if not IS_POINTER %}
 
 /**
@@ -79,10 +93,14 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
  * {{DOC}}.{% endif %}
  * If you need write access to {{NAME}}, use part_get_{{NAME}}_p() instead.
  */
+{% if HAS_IFDEF and IS_STRUCT %}
+{#- we can't return a struct which is undefined because it's hidden behind a macro, so we have to hide the entire API. -#}
+#ifdef {{IFDEF}}
+{%- endif -%}
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
-  part_get_const_{{NAME}}_p_global(const size_t pind) {
+  part_get_const_{{NAME}}_p{{API_SUFFIX}}(const size_t pind) {
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
@@ -105,21 +123,28 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
   return &{{ROOT_STRUCT}}_s->_{{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF and not IS_STRUCT %}
 #else
   return NULL;
 #endif
 {%- endif %}
 }
+{% if HAS_IFDEF and IS_STRUCT -%}
+#endif
+{%- endif %}
 
 {% endif -%}
 /**
  * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %}.
  */
+{% if HAS_IFDEF and IS_STRUCT %}
+{#- we can't return a struct which is undefined because it's hidden behind a macro, so we have to hide the entire API. -#}
+#ifdef {{IFDEF}}
+{%- endif -%}
 static __attribute__((always_inline)) INLINE void
-  part_set_{{NAME}}_global(const size_t pind, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
+  part_set_{{NAME}}{{API_SUFFIX}}(const size_t pind, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
 {%- endif %}
 
@@ -142,8 +167,11 @@ static __attribute__((always_inline)) INLINE void
   {{ROOT_STRUCT}}_s->_{{NAME}} = {{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF and not IS_STRUCT %}
 #endif
 {%- endif %}
 }
+{% if HAS_IFDEF and IS_STRUCT -%}
+#endif
+{%- endif %}
 {# deliberately empty line #}
