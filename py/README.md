@@ -6,8 +6,8 @@ particle structs.
 Documentation to be updated as script grows.
 
 For now, run e.g. `./generate_hydro_part.py input/SPHENIX.yml`.
-Use
 
+Use
 
 ```
 py generate_hydro_part.py --help
@@ -20,8 +20,16 @@ Dependencies:
 - pyyaml
 - jinja2
 
+Install them e.g. using
+```
+pip3 install pyyaml jinja2
+```
 
-Look at the `make_all.sh` to re-generate all files used in swiftgpupacksim.
+
+Look at the `./make_all_sphenix_variations.sh` script to re-generate all files
+used in swiftgpupacksim.
+Look at the `./make_swift_particles.sh` script for an example how to generate
+particle files for the actual SWIFT codebase, not swiftgpupacksim.
 
 
 
@@ -32,6 +40,8 @@ Look at the `make_all.sh` to re-generate all files used in swiftgpupacksim.
   intended for use in cells
 - `parts.h`: Header containing generated allocation/freeing of particle array
   data
+
+TODO: there's more now... to be updated when version converges.
 
 
 ## Yaml syntax
@@ -45,6 +55,10 @@ The general specification requirement is as follows:
 
 
 ```
+metadata:
+  authors: "2026 John Doe"       # year and authors of file, to be inserted into the license
+  flavour: my_sph_flavour_name   # name of the SPH flavour. Mainly used in header guard macro
+
 part_struct1_name:          # name of struct (e.g. 'part', 'density', 'force'...)
   field1_name:              # name of particle field (e.g. 'x', 'm', 'h'...)
     type: DATA_TYPE         # Optional: C data type of the field. E.g. float,
@@ -71,7 +85,11 @@ part_struct2_name:
 
 **IMPORTANT**:
 
-- No duplicate names.
+- The top-level entries in the hierarchies will be transformed into separate
+  structs with that name.
+- An exception is the group `metadata`, which should contain the file metadata
+  and will not be turned into a struct.
+- No duplicate names - not even between two different structs!
   - If there are several top level/root particle data structs with identical
     names, the yaml reader will only keep the last one.
   - If there are several fields with identical names, even if they are stored in
@@ -107,10 +125,10 @@ struct parent_struct {
 
   struct {
 
-    /*! the first field of 'your_struct_name' struct
+    /*! the first field of 'your_struct_name' struct */
     int a;
 
-    /*! the second field of 'your_struct_name' struct
+    /*! the second field of 'your_struct_name' struct */
     double b;
 
   } your_struct_name;
@@ -230,7 +248,7 @@ static __attribute__((always_inline)) INLINE float
 
 ```
 
-**WARNING**: This currently doesn't work for structs or unions.
+**WARNING**: This currently doesn't work for unions.
 
 
 ### Reserved names
@@ -251,8 +269,6 @@ fields. These are:
 You may want to split the particle data such that they are contained within
 multiple structs instead of a single one. To do so, some restrictions apply:
 
-- All functions that actually do something in SWIFT will access the data via a
-  ``struct part p``. This is the single access point to all particle data.
 - You *may* define a struct which is named ``part``
   - If you do, it *must* be the first defined struct.
   - If you do, the script will also automatically generate getter functions to
@@ -261,6 +277,5 @@ multiple structs instead of a single one. To do so, some restrictions apply:
   - If you don't, one will be generated for you.
   - If you don't, the script will also automatically generate getter functions to
     all other structs holding particle data as defined in the yaml file.
-
 
 
