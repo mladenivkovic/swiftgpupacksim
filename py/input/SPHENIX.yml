@@ -1,6 +1,19 @@
 # SPHENIX particle struct as it is in the GPUSwift branch
 
+# First, some metadata about this SPH flavour.
+metadata:
+  flavour: "SPHENIX"
+  copyright: "2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
+
+# now for the actual particle content
+
 part:
+  doc: | 
+    @brief Particle fields for the SPH particles
+
+    The density and force substructures are used to contain variables only used
+    within the density and force loops over neighbours. All more permanent
+    variables should be declared in the main part of the part structure,
 
   x:
     type: double
@@ -247,4 +260,61 @@ part:
     type: struct fvpm_geometry_struct
     doc: Geometrical quantities used for Finite Volume Particle Method RT
 
+
+
+xpart:
+  doc: |
+    @brief Particle fields not needed during the SPH loops over neighbours.
+
+    This structure contains the particle fields that are not used in the
+    density or force loops. Quantities should be used in the kick, drift and
+    potentially ghost tasks only.
+
+  x_diff:
+    size: 3
+    doc: "Offset between current position and position at last tree rebuild."
+
+  x_diff_sort:
+    size: 3
+    doc: "Offset between the current position and position at the last sort."
+
+  v_full:
+    size: 3
+    doc: "Velocity at the last full step."
+
+  a_grav:
+    size: 3
+    doc: "Gravitational acceleration at the end of the last step"
+
+  u_full:
+    doc: "Internal energy at the last full step."
+
+  split_data:
+    type: "struct particle_splitting_data split_data"
+    doc: "Additional data used to record particle splits"
+
+  cooling_data:
+    type: "struct cooling_xpart_data"
+    doc: "Additional data used to record cooling information"
+
+  tracers_data:
+    doc: "Additional data used by the tracers"
+    type: "struct tracers_xpart_data"
+
+  sf_data:
+    doc: "Additional data used by the tracers"
+    type: "struct star_formation_xpart_data"
+
+  feedback_data:
+    doc: "Additional data used by the feedback"
+    type: "struct feedback_xpart_data"
+
+  mhd_data:
+    doc: "Additional data used by the MHD scheme"
+    type: "struct mhd_xpart_data"
+
+  csds_data:
+    type: "struct csds_part_data"
+    doc: "Additional data for the particle csds"
+    ifdef: "WITH_CSDS"
 
