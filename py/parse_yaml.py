@@ -49,6 +49,7 @@ _field_data_type_default_return_vals = {
     "struct": None,
     "union": None,
     "pointer": "NULL",
+    "struct": "NOTHING RETURNED",
 }
 
 _prohibited_field_names = [
@@ -226,20 +227,6 @@ class FieldEntry(object):
                 )
                 self.sub_entries.append(new_entry)
 
-        if self.type == "struct" or (
-            self.type.startswith("struct ") and "*" not in self.type
-        ):
-            if self.ifdef != None:
-                # we usually use empty structs instead in SWIFT, i.e. their
-                # contents are hidden behind macro guards. The problem we face
-                # here is to decide how to define a default return value for
-                # the getters.
-                # So structs can't be hidden behind a macro, but a pointer to a
-                # struct can.
-                raise NotImplementedError(
-                    f"'{self.type} {self.name}': structs hidden behind macro guards not implemented"
-                )
-
         if self.type == "union":
             if self.ifdef != None:
                 raise NotImplementedError(
@@ -263,6 +250,9 @@ class FieldEntry(object):
         parent_struct: Union[str, None] = None,
         indent_level: int = 0,
         id_checks: bool = True,
+        explicit_var_accessors: bool = False,
+        global_var_accessors: bool = False,
+        part_struct_accessors: bool = False,
         verbose: bool = False,
     ) -> dict:
         """
@@ -281,6 +271,17 @@ class FieldEntry(object):
         id_checks: bool
             If True, add debugging checks whether the struct's accessor IDs align
 
+        explicit_var_accessors: bool
+            if True, generate getters/setters which use explicitly passed pointer
+            as an argument
+
+        global_var_accessors: bool
+            if True, generate getters/setters which use global variable pointer
+
+        part_struct_accessors: bool
+            if True, generate getters/setters which use part structs
+
+
         verbose: bool
             Set verbosity
 
@@ -296,6 +297,11 @@ class FieldEntry(object):
             # don't make pointers const
             is_pointer = True
 
+        is_struct = False
+        if "struct" in self.type:
+            # structs need special ifdef treatment for return values - it's not guaranteed they exist if macro undefined
+            is_struct = True
+
         if self.ifdef:
             # do we use the default return value?
             if self.ifdef_return_val is None:
@@ -303,6 +309,8 @@ class FieldEntry(object):
                     self.ifdef_return_val = _field_data_type_default_return_vals[
                         "pointer"
                     ]
+                elif is_struct:
+                    self.ifdef_return_val = _field_data_type_default_return_vals[ "struct" ]
                 else:
                     self.ifdef_return_val = _field_data_type_default_return_vals[
                         self.type
@@ -325,6 +333,7 @@ class FieldEntry(object):
             "PARENT_STRUCT": parent_struct,
             "ROOT_STRUCT": self.root_struct,
             "IS_POINTER": is_pointer,
+            "IS_STRUCT": is_struct,
             "HAS_DOC": self.documentation is not None,
             "HAS_IFDEF": self.ifdef is not None,
             "HAS_PARENT_STRUCT": parent_struct is not None,
@@ -378,6 +387,7 @@ class FieldEntry(object):
     def generate_API(
         self,
         parent_struct: Union[str, None] = None,
+        swift_header: bool = False,
         explicit_var_accessors: bool = False,
         global_var_accessors: bool = False,
         part_struct_accessors: bool = False,
@@ -394,8 +404,8 @@ class FieldEntry(object):
             If not None, this denoted that field is a sub-field contained within
             the given parent struct.
 
-        id_checks: bool
-            If True, add debugging checks whether the struct's accessor IDs align
+        swift_header: bool
+            If True, generate API for swift, not swiftgpupacksim
 
         explicit_var_accessors: bool
             if True, also generate getters/setters which use explicitly passed pointer
@@ -406,6 +416,9 @@ class FieldEntry(object):
 
         part_struct_accessors: bool
             if True, generate getters/setters which use part structs
+
+        id_checks: bool
+            If True, add debugging checks whether the struct's accessor IDs align
 
         verbose: bool
             Set verbosity level
@@ -426,7 +439,7 @@ class FieldEntry(object):
             print(f"-- Generating API for {self.type} {self.name}")
 
         params_dict = self._get_field_dict(
-            parent_struct=parent_struct, id_checks=id_checks, verbose=verbose
+            parent_struct=parent_struct, id_checks=id_checks, verbose=verbose,
         )
 
         # If we have sub-entries (e.g. members of a struct or union), generate
@@ -437,10 +450,11 @@ class FieldEntry(object):
                 if params_dict["IS_UNION"]:
                     # we don't need any modification to the accessors.
                     api_entry = entry.generate_API(
-                        id_checks=id_checks,
+                        swift_header=swift_header,
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
                         part_struct_accessors=part_struct_accessors,
+                        id_checks=id_checks,
                         verbose=verbose,
                     )
                 else:
@@ -452,10 +466,11 @@ class FieldEntry(object):
                         parent = self.name
                     api_entry = entry.generate_API(
                         parent_struct=parent,
-                        id_checks=id_checks,
+                        swift_header=swift_header,
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
                         part_struct_accessors=part_struct_accessors,
+                        id_checks=id_checks,
                         verbose=verbose,
                     )
 
@@ -498,10 +513,16 @@ class FieldEntry(object):
             api_global = ""
 
             if part_struct_accessors:
+                if not swift_header:
+                    params_dict["API_SUFFIX"]="_part_struct"
                 api_part_struct = templ_part_struct.render(params_dict)
             if explicit_var_accessors:
+                if not swift_header:
+                    params_dict["API_SUFFIX"]="_explicit"
                 api_explicit = templ_explicit.render(params_dict)
             if global_var_accessors:
+                if not swift_header:
+                    params_dict["API_SUFFIX"]="_global"
                 api_global = templ_global.render(params_dict)
 
             api = "".join((api_part_struct, api_explicit, api_global))

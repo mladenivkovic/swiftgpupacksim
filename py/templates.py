@@ -27,6 +27,7 @@ def init_jinja_env(template_dir: str = _default_template_dir) -> jinja2.Environm
 
 def jinja_generate_hydro_part_h(
     part_structs_d: dict,
+    metadata_d: dict,
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
     manual_struct_align: bool = False,
@@ -50,6 +51,9 @@ def jinja_generate_hydro_part_h(
               particle field API
             - "DECLARATIONS": containing a list of strings containing C-code
               for the particle field declarations
+
+    metadata_d: dict
+        dict containing particle (flavour) metadata
 
     template_dir: str
         the directory to search for templates
@@ -91,6 +95,8 @@ def jinja_generate_hydro_part_h(
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join(template_dir, templ_fname)
 
+    print("SWIFT HEADER2", swift_header)
+
     # fill up dict for template rendering
     d = {}
     d["STRUCT_NAMES"] = list(part_structs_d.keys())
@@ -103,6 +109,9 @@ def jinja_generate_hydro_part_h(
     d["GLOBAL_VAR_ACCESSORS"] = global_var_accessors
     d["EXPLICIT_VAR_ACCESSORS"] = explicit_var_accessors
     d["PART_STRUCT_ACCESORS"] = part_struct_accessors
+
+    d["AUTHORS"] = metadata_d["authors"]
+    d["FLAVOUR_NAME"] = metadata_d["flavour"].upper()
 
     header_template = templ.render(d)
 

@@ -12,6 +12,7 @@ from utils import check_part_struct_first_in_list
 
 def generate_hydro_part_header(
     part_d: dict,
+    metadata_d: dict,
     swift_header: bool = True,
     id_checks: bool = True,
     manual_align: bool = False,
@@ -29,6 +30,9 @@ def generate_hydro_part_header(
 
     part_d: dict
         dict containing the read-in particle struct fields
+
+    metadata_d: dict
+        dict containing particle (flavour) metadata
 
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
@@ -92,11 +96,12 @@ def generate_hydro_part_header(
             declarations.append(decl)
             # get the API C-code
             api = field_entry.generate_API(
-                verbose=verbose,
-                id_checks=id_checks,
+                swift_header=swift_header,
                 explicit_var_accessors=explicit_var_accessors,
                 global_var_accessors=global_var_accessors,
                 part_struct_accessors=part_struct_accessors,
+                id_checks=id_checks,
+                verbose=verbose,
             )
             apis.append(api)
 
@@ -104,8 +109,10 @@ def generate_hydro_part_header(
         part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations}
 
     # Now generate the file from template
+    print("SWIFT HEADER1", swift_header)
     header_file = jinja_generate_hydro_part_h(
         part_struct_d,
+        metadata_d,
         swift_header=swift_header,
         manual_struct_align=manual_align,
         part_struct_accessors=part_struct_accessors,

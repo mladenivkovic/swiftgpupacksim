@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import yaml
 
 from utils import (
     verify_file_exists,
@@ -10,6 +9,7 @@ from utils import (
     print_separator,
     validate_yml_contents,
     add_auxiliary_fields,
+    read_input_file,
 )
 from headers import (
     generate_hydro_part_header,
@@ -123,13 +123,15 @@ if __name__ == "__main__":
     if (not part_struct_accessors) and (not global_var_accessors) and (not explicit_var_accessors):
         raise ValueError("Neither '--part-struct-accessors' nor '--global-var-accessors' nor '--explicit-var-accessors' selected. You must select at least one.")
 
+    # read in data
+    particle_fields_d, metadata_d = read_input_file(input_file)
 
-    input_fp = open(input_file, "r")
-    particle_fields_d = yaml.safe_load(input_fp)
-    input_fp.close()
+    # add required auxiliary fields
     particle_fields_d = add_auxiliary_fields(
         particle_fields_d, id_checks=id_checks, part_struct_accessors=part_struct_accessors, verbose=verbose,
     )
+
+    # check that everything is sensible
     validate_yml_contents(particle_fields_d)
 
     if (len(particle_fields_d.keys()) == 1) and id_checks:
@@ -138,6 +140,7 @@ if __name__ == "__main__":
 
     hydro_part_header = generate_hydro_part_header(
         particle_fields_d,
+        metadata_d,
         swift_header=swift_header,
         id_checks=id_checks,
         manual_align=manual_align,
@@ -178,6 +181,10 @@ if __name__ == "__main__":
         fp.write(hydro_part_header)
         fp.close()
         print("Written", outfile)
+
+        # For now, exit here and don't create other files just yet.
+        if swift_header:
+            quit()
 
         outfile = os.path.join(outdir, "parts.h")
         fp = open(outfile, "w")

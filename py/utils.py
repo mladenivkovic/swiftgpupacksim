@@ -4,6 +4,7 @@ import os
 from typing import Union
 import subprocess
 import datetime
+import yaml
 
 
 # Allow certain "field names" to be multiply defined for validation checks
@@ -94,6 +95,40 @@ def get_git_hash() -> str:
 def print_separator(msg: str = ""):
     print("----------------------------------------------------------------", msg)
     return
+
+
+def read_input_file(filename: str):
+    """
+    Read the yaml input file.
+
+    Returns
+    -------
+
+    part_data_dict: Dict containing all particle fields specified in yaml file
+
+    metadata_dict: Dict containing (SPH flavour) metadata specified in yaml file
+    """
+
+    verify_file_exists(filename)
+    input_fp = open(filename, "r")
+    yaml_data_d = yaml.safe_load(input_fp)
+    input_fp.close()
+
+    part_data_dict = {}
+    # Set some default values
+    metadata_dict = {"authors": "NO AUTHORS SPECIFIED", "flavour": "NO_FLAVOUR_SPECIFIED"}
+
+    for key in yaml_data_d.keys():
+        if key == "metadata":
+            # copy contents of group "metadata", not entire group
+            for key2 in yaml_data_d[key].keys():
+                metadata_dict[key2] = yaml_data_d[key][key2]
+        else:
+            part_data_dict[key] = yaml_data_d[key]
+
+    return part_data_dict, metadata_dict
+
+
 
 
 def validate_yml_contents(contents_d: dict) -> None:
