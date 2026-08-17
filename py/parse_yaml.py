@@ -380,6 +380,7 @@ class FieldEntry(object):
         parent_struct: Union[str, None] = None,
         explicit_var_accessors: bool = False,
         global_var_accessors: bool = False,
+        part_struct_accessors: bool = False,
         id_checks: bool = True,
         verbose: bool = False,
     ) -> str:
@@ -401,7 +402,10 @@ class FieldEntry(object):
             as an argument
 
         global_var_accessors: bool
-            if True, also generate getters/setters which use global variable pointer
+            if True, generate getters/setters which use global variable pointer
+
+        part_struct_accessors: bool
+            if True, generate getters/setters which use part structs
 
         verbose: bool
             Set verbosity level
@@ -436,6 +440,7 @@ class FieldEntry(object):
                         id_checks=id_checks,
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
+                        part_struct_accessors=part_struct_accessors,
                         verbose=verbose,
                     )
                 else:
@@ -450,6 +455,7 @@ class FieldEntry(object):
                         id_checks=id_checks,
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
+                        part_struct_accessors=part_struct_accessors,
                         verbose=verbose,
                     )
 
@@ -457,6 +463,7 @@ class FieldEntry(object):
 
             api = "".join(api_sub_entries)
         else:
+            # Generate API for a simple field.
             templ_part_struct = None
             templ_explicit = None
             templ_global = None
@@ -469,32 +476,29 @@ class FieldEntry(object):
                 templ_part_struct = self.jinja_env.get_template(
                     "api_array_part_struct_accessors.jinja.template"
                 )
-                if explicit_var_accessors:
-                    templ_explicit = self.jinja_env.get_template(
-                        "api_array_explicit_var_accessors.jinja.template"
-                    )
-                if global_var_accessors:
-                    templ_global = self.jinja_env.get_template(
-                        "api_array_global_var_accessors.jinja.template"
-                    )
+                templ_explicit = self.jinja_env.get_template(
+                    "api_array_explicit_var_accessors.jinja.template"
+                )
+                templ_global = self.jinja_env.get_template(
+                    "api_array_global_var_accessors.jinja.template"
+                )
             else:
                 templ_part_struct = self.jinja_env.get_template(
                     "api_scalar_part_struct_accessors.jinja.template"
                 )
-                if explicit_var_accessors:
-                    templ_explicit = self.jinja_env.get_template(
-                        "api_scalar_explicit_var_accessors.jinja.template"
-                    )
-                if global_var_accessors:
-                    templ_global = self.jinja_env.get_template(
-                        "api_scalar_global_var_accessors.jinja.template"
-                    )
+                templ_explicit = self.jinja_env.get_template(
+                    "api_scalar_explicit_var_accessors.jinja.template"
+                )
+                templ_global = self.jinja_env.get_template(
+                    "api_scalar_global_var_accessors.jinja.template"
+                )
 
             api_part_struct = ""
             api_explicit = ""
             api_global = ""
 
-            api_part_struct = templ_part_struct.render(params_dict)
+            if part_struct_accessors:
+                api_part_struct = templ_part_struct.render(params_dict)
             if explicit_var_accessors:
                 api_explicit = templ_explicit.render(params_dict)
             if global_var_accessors:

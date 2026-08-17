@@ -17,6 +17,7 @@ def generate_hydro_part_header(
     manual_align: bool = False,
     explicit_var_accessors: bool = False,
     global_var_accessors: bool = False,
+    part_struct_accessors: bool = False,
     testing: bool = False,
     verbose: bool = False,
 ) -> str:
@@ -40,11 +41,14 @@ def generate_hydro_part_header(
         if True, generate a different SWIFT_STRUCT_ALIGN_ macro for each struct.
 
     explicit_var_accessors: bool
-        if True, also generate getters/setters which use explicitly passed pointer
+        if True, generate getters/setters which use explicitly passed pointer
         as an argument
 
     global_var_accessors: bool
-        if True, also generate getters/setters which use global variable pointer
+        if True, generate getters/setters which use global variable pointer
+
+    part_struct_accessors: bool
+        if True, generate getters/setters using a part struct
 
     testing: bool
         if True, use minimalistic header template for unit tests to generate
@@ -92,6 +96,7 @@ def generate_hydro_part_header(
                 id_checks=id_checks,
                 explicit_var_accessors=explicit_var_accessors,
                 global_var_accessors=global_var_accessors,
+                part_struct_accessors=part_struct_accessors,
             )
             apis.append(api)
 
@@ -103,6 +108,8 @@ def generate_hydro_part_header(
         part_struct_d,
         swift_header=swift_header,
         manual_struct_align=manual_align,
+        part_struct_accessors=part_struct_accessors,
+        explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
         testing=testing,
         verbose=verbose,

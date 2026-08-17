@@ -95,6 +95,14 @@ parser.add_argument(
     default=False,
     help="Generate getters/setters using global variable pointer",
 )
+parser.add_argument(
+    "-p",
+    "--part-struct-accessors",
+    dest="part_struct_accessors",
+    action="store_true",
+    default=False,
+    help="Generate getters/setters using part struct accessors",
+)
 
 if __name__ == "__main__":
 
@@ -109,13 +117,18 @@ if __name__ == "__main__":
     manual_align = not args.no_manual_align
     explicit_var_accessors = args.explicit_var_accessors
     global_var_accessors = args.global_var_accessors
+    part_struct_accessors = args.part_struct_accessors
     verify_file_exists(input_file)
+
+    if (not part_struct_accessors) and (not global_var_accessors) and (not explicit_var_accessors):
+        raise ValueError("Neither '--part-struct-accessors' nor '--global-var-accessors' nor '--explicit-var-accessors' selected. You must select at least one.")
+
 
     input_fp = open(input_file, "r")
     particle_fields_d = yaml.safe_load(input_fp)
     input_fp.close()
     particle_fields_d = add_auxiliary_fields(
-        particle_fields_d, id_checks=id_checks, verbose=verbose
+        particle_fields_d, id_checks=id_checks, part_struct_accessors=part_struct_accessors, verbose=verbose,
     )
     validate_yml_contents(particle_fields_d)
 
@@ -130,6 +143,7 @@ if __name__ == "__main__":
         manual_align=manual_align,
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
+        part_struct_accessors=part_struct_accessors,
         testing=testing,
         verbose=verbose,
     )

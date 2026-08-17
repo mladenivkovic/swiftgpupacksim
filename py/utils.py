@@ -164,7 +164,7 @@ def check_part_struct_first_in_list(contents_d: dict) -> bool:
 
 
 def add_auxiliary_fields(
-    contents_d: dict, id_checks: bool = True, verbose: bool = False
+    contents_d: dict, id_checks: bool = True, part_struct_accessors: bool = False, verbose: bool = False
 ) -> dict:
     """
     Run through the read in contents (passed as contents_d) and add auxiliary
@@ -180,6 +180,9 @@ def add_auxiliary_fields(
 
     id_checks: bool
         if True, add a field for IDs for each struct for debugging checks
+
+    part_struct_accessors: bool
+        if True, add auxiliary fields needed for part struct accessors (offset/index in cell's particle arrays for this particle, and pointer to cell_part_arrays)
 
     verbose: bool
         if True, be talkative
@@ -198,16 +201,22 @@ def add_auxiliary_fields(
         return contents_d
 
     # fake having field props for the auxiliary fields
-    main_part_struct_aux_fields_props = {
-        "cell_offset": {
-            "type": "size_t",
-            "doc": "offset/index of particle in cell particle data array",
-        },
-        "cell_part_arrays": {
-            "type": "struct hydro_part_arrays*",
-            "doc": "pointer to particle data array struct of the cell this particle is located in",
-        },
-    }
+    main_part_struct_aux_fields_props = {}
+
+    if part_struct_accessors:
+        # without part struct accessors, we don't need any further aux fields
+        main_part_struct_aux_fields_props = {
+            "cell_offset": {
+                "type": "size_t",
+                "doc": "offset/index of particle in cell particle data array",
+                "ifdef": "USE_PART_STRUCT_ACCESSORS",
+            },
+            "cell_part_arrays": {
+                "type": "struct hydro_part_arrays*",
+                "doc": "pointer to particle data array struct of the cell this particle is located in",
+                "ifdef": "USE_PART_STRUCT_ACCESSORS",
+            },
+        }
 
     debug_id_props_name = "accessor_id"
     debug_id_props = {
