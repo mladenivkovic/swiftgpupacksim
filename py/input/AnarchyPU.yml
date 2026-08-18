@@ -108,7 +108,7 @@ part:
       laplace_u:
         doc: del^2 u, a smoothed quantity
 
-      alpha_diff: 
+      alpha: 
         doc: Thermal diffusion coefficient
 
   id: 
