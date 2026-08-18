@@ -13,12 +13,12 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 #ifdef {{IFDEF}}
 {%- endif %}
 
-  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_hydro_part_arrays._{{ROOT_STRUCT}} + pind;
+  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -58,12 +58,12 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 #ifdef {{IFDEF}}
 {%- endif %}
 
-  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_hydro_part_arrays._{{ROOT_STRUCT}} + pind;
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -104,12 +104,12 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 #ifdef {{IFDEF}}
 {%- endif %}
 
-  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_hydro_part_arrays._{{ROOT_STRUCT}} + pind;
+  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
@@ -148,12 +148,12 @@ static __attribute__((always_inline)) INLINE void
 #ifdef {{IFDEF}}
 {%- endif %}
 
-  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_hydro_part_arrays._{{ROOT_STRUCT}} + pind;
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
 
     {%- if DEBUG_ID_CHECKS %}
 {% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
-  const struct part* restrict p = global_hydro_part_arrays._part + pind;
+  const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)

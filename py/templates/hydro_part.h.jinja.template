@@ -64,7 +64,7 @@
 {% endif -%}
 
 {% if GLOBAL_VAR_ACCESSORS %}
-extern struct hydro_part_arrays global_hydro_part_arrays;
+extern struct part_arrays global_part_arrays;
 {%- endif %}
 
 {# --------------------------------- GENERATE STUCTS -------------------------------- #}

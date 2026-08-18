@@ -7,7 +7,7 @@
 #ifdef {{IFDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE {{TYPE}}
-  part_get_{{NAME}}{{API_SUFFIX}}(const struct hydro_part_arrays *restrict pd, const size_t pind) {
+  part_get_{{NAME}}{{API_SUFFIX}}(const struct part_arrays *restrict pd, const size_t pind) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
@@ -52,7 +52,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 #ifdef {{IFDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE {{TYPE}}*
-  part_get_{{NAME}}_p{{API_SUFFIX}}(struct hydro_part_arrays *restrict pd, const size_t pind) {
+  part_get_{{NAME}}_p{{API_SUFFIX}}(struct part_arrays *restrict pd, const size_t pind) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
@@ -98,7 +98,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 #ifdef {{IFDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
-  part_get_const_{{NAME}}_p{{API_SUFFIX}}(const struct hydro_part_arrays *restrict pd, const size_t pind) {
+  part_get_const_{{NAME}}_p{{API_SUFFIX}}(const struct part_arrays *restrict pd, const size_t pind) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
@@ -142,7 +142,7 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 #ifdef {{IFDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE void
-  part_set_{{NAME}}{{API_SUFFIX}}(struct hydro_part_arrays *restrict pd, const size_t pind, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
+  part_set_{{NAME}}{{API_SUFFIX}}(struct part_arrays *restrict pd, const size_t pind, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
