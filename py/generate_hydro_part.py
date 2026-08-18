@@ -182,6 +182,12 @@ if __name__ == "__main__":
         fp.close()
         print("Written", outfile)
 
+        outfile = os.path.join(outdir, "hydro_part_arrays_struct.h")
+        fp = open(outfile, "w")
+        fp.write(hydro_part_arrays_struct_header)
+        fp.close()
+        print("Written", outfile)
+
         # For now, exit here and don't create other files just yet.
         if swift_header:
             quit()
@@ -189,12 +195,6 @@ if __name__ == "__main__":
         outfile = os.path.join(outdir, "parts.h")
         fp = open(outfile, "w")
         fp.write(parts_header)
-        fp.close()
-        print("Written", outfile)
-
-        outfile = os.path.join(outdir, "hydro_part_arrays_struct.h")
-        fp = open(outfile, "w")
-        fp.write(hydro_part_arrays_struct_header)
         fp.close()
         print("Written", outfile)
 
