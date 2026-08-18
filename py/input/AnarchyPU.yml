@@ -73,16 +73,12 @@ part:
              Quantities in this sub-structure should only be accessed in the force loop 
              over neighbours and the ghost, drift and kick tasks
         contents:
-          f_gradh:
+          f:
             doc: "'Grad h' term -- only partial in P-U"
-          pressure:
-            doc: Particle pressure
           balsara:
             doc: Balsara switch
           soundspeed: 
             doc: Particle soundspeed
-          alpha_visc_max_ngb:
-            doc: Maximal alpha (viscosity) over neighbours
           h_dt: 
             doc: Time derivative of smoothing length 
 
