@@ -95,8 +95,6 @@ def jinja_generate_hydro_part_h(
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join(template_dir, templ_fname)
 
-    print("SWIFT HEADER2", swift_header)
-
     # fill up dict for template rendering
     d = {}
     d["STRUCT_NAMES"] = list(part_structs_d.keys())

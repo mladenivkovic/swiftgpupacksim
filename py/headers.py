@@ -109,7 +109,6 @@ def generate_hydro_part_header(
         part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations}
 
     # Now generate the file from template
-    print("SWIFT HEADER1", swift_header)
     header_file = jinja_generate_hydro_part_h(
         part_struct_d,
         metadata_d,
