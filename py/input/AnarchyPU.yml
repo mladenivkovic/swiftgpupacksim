@@ -1,8 +1,8 @@
-# SPHENIX particle struct as it is in the GPUSwift branch
+# AnarchyPU particle struct as it is in the GPUSwift branch
 
 # First, some metadata about this SPH flavour.
 metadata:
-  flavour: "SPHENIX"
+  flavour: "AnarchyPu"
   authors: "2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
 
 # now for the actual particle content
@@ -42,6 +42,9 @@ part:
 
   rho:
     doc: Particle density
+
+  pressure_bar:
+    doc: Particle pressure (weighted)
 
   union1:
     type: union
@@ -88,16 +91,13 @@ part:
       div_v:
         doc: Particle velocity divergence
 
-      div_v_dt:
-        doc: Time differential of velocity divergence
-
       div_v_previous_step:
         doc: Particle velocity divergence from previous step
 
-      alpha_av:
+      alpha:
         doc: Artificial viscosity parameter
       
-      v_sig:
+     v_sig:
         doc: Signal velocity
 
   diffusion:
@@ -141,15 +141,11 @@ part:
 
   black_holes_data:
     type: struct black_holes_part_data
-    doc: Black holes information (eg swallowing ID)
+    doc: Black holes information (e.g. swallowing ID)
 
   sink_data:
     type: struct sink_part_data
     doc: Sink information (eg swallowing ID)
-
-  pressure_floor_data:
-    type: struct pressure_floor_part_data
-    doc: Additional data used by the pressure floor
 
   rt_data:
     type: struct rt_part_data
@@ -180,87 +176,6 @@ part:
     type: integertime_t
     doc: Time of the last drift
     ifdef: SWIFT_DEBUG_CHECKS
-
-  N_density:
-    type: int
-    doc: Integer number of neighbours in the density loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  N_density_exact:
-    type: int
-    doc: Exact integer number of neighbours in the density loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  N_gradient:
-    type: int
-    doc: Integer number of neighbours in the gradient loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  N_gradient_exact:
-    type: int
-    doc: Exact integer number of neighbours in the gradient loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  N_force:
-    type: int
-    doc: Integer number of neighbours in the force loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  N_force_exact:
-    type: int
-    doc: Exact integer number of neighbours in the force loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  rho_exact:
-    type: float
-    doc: Exact value of the density field obtained via brute-force loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  n_density:
-    type: float
-    doc: Weighted number of neighbours in the density loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  n_density_exact:
-    type: float
-    doc: Exact value of the weighted number of neighbours in the density loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  n_gradient:
-    type: float
-    doc: Weighted number of neighbours in the gradient loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  n_gradient_exact:
-    type: float
-    doc: Exact value of the weighted number of neighbours in the gradient loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  n_force:
-    type: float
-    doc: Weighted number of neighbours in the force loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  n_force_exact:
-    type: float
-    doc: Exact value of the weighted number of neighbours in the force loop
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  inhibited_exact:
-    type: char
-    doc: Has this particle interacted with any unhibited neighbour?
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  limited_part:
-    type: char
-    doc: Has this particle been woken up by the limiter?
-    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  geometry:
-    type: struct fvpm_geometry_struct
-    doc: Geometrical quantities used for Finite Volume Particle Method RT
-
-
 
 xpart:
   doc: |
@@ -293,28 +208,27 @@ xpart:
     type: "struct particle_splitting_data split_data"
     doc: "Additional data used to record particle splits"
 
-  extra_cooling_data:
+  cooling_data:
     type: "struct cooling_xpart_data"
     doc: "Additional data used to record cooling information"
 
-  extra_tracers_data:
+  tracers_data:
     doc: "Additional data used by the tracers"
     type: "struct tracers_xpart_data"
 
-  extra_sf_data:
+  sf_data:
     doc: "Additional data used by the tracers"
     type: "struct star_formation_xpart_data"
 
-  extra_feedback_data:
+  feedback_data:
     doc: "Additional data used by the feedback"
     type: "struct feedback_xpart_data"
 
-  extra_mhd_data:
+  mhd_data:
     doc: "Additional data used by the MHD scheme"
     type: "struct mhd_xpart_data"
 
-  csds_data:
-    type: "struct csds_part_data"
-    doc: "Additional data for the particle csds"
-    ifdef: "WITH_CSDS"
+  forcing_data:
+    type: "struct forcing_xpart_data"
+    doc: "Additional data used by the forcing scheme"
 
