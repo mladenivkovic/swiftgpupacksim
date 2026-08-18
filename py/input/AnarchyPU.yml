@@ -65,6 +65,8 @@ part:
           rot_v:
             doc: Particle velocity curl
             size: 3
+          pressure_bar_dh:
+            doc: Derivative of the weighted pressure with respect to h
       force:
         type: struct
         doc: Structure for the variables only used in the force loop over neighbours 
