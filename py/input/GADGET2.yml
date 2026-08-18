@@ -1,0 +1,235 @@
+# GADGET2 particle struct as it is in the GPUSwift branch
+
+# First, some metadata about this SPH flavour.
+metadata:
+  flavour: "GADGET2"
+  authors: "2012 Pedro Gonnet (pedro.gonnet@durham.ac.uk)"
+
+# now for the actual particle content
+
+part:
+  doc: | 
+    @brief Particle fields for the SPH particles
+
+    The density and force substructures are used to contain variables only used
+    within the density and force loops over neighbours. All more permanent
+    variables should be declared in the main part of the part structure,
+
+  x:
+    type: double
+    size: 3
+    doc: Particle position
+
+  h:
+    doc: Particle cutoff radius
+
+  v:
+    size: 3
+    doc: Particle predicted velocity
+
+  mass:
+    doc: Particle mass
+
+  a_hydro:
+    size: 3
+    doc: Particle acceleration 
+
+  rho:
+    doc: Particle density
+
+  entropy:
+    doc: Particle entropy
+
+  entropy_dt:
+    doc: Entropy time derivative
+#19/08 start adding data types to this union
+  union1:
+    type: union
+    doc: Store density/force specific stuff
+    contents:
+      density:
+        type: struct
+        doc: Structure for the variables only used in the density loop over neighbours 
+             Quantities in this sub-structure should only be accessed in the density loop 
+             over neighbours and the ghost task
+        contents:
+          rho_dh:
+            doc: Derivative of density with respect to h
+          wcount:
+            doc: Neighbour number count
+          wcount_dh:
+            doc: Derivative of the neighbour number with respect to h
+          rot_v:
+            doc: Particle velocity curl
+            size: 3
+      force:
+        type: struct
+        doc: Structure for the variables only used in the force loop over neighbours 
+             Quantities in this sub-structure should only be accessed in the force loop 
+             over neighbours and the ghost, drift and kick tasks
+        contents:
+          balsara:
+            doc: Balsara switch
+          soundspeed: 
+            doc: Particle soundspeed
+          h_dt: 
+            doc: Time derivative of smoothing length 
+
+  viscosity:
+    type: struct
+    doc: store viscosity information in a separate struct
+    contents:
+      div_v:
+        doc: Particle velocity divergence
+      v_sig:
+        doc: Signal velocity
+
+#removed all of internal energy stuff
+  id: 
+    type: long long
+    doc:  Particle unique ID
+
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
+
+  adaptive_softening_data:
+    type: struct adaptive_softening_part_data
+    doc: Additional data used for adaptive softening
+
+  mhd_data:
+    type: struct mhd_part_data
+    doc: Additional data used by the MHD scheme
+
+  chemistry_data:
+    type: struct chemistry_part_data 
+    doc: Chemistry information
+
+  cooling_data:
+    type: struct cooling_part_data
+    doc: Cooling information
+
+  feedback_data:
+    type: struct feedback_part_data
+    doc: Additional data used by the feedback
+
+  black_holes_data:
+    type: struct black_holes_part_data
+    doc: Black holes information (eg swallowing ID)
+
+  sink_data:
+    type: struct sink_part_data
+    doc: Sink information (eg swallowing ID)
+
+  pressure_floor_data:
+    type: struct pressure_floor_part_data
+    doc: Additional data used by the pressure floor
+
+  rt_data:
+    type: struct rt_part_data
+    doc: Additional Radiative Transfer Data
+
+  rt_time_data:
+    type: struct rt_timestepping_data
+    doc: RT sub-cycling time stepping data
+
+  depth_h:
+    doc: Tree-depth at which size / 2 <= h * gamma < size
+    type: char
+
+  time_bin:
+    type: timebin_t
+    doc: Time-step length
+
+  limiter_data:
+    type: struct timestep_limiter_data
+    doc: Time-step limiter information
+
+  ti_drift:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS
+
+  ti_kick:
+    type: integertime_t
+    doc: Time of the last kick
+    ifdef: SWIFT_DEBUG_CHECKS
+
+#question: what to do about ids_ngbs_density/force[MAX_NUM]   
+  num_ngb_density:
+    type: integer
+    doc: Number of interactions in the density SELF and PAIR
+    ifdef: DEBUG_INTERACTIONS_SPH
+
+  num_ngb_force:
+    type: integer
+    doc: Number of interactions in the force SELF and PAIR
+    ifdef: DEBUG_INTERACTIONS_SPH
+
+  ids_ngbs_density[MAX_NUM_OF_NEIGHBOURS]:
+    type: long long
+    doc: List of interesting particles in the density SELF and PAIR
+    ifdef: DEBUG_INTERACTIONS_SPH
+
+  ids_ngbs_force[MAX_NUM_OF_NEIGHBOURS]:
+    type: long long
+    doc: List of interesting particles in the force SELF and PAIR
+    ifdef: DEBUG_INTERACTIONS_SPH
+
+
+xpart:
+  doc: |
+    @brief Particle fields not needed during the SPH loops over neighbours.
+
+    This structure contains the particle fields that are not used in the
+    density or force loops. Quantities should be used in the kick, drift and
+    potentially ghost tasks only.
+
+  x_diff:
+    size: 3
+    doc: "Offset between current position and position at last tree rebuild."
+
+  x_diff_sort:
+    size: 3
+    doc: "Offset between the current position and position at the last sort."
+
+  v_full:
+    size: 3
+    doc: "Velocity at the last full step."
+
+  a_grav:
+    size: 3
+    doc: "Gravitational acceleration at the end of the last step"
+
+  u_full:
+    doc: "Internal energy at the last full step."
+
+  split_data:
+    type: "struct particle_splitting_data"
+    doc: "Additional data used to record particle splits"
+
+  extra_cooling_data:
+    type: "struct cooling_xpart_data"
+    doc: "Additional data used to record cooling information"
+
+  extra_tracers_data:
+    doc: "Additional data used by the tracers"
+    type: "struct tracers_xpart_data"
+
+  extra_sf_data:
+    doc: "Additional data used by the tracers"
+    type: "struct star_formation_xpart_data"
+
+  extra_feedback_data:
+    doc: "Additional data used by the feedback"
+    type: "struct feedback_xpart_data"
+
+  extra_mhd_data:
+    doc: "Additional data used by the MHD scheme"
+    type: "struct mhd_xpart_data"
+
+  csds_data:
+    type: "struct csds_part_data"
+    doc: "Additional data for the particle csds"
+    ifdef: "WITH_CSDS"
+
