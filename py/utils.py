@@ -247,7 +247,7 @@ def add_auxiliary_fields(
                 "ifdef": "USE_PART_STRUCT_ACCESSORS",
             },
             "cell_part_arrays": {
-                "type": "struct hydro_part_arrays*",
+                "type": "struct part_arrays*",
                 "doc": "pointer to particle data array struct of the cell this particle is located in",
                 "ifdef": "USE_PART_STRUCT_ACCESSORS",
             },
