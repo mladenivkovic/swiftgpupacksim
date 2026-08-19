@@ -322,6 +322,19 @@ class FieldEntry(object):
                     + f"name: {self.name}, type: {self.type}"
                 )
 
+        # allow for array sizes defined by macros
+        is_array = False
+        array_size_is_macro = False
+        if isinstance(self.size, str):
+            is_array = True
+            array_size_is_macro = True
+        else:
+            try:
+                is_array = self.size > 1
+            except TypeError:
+                raise ValueError("Array size must be integer or string (if size is defined by a macro)")
+        print(self.size, is_array, array_size_is_macro)
+
         d = {
             "NAME": self.name,
             "SIZE": self.size,
@@ -337,7 +350,8 @@ class FieldEntry(object):
             "HAS_DOC": self.documentation is not None,
             "HAS_IFDEF": self.ifdef is not None,
             "HAS_PARENT_STRUCT": parent_struct is not None,
-            "IS_ARRAY": self.size > 1,
+            "IS_ARRAY": is_array,
+            "ARRAY_SIZE_IS_MACRO": array_size_is_macro,
             "IS_UNION": self.type == "union",
             "IS_INTERNAL_STRUCT": self.type == "struct",
             "IS_IN_SPLIT_STRUCT": self.root_struct != "part",

@@ -45,6 +45,11 @@ part:
         doc: some externally defined struct
         size: 4
 
+    my_macro_arr:
+        type: int
+        doc: array with size defined by macro
+        size: MY_ARRAY_SIZE
+
     # Not implemented yet
     # my_pointer_struct_arr:
     #     type: struct gpart*
