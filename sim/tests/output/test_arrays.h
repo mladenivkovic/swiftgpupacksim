@@ -7,13 +7,16 @@
 #error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
 #endif
 
-
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
 
 #include "hydro_part_arrays_struct.h"
+
+#ifndef MY_ARRAY_SIZE
+#define MY_ARRAY_SIZE 4
+#endif
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
@@ -59,6 +62,9 @@ struct part {
 
   /*! some externally defined struct */
   struct my_struct _my_external_struct_arr[4];
+
+  /*! array with size defined by macro */
+  int _my_macro_arr[MY_ARRAY_SIZE];
 
 };
 
@@ -499,6 +505,54 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE void
   part_set_my_external_struct_arr_ind_part_struct(struct part *restrict p, const int i, const struct my_struct my_external_struct_arr) {
   p->_my_external_struct_arr[i] = my_external_struct_arr;
+}
+
+
+
+
+/**
+ * @brief get my_macro_arr, array with size defined by macro,
+ * for read and write access. For read-only access, use
+ * part_get_const_my_macro_arr() instead.
+ */
+static __attribute__((always_inline)) INLINE int*
+  part_get_my_macro_arr_part_struct(struct part *restrict p) {
+  return p->_my_macro_arr;
+}
+
+/**
+ * @brief get my_macro_arr, array with size defined by macro, for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const int*
+  part_get_const_my_macro_arr_part_struct(const struct part *restrict p) {
+  return p->_my_macro_arr;
+}
+
+/**
+ * @brief get my_macro_arr, array with size defined by macro, by index.
+ */
+static __attribute__((always_inline)) INLINE int
+  part_get_my_macro_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_macro_arr[i];
+}
+
+/**
+ * @brief set all values of my_macro_arr, array with size defined by macro,
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_macro_arr_part_struct(struct part *restrict p, const int my_macro_arr[MY_ARRAY_SIZE]) {
+  for (int i = 0; i < MY_ARRAY_SIZE; i++){
+    p->_my_macro_arr[i] = my_macro_arr[i];
+  }
+}
+
+/**
+ * @brief set the value of my_macro_arr, array with size defined by macro, by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_macro_arr_ind_part_struct(struct part *restrict p, const int i, const int my_macro_arr) {
+  p->_my_macro_arr[i] = my_macro_arr;
 }
 
 

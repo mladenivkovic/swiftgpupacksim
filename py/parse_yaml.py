@@ -333,7 +333,6 @@ class FieldEntry(object):
                 is_array = self.size > 1
             except TypeError:
                 raise ValueError("Array size must be integer or string (if size is defined by a macro)")
-        print(self.size, is_array, array_size_is_macro)
 
         d = {
             "NAME": self.name,

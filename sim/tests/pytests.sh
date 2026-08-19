@@ -28,60 +28,60 @@ function DIFF(){
 }
 
 
-# echo "running test_data_types"
-# python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_data_types.yml
-# COMPILE_AND_RUN
-# DIFF hydro_part.h output/test_data_types.h
-# rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
-#
+echo "running test_data_types"
+python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_data_types.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_data_types.h
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+
+
 echo "running test_arrays"
 python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_arrays.yml
 COMPILE_AND_RUN
 DIFF hydro_part.h output/test_arrays.h
 rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
-#
-# echo "running test_ifdefs"
-# python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_ifdefs.yml
-# COMPILE_AND_RUN
-# DIFF hydro_part.h output/test_ifdefs.h
-# rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
-# echo "running test_struct"
-# python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_struct.yml
-# COMPILE_AND_RUN
-# DIFF hydro_part.h output/test_struct.h
-# rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
-# echo "running test_union"
-# python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_union.yml
-# COMPILE_AND_RUN
-# DIFF hydro_part.h output/test_union.h
-# rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
-# echo "running test_split_struct"
-# python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_split_struct.yml
-# COMPILE_AND_RUN
-# DIFF hydro_part.h output/test_split_struct.h
-# rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
-# echo "running test_split_struct_nopart"
-# python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_split_struct_nopart.yml
-# COMPILE_AND_RUN
-# DIFF hydro_part.h output/test_split_struct_nopart.h
-# rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
-# echo "running test_split_struct_arrays"
-# python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_split_struct_arrays.yml
-# COMPILE_AND_RUN
-# DIFF hydro_part.h output/test_split_struct_arrays.h
-# rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
-# echo "running test_split_struct_structs_and_unions"
-# python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_split_struct_structs_and_unions.yml
-# COMPILE_AND_RUN
-# DIFF hydro_part.h output/test_split_struct_structs_and_unions.h
-# rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#
+
+
+echo "running test_ifdefs"
+python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_ifdefs.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_ifdefs.h
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+
+echo "running test_struct"
+python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_struct.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_struct.h
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+
+echo "running test_union"
+python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_union.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_union.h
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+
+echo "running test_split_struct"
+python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_split_struct.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_split_struct.h
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+
+echo "running test_split_struct_nopart"
+python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_split_struct_nopart.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_split_struct_nopart.h
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+
+echo "running test_split_struct_arrays"
+python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_split_struct_arrays.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_split_struct_arrays.h
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+
+echo "running test_split_struct_structs_and_unions"
+python3 ../../py/generate_hydro_part.py --test --part-struct-accessor ./input/test_split_struct_structs_and_unions.yml
+COMPILE_AND_RUN
+DIFF hydro_part.h output/test_split_struct_structs_and_unions.h
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+
 echo "Python tests passed."

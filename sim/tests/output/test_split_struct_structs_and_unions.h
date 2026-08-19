@@ -7,13 +7,16 @@
 #error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
 #endif
 
-
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
 
 #include "hydro_part_arrays_struct.h"
+
+#ifndef MY_ARRAY_SIZE
+#define MY_ARRAY_SIZE 4
+#endif
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
@@ -852,7 +855,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float*
   part_get_b2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -925,7 +928,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_st3._b2[i] = b2;
 }
 

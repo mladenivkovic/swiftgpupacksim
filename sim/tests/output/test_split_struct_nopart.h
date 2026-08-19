@@ -7,13 +7,16 @@
 #error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
 #endif
 
-
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
 
 #include "hydro_part_arrays_struct.h"
+
+#ifndef MY_ARRAY_SIZE
+#define MY_ARRAY_SIZE 4
+#endif
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
