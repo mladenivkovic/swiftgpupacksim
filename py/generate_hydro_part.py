@@ -12,14 +12,14 @@ from utils import (
     read_input_file,
 )
 from headers import (
-    generate_hydro_part_header,
-    generate_parts_header,
-    generate_hydro_part_arrays_struct_header,
-    generate_hydro_part_arrays_flush_header,
+    generate_hydro_part_dot_h,
+    generate_parts_dot_h,
+    generate_hydro_part_arrays_struct_dot_h,
+    generate_hydro_part_arrays_flush_dot_h,
 )
 
 
-parser = argparse.ArgumentParser(description="Generate the hydro_part.h file.")
+parser = argparse.ArgumentParser(description="Generate the particle header files.")
 parser.add_argument("input_file")
 parser.add_argument(
     "-v",
@@ -138,7 +138,7 @@ if __name__ == "__main__":
         print("Have only a single particle struct. Skipping accessor ID checks.")
         id_checks = False
 
-    hydro_part_header = generate_hydro_part_header(
+    hydro_part_header = generate_hydro_part_dot_h(
         particle_fields_d,
         metadata_d,
         swift_header=swift_header,
@@ -151,18 +151,18 @@ if __name__ == "__main__":
         verbose=verbose,
     )
 
-    parts_header = generate_parts_header(
+    parts_header = generate_parts_dot_h(
         particle_fields_d,
         swift_header=swift_header,
         id_checks=id_checks,
         verbose=verbose,
     )
 
-    hydro_part_arrays_struct_header = generate_hydro_part_arrays_struct_header(
+    hydro_part_arrays_struct_header = generate_hydro_part_arrays_struct_dot_h(
         particle_fields_d, swift_header=swift_header, verbose=verbose
     )
 
-    hydro_part_arrays_flush_header = generate_hydro_part_arrays_flush_header(
+    hydro_part_arrays_flush_header = generate_hydro_part_arrays_flush_dot_h(
         particle_fields_d, swift_header=swift_header, verbose=verbose
     )
 
