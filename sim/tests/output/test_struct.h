@@ -59,9 +59,10 @@ struct part {
  * @brief get a.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_a(const struct part *restrict p) {
+  part_get_a_part_struct(const struct part *restrict p) {
   return p->_st1._a;
 }
+
 
 /**
  * @brief get a pointer to a.
@@ -69,26 +70,29 @@ static __attribute__((always_inline)) INLINE float
  * to a. If you need read-only access to a, use part_get_const_a_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_a_p(struct part *restrict p) {
+  part_get_a_p_part_struct(struct part *restrict p) {
   return &p->_st1._a;
 }
+
 
 /**
  * @brief get read-only access to pointer to a.
  * If you need write access to a, use part_get_a_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_a_p(const struct part *restrict p) {
+  part_get_const_a_p_part_struct(const struct part *restrict p) {
   return &p->_st1._a;
 }
+
 
 /**
  * @brief set the value of a.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_a(struct part *restrict p, const float a) {
+  part_set_a_part_struct(struct part *restrict p, const float a) {
   p->_st1._a = a;
 }
+
 
 
 /**
@@ -97,7 +101,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_b() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_b(struct part *restrict p) {
+  part_get_b_part_struct(struct part *restrict p) {
   return p->_st1._b;
 }
 
@@ -105,7 +109,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get b for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_b(const struct part *restrict p) {
+  part_get_const_b_part_struct(const struct part *restrict p) {
   return p->_st1._b;
 }
 
@@ -113,8 +117,8 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get b by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_b_ind(const struct part *restrict p, const size_t ind) {
-  return p->_st1._b[ind];
+  part_get_b_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_st1._b[i];
 }
 
 /**
@@ -122,7 +126,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_b(struct part *restrict p, const float b[3]) {
+  part_set_b_part_struct(struct part *restrict p, const float b[3]) {
   p->_st1._b[0] = b[0];
   p->_st1._b[1] = b[1];
   p->_st1._b[2] = b[2];
@@ -132,7 +136,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of b by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_b_ind(struct part *restrict p, const size_t i, const float b) {
+  part_set_b_ind_part_struct(struct part *restrict p, const int i, const float b) {
   p->_st1._b[i] = b;
 }
 
@@ -141,7 +145,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get c.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_c(const struct part *restrict p) {
+  part_get_c_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_st1._c;
 #else
@@ -149,26 +153,28 @@ static __attribute__((always_inline)) INLINE long long
 #endif
 }
 
+
 /**
  * @brief get a pointer to c.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to c. If you need read-only access to c, use part_get_const_c_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_c_p(struct part *restrict p) {
+  part_get_c_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_st1._c;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to c.
  * If you need write access to c, use part_get_c_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_c_p(const struct part *restrict p) {
+  part_get_const_c_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_st1._c;
 #else
@@ -176,11 +182,12 @@ static __attribute__((always_inline)) INLINE const long long*
 #endif
 }
 
+
 /**
  * @brief set the value of c.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_c(struct part *restrict p, const long long c) {
+  part_set_c_part_struct(struct part *restrict p, const long long c) {
 #ifdef DEBUG
   p->_st1._c = c;
 #endif
@@ -189,13 +196,15 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get d.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_d(const struct part *restrict p) {
+  part_get_d_part_struct(const struct part *restrict p) {
   return p->_st2._d;
 }
+
 
 /**
  * @brief get a pointer to d.
@@ -203,35 +212,39 @@ static __attribute__((always_inline)) INLINE double
  * to d. If you need read-only access to d, use part_get_const_d_p() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_d_p(struct part *restrict p) {
+  part_get_d_p_part_struct(struct part *restrict p) {
   return &p->_st2._d;
 }
+
 
 /**
  * @brief get read-only access to pointer to d.
  * If you need write access to d, use part_get_d_p() instead.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_d_p(const struct part *restrict p) {
+  part_get_const_d_p_part_struct(const struct part *restrict p) {
   return &p->_st2._d;
 }
+
 
 /**
  * @brief set the value of d.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_d(struct part *restrict p, const double d) {
+  part_set_d_part_struct(struct part *restrict p, const double d) {
   p->_st2._d = d;
 }
+
 
 
 /**
  * @brief get gp.
  */
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_gp(const struct part *restrict p) {
+  part_get_gp_part_struct(const struct part *restrict p) {
   return p->_st2._nested1._gp;
 }
+
 
 /**
  * @brief get a pointer to gp.
@@ -239,24 +252,27 @@ static __attribute__((always_inline)) INLINE struct gpart*
  * to gp. If you need read-only access to gp, use part_get_const_gp_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_gp_p(struct part *restrict p) {
+  part_get_gp_p_part_struct(struct part *restrict p) {
   return &p->_st2._nested1._gp;
-}/**
+}
+/**
  * @brief set the value of gp.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_gp(struct part *restrict p,  struct gpart* gp) {
+  part_set_gp_part_struct(struct part *restrict p,  struct gpart* gp) {
   p->_st2._nested1._gp = gp;
 }
+
 
 
 /**
  * @brief get t.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_t(const struct part *restrict p) {
+  part_get_t_part_struct(const struct part *restrict p) {
   return p->_st2._nested1._t;
 }
+
 
 /**
  * @brief get a pointer to t.
@@ -264,26 +280,29 @@ static __attribute__((always_inline)) INLINE timebin_t
  * to t. If you need read-only access to t, use part_get_const_t_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_t_p(struct part *restrict p) {
+  part_get_t_p_part_struct(struct part *restrict p) {
   return &p->_st2._nested1._t;
 }
+
 
 /**
  * @brief get read-only access to pointer to t.
  * If you need write access to t, use part_get_t_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_t_p(const struct part *restrict p) {
+  part_get_const_t_p_part_struct(const struct part *restrict p) {
   return &p->_st2._nested1._t;
 }
+
 
 /**
  * @brief set the value of t.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_t(struct part *restrict p, const timebin_t t) {
+  part_set_t_part_struct(struct part *restrict p, const timebin_t t) {
   p->_st2._nested1._t = t;
 }
+
 
 
 
