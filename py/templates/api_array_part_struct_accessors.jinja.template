@@ -13,15 +13,19 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 
 {%- if IS_IN_SPLIT_STRUCT %}
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
-  
+ 
   {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+    {% if DEBUG_ID_CHECKS_MACRO_GUARD -%}
+#ifdef SWIFT_DEBUG_CHECKS
+    {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+    {%- endif %}
   {%- endif %}
 
   {%- if HAS_PARENT_STRUCT %}
@@ -58,15 +62,19 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 
 {%- if IS_IN_SPLIT_STRUCT %}
   const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
-  
+ 
   {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+    {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+    {%- endif %}
   {%- endif %}
 
   {%- if HAS_PARENT_STRUCT %}
@@ -103,18 +111,22 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 
 {%- if IS_IN_SPLIT_STRUCT %}
   const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
- 
-    {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+
+    {%- if DEBUG_ID_CHECKS -%}
+      {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+      {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+      {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+      {%- endif %}
     {%- endif %}
 
- {%- if HAS_PARENT_STRUCT %}
+  {%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[i];
   {%- else %}
   return {{ROOT_STRUCT}}_s->_{{NAME}}[i];
@@ -150,33 +162,60 @@ static __attribute__((always_inline)) INLINE void
 {%- if IS_IN_SPLIT_STRUCT %}
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
 
-    {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+  {%- if DEBUG_ID_CHECKS %}
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+    {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
     {%- endif %}
+  {%- endif %}
 
-  {%- for i in range(SIZE) %}
+  {%- if ARRAY_SIZE_IS_MACRO %}
+  for (int i = 0; i < {{SIZE}}; i++){
     {%- if HAS_PARENT_STRUCT %}
+    {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[i] = {{NAME}}[i];
+    {%- else %}
+    {{ROOT_STRUCT}}_s->_{{NAME}}[i] = {{NAME}}[i];
+    {%- endif %}
+  }
+  {%- else %}
+
+    {%- for i in range(SIZE) %}
+      {%- if HAS_PARENT_STRUCT %}
   {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
-    {%- else %}
+      {%- else %}
   {{ROOT_STRUCT}}_s->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
-    {%- endif -%}
-  {%- endfor %}
+      {%- endif -%}
+    {%- endfor %}
+  {%- endif -%}
 
-{%- else -%}
+{%- else -%} {# is NOT in split struct #}
 
-  {%- for i in range(SIZE) %}
+  {%- if ARRAY_SIZE_IS_MACRO %}
+  for (int i = 0; i < {{SIZE}}; i++){
     {%- if HAS_PARENT_STRUCT %}
-  p->_{{PARENT_STRUCT}}._{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+    p->_{{PARENT_STRUCT}}._{{NAME}}[i] = {{NAME}}[i];
     {%- else %}
-  p->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+    p->_{{NAME}}[i] = {{NAME}}[i];
     {%- endif %}
-  {%- endfor %}
+  }
+
+  {%- else %}
+
+    {%- for i in range(SIZE) %}
+      {%- if HAS_PARENT_STRUCT %}
+  p->_{{PARENT_STRUCT}}._{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+      {%- else %}
+  p->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
+      {%- endif %}
+    {%- endfor %}
+  {%- endif %}
 {%- endif %}
 
 {%- if HAS_IFDEF %}
@@ -198,13 +237,17 @@ static __attribute__((always_inline)) INLINE void
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
 
     {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+      {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+      {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+      {% if DEBUG_ID_CHECKS_MACRO_GUARD -%}
+#endif
+      {%- endif %}
     {%- endif %}
 
   {%- if HAS_PARENT_STRUCT %}

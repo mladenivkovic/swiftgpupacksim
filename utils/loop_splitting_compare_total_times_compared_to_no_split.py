@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
     # get available layouts
     layouts = LAYOUTS_TO_USE
-#      firstdir = get_result_dir(
+    #      firstdir = get_result_dir(
     #      srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0]
     #  )
     #  ls = os.listdir(firstdir)
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     #      if f.startswith("results_") and f.endswith(".csv"):
     #          layout = f[len("results_") : -len(".csv")]
     #          layouts.append(layout)
-#      layouts.sort()
+    #      layouts.sort()
 
     if "dine2" in srcdir:
         fig = plt.figure(figsize=(12, 3))
@@ -151,12 +151,10 @@ if __name__ == "__main__":
         ax = axes[e]
         ax.set_title(experiment + ", " + NODE_LABELS[srcdir])
 
-
         for a, part_access in enumerate(PART_ACCESS):
 
             ls = linestyles[a]
             marker = markers[a]
-
 
             for s, split in enumerate(LOOP_SPLITS):
 
@@ -180,7 +178,6 @@ if __name__ == "__main__":
                     )
                     res = ResultData(fname_norm, verbose=False)
                     normalisation = res.total_time
-
 
                     fname = get_result_fname(
                         srcdir,
@@ -224,14 +221,20 @@ if __name__ == "__main__":
     for ax in fig.axes:
         #  ax.set_xlabel("particle data layouts")
         #  ax.tick_params("x", rotation=90)
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid(which="both")
         #  ax.legend()
         if args.equal_axis_limits:
             ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
 
         ax.set_ylabel(
-            r"$t / t_{\mathrm{by-particle}}$"#^{\mathrm{part-struct}}$"
+            r"$t / t_{\mathrm{by-particle}}$"  # ^{\mathrm{part-struct}}$"
             #  r"$t / t_{\mathrm{\ no\ loop\ split}}$"#^{\mathrm{part-struct}}$"
         )
         #  if NODE_LABELS[srcdir] == "gracehopper":
@@ -243,8 +246,8 @@ if __name__ == "__main__":
             ax.set_yticks([0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5])
 
     # the others
-        #  if args.equal_axis_limits:
-        #      ax.set_yticklabels([])
+    #  if args.equal_axis_limits:
+    #      ax.set_yticklabels([])
 
     if "dine2" in srcdir:
         fig.tight_layout(w_pad=0.7, rect=(0.0, 0.0, 1.0, 1.0))

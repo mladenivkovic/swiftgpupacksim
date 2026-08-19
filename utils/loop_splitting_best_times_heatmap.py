@@ -146,8 +146,17 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 def plot_heatmap(ax, heatmap):
 
     im = ax.imshow(heatmap, cmap="viridis_r")
-    ax.set_xticks(range(len(PART_ACCESS)), labels=PART_ACCESS_LABELS, rotation=30, ha="right", rotation_mode="anchor")
-    ax.set_yticks(range(len(layouts)), labels=layouts,)
+    ax.set_xticks(
+        range(len(PART_ACCESS)),
+        labels=PART_ACCESS_LABELS,
+        rotation=30,
+        ha="right",
+        rotation_mode="anchor",
+    )
+    ax.set_yticks(
+        range(len(layouts)),
+        labels=layouts,
+    )
 
     maxval = heatmap.max()
     mean = heatmap.mean()
@@ -156,14 +165,13 @@ def plot_heatmap(ax, heatmap):
     for l in range(len(layouts)):
         for s in range(len(PART_ACCESS)):
             colour = "black"
-            if heatmap[l,s] > 0.5 * (maxval + mean):
+            if heatmap[l, s] > 0.5 * (maxval + mean):
                 colour = "white"
-            text = ax.text(s, l, f"{heatmap[l,s]:.2f}", ha="center", va="center", color=colour)
+            text = ax.text(
+                s, l, f"{heatmap[l,s]:.2f}", ha="center", va="center", color=colour
+            )
 
     return im
-
-
-
 
 
 if __name__ == "__main__":
@@ -175,7 +183,6 @@ if __name__ == "__main__":
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
-
 
     for e, experiment in enumerate(EXPERIMENTS):
 
@@ -220,9 +227,7 @@ if __name__ == "__main__":
                     result_data.append(res)
 
                 # Unpack result data by packing operation type
-                dens_pack = np.array(
-                    [r.data_dict["pack/density"] for r in result_data]
-                )
+                dens_pack = np.array([r.data_dict["pack/density"] for r in result_data])
                 dens_unpack = np.array(
                     [r.data_dict["unpack/density"] for r in result_data]
                 )
@@ -232,12 +237,10 @@ if __name__ == "__main__":
                 grad_unpack = np.array(
                     [r.data_dict["unpack/gradient"] for r in result_data]
                 )
-                forc_pack = np.array(
-                    [r.data_dict["pack/force"] for r in result_data]
-                )
+                forc_pack = np.array([r.data_dict["pack/force"] for r in result_data])
                 forc_unpack = np.array(
                     [r.data_dict["unpack/force"] for r in result_data]
-                    )
+                )
 
                 dp_best = dens_pack.argmin()
                 du_best = dens_unpack.argmin()
@@ -256,10 +259,15 @@ if __name__ == "__main__":
                 print("---- forc unpack:", LOOP_SPLITS[fu_best])
                 print("")
 
-                heatmap[l, a] = (dens_pack[dp_best] + dens_unpack[du_best] + grad_pack[gp_best] + grad_unpack[gu_best] + forc_pack[fp_best] + forc_unpack[fu_best])
+                heatmap[l, a] = (
+                    dens_pack[dp_best]
+                    + dens_unpack[du_best]
+                    + grad_pack[gp_best]
+                    + grad_unpack[gu_best]
+                    + forc_pack[fp_best]
+                    + forc_unpack[fu_best]
+                )
                 heatmap[l, a] /= ref_total_time
-
-
 
         im = plot_heatmap(ax, heatmap)
 

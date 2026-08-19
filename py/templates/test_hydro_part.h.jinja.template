@@ -2,11 +2,25 @@
 #ifndef SWIFT_HYDRO_PART_TEST_H
 #define SWIFT_HYDRO_PART_TEST_H
 
+{% if PART_STRUCT_ACCESSORS %}
+#ifndef USE_PART_STRUCT_ACCESSORS
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#endif
+{%- endif %}
+{%- if GLOBAL_VAR_ACCESSORS %}
+extern struct part_arrays global_part_arrays;
+{%- endif %}
+
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "hydro_part_arrays_struct.h"
+
+#ifndef MY_ARRAY_SIZE
+#define MY_ARRAY_SIZE 4
+#endif
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline

@@ -180,18 +180,17 @@ if __name__ == "__main__":
     maxtime = -1.0
     mintime = 1e32
 
-    for n,srcdir in enumerate(NODES):
+    for n, srcdir in enumerate(NODES):
 
         ax = axes[n]
         ax.set_title(NODE_LABELS[srcdir])
 
         if srcdir.endswith("gn003") or srcdir.endswith("gn003/"):
-            NTHREADS=[1, 9, 18, 36, 72]
+            NTHREADS = [1, 9, 18, 36, 72]
         elif srcdir.endswith("dine2") or srcdir.endswith("dine2/"):
-            NTHREADS=[1, 4, 8, 16, 32, 64]
+            NTHREADS = [1, 4, 8, 16, 32, 64]
         elif srcdir.endswith("mad06") or srcdir.endswith("mad06/"):
-            NTHREADS=[4, 8, 16, 32, 64, 128]
-
+            NTHREADS = [4, 8, 16, 32, 64, 128]
 
         for e, experiment in enumerate(EXPERIMENTS):
 
@@ -200,21 +199,18 @@ if __name__ == "__main__":
             # first, grab normalisation:
             # AoS on single thread for this experiment
             fname_norm = get_result_fname(
-                        srcdir,
-                        experiment,
-                        1,
-                        access_variant,
-                        loop_split,
-                        variant_dir_suffix,
-                        "aos",
-                    )
+                srcdir,
+                experiment,
+                1,
+                access_variant,
+                loop_split,
+                variant_dir_suffix,
+                "aos",
+            )
             res = ResultData(fname_norm, verbose=False)
             normalisation = res.total_time
 
-
-
             for n, nthreads in enumerate(NTHREADS):
-
 
                 color = "C" + str(n)
 
@@ -243,8 +239,9 @@ if __name__ == "__main__":
                     results /= normalisation
 
                 label = (
-                        #  NODE_LABELS[srcdir] + " " +
-                        experiment + " "
+                    #  NODE_LABELS[srcdir] + " " +
+                    experiment
+                    + " "
                     #  PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
                     #  + " "
                     #  + LOOP_SPLIT_LABELS[LOOP_SPLITS.index(loop_split)]
@@ -254,9 +251,7 @@ if __name__ == "__main__":
                     + " threads"
                 )
 
-                ax.plot(
-                    layouts, results, c=color, ls=ls, label=label, **plotkwargs
-                )
+                ax.plot(layouts, results, c=color, ls=ls, label=label, **plotkwargs)
 
     #  if mintime < 200.0:
     #      mintime = 0.0
@@ -265,14 +260,20 @@ if __name__ == "__main__":
     for ax in fig.axes:
         ax.set_xlabel("particle data layouts")
         #  ax.tick_params("x", rotation=45)
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid()
         #  ax.legend()
         #  if args.equal_axis_limits:
         #      ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
 
         if normalise:
-            ax.set_ylabel( r"$t / t_{\mathrm{aos}}$")
+            ax.set_ylabel(r"$t / t_{\mathrm{aos}}$")
         else:
             ax.set_ylabel("Timing [ms]")
 

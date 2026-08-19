@@ -310,7 +310,9 @@ class FieldEntry(object):
                         "pointer"
                     ]
                 elif is_struct:
-                    self.ifdef_return_val = _field_data_type_default_return_vals[ "struct" ]
+                    self.ifdef_return_val = _field_data_type_default_return_vals[
+                        "struct"
+                    ]
                 else:
                     self.ifdef_return_val = _field_data_type_default_return_vals[
                         self.type
@@ -320,6 +322,20 @@ class FieldEntry(object):
                 raise ValueError(
                     "No return value available for field with IFDEF."
                     + f"name: {self.name}, type: {self.type}"
+                )
+
+        # allow for array sizes defined by macros
+        is_array = False
+        array_size_is_macro = False
+        if isinstance(self.size, str):
+            is_array = True
+            array_size_is_macro = True
+        else:
+            try:
+                is_array = self.size > 1
+            except TypeError:
+                raise ValueError(
+                    "Array size must be integer or string (if size is defined by a macro)"
                 )
 
         d = {
@@ -337,7 +353,8 @@ class FieldEntry(object):
             "HAS_DOC": self.documentation is not None,
             "HAS_IFDEF": self.ifdef is not None,
             "HAS_PARENT_STRUCT": parent_struct is not None,
-            "IS_ARRAY": self.size > 1,
+            "IS_ARRAY": is_array,
+            "ARRAY_SIZE_IS_MACRO": array_size_is_macro,
             "IS_UNION": self.type == "union",
             "IS_INTERNAL_STRUCT": self.type == "struct",
             "IS_IN_SPLIT_STRUCT": self.root_struct != "part",
@@ -439,7 +456,9 @@ class FieldEntry(object):
             print(f"-- Generating API for {self.type} {self.name}")
 
         params_dict = self._get_field_dict(
-            parent_struct=parent_struct, id_checks=id_checks, verbose=verbose,
+            parent_struct=parent_struct,
+            id_checks=id_checks,
+            verbose=verbose,
         )
 
         # If we have sub-entries (e.g. members of a struct or union), generate
@@ -514,15 +533,15 @@ class FieldEntry(object):
 
             if part_struct_accessors:
                 if not swift_header:
-                    params_dict["API_SUFFIX"]="_part_struct"
+                    params_dict["API_SUFFIX"] = "_part_struct"
                 api_part_struct = templ_part_struct.render(params_dict)
             if explicit_var_accessors:
                 if not swift_header:
-                    params_dict["API_SUFFIX"]="_explicit"
+                    params_dict["API_SUFFIX"] = "_explicit"
                 api_explicit = templ_explicit.render(params_dict)
             if global_var_accessors:
                 if not swift_header:
-                    params_dict["API_SUFFIX"]="_global"
+                    params_dict["API_SUFFIX"] = "_global"
                 api_global = templ_global.render(params_dict)
 
             api = "".join((api_part_struct, api_explicit, api_global))

@@ -2,11 +2,21 @@
 #ifndef SWIFT_HYDRO_PART_TEST_H
 #define SWIFT_HYDRO_PART_TEST_H
 
+
+#ifndef USE_PART_STRUCT_ACCESSORS
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#endif
+
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "hydro_part_arrays_struct.h"
+
+#ifndef MY_ARRAY_SIZE
+#define MY_ARRAY_SIZE 4
+#endif
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
@@ -26,11 +36,15 @@ struct gpart{
 
 struct part {
 
+#ifdef USE_PART_STRUCT_ACCESSORS
   /*! offset/index of particle in cell particle data array */
   size_t _cell_offset;
+#endif
 
+#ifdef USE_PART_STRUCT_ACCESSORS
   /*! pointer to particle data array struct of the cell this particle is located in */
-  struct hydro_part_arrays* _cell_part_arrays;
+  struct part_arrays* _cell_part_arrays;
+#endif
 
   struct {
 
@@ -161,9 +175,14 @@ struct part2 {
  * @brief get cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE size_t
-  part_get_cell_offset(const struct part *restrict p) {
+  part_get_cell_offset_part_struct(const struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
   return p->_cell_offset;
+#else
+  return SIZE_MAX;
+#endif
 }
+
 
 /**
  * @brief get a pointer to cell_offset, offset/index of particle in cell particle data array.
@@ -171,9 +190,14 @@ static __attribute__((always_inline)) INLINE size_t
  * to cell_offset. If you need read-only access to cell_offset, use part_get_const_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE size_t*
-  part_get_cell_offset_p(struct part *restrict p) {
+  part_get_cell_offset_p_part_struct(struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
   return &p->_cell_offset;
+#else
+  return NULL;
+#endif
 }
+
 
 /**
  * @brief get read-only access to pointer to cell_offset,
@@ -181,17 +205,25 @@ static __attribute__((always_inline)) INLINE size_t*
  * If you need write access to cell_offset, use part_get_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE const size_t*
-  part_get_const_cell_offset_p(const struct part *restrict p) {
+  part_get_const_cell_offset_p_part_struct(const struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
   return &p->_cell_offset;
+#else
+  return NULL;
+#endif
 }
+
 
 /**
  * @brief set the value of cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_offset(struct part *restrict p, const size_t cell_offset) {
+  part_set_cell_offset_part_struct(struct part *restrict p, const size_t cell_offset) {
+#ifdef USE_PART_STRUCT_ACCESSORS
   p->_cell_offset = cell_offset;
+#endif
 }
+
 
 
 
@@ -199,26 +231,32 @@ static __attribute__((always_inline)) INLINE void
 /**
  * @brief get cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  */
-static __attribute__((always_inline)) INLINE struct hydro_part_arrays*
-  part_get_cell_part_arrays(const struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
+static __attribute__((always_inline)) INLINE struct part_arrays*
+  part_get_cell_part_arrays_part_struct(const struct part *restrict p) {
   return p->_cell_part_arrays;
 }
+#endif
 
 /**
  * @brief get a pointer to cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to cell_part_arrays. If you need read-only access to cell_part_arrays, use part_get_const_cell_part_arrays_p() instead.
  */
-static __attribute__((always_inline)) INLINE struct hydro_part_arrays**
-  part_get_cell_part_arrays_p(struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
+static __attribute__((always_inline)) INLINE struct part_arrays**
+  part_get_cell_part_arrays_p_part_struct(struct part *restrict p) {
   return &p->_cell_part_arrays;
-}/**
+}
+#endif/**
  * @brief set the value of cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  */
+#ifdef USE_PART_STRUCT_ACCESSORS
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_part_arrays(struct part *restrict p,  struct hydro_part_arrays* cell_part_arrays) {
+  part_set_cell_part_arrays_part_struct(struct part *restrict p,  struct part_arrays* cell_part_arrays) {
   p->_cell_part_arrays = cell_part_arrays;
 }
+#endif
 
 
 
@@ -227,9 +265,10 @@ static __attribute__((always_inline)) INLINE void
  * @brief get a.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_a(const struct part *restrict p) {
+  part_get_a_part_struct(const struct part *restrict p) {
   return p->_st1._a;
 }
+
 
 /**
  * @brief get a pointer to a.
@@ -237,26 +276,29 @@ static __attribute__((always_inline)) INLINE float
  * to a. If you need read-only access to a, use part_get_const_a_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_a_p(struct part *restrict p) {
+  part_get_a_p_part_struct(struct part *restrict p) {
   return &p->_st1._a;
 }
+
 
 /**
  * @brief get read-only access to pointer to a.
  * If you need write access to a, use part_get_a_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_a_p(const struct part *restrict p) {
+  part_get_const_a_p_part_struct(const struct part *restrict p) {
   return &p->_st1._a;
 }
+
 
 /**
  * @brief set the value of a.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_a(struct part *restrict p, const float a) {
+  part_set_a_part_struct(struct part *restrict p, const float a) {
   p->_st1._a = a;
 }
+
 
 
 /**
@@ -265,7 +307,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_b() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_b(struct part *restrict p) {
+  part_get_b_part_struct(struct part *restrict p) {
   return p->_st1._b;
 }
 
@@ -273,7 +315,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get b for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_b(const struct part *restrict p) {
+  part_get_const_b_part_struct(const struct part *restrict p) {
   return p->_st1._b;
 }
 
@@ -281,8 +323,8 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get b by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_b_ind(const struct part *restrict p, const size_t ind) {
-  return p->_st1._b[ind];
+  part_get_b_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_st1._b[i];
 }
 
 /**
@@ -290,7 +332,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_b(struct part *restrict p, const float b[3]) {
+  part_set_b_part_struct(struct part *restrict p, const float b[3]) {
   p->_st1._b[0] = b[0];
   p->_st1._b[1] = b[1];
   p->_st1._b[2] = b[2];
@@ -300,7 +342,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of b by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_b_ind(struct part *restrict p, const size_t i, const float b) {
+  part_set_b_ind_part_struct(struct part *restrict p, const int i, const float b) {
   p->_st1._b[i] = b;
 }
 
@@ -309,7 +351,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get c.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_c(const struct part *restrict p) {
+  part_get_c_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_st1._c;
 #else
@@ -317,26 +359,28 @@ static __attribute__((always_inline)) INLINE long long
 #endif
 }
 
+
 /**
  * @brief get a pointer to c.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to c. If you need read-only access to c, use part_get_const_c_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_c_p(struct part *restrict p) {
+  part_get_c_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_st1._c;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to c.
  * If you need write access to c, use part_get_c_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_c_p(const struct part *restrict p) {
+  part_get_const_c_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_st1._c;
 #else
@@ -344,11 +388,12 @@ static __attribute__((always_inline)) INLINE const long long*
 #endif
 }
 
+
 /**
  * @brief set the value of c.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_c(struct part *restrict p, const long long c) {
+  part_set_c_part_struct(struct part *restrict p, const long long c) {
 #ifdef DEBUG
   p->_st1._c = c;
 #endif
@@ -357,13 +402,15 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get d.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_d(const struct part *restrict p) {
+  part_get_d_part_struct(const struct part *restrict p) {
   return p->_st2._d;
 }
+
 
 /**
  * @brief get a pointer to d.
@@ -371,35 +418,39 @@ static __attribute__((always_inline)) INLINE double
  * to d. If you need read-only access to d, use part_get_const_d_p() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_d_p(struct part *restrict p) {
+  part_get_d_p_part_struct(struct part *restrict p) {
   return &p->_st2._d;
 }
+
 
 /**
  * @brief get read-only access to pointer to d.
  * If you need write access to d, use part_get_d_p() instead.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_d_p(const struct part *restrict p) {
+  part_get_const_d_p_part_struct(const struct part *restrict p) {
   return &p->_st2._d;
 }
+
 
 /**
  * @brief set the value of d.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_d(struct part *restrict p, const double d) {
+  part_set_d_part_struct(struct part *restrict p, const double d) {
   p->_st2._d = d;
 }
+
 
 
 /**
  * @brief get gps.
  */
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_gps(const struct part *restrict p) {
+  part_get_gps_part_struct(const struct part *restrict p) {
   return p->_st2._nested1._gps;
 }
+
 
 /**
  * @brief get a pointer to gps.
@@ -407,24 +458,27 @@ static __attribute__((always_inline)) INLINE struct gpart*
  * to gps. If you need read-only access to gps, use part_get_const_gps_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_gps_p(struct part *restrict p) {
+  part_get_gps_p_part_struct(struct part *restrict p) {
   return &p->_st2._nested1._gps;
-}/**
+}
+/**
  * @brief set the value of gps.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_gps(struct part *restrict p,  struct gpart* gps) {
+  part_set_gps_part_struct(struct part *restrict p,  struct gpart* gps) {
   p->_st2._nested1._gps = gps;
 }
+
 
 
 /**
  * @brief get ts.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_ts(const struct part *restrict p) {
+  part_get_ts_part_struct(const struct part *restrict p) {
   return p->_st2._nested1._ts;
 }
+
 
 /**
  * @brief get a pointer to ts.
@@ -432,26 +486,29 @@ static __attribute__((always_inline)) INLINE timebin_t
  * to ts. If you need read-only access to ts, use part_get_const_ts_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_ts_p(struct part *restrict p) {
+  part_get_ts_p_part_struct(struct part *restrict p) {
   return &p->_st2._nested1._ts;
 }
+
 
 /**
  * @brief get read-only access to pointer to ts.
  * If you need write access to ts, use part_get_ts_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_ts_p(const struct part *restrict p) {
+  part_get_const_ts_p_part_struct(const struct part *restrict p) {
   return &p->_st2._nested1._ts;
 }
+
 
 /**
  * @brief set the value of ts.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_ts(struct part *restrict p, const timebin_t ts) {
+  part_set_ts_part_struct(struct part *restrict p, const timebin_t ts) {
   p->_st2._nested1._ts = ts;
 }
+
 
 
 
@@ -460,9 +517,10 @@ static __attribute__((always_inline)) INLINE void
  * @brief get au.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_au(const struct part *restrict p) {
+  part_get_au_part_struct(const struct part *restrict p) {
   return p->_au;
 }
+
 
 /**
  * @brief get a pointer to au.
@@ -470,33 +528,36 @@ static __attribute__((always_inline)) INLINE float
  * to au. If you need read-only access to au, use part_get_const_au_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_au_p(struct part *restrict p) {
+  part_get_au_p_part_struct(struct part *restrict p) {
   return &p->_au;
 }
+
 
 /**
  * @brief get read-only access to pointer to au.
  * If you need write access to au, use part_get_au_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_au_p(const struct part *restrict p) {
+  part_get_const_au_p_part_struct(const struct part *restrict p) {
   return &p->_au;
 }
+
 
 /**
  * @brief set the value of au.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_au(struct part *restrict p, const float au) {
+  part_set_au_part_struct(struct part *restrict p, const float au) {
   p->_au = au;
 }
+
 
 
 /**
  * @brief get bu.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_bu(const struct part *restrict p) {
+  part_get_bu_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_bu;
 #else
@@ -504,26 +565,28 @@ static __attribute__((always_inline)) INLINE float
 #endif
 }
 
+
 /**
  * @brief get a pointer to bu.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to bu. If you need read-only access to bu, use part_get_const_bu_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_bu_p(struct part *restrict p) {
+  part_get_bu_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_bu;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to bu.
  * If you need write access to bu, use part_get_bu_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_bu_p(const struct part *restrict p) {
+  part_get_const_bu_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_bu;
 #else
@@ -531,22 +594,24 @@ static __attribute__((always_inline)) INLINE const float*
 #endif
 }
 
+
 /**
  * @brief set the value of bu.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_bu(struct part *restrict p, const float bu) {
+  part_set_bu_part_struct(struct part *restrict p, const float bu) {
 #ifdef DEBUG
   p->_bu = bu;
 #endif
 }
 
 
+
 /**
  * @brief get cu.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_cu(const struct part *restrict p) {
+  part_get_cu_part_struct(const struct part *restrict p) {
 #ifdef NODEBUG
   return p->_cu;
 #else
@@ -554,26 +619,28 @@ static __attribute__((always_inline)) INLINE float
 #endif
 }
 
+
 /**
  * @brief get a pointer to cu.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to cu. If you need read-only access to cu, use part_get_const_cu_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_cu_p(struct part *restrict p) {
+  part_get_cu_p_part_struct(struct part *restrict p) {
 #ifdef NODEBUG
   return &p->_cu;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to cu.
  * If you need write access to cu, use part_get_cu_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_cu_p(const struct part *restrict p) {
+  part_get_const_cu_p_part_struct(const struct part *restrict p) {
 #ifdef NODEBUG
   return &p->_cu;
 #else
@@ -581,11 +648,12 @@ static __attribute__((always_inline)) INLINE const float*
 #endif
 }
 
+
 /**
  * @brief set the value of cu.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cu(struct part *restrict p, const float cu) {
+  part_set_cu_part_struct(struct part *restrict p, const float cu) {
 #ifdef NODEBUG
   p->_cu = cu;
 #endif
@@ -594,13 +662,15 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get gpu.
  */
 static __attribute__((always_inline)) INLINE struct gp*
-  part_get_gpu(const struct part *restrict p) {
+  part_get_gpu_part_struct(const struct part *restrict p) {
   return p->_gpu;
 }
+
 
 /**
  * @brief get a pointer to gpu.
@@ -608,24 +678,27 @@ static __attribute__((always_inline)) INLINE struct gp*
  * to gpu. If you need read-only access to gpu, use part_get_const_gpu_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gp**
-  part_get_gpu_p(struct part *restrict p) {
+  part_get_gpu_p_part_struct(struct part *restrict p) {
   return &p->_gpu;
-}/**
+}
+/**
  * @brief set the value of gpu.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_gpu(struct part *restrict p,  struct gp* gpu) {
+  part_set_gpu_part_struct(struct part *restrict p,  struct gp* gpu) {
   p->_gpu = gpu;
 }
+
 
 
 /**
  * @brief get du.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_du(const struct part *restrict p) {
+  part_get_du_part_struct(const struct part *restrict p) {
   return p->_ppu._du;
 }
+
 
 /**
  * @brief get a pointer to du.
@@ -633,35 +706,39 @@ static __attribute__((always_inline)) INLINE float
  * to du. If you need read-only access to du, use part_get_const_du_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_du_p(struct part *restrict p) {
+  part_get_du_p_part_struct(struct part *restrict p) {
   return &p->_ppu._du;
 }
+
 
 /**
  * @brief get read-only access to pointer to du.
  * If you need write access to du, use part_get_du_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_du_p(const struct part *restrict p) {
+  part_get_const_du_p_part_struct(const struct part *restrict p) {
   return &p->_ppu._du;
 }
+
 
 /**
  * @brief set the value of du.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_du(struct part *restrict p, const float du) {
+  part_set_du_part_struct(struct part *restrict p, const float du) {
   p->_ppu._du = du;
 }
+
 
 
 /**
  * @brief get eu.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_eu(const struct part *restrict p) {
+  part_get_eu_part_struct(const struct part *restrict p) {
   return p->_ppu._eu;
 }
+
 
 /**
  * @brief get a pointer to eu.
@@ -669,26 +746,29 @@ static __attribute__((always_inline)) INLINE float
  * to eu. If you need read-only access to eu, use part_get_const_eu_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_eu_p(struct part *restrict p) {
+  part_get_eu_p_part_struct(struct part *restrict p) {
   return &p->_ppu._eu;
 }
+
 
 /**
  * @brief get read-only access to pointer to eu.
  * If you need write access to eu, use part_get_eu_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_eu_p(const struct part *restrict p) {
+  part_get_const_eu_p_part_struct(const struct part *restrict p) {
   return &p->_ppu._eu;
 }
+
 
 /**
  * @brief set the value of eu.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_eu(struct part *restrict p, const float eu) {
+  part_set_eu_part_struct(struct part *restrict p, const float eu) {
   p->_ppu._eu = eu;
 }
+
 
 
 
@@ -699,7 +779,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get a2.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_a2(const struct part *restrict p) {
+  part_get_a2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -711,13 +791,14 @@ static __attribute__((always_inline)) INLINE float
   return part2_s->_st3._a2;
 }
 
+
 /**
  * @brief get a pointer to a2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to a2. If you need read-only access to a2, use part_get_const_a2_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_a2_p(struct part *restrict p) {
+  part_get_a2_p_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -729,12 +810,13 @@ static __attribute__((always_inline)) INLINE float*
   return &part2_s->_st3._a2;
 }
 
+
 /**
  * @brief get read-only access to pointer to a2.
  * If you need write access to a2, use part_get_a2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_a2_p(const struct part *restrict p) {
+  part_get_const_a2_p_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -746,11 +828,12 @@ static __attribute__((always_inline)) INLINE const float*
   return &part2_s->_st3._a2;
 }
 
+
 /**
  * @brief set the value of a2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_a2(struct part *restrict p, const float a2) {
+  part_set_a2_part_struct(struct part *restrict p, const float a2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -763,15 +846,16 @@ static __attribute__((always_inline)) INLINE void
 }
 
 
+
 /**
  * @brief get b2
  * for read and write access. For read-only access, use
  * part_get_const_b2() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_b2(struct part *restrict p) {
+  part_get_b2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -785,7 +869,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get b2 for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_b2(const struct part *restrict p) {
+  part_get_const_b2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -801,7 +885,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get b2 by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_b2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_b2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -810,7 +894,7 @@ static __attribute__((always_inline)) INLINE float
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_st3._b2[ind];
+  return part2_s->_st3._b2[i];
 }
 
 /**
@@ -818,7 +902,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_b2(struct part *restrict p, const float b2[3]) {
+  part_set_b2_part_struct(struct part *restrict p, const float b2[3]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -836,7 +920,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of b2 by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_b2_ind(struct part *restrict p, const size_t i, const float b2) {
+  part_set_b2_ind_part_struct(struct part *restrict p, const int i, const float b2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -844,7 +928,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_st3._b2[i] = b2;
 }
 
@@ -853,7 +937,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get c2.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_c2(const struct part *restrict p) {
+  part_get_c2_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -869,13 +953,14 @@ static __attribute__((always_inline)) INLINE long long
 #endif
 }
 
+
 /**
  * @brief get a pointer to c2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to c2. If you need read-only access to c2, use part_get_const_c2_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_c2_p(struct part *restrict p) {
+  part_get_c2_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -891,12 +976,13 @@ static __attribute__((always_inline)) INLINE long long*
 #endif
 }
 
+
 /**
  * @brief get read-only access to pointer to c2.
  * If you need write access to c2, use part_get_c2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_c2_p(const struct part *restrict p) {
+  part_get_const_c2_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -912,11 +998,12 @@ static __attribute__((always_inline)) INLINE const long long*
 #endif
 }
 
+
 /**
  * @brief set the value of c2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_c2(struct part *restrict p, const long long c2) {
+  part_set_c2_part_struct(struct part *restrict p, const long long c2) {
 #ifdef DEBUG
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -933,11 +1020,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get d2.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_d2(const struct part *restrict p) {
+  part_get_d2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -949,13 +1037,14 @@ static __attribute__((always_inline)) INLINE double
   return part2_s->_st4._d2;
 }
 
+
 /**
  * @brief get a pointer to d2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to d2. If you need read-only access to d2, use part_get_const_d2_p() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_d2_p(struct part *restrict p) {
+  part_get_d2_p_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -967,12 +1056,13 @@ static __attribute__((always_inline)) INLINE double*
   return &part2_s->_st4._d2;
 }
 
+
 /**
  * @brief get read-only access to pointer to d2.
  * If you need write access to d2, use part_get_d2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_d2_p(const struct part *restrict p) {
+  part_get_const_d2_p_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -984,11 +1074,12 @@ static __attribute__((always_inline)) INLINE const double*
   return &part2_s->_st4._d2;
 }
 
+
 /**
  * @brief set the value of d2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_d2(struct part *restrict p, const double d2) {
+  part_set_d2_part_struct(struct part *restrict p, const double d2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1001,11 +1092,12 @@ static __attribute__((always_inline)) INLINE void
 }
 
 
+
 /**
  * @brief get gps2.
  */
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_gps2(const struct part *restrict p) {
+  part_get_gps2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1017,13 +1109,14 @@ static __attribute__((always_inline)) INLINE struct gpart*
   return part2_s->_st4._nested12._gps2;
 }
 
+
 /**
  * @brief get a pointer to gps2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to gps2. If you need read-only access to gps2, use part_get_const_gps2_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_gps2_p(struct part *restrict p) {
+  part_get_gps2_p_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1033,11 +1126,12 @@ static __attribute__((always_inline)) INLINE struct gpart**
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
   return &part2_s->_st4._nested12._gps2;
-}/**
+}
+/**
  * @brief set the value of gps2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_gps2(struct part *restrict p,  struct gpart* gps2) {
+  part_set_gps2_part_struct(struct part *restrict p,  struct gpart* gps2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1050,11 +1144,12 @@ static __attribute__((always_inline)) INLINE void
 }
 
 
+
 /**
  * @brief get ts2.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_ts2(const struct part *restrict p) {
+  part_get_ts2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1066,13 +1161,14 @@ static __attribute__((always_inline)) INLINE timebin_t
   return part2_s->_st4._nested12._ts2;
 }
 
+
 /**
  * @brief get a pointer to ts2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to ts2. If you need read-only access to ts2, use part_get_const_ts2_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_ts2_p(struct part *restrict p) {
+  part_get_ts2_p_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1084,12 +1180,13 @@ static __attribute__((always_inline)) INLINE timebin_t*
   return &part2_s->_st4._nested12._ts2;
 }
 
+
 /**
  * @brief get read-only access to pointer to ts2.
  * If you need write access to ts2, use part_get_ts2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_ts2_p(const struct part *restrict p) {
+  part_get_const_ts2_p_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1101,11 +1198,12 @@ static __attribute__((always_inline)) INLINE const timebin_t*
   return &part2_s->_st4._nested12._ts2;
 }
 
+
 /**
  * @brief set the value of ts2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_ts2(struct part *restrict p, const timebin_t ts2) {
+  part_set_ts2_part_struct(struct part *restrict p, const timebin_t ts2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1120,11 +1218,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get au2.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_au2(const struct part *restrict p) {
+  part_get_au2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1136,13 +1235,14 @@ static __attribute__((always_inline)) INLINE float
   return part2_s->_au2;
 }
 
+
 /**
  * @brief get a pointer to au2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to au2. If you need read-only access to au2, use part_get_const_au2_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_au2_p(struct part *restrict p) {
+  part_get_au2_p_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1154,12 +1254,13 @@ static __attribute__((always_inline)) INLINE float*
   return &part2_s->_au2;
 }
 
+
 /**
  * @brief get read-only access to pointer to au2.
  * If you need write access to au2, use part_get_au2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_au2_p(const struct part *restrict p) {
+  part_get_const_au2_p_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1171,11 +1272,12 @@ static __attribute__((always_inline)) INLINE const float*
   return &part2_s->_au2;
 }
 
+
 /**
  * @brief set the value of au2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_au2(struct part *restrict p, const float au2) {
+  part_set_au2_part_struct(struct part *restrict p, const float au2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1188,11 +1290,12 @@ static __attribute__((always_inline)) INLINE void
 }
 
 
+
 /**
  * @brief get bu2.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_bu2(const struct part *restrict p) {
+  part_get_bu2_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1208,13 +1311,14 @@ static __attribute__((always_inline)) INLINE float
 #endif
 }
 
+
 /**
  * @brief get a pointer to bu2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to bu2. If you need read-only access to bu2, use part_get_const_bu2_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_bu2_p(struct part *restrict p) {
+  part_get_bu2_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1230,12 +1334,13 @@ static __attribute__((always_inline)) INLINE float*
 #endif
 }
 
+
 /**
  * @brief get read-only access to pointer to bu2.
  * If you need write access to bu2, use part_get_bu2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_bu2_p(const struct part *restrict p) {
+  part_get_const_bu2_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1251,11 +1356,12 @@ static __attribute__((always_inline)) INLINE const float*
 #endif
 }
 
+
 /**
  * @brief set the value of bu2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_bu2(struct part *restrict p, const float bu2) {
+  part_set_bu2_part_struct(struct part *restrict p, const float bu2) {
 #ifdef DEBUG
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1270,11 +1376,12 @@ static __attribute__((always_inline)) INLINE void
 }
 
 
+
 /**
  * @brief get cu2.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_cu2(const struct part *restrict p) {
+  part_get_cu2_part_struct(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1290,13 +1397,14 @@ static __attribute__((always_inline)) INLINE float
 #endif
 }
 
+
 /**
  * @brief get a pointer to cu2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to cu2. If you need read-only access to cu2, use part_get_const_cu2_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_cu2_p(struct part *restrict p) {
+  part_get_cu2_p_part_struct(struct part *restrict p) {
 #ifdef NODEBUG
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1312,12 +1420,13 @@ static __attribute__((always_inline)) INLINE float*
 #endif
 }
 
+
 /**
  * @brief get read-only access to pointer to cu2.
  * If you need write access to cu2, use part_get_cu2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_cu2_p(const struct part *restrict p) {
+  part_get_const_cu2_p_part_struct(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1333,11 +1442,12 @@ static __attribute__((always_inline)) INLINE const float*
 #endif
 }
 
+
 /**
  * @brief set the value of cu2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cu2(struct part *restrict p, const float cu2) {
+  part_set_cu2_part_struct(struct part *restrict p, const float cu2) {
 #ifdef NODEBUG
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1354,11 +1464,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get gpu2.
  */
 static __attribute__((always_inline)) INLINE struct gp*
-  part_get_gpu2(const struct part *restrict p) {
+  part_get_gpu2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1370,13 +1481,14 @@ static __attribute__((always_inline)) INLINE struct gp*
   return part2_s->_gpu2;
 }
 
+
 /**
  * @brief get a pointer to gpu2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to gpu2. If you need read-only access to gpu2, use part_get_const_gpu2_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gp**
-  part_get_gpu2_p(struct part *restrict p) {
+  part_get_gpu2_p_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1386,11 +1498,12 @@ static __attribute__((always_inline)) INLINE struct gp**
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
   return &part2_s->_gpu2;
-}/**
+}
+/**
  * @brief set the value of gpu2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_gpu2(struct part *restrict p,  struct gp* gpu2) {
+  part_set_gpu2_part_struct(struct part *restrict p,  struct gp* gpu2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1403,11 +1516,12 @@ static __attribute__((always_inline)) INLINE void
 }
 
 
+
 /**
  * @brief get du2.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_du2(const struct part *restrict p) {
+  part_get_du2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1419,13 +1533,14 @@ static __attribute__((always_inline)) INLINE float
   return part2_s->_ppu2._du2;
 }
 
+
 /**
  * @brief get a pointer to du2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to du2. If you need read-only access to du2, use part_get_const_du2_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_du2_p(struct part *restrict p) {
+  part_get_du2_p_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1437,12 +1552,13 @@ static __attribute__((always_inline)) INLINE float*
   return &part2_s->_ppu2._du2;
 }
 
+
 /**
  * @brief get read-only access to pointer to du2.
  * If you need write access to du2, use part_get_du2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_du2_p(const struct part *restrict p) {
+  part_get_const_du2_p_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1454,11 +1570,12 @@ static __attribute__((always_inline)) INLINE const float*
   return &part2_s->_ppu2._du2;
 }
 
+
 /**
  * @brief set the value of du2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_du2(struct part *restrict p, const float du2) {
+  part_set_du2_part_struct(struct part *restrict p, const float du2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1471,11 +1588,12 @@ static __attribute__((always_inline)) INLINE void
 }
 
 
+
 /**
  * @brief get eu2.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_eu2(const struct part *restrict p) {
+  part_get_eu2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1487,13 +1605,14 @@ static __attribute__((always_inline)) INLINE float
   return part2_s->_ppu2._eu2;
 }
 
+
 /**
  * @brief get a pointer to eu2.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to eu2. If you need read-only access to eu2, use part_get_const_eu2_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_eu2_p(struct part *restrict p) {
+  part_get_eu2_p_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1505,12 +1624,13 @@ static __attribute__((always_inline)) INLINE float*
   return &part2_s->_ppu2._eu2;
 }
 
+
 /**
  * @brief get read-only access to pointer to eu2.
  * If you need write access to eu2, use part_get_eu2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_eu2_p(const struct part *restrict p) {
+  part_get_const_eu2_p_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1522,11 +1642,12 @@ static __attribute__((always_inline)) INLINE const float*
   return &part2_s->_ppu2._eu2;
 }
 
+
 /**
  * @brief set the value of eu2.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_eu2(struct part *restrict p, const float eu2) {
+  part_set_eu2_part_struct(struct part *restrict p, const float eu2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1537,6 +1658,7 @@ static __attribute__((always_inline)) INLINE void
 #endif
   part2_s->_ppu2._eu2 = eu2;
 }
+
 
 
 

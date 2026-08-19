@@ -150,11 +150,11 @@ if args.equal_axis_limits:
     raise NotImplementedError()
 
 if srcdir.endswith("gn003") or srcdir.endswith("gn003/"):
-    NTHREADS=[1, 9, 18, 36, 72]
+    NTHREADS = [1, 9, 18, 36, 72]
 elif srcdir.endswith("dine2") or srcdir.endswith("dine2/"):
-    NTHREADS=[4, 8, 16, 32, 64]
+    NTHREADS = [4, 8, 16, 32, 64]
 elif srcdir.endswith("mad06") or srcdir.endswith("mad06/"):
-    NTHREADS=[4, 8, 16, 32, 64, 128]
+    NTHREADS = [4, 8, 16, 32, 64, 128]
 
 if args.local_hp:
     NTHREADS = [4]
@@ -251,9 +251,7 @@ if __name__ == "__main__":
             normalisation = result_data[aos_ind].data_dict
 
             # Unpack result data by packing operation type
-            dens_pack = np.array(
-                [res.data_dict["pack/density"] for res in result_data]
-            )
+            dens_pack = np.array([res.data_dict["pack/density"] for res in result_data])
             dens_unpack = np.array(
                 [res.data_dict["unpack/density"] for res in result_data]
             )
@@ -263,9 +261,7 @@ if __name__ == "__main__":
             grad_unpack = np.array(
                 [res.data_dict["unpack/gradient"] for res in result_data]
             )
-            forc_pack = np.array(
-                [res.data_dict["pack/force"] for res in result_data]
-            )
+            forc_pack = np.array([res.data_dict["pack/force"] for res in result_data])
             forc_unpack = np.array(
                 [res.data_dict["unpack/force"] for res in result_data]
             )
@@ -279,8 +275,9 @@ if __name__ == "__main__":
                 forc_unpack /= normalisation["unpack/force"]
 
             label = (
-                    experiment + " " +
-                PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
+                experiment
+                + " "
+                + PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
                 + " "
                 + LOOP_SPLIT_LABELS[LOOP_SPLITS.index(loop_split)]
                 + variant_label_suffix
@@ -289,24 +286,12 @@ if __name__ == "__main__":
                 + " threads"
             )
 
-            ax1.plot(
-                layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax2.plot(
-                layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax3.plot(
-                layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax4.plot(
-                layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax5.plot(
-                layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax6.plot(
-                layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
+            ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax4.plot(layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs)
+            ax5.plot(layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs)
+            ax6.plot(layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs)
 
     #  if mintime < 200.0:
     #      mintime = 0.0
@@ -315,7 +300,13 @@ if __name__ == "__main__":
     for ax in fig.axes:
         ax.set_xlabel("particle data layouts")
         #  ax.tick_params("x", rotation=45)
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid()
         #  ax.legend()
         if args.equal_axis_limits:
@@ -324,9 +315,7 @@ if __name__ == "__main__":
     # leftmost axes
     for ax in [ax1, ax4]:
         if normalise:
-            ax.set_ylabel(
-                r"$t / t_{\mathrm{aos}}$"
-            )
+            ax.set_ylabel(r"$t / t_{\mathrm{aos}}$")
         else:
             ax.set_ylabel("Timing [ms]")
 

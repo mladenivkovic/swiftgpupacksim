@@ -14,7 +14,8 @@ function COMPILE_AND_RUN() {
   if [[ -z "${CC}" ]]; then
     CC=gcc
   fi
-  "$CC" test_header_output.c -o test_header_output.o -Wall -Werror
+  "$CC" -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror
+  echo TODO MLADEN: THIS SHOULD ALSO WORK WITHOUT -DUSE_PART_STRUCT_ACCESSORS
   ./test_header_output.o
   rm -f ./test_header_output.o
 }
@@ -27,60 +28,34 @@ function DIFF(){
 }
 
 
-echo "running test_data_types"
-python3 ../../py/generate_hydro_part.py --test ./input/test_data_types.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_data_types.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
 
+for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
+  for testcase in \
+    "test_data_types" \
+    "test_arrays" \
+    "test_ifdefs" \
+    "test_struct" \
+    "test_union" \
+    "test_split_struct" \
+    "test_split_struct_nopart" \
+    "test_split_struct_arrays" \
+    "test_split_struct_structs_and_unions" \
+  ; do
 
-echo "running test_arrays"
-python3 ../../py/generate_hydro_part.py --test ./input/test_arrays.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_arrays.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+    echo "==============================================="
+    echo "running $testcase $flag"
+    echo "==============================================="
 
+    python3 ../../py/generate_hydro_part.py --test "$flag" ./input/"$testcase".yml
+    COMPILE_AND_RUN
 
-echo "running test_ifdefs"
-python3 ../../py/generate_hydro_part.py --test ./input/test_ifdefs.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_ifdefs.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+    if [ "$flag" == "--part-struct-accessor" ]; then
+      # I only keep the outputs for part struct accessors for comparison for now...
+      DIFF hydro_part.h output/"$testcase".h
+    fi
 
-echo "running test_struct"
-python3 ../../py/generate_hydro_part.py --test ./input/test_struct.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_struct.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-
-echo "running test_union"
-python3 ../../py/generate_hydro_part.py --test ./input/test_union.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_union.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-
-echo "running test_split_struct"
-python3 ../../py/generate_hydro_part.py --test ./input/test_split_struct.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_split_struct.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-
-echo "running test_split_struct_nopart"
-python3 ../../py/generate_hydro_part.py --test ./input/test_split_struct_nopart.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_split_struct_nopart.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-
-echo "running test_split_struct_arrays"
-python3 ../../py/generate_hydro_part.py --test ./input/test_split_struct_arrays.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_split_struct_arrays.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-
-echo "running test_split_struct_structs_and_unions"
-python3 ../../py/generate_hydro_part.py --test ./input/test_split_struct_structs_and_unions.yml
-COMPILE_AND_RUN
-DIFF hydro_part.h output/test_split_struct_structs_and_unions.h
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+    rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+  done
+done
 
 echo "Python tests passed."

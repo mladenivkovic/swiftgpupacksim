@@ -25,7 +25,7 @@ def init_jinja_env(template_dir: str = _default_template_dir) -> jinja2.Environm
     return env
 
 
-def jinja_generate_hydro_part_h(
+def jinja_generate_hydro_part_dot_h(
     part_structs_d: dict,
     metadata_d: dict,
     template_dir: str = _default_template_dir,
@@ -106,7 +106,7 @@ def jinja_generate_hydro_part_h(
     d["MANUAL_STRUCT_ALIGN"] = manual_struct_align
     d["GLOBAL_VAR_ACCESSORS"] = global_var_accessors
     d["EXPLICIT_VAR_ACCESSORS"] = explicit_var_accessors
-    d["PART_STRUCT_ACCESORS"] = part_struct_accessors
+    d["PART_STRUCT_ACCESSORS"] = part_struct_accessors
 
     d["AUTHORS"] = metadata_d["authors"]
     d["FLAVOUR_NAME"] = metadata_d["flavour"].upper()
@@ -116,7 +116,7 @@ def jinja_generate_hydro_part_h(
     return header_template
 
 
-def jinja_generate_parts_h(
+def jinja_generate_parts_dot_h(
     part_structs_d: dict,
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
@@ -174,7 +174,7 @@ def jinja_generate_parts_h(
     return header_template
 
 
-def jinja_generate_hydro_part_arrays_struct_h(
+def jinja_generate_hydro_part_arrays_struct_dot_h(
     part_structs_d: dict,
     template_dir: str = _default_template_dir,
     swift_header: bool = True,
@@ -227,7 +227,7 @@ def jinja_generate_hydro_part_arrays_struct_h(
     return header_template
 
 
-def jinja_generate_hydro_part_arrays_flush_h(
+def jinja_generate_hydro_part_arrays_flush_dot_h(
     part_structs_d: dict,
     template_dir: str = _default_template_dir,
     swift_header: bool = True,

@@ -2,11 +2,21 @@
 #ifndef SWIFT_HYDRO_PART_TEST_H
 #define SWIFT_HYDRO_PART_TEST_H
 
+
+#ifndef USE_PART_STRUCT_ACCESSORS
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#endif
+
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "hydro_part_arrays_struct.h"
+
+#ifndef MY_ARRAY_SIZE
+#define MY_ARRAY_SIZE 4
+#endif
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
@@ -123,7 +133,7 @@ struct part {
  * @brief get my_int, my integer.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int(const struct part *restrict p) {
+  part_get_my_int_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_int;
 #else
@@ -131,19 +141,21 @@ static __attribute__((always_inline)) INLINE int
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_int, my integer.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_int. If you need read-only access to my_int, use part_get_const_my_int_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int_p(struct part *restrict p) {
+  part_get_my_int_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_int;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to my_int,
@@ -151,7 +163,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to my_int, use part_get_my_int_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int_p(const struct part *restrict p) {
+  part_get_const_my_int_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_int;
 #else
@@ -159,11 +171,12 @@ static __attribute__((always_inline)) INLINE const int*
 #endif
 }
 
+
 /**
  * @brief set the value of my_int, my integer.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int(struct part *restrict p, const int my_int) {
+  part_set_my_int_part_struct(struct part *restrict p, const int my_int) {
 #ifdef DEBUG
   p->_my_int = my_int;
 #endif
@@ -172,11 +185,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get my_long, my long.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long(const struct part *restrict p) {
+  part_get_my_long_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_long;
 #else
@@ -184,19 +198,21 @@ static __attribute__((always_inline)) INLINE long
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_long, my long.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_long. If you need read-only access to my_long, use part_get_const_my_long_p() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long_p(struct part *restrict p) {
+  part_get_my_long_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_long;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to my_long,
@@ -204,7 +220,7 @@ static __attribute__((always_inline)) INLINE long*
  * If you need write access to my_long, use part_get_my_long_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long_p(const struct part *restrict p) {
+  part_get_const_my_long_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_long;
 #else
@@ -212,11 +228,12 @@ static __attribute__((always_inline)) INLINE const long*
 #endif
 }
 
+
 /**
  * @brief set the value of my_long, my long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long(struct part *restrict p, const long my_long) {
+  part_set_my_long_part_struct(struct part *restrict p, const long my_long) {
 #ifdef DEBUG
   p->_my_long = my_long;
 #endif
@@ -225,11 +242,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get my_longlong, my long long.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong(const struct part *restrict p) {
+  part_get_my_longlong_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_longlong;
 #else
@@ -237,19 +255,21 @@ static __attribute__((always_inline)) INLINE long long
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_longlong, my long long.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_longlong. If you need read-only access to my_longlong, use part_get_const_my_longlong_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong_p(struct part *restrict p) {
+  part_get_my_longlong_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_longlong;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to my_longlong,
@@ -257,7 +277,7 @@ static __attribute__((always_inline)) INLINE long long*
  * If you need write access to my_longlong, use part_get_my_longlong_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong_p(const struct part *restrict p) {
+  part_get_const_my_longlong_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_longlong;
 #else
@@ -265,11 +285,12 @@ static __attribute__((always_inline)) INLINE const long long*
 #endif
 }
 
+
 /**
  * @brief set the value of my_longlong, my long long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong(struct part *restrict p, const long long my_longlong) {
+  part_set_my_longlong_part_struct(struct part *restrict p, const long long my_longlong) {
 #ifdef DEBUG
   p->_my_longlong = my_longlong;
 #endif
@@ -278,11 +299,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get my_float, my float.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float(const struct part *restrict p) {
+  part_get_my_float_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_float;
 #else
@@ -290,19 +312,21 @@ static __attribute__((always_inline)) INLINE float
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_float, my float.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_float. If you need read-only access to my_float, use part_get_const_my_float_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float_p(struct part *restrict p) {
+  part_get_my_float_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_float;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to my_float,
@@ -310,7 +334,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to my_float, use part_get_my_float_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float_p(const struct part *restrict p) {
+  part_get_const_my_float_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_float;
 #else
@@ -318,11 +342,12 @@ static __attribute__((always_inline)) INLINE const float*
 #endif
 }
 
+
 /**
  * @brief set the value of my_float, my float.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float(struct part *restrict p, const float my_float) {
+  part_set_my_float_part_struct(struct part *restrict p, const float my_float) {
 #ifdef DEBUG
   p->_my_float = my_float;
 #endif
@@ -331,11 +356,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get my_dble, my double.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble(const struct part *restrict p) {
+  part_get_my_dble_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_dble;
 #else
@@ -343,19 +369,21 @@ static __attribute__((always_inline)) INLINE double
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_dble, my double.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_dble. If you need read-only access to my_dble, use part_get_const_my_dble_p() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble_p(struct part *restrict p) {
+  part_get_my_dble_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_dble;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to my_dble,
@@ -363,7 +391,7 @@ static __attribute__((always_inline)) INLINE double*
  * If you need write access to my_dble, use part_get_my_dble_p() instead.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble_p(const struct part *restrict p) {
+  part_get_const_my_dble_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_dble;
 #else
@@ -371,11 +399,12 @@ static __attribute__((always_inline)) INLINE const double*
 #endif
 }
 
+
 /**
  * @brief set the value of my_dble, my double.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble(struct part *restrict p, const double my_dble) {
+  part_set_my_dble_part_struct(struct part *restrict p, const double my_dble) {
 #ifdef DEBUG
   p->_my_dble = my_dble;
 #endif
@@ -384,11 +413,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get my_char, my_char.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char(const struct part *restrict p) {
+  part_get_my_char_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_char;
 #else
@@ -396,19 +426,21 @@ static __attribute__((always_inline)) INLINE char
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_char, my_char.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_char. If you need read-only access to my_char, use part_get_const_my_char_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char_p(struct part *restrict p) {
+  part_get_my_char_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_char;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to my_char,
@@ -416,7 +448,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to my_char, use part_get_my_char_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char_p(const struct part *restrict p) {
+  part_get_const_my_char_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_char;
 #else
@@ -424,11 +456,12 @@ static __attribute__((always_inline)) INLINE const char*
 #endif
 }
 
+
 /**
  * @brief set the value of my_char, my_char.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char(struct part *restrict p, const char my_char) {
+  part_set_my_char_part_struct(struct part *restrict p, const char my_char) {
 #ifdef DEBUG
   p->_my_char = my_char;
 #endif
@@ -437,11 +470,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get my_integertime, my integertime.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime(const struct part *restrict p) {
+  part_get_my_integertime_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_integertime;
 #else
@@ -449,19 +483,21 @@ static __attribute__((always_inline)) INLINE integertime_t
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_integertime, my integertime.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_integertime. If you need read-only access to my_integertime, use part_get_const_my_integertime_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime_p(struct part *restrict p) {
+  part_get_my_integertime_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_integertime;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to my_integertime,
@@ -469,7 +505,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to my_integertime, use part_get_my_integertime_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime_p(const struct part *restrict p) {
+  part_get_const_my_integertime_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_integertime;
 #else
@@ -477,11 +513,12 @@ static __attribute__((always_inline)) INLINE const integertime_t*
 #endif
 }
 
+
 /**
  * @brief set the value of my_integertime, my integertime.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime(struct part *restrict p, const integertime_t my_integertime) {
+  part_set_my_integertime_part_struct(struct part *restrict p, const integertime_t my_integertime) {
 #ifdef DEBUG
   p->_my_integertime = my_integertime;
 #endif
@@ -490,11 +527,12 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get my_timebin, my timebin.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin(const struct part *restrict p) {
+  part_get_my_timebin_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_timebin;
 #else
@@ -502,19 +540,21 @@ static __attribute__((always_inline)) INLINE timebin_t
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_timebin, my timebin.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_timebin. If you need read-only access to my_timebin, use part_get_const_my_timebin_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin_p(struct part *restrict p) {
+  part_get_my_timebin_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_timebin;
 #else
   return NULL;
 #endif
 }
+
 
 /**
  * @brief get read-only access to pointer to my_timebin,
@@ -522,7 +562,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * If you need write access to my_timebin, use part_get_my_timebin_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin_p(const struct part *restrict p) {
+  part_get_const_my_timebin_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_timebin;
 #else
@@ -530,11 +570,12 @@ static __attribute__((always_inline)) INLINE const timebin_t*
 #endif
 }
 
+
 /**
  * @brief set the value of my_timebin, my timebin.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin(struct part *restrict p, const timebin_t my_timebin) {
+  part_set_my_timebin_part_struct(struct part *restrict p, const timebin_t my_timebin) {
 #ifdef DEBUG
   p->_my_timebin = my_timebin;
 #endif
@@ -543,39 +584,36 @@ static __attribute__((always_inline)) INLINE void
 
 
 
+
 /**
  * @brief get my_pointer_struct, pointer to externally defined struct.
  */
-static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_my_pointer_struct(const struct part *restrict p) {
 #ifdef DEBUG
+static __attribute__((always_inline)) INLINE struct gpart*
+  part_get_my_pointer_struct_part_struct(const struct part *restrict p) {
   return p->_my_pointer_struct;
-#else
-  return NULL;
-#endif
 }
+#endif
 
 /**
  * @brief get a pointer to my_pointer_struct, pointer to externally defined struct.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_pointer_struct. If you need read-only access to my_pointer_struct, use part_get_const_my_pointer_struct_p() instead.
  */
-static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_my_pointer_struct_p(struct part *restrict p) {
 #ifdef DEBUG
+static __attribute__((always_inline)) INLINE struct gpart**
+  part_get_my_pointer_struct_p_part_struct(struct part *restrict p) {
   return &p->_my_pointer_struct;
-#else
-  return NULL;
-#endif
-}/**
+}
+#endif/**
  * @brief set the value of my_pointer_struct, pointer to externally defined struct.
  */
-static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer_struct(struct part *restrict p,  struct gpart* my_pointer_struct) {
 #ifdef DEBUG
+static __attribute__((always_inline)) INLINE void
+  part_set_my_pointer_struct_part_struct(struct part *restrict p,  struct gpart* my_pointer_struct) {
   p->_my_pointer_struct = my_pointer_struct;
-#endif
 }
+#endif
 
 
 
@@ -584,7 +622,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_pointer, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_pointer(const struct part *restrict p) {
+  part_get_my_pointer_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_pointer;
 #else
@@ -592,27 +630,30 @@ static __attribute__((always_inline)) INLINE int*
 #endif
 }
 
+
 /**
  * @brief get a pointer to my_pointer, pointer to integer array.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to my_pointer. If you need read-only access to my_pointer, use part_get_const_my_pointer_p() instead.
  */
 static __attribute__((always_inline)) INLINE int**
-  part_get_my_pointer_p(struct part *restrict p) {
+  part_get_my_pointer_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return &p->_my_pointer;
 #else
   return NULL;
 #endif
-}/**
+}
+/**
  * @brief set the value of my_pointer, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer(struct part *restrict p,  int* my_pointer) {
+  part_set_my_pointer_part_struct(struct part *restrict p,  int* my_pointer) {
 #ifdef DEBUG
   p->_my_pointer = my_pointer;
 #endif
 }
+
 
 
 
@@ -623,7 +664,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_int_arr() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int_arr(struct part *restrict p) {
+  part_get_my_int_arr_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_int_arr;
 #else
@@ -635,7 +676,7 @@ static __attribute__((always_inline)) INLINE int*
  * @brief get my_int_arr, my integer, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int_arr(const struct part *restrict p) {
+  part_get_const_my_int_arr_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_int_arr;
 #else
@@ -647,9 +688,9 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief get my_int_arr, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int_arr_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_int_arr_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
-  return p->_my_int_arr[ind];
+  return p->_my_int_arr[i];
 #else
   return INT_MAX;
 #endif
@@ -660,7 +701,7 @@ static __attribute__((always_inline)) INLINE int
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr(struct part *restrict p, const int my_int_arr[4]) {
+  part_set_my_int_arr_part_struct(struct part *restrict p, const int my_int_arr[4]) {
 #ifdef DEBUG
   p->_my_int_arr[0] = my_int_arr[0];
   p->_my_int_arr[1] = my_int_arr[1];
@@ -673,7 +714,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_int_arr, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr_ind(struct part *restrict p, const size_t i, const int my_int_arr) {
+  part_set_my_int_arr_ind_part_struct(struct part *restrict p, const int i, const int my_int_arr) {
 #ifdef DEBUG
   p->_my_int_arr[i] = my_int_arr;
 #endif
@@ -688,7 +729,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_long_arr() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long_arr(struct part *restrict p) {
+  part_get_my_long_arr_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_long_arr;
 #else
@@ -700,7 +741,7 @@ static __attribute__((always_inline)) INLINE long*
  * @brief get my_long_arr, my long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long_arr(const struct part *restrict p) {
+  part_get_const_my_long_arr_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_long_arr;
 #else
@@ -712,9 +753,9 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief get my_long_arr, my long, by index.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long_arr_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_long_arr_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
-  return p->_my_long_arr[ind];
+  return p->_my_long_arr[i];
 #else
   return LONG_MAX;
 #endif
@@ -725,7 +766,7 @@ static __attribute__((always_inline)) INLINE long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr(struct part *restrict p, const long my_long_arr[4]) {
+  part_set_my_long_arr_part_struct(struct part *restrict p, const long my_long_arr[4]) {
 #ifdef DEBUG
   p->_my_long_arr[0] = my_long_arr[0];
   p->_my_long_arr[1] = my_long_arr[1];
@@ -738,7 +779,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_long_arr, my long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr_ind(struct part *restrict p, const size_t i, const long my_long_arr) {
+  part_set_my_long_arr_ind_part_struct(struct part *restrict p, const int i, const long my_long_arr) {
 #ifdef DEBUG
   p->_my_long_arr[i] = my_long_arr;
 #endif
@@ -753,7 +794,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_longlong_arr() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong_arr(struct part *restrict p) {
+  part_get_my_longlong_arr_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_longlong_arr;
 #else
@@ -765,7 +806,7 @@ static __attribute__((always_inline)) INLINE long long*
  * @brief get my_longlong_arr, my long long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong_arr(const struct part *restrict p) {
+  part_get_const_my_longlong_arr_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_longlong_arr;
 #else
@@ -777,9 +818,9 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief get my_longlong_arr, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong_arr_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_longlong_arr_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
-  return p->_my_longlong_arr[ind];
+  return p->_my_longlong_arr[i];
 #else
   return LLONG_MAX;
 #endif
@@ -790,7 +831,7 @@ static __attribute__((always_inline)) INLINE long long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr(struct part *restrict p, const long long my_longlong_arr[4]) {
+  part_set_my_longlong_arr_part_struct(struct part *restrict p, const long long my_longlong_arr[4]) {
 #ifdef DEBUG
   p->_my_longlong_arr[0] = my_longlong_arr[0];
   p->_my_longlong_arr[1] = my_longlong_arr[1];
@@ -803,7 +844,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_longlong_arr, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr_ind(struct part *restrict p, const size_t i, const long long my_longlong_arr) {
+  part_set_my_longlong_arr_ind_part_struct(struct part *restrict p, const int i, const long long my_longlong_arr) {
 #ifdef DEBUG
   p->_my_longlong_arr[i] = my_longlong_arr;
 #endif
@@ -818,7 +859,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_float_arr() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float_arr(struct part *restrict p) {
+  part_get_my_float_arr_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_float_arr;
 #else
@@ -830,7 +871,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get my_float_arr, my float, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float_arr(const struct part *restrict p) {
+  part_get_const_my_float_arr_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_float_arr;
 #else
@@ -842,9 +883,9 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get my_float_arr, my float, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float_arr_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_float_arr_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
-  return p->_my_float_arr[ind];
+  return p->_my_float_arr[i];
 #else
   return FLT_MAX;
 #endif
@@ -855,7 +896,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr(struct part *restrict p, const float my_float_arr[4]) {
+  part_set_my_float_arr_part_struct(struct part *restrict p, const float my_float_arr[4]) {
 #ifdef DEBUG
   p->_my_float_arr[0] = my_float_arr[0];
   p->_my_float_arr[1] = my_float_arr[1];
@@ -868,7 +909,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_float_arr, my float, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr_ind(struct part *restrict p, const size_t i, const float my_float_arr) {
+  part_set_my_float_arr_ind_part_struct(struct part *restrict p, const int i, const float my_float_arr) {
 #ifdef DEBUG
   p->_my_float_arr[i] = my_float_arr;
 #endif
@@ -883,7 +924,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_dble_arr() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble_arr(struct part *restrict p) {
+  part_get_my_dble_arr_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_dble_arr;
 #else
@@ -895,7 +936,7 @@ static __attribute__((always_inline)) INLINE double*
  * @brief get my_dble_arr, my double, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble_arr(const struct part *restrict p) {
+  part_get_const_my_dble_arr_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_dble_arr;
 #else
@@ -907,9 +948,9 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief get my_dble_arr, my double, by index.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble_arr_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_dble_arr_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
-  return p->_my_dble_arr[ind];
+  return p->_my_dble_arr[i];
 #else
   return DBL_MAX;
 #endif
@@ -920,7 +961,7 @@ static __attribute__((always_inline)) INLINE double
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr(struct part *restrict p, const double my_dble_arr[4]) {
+  part_set_my_dble_arr_part_struct(struct part *restrict p, const double my_dble_arr[4]) {
 #ifdef DEBUG
   p->_my_dble_arr[0] = my_dble_arr[0];
   p->_my_dble_arr[1] = my_dble_arr[1];
@@ -933,7 +974,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_dble_arr, my double, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr_ind(struct part *restrict p, const size_t i, const double my_dble_arr) {
+  part_set_my_dble_arr_ind_part_struct(struct part *restrict p, const int i, const double my_dble_arr) {
 #ifdef DEBUG
   p->_my_dble_arr[i] = my_dble_arr;
 #endif
@@ -948,7 +989,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_char_arr() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char_arr(struct part *restrict p) {
+  part_get_my_char_arr_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_char_arr;
 #else
@@ -960,7 +1001,7 @@ static __attribute__((always_inline)) INLINE char*
  * @brief get my_char_arr, my_char, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char_arr(const struct part *restrict p) {
+  part_get_const_my_char_arr_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_char_arr;
 #else
@@ -972,9 +1013,9 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief get my_char_arr, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char_arr_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_char_arr_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
-  return p->_my_char_arr[ind];
+  return p->_my_char_arr[i];
 #else
   return CHAR_MAX;
 #endif
@@ -985,7 +1026,7 @@ static __attribute__((always_inline)) INLINE char
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr(struct part *restrict p, const char my_char_arr[4]) {
+  part_set_my_char_arr_part_struct(struct part *restrict p, const char my_char_arr[4]) {
 #ifdef DEBUG
   p->_my_char_arr[0] = my_char_arr[0];
   p->_my_char_arr[1] = my_char_arr[1];
@@ -998,7 +1039,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_char_arr, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr_ind(struct part *restrict p, const size_t i, const char my_char_arr) {
+  part_set_my_char_arr_ind_part_struct(struct part *restrict p, const int i, const char my_char_arr) {
 #ifdef DEBUG
   p->_my_char_arr[i] = my_char_arr;
 #endif
@@ -1013,7 +1054,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_integertime_arr() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime_arr(struct part *restrict p) {
+  part_get_my_integertime_arr_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_integertime_arr;
 #else
@@ -1025,7 +1066,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * @brief get my_integertime_arr, my integertime, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime_arr(const struct part *restrict p) {
+  part_get_const_my_integertime_arr_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_integertime_arr;
 #else
@@ -1037,9 +1078,9 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief get my_integertime_arr, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime_arr_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_integertime_arr_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
-  return p->_my_integertime_arr[ind];
+  return p->_my_integertime_arr[i];
 #else
   return LLONG_MAX;
 #endif
@@ -1050,7 +1091,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr(struct part *restrict p, const integertime_t my_integertime_arr[4]) {
+  part_set_my_integertime_arr_part_struct(struct part *restrict p, const integertime_t my_integertime_arr[4]) {
 #ifdef DEBUG
   p->_my_integertime_arr[0] = my_integertime_arr[0];
   p->_my_integertime_arr[1] = my_integertime_arr[1];
@@ -1063,7 +1104,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_integertime_arr, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime_arr) {
+  part_set_my_integertime_arr_ind_part_struct(struct part *restrict p, const int i, const integertime_t my_integertime_arr) {
 #ifdef DEBUG
   p->_my_integertime_arr[i] = my_integertime_arr;
 #endif
@@ -1078,7 +1119,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_timebin_arr() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin_arr(struct part *restrict p) {
+  part_get_my_timebin_arr_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_timebin_arr;
 #else
@@ -1090,7 +1131,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * @brief get my_timebin_arr, my timebin, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin_arr(const struct part *restrict p) {
+  part_get_const_my_timebin_arr_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   return p->_my_timebin_arr;
 #else
@@ -1102,9 +1143,9 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief get my_timebin_arr, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin_arr_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_timebin_arr_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
-  return p->_my_timebin_arr[ind];
+  return p->_my_timebin_arr[i];
 #else
   return CHAR_MAX;
 #endif
@@ -1115,7 +1156,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr(struct part *restrict p, const timebin_t my_timebin_arr[4]) {
+  part_set_my_timebin_arr_part_struct(struct part *restrict p, const timebin_t my_timebin_arr[4]) {
 #ifdef DEBUG
   p->_my_timebin_arr[0] = my_timebin_arr[0];
   p->_my_timebin_arr[1] = my_timebin_arr[1];
@@ -1128,7 +1169,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_timebin_arr, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin_arr) {
+  part_set_my_timebin_arr_ind_part_struct(struct part *restrict p, const int i, const timebin_t my_timebin_arr) {
 #ifdef DEBUG
   p->_my_timebin_arr[i] = my_timebin_arr;
 #endif

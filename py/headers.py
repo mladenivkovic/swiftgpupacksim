@@ -2,15 +2,15 @@
 
 from parse_yaml import FieldEntry
 from templates import (
-    jinja_generate_hydro_part_h,
-    jinja_generate_parts_h,
-    jinja_generate_hydro_part_arrays_struct_h,
-    jinja_generate_hydro_part_arrays_flush_h,
+    jinja_generate_hydro_part_dot_h,
+    jinja_generate_parts_dot_h,
+    jinja_generate_hydro_part_arrays_struct_dot_h,
+    jinja_generate_hydro_part_arrays_flush_dot_h,
 )
 from utils import check_part_struct_first_in_list
 
 
-def generate_hydro_part_header(
+def generate_hydro_part_dot_h(
     part_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
@@ -109,7 +109,7 @@ def generate_hydro_part_header(
         part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations}
 
     # Now generate the file from template
-    header_file = jinja_generate_hydro_part_h(
+    header_file = jinja_generate_hydro_part_dot_h(
         part_struct_d,
         metadata_d,
         swift_header=swift_header,
@@ -124,7 +124,7 @@ def generate_hydro_part_header(
     return header_file
 
 
-def generate_parts_header(
+def generate_parts_dot_h(
     part_d: dict,
     swift_header: bool = True,
     id_checks: bool = True,
@@ -199,14 +199,14 @@ def generate_parts_header(
         print("--", part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_parts_h(
+    header_file = jinja_generate_parts_dot_h(
         part_struct_d, swift_header=swift_header, id_checks=id_checks, verbose=verbose
     )
 
     return header_file
 
 
-def generate_hydro_part_arrays_struct_header(
+def generate_hydro_part_arrays_struct_dot_h(
     part_d: dict,
     swift_header: bool = True,
     verbose: bool = False,
@@ -275,14 +275,14 @@ def generate_hydro_part_arrays_struct_header(
         print("--", part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_hydro_part_arrays_struct_h(
+    header_file = jinja_generate_hydro_part_arrays_struct_dot_h(
         part_struct_d, swift_header=swift_header, verbose=verbose
     )
 
     return header_file
 
 
-def generate_hydro_part_arrays_flush_header(
+def generate_hydro_part_arrays_flush_dot_h(
     part_d: dict,
     swift_header: bool = True,
     verbose: bool = False,
@@ -349,7 +349,7 @@ def generate_hydro_part_arrays_flush_header(
         print("--", part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_hydro_part_arrays_flush_h(
+    header_file = jinja_generate_hydro_part_arrays_flush_dot_h(
         part_struct_d, swift_header=swift_header, verbose=verbose
     )
 

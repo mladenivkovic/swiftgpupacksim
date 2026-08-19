@@ -138,7 +138,11 @@ plotkwargs = {
 
 
 PART_ACCESS = ["explicit-var", "global-var", "global-var-threadlocal"]
-PART_ACCESS_LABELS = ["explicit var access", "global var access", "threadlocal global var"]
+PART_ACCESS_LABELS = [
+    "explicit var access",
+    "global var access",
+    "threadlocal global var",
+]
 
 
 if __name__ == "__main__":
@@ -165,7 +169,6 @@ if __name__ == "__main__":
     maxtime = -1.0
     mintime = 1e32
 
-
     for e, experiment in enumerate(EXPERIMENTS):
 
         ls = linestyles[e]
@@ -173,15 +176,15 @@ if __name__ == "__main__":
         # first, grab normalisation:
         # AoS part-struct for this experiment
         fname_norm = get_result_fname(
-                    srcdir,
-                    experiment,
-                    nthreads,
-                    #  "part-struct",
-                    "explicit-var",
-                    loop_split,
-                    variant_dir_suffix,
-                    "aos",
-                )
+            srcdir,
+            experiment,
+            nthreads,
+            #  "part-struct",
+            "explicit-var",
+            loop_split,
+            variant_dir_suffix,
+            "aos",
+        )
         res = ResultData(fname_norm, verbose=False)
         normalisation = res.data_dict
 
@@ -209,11 +212,8 @@ if __name__ == "__main__":
                 maxtime = max(maxtime, res.timings.max())
                 mintime = min(mintime, res.timings.min())
 
-
             # Unpack result data by packing operation type
-            dens_pack = np.array(
-                [res.data_dict["pack/density"] for res in result_data]
-            )
+            dens_pack = np.array([res.data_dict["pack/density"] for res in result_data])
             dens_unpack = np.array(
                 [res.data_dict["unpack/density"] for res in result_data]
             )
@@ -223,9 +223,7 @@ if __name__ == "__main__":
             grad_unpack = np.array(
                 [res.data_dict["unpack/gradient"] for res in result_data]
             )
-            forc_pack = np.array(
-                [res.data_dict["pack/force"] for res in result_data]
-            )
+            forc_pack = np.array([res.data_dict["pack/force"] for res in result_data])
             forc_unpack = np.array(
                 [res.data_dict["unpack/force"] for res in result_data]
             )
@@ -239,8 +237,9 @@ if __name__ == "__main__":
                 forc_unpack /= normalisation["unpack/force"]
 
             label = (
-                    experiment + " " +
-                PART_ACCESS_LABELS[a]
+                experiment
+                + " "
+                + PART_ACCESS_LABELS[a]
                 #  + " "
                 #  + LOOP_SPLIT_LABELS[s]
                 #  + variant_label_suffix
@@ -249,15 +248,9 @@ if __name__ == "__main__":
             ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs)
             ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs)
             ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs)
-            ax4.plot(
-                layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax5.plot(
-                layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax6.plot(
-                layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
+            ax4.plot(layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs)
+            ax5.plot(layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs)
+            ax6.plot(layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs)
 
     #  if mintime < 200.0:
     #      mintime = 0.0
@@ -266,7 +259,13 @@ if __name__ == "__main__":
     for ax in fig.axes:
         #  ax.set_xlabel("particle data layouts")
         #  ax.tick_params("x", rotation=90)
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid()
         #  ax.legend()
         if args.equal_axis_limits:
@@ -275,9 +274,7 @@ if __name__ == "__main__":
     # leftmost axes
     for ax in [ax1, ax4]:
         if normalise:
-            ax.set_ylabel(
-                r"$t / t_{\mathrm{aos}}$"
-            )
+            ax.set_ylabel(r"$t / t_{\mathrm{aos}}$")
         else:
             ax.set_ylabel("Timing [ms]")
 

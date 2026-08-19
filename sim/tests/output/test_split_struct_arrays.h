@@ -2,11 +2,21 @@
 #ifndef SWIFT_HYDRO_PART_TEST_H
 #define SWIFT_HYDRO_PART_TEST_H
 
+
+#ifndef USE_PART_STRUCT_ACCESSORS
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#endif
+
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "hydro_part_arrays_struct.h"
+
+#ifndef MY_ARRAY_SIZE
+#define MY_ARRAY_SIZE 4
+#endif
 
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
@@ -26,11 +36,15 @@ struct gpart{
 
 struct part {
 
+#ifdef USE_PART_STRUCT_ACCESSORS
   /*! offset/index of particle in cell particle data array */
   size_t _cell_offset;
+#endif
 
+#ifdef USE_PART_STRUCT_ACCESSORS
   /*! pointer to particle data array struct of the cell this particle is located in */
-  struct hydro_part_arrays* _cell_part_arrays;
+  struct part_arrays* _cell_part_arrays;
+#endif
 
   /*! my integer */
   int _my_int_arr[4];
@@ -156,9 +170,14 @@ struct part3 {
  * @brief get cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE size_t
-  part_get_cell_offset(const struct part *restrict p) {
+  part_get_cell_offset_part_struct(const struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
   return p->_cell_offset;
+#else
+  return SIZE_MAX;
+#endif
 }
+
 
 /**
  * @brief get a pointer to cell_offset, offset/index of particle in cell particle data array.
@@ -166,9 +185,14 @@ static __attribute__((always_inline)) INLINE size_t
  * to cell_offset. If you need read-only access to cell_offset, use part_get_const_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE size_t*
-  part_get_cell_offset_p(struct part *restrict p) {
+  part_get_cell_offset_p_part_struct(struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
   return &p->_cell_offset;
+#else
+  return NULL;
+#endif
 }
+
 
 /**
  * @brief get read-only access to pointer to cell_offset,
@@ -176,17 +200,25 @@ static __attribute__((always_inline)) INLINE size_t*
  * If you need write access to cell_offset, use part_get_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE const size_t*
-  part_get_const_cell_offset_p(const struct part *restrict p) {
+  part_get_const_cell_offset_p_part_struct(const struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
   return &p->_cell_offset;
+#else
+  return NULL;
+#endif
 }
+
 
 /**
  * @brief set the value of cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_offset(struct part *restrict p, const size_t cell_offset) {
+  part_set_cell_offset_part_struct(struct part *restrict p, const size_t cell_offset) {
+#ifdef USE_PART_STRUCT_ACCESSORS
   p->_cell_offset = cell_offset;
+#endif
 }
+
 
 
 
@@ -194,26 +226,32 @@ static __attribute__((always_inline)) INLINE void
 /**
  * @brief get cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  */
-static __attribute__((always_inline)) INLINE struct hydro_part_arrays*
-  part_get_cell_part_arrays(const struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
+static __attribute__((always_inline)) INLINE struct part_arrays*
+  part_get_cell_part_arrays_part_struct(const struct part *restrict p) {
   return p->_cell_part_arrays;
 }
+#endif
 
 /**
  * @brief get a pointer to cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  * Use this only if you need to modify the value, i.e. if you need write access
  * to cell_part_arrays. If you need read-only access to cell_part_arrays, use part_get_const_cell_part_arrays_p() instead.
  */
-static __attribute__((always_inline)) INLINE struct hydro_part_arrays**
-  part_get_cell_part_arrays_p(struct part *restrict p) {
+#ifdef USE_PART_STRUCT_ACCESSORS
+static __attribute__((always_inline)) INLINE struct part_arrays**
+  part_get_cell_part_arrays_p_part_struct(struct part *restrict p) {
   return &p->_cell_part_arrays;
-}/**
+}
+#endif/**
  * @brief set the value of cell_part_arrays, pointer to particle data array struct of the cell this particle is located in.
  */
+#ifdef USE_PART_STRUCT_ACCESSORS
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_part_arrays(struct part *restrict p,  struct hydro_part_arrays* cell_part_arrays) {
+  part_set_cell_part_arrays_part_struct(struct part *restrict p,  struct part_arrays* cell_part_arrays) {
   p->_cell_part_arrays = cell_part_arrays;
 }
+#endif
 
 
 
@@ -224,7 +262,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_int_arr() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int_arr(struct part *restrict p) {
+  part_get_my_int_arr_part_struct(struct part *restrict p) {
   return p->_my_int_arr;
 }
 
@@ -232,7 +270,7 @@ static __attribute__((always_inline)) INLINE int*
  * @brief get my_int_arr, my integer, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int_arr(const struct part *restrict p) {
+  part_get_const_my_int_arr_part_struct(const struct part *restrict p) {
   return p->_my_int_arr;
 }
 
@@ -240,8 +278,8 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief get my_int_arr, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_int_arr[ind];
+  part_get_my_int_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_int_arr[i];
 }
 
 /**
@@ -249,7 +287,7 @@ static __attribute__((always_inline)) INLINE int
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr(struct part *restrict p, const int my_int_arr[4]) {
+  part_set_my_int_arr_part_struct(struct part *restrict p, const int my_int_arr[4]) {
   p->_my_int_arr[0] = my_int_arr[0];
   p->_my_int_arr[1] = my_int_arr[1];
   p->_my_int_arr[2] = my_int_arr[2];
@@ -260,7 +298,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_int_arr, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr_ind(struct part *restrict p, const size_t i, const int my_int_arr) {
+  part_set_my_int_arr_ind_part_struct(struct part *restrict p, const int i, const int my_int_arr) {
   p->_my_int_arr[i] = my_int_arr;
 }
 
@@ -273,7 +311,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_long_arr() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long_arr(struct part *restrict p) {
+  part_get_my_long_arr_part_struct(struct part *restrict p) {
   return p->_my_long_arr;
 }
 
@@ -281,7 +319,7 @@ static __attribute__((always_inline)) INLINE long*
  * @brief get my_long_arr, my long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long_arr(const struct part *restrict p) {
+  part_get_const_my_long_arr_part_struct(const struct part *restrict p) {
   return p->_my_long_arr;
 }
 
@@ -289,8 +327,8 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief get my_long_arr, my long, by index.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_long_arr[ind];
+  part_get_my_long_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_long_arr[i];
 }
 
 /**
@@ -298,7 +336,7 @@ static __attribute__((always_inline)) INLINE long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr(struct part *restrict p, const long my_long_arr[4]) {
+  part_set_my_long_arr_part_struct(struct part *restrict p, const long my_long_arr[4]) {
   p->_my_long_arr[0] = my_long_arr[0];
   p->_my_long_arr[1] = my_long_arr[1];
   p->_my_long_arr[2] = my_long_arr[2];
@@ -309,7 +347,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_long_arr, my long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr_ind(struct part *restrict p, const size_t i, const long my_long_arr) {
+  part_set_my_long_arr_ind_part_struct(struct part *restrict p, const int i, const long my_long_arr) {
   p->_my_long_arr[i] = my_long_arr;
 }
 
@@ -322,7 +360,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_longlong_arr() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong_arr(struct part *restrict p) {
+  part_get_my_longlong_arr_part_struct(struct part *restrict p) {
   return p->_my_longlong_arr;
 }
 
@@ -330,7 +368,7 @@ static __attribute__((always_inline)) INLINE long long*
  * @brief get my_longlong_arr, my long long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong_arr(const struct part *restrict p) {
+  part_get_const_my_longlong_arr_part_struct(const struct part *restrict p) {
   return p->_my_longlong_arr;
 }
 
@@ -338,8 +376,8 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief get my_longlong_arr, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_longlong_arr[ind];
+  part_get_my_longlong_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_longlong_arr[i];
 }
 
 /**
@@ -347,7 +385,7 @@ static __attribute__((always_inline)) INLINE long long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr(struct part *restrict p, const long long my_longlong_arr[4]) {
+  part_set_my_longlong_arr_part_struct(struct part *restrict p, const long long my_longlong_arr[4]) {
   p->_my_longlong_arr[0] = my_longlong_arr[0];
   p->_my_longlong_arr[1] = my_longlong_arr[1];
   p->_my_longlong_arr[2] = my_longlong_arr[2];
@@ -358,7 +396,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_longlong_arr, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr_ind(struct part *restrict p, const size_t i, const long long my_longlong_arr) {
+  part_set_my_longlong_arr_ind_part_struct(struct part *restrict p, const int i, const long long my_longlong_arr) {
   p->_my_longlong_arr[i] = my_longlong_arr;
 }
 
@@ -371,7 +409,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_float_arr() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float_arr(struct part *restrict p) {
+  part_get_my_float_arr_part_struct(struct part *restrict p) {
   return p->_my_float_arr;
 }
 
@@ -379,7 +417,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get my_float_arr, my float, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float_arr(const struct part *restrict p) {
+  part_get_const_my_float_arr_part_struct(const struct part *restrict p) {
   return p->_my_float_arr;
 }
 
@@ -387,8 +425,8 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get my_float_arr, my float, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_float_arr[ind];
+  part_get_my_float_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_float_arr[i];
 }
 
 /**
@@ -396,7 +434,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr(struct part *restrict p, const float my_float_arr[4]) {
+  part_set_my_float_arr_part_struct(struct part *restrict p, const float my_float_arr[4]) {
   p->_my_float_arr[0] = my_float_arr[0];
   p->_my_float_arr[1] = my_float_arr[1];
   p->_my_float_arr[2] = my_float_arr[2];
@@ -407,7 +445,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_float_arr, my float, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr_ind(struct part *restrict p, const size_t i, const float my_float_arr) {
+  part_set_my_float_arr_ind_part_struct(struct part *restrict p, const int i, const float my_float_arr) {
   p->_my_float_arr[i] = my_float_arr;
 }
 
@@ -420,7 +458,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_dble_arr() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble_arr(struct part *restrict p) {
+  part_get_my_dble_arr_part_struct(struct part *restrict p) {
   return p->_my_dble_arr;
 }
 
@@ -428,7 +466,7 @@ static __attribute__((always_inline)) INLINE double*
  * @brief get my_dble_arr, my double, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble_arr(const struct part *restrict p) {
+  part_get_const_my_dble_arr_part_struct(const struct part *restrict p) {
   return p->_my_dble_arr;
 }
 
@@ -436,8 +474,8 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief get my_dble_arr, my double, by index.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_dble_arr[ind];
+  part_get_my_dble_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_dble_arr[i];
 }
 
 /**
@@ -445,7 +483,7 @@ static __attribute__((always_inline)) INLINE double
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr(struct part *restrict p, const double my_dble_arr[4]) {
+  part_set_my_dble_arr_part_struct(struct part *restrict p, const double my_dble_arr[4]) {
   p->_my_dble_arr[0] = my_dble_arr[0];
   p->_my_dble_arr[1] = my_dble_arr[1];
   p->_my_dble_arr[2] = my_dble_arr[2];
@@ -456,7 +494,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_dble_arr, my double, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr_ind(struct part *restrict p, const size_t i, const double my_dble_arr) {
+  part_set_my_dble_arr_ind_part_struct(struct part *restrict p, const int i, const double my_dble_arr) {
   p->_my_dble_arr[i] = my_dble_arr;
 }
 
@@ -469,7 +507,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_char_arr() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char_arr(struct part *restrict p) {
+  part_get_my_char_arr_part_struct(struct part *restrict p) {
   return p->_my_char_arr;
 }
 
@@ -477,7 +515,7 @@ static __attribute__((always_inline)) INLINE char*
  * @brief get my_char_arr, my_char, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char_arr(const struct part *restrict p) {
+  part_get_const_my_char_arr_part_struct(const struct part *restrict p) {
   return p->_my_char_arr;
 }
 
@@ -485,8 +523,8 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief get my_char_arr, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_char_arr[ind];
+  part_get_my_char_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_char_arr[i];
 }
 
 /**
@@ -494,7 +532,7 @@ static __attribute__((always_inline)) INLINE char
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr(struct part *restrict p, const char my_char_arr[4]) {
+  part_set_my_char_arr_part_struct(struct part *restrict p, const char my_char_arr[4]) {
   p->_my_char_arr[0] = my_char_arr[0];
   p->_my_char_arr[1] = my_char_arr[1];
   p->_my_char_arr[2] = my_char_arr[2];
@@ -505,7 +543,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_char_arr, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr_ind(struct part *restrict p, const size_t i, const char my_char_arr) {
+  part_set_my_char_arr_ind_part_struct(struct part *restrict p, const int i, const char my_char_arr) {
   p->_my_char_arr[i] = my_char_arr;
 }
 
@@ -518,7 +556,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_integertime_arr() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime_arr(struct part *restrict p) {
+  part_get_my_integertime_arr_part_struct(struct part *restrict p) {
   return p->_my_integertime_arr;
 }
 
@@ -526,7 +564,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * @brief get my_integertime_arr, my integertime, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime_arr(const struct part *restrict p) {
+  part_get_const_my_integertime_arr_part_struct(const struct part *restrict p) {
   return p->_my_integertime_arr;
 }
 
@@ -534,8 +572,8 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief get my_integertime_arr, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_integertime_arr[ind];
+  part_get_my_integertime_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_integertime_arr[i];
 }
 
 /**
@@ -543,7 +581,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr(struct part *restrict p, const integertime_t my_integertime_arr[4]) {
+  part_set_my_integertime_arr_part_struct(struct part *restrict p, const integertime_t my_integertime_arr[4]) {
   p->_my_integertime_arr[0] = my_integertime_arr[0];
   p->_my_integertime_arr[1] = my_integertime_arr[1];
   p->_my_integertime_arr[2] = my_integertime_arr[2];
@@ -554,7 +592,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_integertime_arr, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime_arr) {
+  part_set_my_integertime_arr_ind_part_struct(struct part *restrict p, const int i, const integertime_t my_integertime_arr) {
   p->_my_integertime_arr[i] = my_integertime_arr;
 }
 
@@ -567,7 +605,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_timebin_arr() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin_arr(struct part *restrict p) {
+  part_get_my_timebin_arr_part_struct(struct part *restrict p) {
   return p->_my_timebin_arr;
 }
 
@@ -575,7 +613,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * @brief get my_timebin_arr, my timebin, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin_arr(const struct part *restrict p) {
+  part_get_const_my_timebin_arr_part_struct(const struct part *restrict p) {
   return p->_my_timebin_arr;
 }
 
@@ -583,8 +621,8 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief get my_timebin_arr, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_timebin_arr[ind];
+  part_get_my_timebin_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_timebin_arr[i];
 }
 
 /**
@@ -592,7 +630,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr(struct part *restrict p, const timebin_t my_timebin_arr[4]) {
+  part_set_my_timebin_arr_part_struct(struct part *restrict p, const timebin_t my_timebin_arr[4]) {
   p->_my_timebin_arr[0] = my_timebin_arr[0];
   p->_my_timebin_arr[1] = my_timebin_arr[1];
   p->_my_timebin_arr[2] = my_timebin_arr[2];
@@ -603,7 +641,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_timebin_arr, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin_arr) {
+  part_set_my_timebin_arr_ind_part_struct(struct part *restrict p, const int i, const timebin_t my_timebin_arr) {
   p->_my_timebin_arr[i] = my_timebin_arr;
 }
 
@@ -616,7 +654,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_external_struct_arr() instead.
  */
 static __attribute__((always_inline)) INLINE struct my_struct*
-  part_get_my_external_struct_arr(struct part *restrict p) {
+  part_get_my_external_struct_arr_part_struct(struct part *restrict p) {
   return p->_my_external_struct_arr;
 }
 
@@ -624,7 +662,7 @@ static __attribute__((always_inline)) INLINE struct my_struct*
  * @brief get my_external_struct_arr, some externally defined struct, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const struct my_struct*
-  part_get_const_my_external_struct_arr(const struct part *restrict p) {
+  part_get_const_my_external_struct_arr_part_struct(const struct part *restrict p) {
   return p->_my_external_struct_arr;
 }
 
@@ -632,8 +670,8 @@ static __attribute__((always_inline)) INLINE const struct my_struct*
  * @brief get my_external_struct_arr, some externally defined struct, by index.
  */
 static __attribute__((always_inline)) INLINE struct my_struct
-  part_get_my_external_struct_arr_ind(const struct part *restrict p, const size_t ind) {
-  return p->_my_external_struct_arr[ind];
+  part_get_my_external_struct_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  return p->_my_external_struct_arr[i];
 }
 
 /**
@@ -641,7 +679,7 @@ static __attribute__((always_inline)) INLINE struct my_struct
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct_arr(struct part *restrict p, const struct my_struct my_external_struct_arr[4]) {
+  part_set_my_external_struct_arr_part_struct(struct part *restrict p, const struct my_struct my_external_struct_arr[4]) {
   p->_my_external_struct_arr[0] = my_external_struct_arr[0];
   p->_my_external_struct_arr[1] = my_external_struct_arr[1];
   p->_my_external_struct_arr[2] = my_external_struct_arr[2];
@@ -652,7 +690,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_external_struct_arr, some externally defined struct, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct_arr_ind(struct part *restrict p, const size_t i, const struct my_struct my_external_struct_arr) {
+  part_set_my_external_struct_arr_ind_part_struct(struct part *restrict p, const int i, const struct my_struct my_external_struct_arr) {
   p->_my_external_struct_arr[i] = my_external_struct_arr;
 }
 
@@ -667,9 +705,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_int_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int_arr2(struct part *restrict p) {
+  part_get_my_int_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -683,7 +721,7 @@ static __attribute__((always_inline)) INLINE int*
  * @brief get my_int_arr2, my integer, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int_arr2(const struct part *restrict p) {
+  part_get_const_my_int_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -699,7 +737,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief get my_int_arr2, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_int_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -708,7 +746,7 @@ static __attribute__((always_inline)) INLINE int
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_int_arr2[ind];
+  return part2_s->_my_int_arr2[i];
 }
 
 /**
@@ -716,7 +754,7 @@ static __attribute__((always_inline)) INLINE int
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr2(struct part *restrict p, const int my_int_arr2[4]) {
+  part_set_my_int_arr2_part_struct(struct part *restrict p, const int my_int_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -735,7 +773,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_int_arr2, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr2_ind(struct part *restrict p, const size_t i, const int my_int_arr2) {
+  part_set_my_int_arr2_ind_part_struct(struct part *restrict p, const int i, const int my_int_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -743,7 +781,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_int_arr2[i] = my_int_arr2;
 }
 
@@ -756,9 +794,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_long_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long_arr2(struct part *restrict p) {
+  part_get_my_long_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -772,7 +810,7 @@ static __attribute__((always_inline)) INLINE long*
  * @brief get my_long_arr2, my long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long_arr2(const struct part *restrict p) {
+  part_get_const_my_long_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -788,7 +826,7 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief get my_long_arr2, my long, by index.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_long_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -797,7 +835,7 @@ static __attribute__((always_inline)) INLINE long
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_long_arr2[ind];
+  return part2_s->_my_long_arr2[i];
 }
 
 /**
@@ -805,7 +843,7 @@ static __attribute__((always_inline)) INLINE long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr2(struct part *restrict p, const long my_long_arr2[4]) {
+  part_set_my_long_arr2_part_struct(struct part *restrict p, const long my_long_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -824,7 +862,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_long_arr2, my long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr2_ind(struct part *restrict p, const size_t i, const long my_long_arr2) {
+  part_set_my_long_arr2_ind_part_struct(struct part *restrict p, const int i, const long my_long_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -832,7 +870,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_long_arr2[i] = my_long_arr2;
 }
 
@@ -845,9 +883,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_longlong_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong_arr2(struct part *restrict p) {
+  part_get_my_longlong_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -861,7 +899,7 @@ static __attribute__((always_inline)) INLINE long long*
  * @brief get my_longlong_arr2, my long long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong_arr2(const struct part *restrict p) {
+  part_get_const_my_longlong_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -877,7 +915,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief get my_longlong_arr2, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_longlong_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -886,7 +924,7 @@ static __attribute__((always_inline)) INLINE long long
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_longlong_arr2[ind];
+  return part2_s->_my_longlong_arr2[i];
 }
 
 /**
@@ -894,7 +932,7 @@ static __attribute__((always_inline)) INLINE long long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr2(struct part *restrict p, const long long my_longlong_arr2[4]) {
+  part_set_my_longlong_arr2_part_struct(struct part *restrict p, const long long my_longlong_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -913,7 +951,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_longlong_arr2, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr2_ind(struct part *restrict p, const size_t i, const long long my_longlong_arr2) {
+  part_set_my_longlong_arr2_ind_part_struct(struct part *restrict p, const int i, const long long my_longlong_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -921,7 +959,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_longlong_arr2[i] = my_longlong_arr2;
 }
 
@@ -934,9 +972,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_float_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float_arr2(struct part *restrict p) {
+  part_get_my_float_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -950,7 +988,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get my_float_arr2, my float, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float_arr2(const struct part *restrict p) {
+  part_get_const_my_float_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -966,7 +1004,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get my_float_arr2, my float, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_float_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -975,7 +1013,7 @@ static __attribute__((always_inline)) INLINE float
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_float_arr2[ind];
+  return part2_s->_my_float_arr2[i];
 }
 
 /**
@@ -983,7 +1021,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr2(struct part *restrict p, const float my_float_arr2[4]) {
+  part_set_my_float_arr2_part_struct(struct part *restrict p, const float my_float_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1002,7 +1040,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_float_arr2, my float, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr2_ind(struct part *restrict p, const size_t i, const float my_float_arr2) {
+  part_set_my_float_arr2_ind_part_struct(struct part *restrict p, const int i, const float my_float_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1010,7 +1048,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_float_arr2[i] = my_float_arr2;
 }
 
@@ -1023,9 +1061,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_dble_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble_arr2(struct part *restrict p) {
+  part_get_my_dble_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1039,7 +1077,7 @@ static __attribute__((always_inline)) INLINE double*
  * @brief get my_dble_arr2, my double, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble_arr2(const struct part *restrict p) {
+  part_get_const_my_dble_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1055,7 +1093,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief get my_dble_arr2, my double, by index.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_dble_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1064,7 +1102,7 @@ static __attribute__((always_inline)) INLINE double
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_dble_arr2[ind];
+  return part2_s->_my_dble_arr2[i];
 }
 
 /**
@@ -1072,7 +1110,7 @@ static __attribute__((always_inline)) INLINE double
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr2(struct part *restrict p, const double my_dble_arr2[4]) {
+  part_set_my_dble_arr2_part_struct(struct part *restrict p, const double my_dble_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1091,7 +1129,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_dble_arr2, my double, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr2_ind(struct part *restrict p, const size_t i, const double my_dble_arr2) {
+  part_set_my_dble_arr2_ind_part_struct(struct part *restrict p, const int i, const double my_dble_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1099,7 +1137,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_dble_arr2[i] = my_dble_arr2;
 }
 
@@ -1112,9 +1150,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_char_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char_arr2(struct part *restrict p) {
+  part_get_my_char_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1128,7 +1166,7 @@ static __attribute__((always_inline)) INLINE char*
  * @brief get my_char_arr2, my_char, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char_arr2(const struct part *restrict p) {
+  part_get_const_my_char_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1144,7 +1182,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief get my_char_arr2, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_char_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1153,7 +1191,7 @@ static __attribute__((always_inline)) INLINE char
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_char_arr2[ind];
+  return part2_s->_my_char_arr2[i];
 }
 
 /**
@@ -1161,7 +1199,7 @@ static __attribute__((always_inline)) INLINE char
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr2(struct part *restrict p, const char my_char_arr2[4]) {
+  part_set_my_char_arr2_part_struct(struct part *restrict p, const char my_char_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1180,7 +1218,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_char_arr2, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr2_ind(struct part *restrict p, const size_t i, const char my_char_arr2) {
+  part_set_my_char_arr2_ind_part_struct(struct part *restrict p, const int i, const char my_char_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1188,7 +1226,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_char_arr2[i] = my_char_arr2;
 }
 
@@ -1201,9 +1239,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_integertime_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime_arr2(struct part *restrict p) {
+  part_get_my_integertime_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1217,7 +1255,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * @brief get my_integertime_arr2, my integertime, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime_arr2(const struct part *restrict p) {
+  part_get_const_my_integertime_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1233,7 +1271,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief get my_integertime_arr2, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_integertime_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1242,7 +1280,7 @@ static __attribute__((always_inline)) INLINE integertime_t
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_integertime_arr2[ind];
+  return part2_s->_my_integertime_arr2[i];
 }
 
 /**
@@ -1250,7 +1288,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr2(struct part *restrict p, const integertime_t my_integertime_arr2[4]) {
+  part_set_my_integertime_arr2_part_struct(struct part *restrict p, const integertime_t my_integertime_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1269,7 +1307,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_integertime_arr2, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr2_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime_arr2) {
+  part_set_my_integertime_arr2_ind_part_struct(struct part *restrict p, const int i, const integertime_t my_integertime_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1277,7 +1315,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_integertime_arr2[i] = my_integertime_arr2;
 }
 
@@ -1290,9 +1328,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_timebin_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin_arr2(struct part *restrict p) {
+  part_get_my_timebin_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1306,7 +1344,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * @brief get my_timebin_arr2, my timebin, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin_arr2(const struct part *restrict p) {
+  part_get_const_my_timebin_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1322,7 +1360,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief get my_timebin_arr2, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_timebin_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1331,7 +1369,7 @@ static __attribute__((always_inline)) INLINE timebin_t
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_timebin_arr2[ind];
+  return part2_s->_my_timebin_arr2[i];
 }
 
 /**
@@ -1339,7 +1377,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr2(struct part *restrict p, const timebin_t my_timebin_arr2[4]) {
+  part_set_my_timebin_arr2_part_struct(struct part *restrict p, const timebin_t my_timebin_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1358,7 +1396,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_timebin_arr2, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr2_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin_arr2) {
+  part_set_my_timebin_arr2_ind_part_struct(struct part *restrict p, const int i, const timebin_t my_timebin_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1366,7 +1404,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_timebin_arr2[i] = my_timebin_arr2;
 }
 
@@ -1379,9 +1417,9 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_external_struct_arr2() instead.
  */
 static __attribute__((always_inline)) INLINE struct my_struct*
-  part_get_my_external_struct_arr2(struct part *restrict p) {
+  part_get_my_external_struct_arr2_part_struct(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1395,7 +1433,7 @@ static __attribute__((always_inline)) INLINE struct my_struct*
  * @brief get my_external_struct_arr2, some externally defined struct, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const struct my_struct*
-  part_get_const_my_external_struct_arr2(const struct part *restrict p) {
+  part_get_const_my_external_struct_arr2_part_struct(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1411,7 +1449,7 @@ static __attribute__((always_inline)) INLINE const struct my_struct*
  * @brief get my_external_struct_arr2, some externally defined struct, by index.
  */
 static __attribute__((always_inline)) INLINE struct my_struct
-  part_get_my_external_struct_arr2_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_external_struct_arr2_ind_part_struct(const struct part *restrict p, const int i) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1420,7 +1458,7 @@ static __attribute__((always_inline)) INLINE struct my_struct
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_my_external_struct_arr2[ind];
+  return part2_s->_my_external_struct_arr2[i];
 }
 
 /**
@@ -1428,7 +1466,7 @@ static __attribute__((always_inline)) INLINE struct my_struct
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct_arr2(struct part *restrict p, const struct my_struct my_external_struct_arr2[4]) {
+  part_set_my_external_struct_arr2_part_struct(struct part *restrict p, const struct my_struct my_external_struct_arr2[4]) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1447,7 +1485,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_external_struct_arr2, some externally defined struct, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct_arr2_ind(struct part *restrict p, const size_t i, const struct my_struct my_external_struct_arr2) {
+  part_set_my_external_struct_arr2_ind_part_struct(struct part *restrict p, const int i, const struct my_struct my_external_struct_arr2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1455,7 +1493,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part2_s->_my_external_struct_arr2[i] = my_external_struct_arr2;
 }
 
@@ -1470,10 +1508,10 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_int_arr3() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int_arr3(struct part *restrict p) {
+  part_get_my_int_arr3_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1490,7 +1528,7 @@ static __attribute__((always_inline)) INLINE int*
  * @brief get my_int_arr3, my integer, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int_arr3(const struct part *restrict p) {
+  part_get_const_my_int_arr3_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1510,7 +1548,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief get my_int_arr3, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int_arr3_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_int_arr3_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1520,7 +1558,7 @@ static __attribute__((always_inline)) INLINE int
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
 #endif
-  return part3_s->_my_int_arr3[ind];
+  return part3_s->_my_int_arr3[i];
 #else
   return INT_MAX;
 #endif
@@ -1531,7 +1569,7 @@ static __attribute__((always_inline)) INLINE int
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr3(struct part *restrict p, const int my_int_arr3[4]) {
+  part_set_my_int_arr3_part_struct(struct part *restrict p, const int my_int_arr3[4]) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1552,7 +1590,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_int_arr3, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr3_ind(struct part *restrict p, const size_t i, const int my_int_arr3) {
+  part_set_my_int_arr3_ind_part_struct(struct part *restrict p, const int i, const int my_int_arr3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1561,7 +1599,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part3_s->_my_int_arr3[i] = my_int_arr3;
 #endif
 }
@@ -1575,10 +1613,10 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_long_arr3() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long_arr3(struct part *restrict p) {
+  part_get_my_long_arr3_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1595,7 +1633,7 @@ static __attribute__((always_inline)) INLINE long*
  * @brief get my_long_arr3, my long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long_arr3(const struct part *restrict p) {
+  part_get_const_my_long_arr3_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1615,7 +1653,7 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief get my_long_arr3, my long, by index.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long_arr3_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_long_arr3_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1625,7 +1663,7 @@ static __attribute__((always_inline)) INLINE long
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
 #endif
-  return part3_s->_my_long_arr3[ind];
+  return part3_s->_my_long_arr3[i];
 #else
   return LONG_MAX;
 #endif
@@ -1636,7 +1674,7 @@ static __attribute__((always_inline)) INLINE long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr3(struct part *restrict p, const long my_long_arr3[4]) {
+  part_set_my_long_arr3_part_struct(struct part *restrict p, const long my_long_arr3[4]) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1657,7 +1695,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_long_arr3, my long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr3_ind(struct part *restrict p, const size_t i, const long my_long_arr3) {
+  part_set_my_long_arr3_ind_part_struct(struct part *restrict p, const int i, const long my_long_arr3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1666,7 +1704,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part3_s->_my_long_arr3[i] = my_long_arr3;
 #endif
 }
@@ -1680,10 +1718,10 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_longlong_arr3() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong_arr3(struct part *restrict p) {
+  part_get_my_longlong_arr3_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1700,7 +1738,7 @@ static __attribute__((always_inline)) INLINE long long*
  * @brief get my_longlong_arr3, my long long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong_arr3(const struct part *restrict p) {
+  part_get_const_my_longlong_arr3_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1720,7 +1758,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief get my_longlong_arr3, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong_arr3_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_longlong_arr3_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1730,7 +1768,7 @@ static __attribute__((always_inline)) INLINE long long
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
 #endif
-  return part3_s->_my_longlong_arr3[ind];
+  return part3_s->_my_longlong_arr3[i];
 #else
   return LLONG_MAX;
 #endif
@@ -1741,7 +1779,7 @@ static __attribute__((always_inline)) INLINE long long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr3(struct part *restrict p, const long long my_longlong_arr3[4]) {
+  part_set_my_longlong_arr3_part_struct(struct part *restrict p, const long long my_longlong_arr3[4]) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1762,7 +1800,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_longlong_arr3, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr3_ind(struct part *restrict p, const size_t i, const long long my_longlong_arr3) {
+  part_set_my_longlong_arr3_ind_part_struct(struct part *restrict p, const int i, const long long my_longlong_arr3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1771,7 +1809,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part3_s->_my_longlong_arr3[i] = my_longlong_arr3;
 #endif
 }
@@ -1785,10 +1823,10 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_float_arr3() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float_arr3(struct part *restrict p) {
+  part_get_my_float_arr3_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1805,7 +1843,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get my_float_arr3, my float, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float_arr3(const struct part *restrict p) {
+  part_get_const_my_float_arr3_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1825,7 +1863,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get my_float_arr3, my float, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float_arr3_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_float_arr3_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1835,7 +1873,7 @@ static __attribute__((always_inline)) INLINE float
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
 #endif
-  return part3_s->_my_float_arr3[ind];
+  return part3_s->_my_float_arr3[i];
 #else
   return FLT_MAX;
 #endif
@@ -1846,7 +1884,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr3(struct part *restrict p, const float my_float_arr3[4]) {
+  part_set_my_float_arr3_part_struct(struct part *restrict p, const float my_float_arr3[4]) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1867,7 +1905,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_float_arr3, my float, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr3_ind(struct part *restrict p, const size_t i, const float my_float_arr3) {
+  part_set_my_float_arr3_ind_part_struct(struct part *restrict p, const int i, const float my_float_arr3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1876,7 +1914,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part3_s->_my_float_arr3[i] = my_float_arr3;
 #endif
 }
@@ -1890,10 +1928,10 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_dble_arr3() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble_arr3(struct part *restrict p) {
+  part_get_my_dble_arr3_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -1910,7 +1948,7 @@ static __attribute__((always_inline)) INLINE double*
  * @brief get my_dble_arr3, my double, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble_arr3(const struct part *restrict p) {
+  part_get_const_my_dble_arr3_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1930,7 +1968,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief get my_dble_arr3, my double, by index.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble_arr3_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_dble_arr3_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1940,7 +1978,7 @@ static __attribute__((always_inline)) INLINE double
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
 #endif
-  return part3_s->_my_dble_arr3[ind];
+  return part3_s->_my_dble_arr3[i];
 #else
   return DBL_MAX;
 #endif
@@ -1951,7 +1989,7 @@ static __attribute__((always_inline)) INLINE double
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr3(struct part *restrict p, const double my_dble_arr3[4]) {
+  part_set_my_dble_arr3_part_struct(struct part *restrict p, const double my_dble_arr3[4]) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1972,7 +2010,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_dble_arr3, my double, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr3_ind(struct part *restrict p, const size_t i, const double my_dble_arr3) {
+  part_set_my_dble_arr3_ind_part_struct(struct part *restrict p, const int i, const double my_dble_arr3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1981,7 +2019,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part3_s->_my_dble_arr3[i] = my_dble_arr3;
 #endif
 }
@@ -1995,10 +2033,10 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_char_arr3() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char_arr3(struct part *restrict p) {
+  part_get_my_char_arr3_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -2015,7 +2053,7 @@ static __attribute__((always_inline)) INLINE char*
  * @brief get my_char_arr3, my_char, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char_arr3(const struct part *restrict p) {
+  part_get_const_my_char_arr3_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2035,7 +2073,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief get my_char_arr3, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char_arr3_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_char_arr3_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2045,7 +2083,7 @@ static __attribute__((always_inline)) INLINE char
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
 #endif
-  return part3_s->_my_char_arr3[ind];
+  return part3_s->_my_char_arr3[i];
 #else
   return CHAR_MAX;
 #endif
@@ -2056,7 +2094,7 @@ static __attribute__((always_inline)) INLINE char
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr3(struct part *restrict p, const char my_char_arr3[4]) {
+  part_set_my_char_arr3_part_struct(struct part *restrict p, const char my_char_arr3[4]) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2077,7 +2115,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_char_arr3, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr3_ind(struct part *restrict p, const size_t i, const char my_char_arr3) {
+  part_set_my_char_arr3_ind_part_struct(struct part *restrict p, const int i, const char my_char_arr3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2086,7 +2124,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part3_s->_my_char_arr3[i] = my_char_arr3;
 #endif
 }
@@ -2100,10 +2138,10 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_integertime_arr3() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime_arr3(struct part *restrict p) {
+  part_get_my_integertime_arr3_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -2120,7 +2158,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * @brief get my_integertime_arr3, my integertime, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime_arr3(const struct part *restrict p) {
+  part_get_const_my_integertime_arr3_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2140,7 +2178,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief get my_integertime_arr3, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime_arr3_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_integertime_arr3_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2150,7 +2188,7 @@ static __attribute__((always_inline)) INLINE integertime_t
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
 #endif
-  return part3_s->_my_integertime_arr3[ind];
+  return part3_s->_my_integertime_arr3[i];
 #else
   return LLONG_MAX;
 #endif
@@ -2161,7 +2199,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr3(struct part *restrict p, const integertime_t my_integertime_arr3[4]) {
+  part_set_my_integertime_arr3_part_struct(struct part *restrict p, const integertime_t my_integertime_arr3[4]) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2182,7 +2220,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_integertime_arr3, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr3_ind(struct part *restrict p, const size_t i, const integertime_t my_integertime_arr3) {
+  part_set_my_integertime_arr3_ind_part_struct(struct part *restrict p, const int i, const integertime_t my_integertime_arr3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2191,7 +2229,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part3_s->_my_integertime_arr3[i] = my_integertime_arr3;
 #endif
 }
@@ -2205,10 +2243,10 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_timebin_arr3() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin_arr3(struct part *restrict p) {
+  part_get_my_timebin_arr3_part_struct(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
-#ifdef SWIFT_DEBUG_CHECKS
+    #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
@@ -2225,7 +2263,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * @brief get my_timebin_arr3, my timebin, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin_arr3(const struct part *restrict p) {
+  part_get_const_my_timebin_arr3_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2245,7 +2283,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief get my_timebin_arr3, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin_arr3_ind(const struct part *restrict p, const size_t ind) {
+  part_get_my_timebin_arr3_ind_part_struct(const struct part *restrict p, const int i) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2255,7 +2293,7 @@ static __attribute__((always_inline)) INLINE timebin_t
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
 #endif
-  return part3_s->_my_timebin_arr3[ind];
+  return part3_s->_my_timebin_arr3[i];
 #else
   return CHAR_MAX;
 #endif
@@ -2266,7 +2304,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr3(struct part *restrict p, const timebin_t my_timebin_arr3[4]) {
+  part_set_my_timebin_arr3_part_struct(struct part *restrict p, const timebin_t my_timebin_arr3[4]) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2287,7 +2325,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_timebin_arr3, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr3_ind(struct part *restrict p, const size_t i, const timebin_t my_timebin_arr3) {
+  part_set_my_timebin_arr3_ind_part_struct(struct part *restrict p, const int i, const timebin_t my_timebin_arr3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2296,7 +2334,7 @@ static __attribute__((always_inline)) INLINE void
   /* Make sure we're accessing the correct data */
   if(part3_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part3_s->_accessor_id, p->_accessor_id);
-#endif
+      #endif
   part3_s->_my_timebin_arr3[i] = my_timebin_arr3;
 #endif
 }

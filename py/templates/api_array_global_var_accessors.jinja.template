@@ -12,17 +12,21 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 {%- endif %}
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
-  
-  {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+
+{%- if DEBUG_ID_CHECKS %}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+  {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
   {%- endif %}
+{%- endif %}
 
 {%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
@@ -48,17 +52,21 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 {%- endif %}
 
   const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
-  
-  {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+
+{%- if DEBUG_ID_CHECKS %}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+  {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
   {%- endif %}
+{%- endif %}
 
 {%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
@@ -84,17 +92,21 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 {%- endif %}
 
   const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
- 
-    {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+
+{%- if DEBUG_ID_CHECKS -%}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+  {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
-    {%- endif %}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+  {%- endif %}
+{%- endif %}
 
 {%- if HAS_PARENT_STRUCT %}
   return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[i];
@@ -122,17 +134,30 @@ static __attribute__((always_inline)) INLINE void
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
 
-    {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+{%- if DEBUG_ID_CHECKS %}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+  {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
-    {%- endif %}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+  {%- endif %}
+{%- endif %}
 
+{%- if ARRAY_SIZE_IS_MACRO %}
+  for (int i = 0; i < {{SIZE}}; i++){
+  {%- if HAS_PARENT_STRUCT %}
+    {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[i] = {{NAME}}[i];
+  {%- else %}
+    {{ROOT_STRUCT}}_s->_{{NAME}}[i] = {{NAME}}[i];
+  {%- endif %}
+  }
+{%- else %}
   {%- for i in range(SIZE) %}
     {%- if HAS_PARENT_STRUCT %}
   {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
@@ -140,6 +165,7 @@ static __attribute__((always_inline)) INLINE void
   {{ROOT_STRUCT}}_s->_{{NAME}}[{{i}}] = {{NAME}}[{{i}}];
     {%- endif %}
   {%- endfor %}
+{%- endif %}
 
 {%- if HAS_IFDEF %}
 #endif
@@ -158,16 +184,20 @@ static __attribute__((always_inline)) INLINE void
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
 
-    {%- if DEBUG_ID_CHECKS %}
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #ifdef SWIFT_DEBUG_CHECKS {%- endif %}
+{%- if DEBUG_ID_CHECKS %}
+  {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+  {%- endif %}
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
   const struct part* restrict p = global_part_arrays._part + pind;
   swift_assert(p->_accessor_id != 0);
   /* Make sure we're accessing the correct data */
   if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
-{% if DEBUG_ID_CHECKS_MACRO_GUARD -%} #endif {%- endif %}
-    {%- endif %}
+  {% if DEBUG_ID_CHECKS_MACRO_GUARD -%}
+#endif
+  {%- endif %}
+{%- endif %}
 
 {%- if HAS_PARENT_STRUCT %}
   {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}[i] = {{NAME}};

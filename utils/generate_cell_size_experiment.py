@@ -14,12 +14,7 @@ parser = argparse.ArgumentParser(
     """,
 )
 parser.add_argument(
-    "-n",
-    "--nparts",
-    nargs=1,
-    dest="nparts",
-    help="Particle number per cell",
-    type=int
+    "-n", "--nparts", nargs=1, dest="nparts", help="Particle number per cell", type=int
 )
 parser.add_argument(
     "-t",
@@ -28,7 +23,7 @@ parser.add_argument(
     dest="nparts_tot",
     help="Total number of particles",
     default=5000000,
-    type=int
+    type=int,
 )
 parser.add_argument(
     "-l",
@@ -37,7 +32,7 @@ parser.add_argument(
     dest="n_logs",
     help="Number of logs to generate for each pack/unpack operation type. (Total number of logs will be this multiplied by 6)",
     default=40000,
-    type=int
+    type=int,
 )
 parser.add_argument(
     "-b",
@@ -46,7 +41,7 @@ parser.add_argument(
     dest="buffer_size",
     help="Size of GPU buffer arrays to use",
     default=1000000,
-    type=int
+    type=int,
 )
 parser.add_argument(
     "-T",
@@ -55,7 +50,7 @@ parser.add_argument(
     dest="nthreads",
     help="Size of GPU buffer arrays to use",
     default=1,
-    type=int
+    type=int,
 )
 
 args = parser.parse_args()
@@ -165,11 +160,12 @@ for thread in range(nthreads):
         if c_use + nparts >= buffer_size:
             raise ValueError("Huh?", c_use, buffer_size, line)
 
-
     # Now write mock log
     log_file = os.path.join(outdir, f"log_thread{thread:03d}_step000.dat")
     log_fp = open(log_file, "w")
-    log_fp.write("// mock log file generated with /utils/generate_cell_size_experiment.py\n")
+    log_fp.write(
+        "// mock log file generated with /utils/generate_cell_size_experiment.py\n"
+    )
     log_fp.write("// subtype,pack_or_unpack,c_offset,count,index,time\n")
     for line in log_full:
         log_fp.write(line)
@@ -177,4 +173,3 @@ for thread in range(nthreads):
     print("Written", log_file)
 
 print(f"Written outputs to {outdir}")
-
