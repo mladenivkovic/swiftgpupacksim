@@ -106,7 +106,7 @@ def jinja_generate_hydro_part_dot_h(
     d["MANUAL_STRUCT_ALIGN"] = manual_struct_align
     d["GLOBAL_VAR_ACCESSORS"] = global_var_accessors
     d["EXPLICIT_VAR_ACCESSORS"] = explicit_var_accessors
-    d["PART_STRUCT_ACCESORS"] = part_struct_accessors
+    d["PART_STRUCT_ACCESSORS"] = part_struct_accessors
 
     d["AUTHORS"] = metadata_d["authors"]
     d["FLAVOUR_NAME"] = metadata_d["flavour"].upper()
