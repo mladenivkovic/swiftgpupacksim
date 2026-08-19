@@ -26,13 +26,13 @@ experiment_dirs = ["gresho256"]
 timer_file = "timers_0.txt"
 
 node_dir_labels = {
-        "gn001": "Intel Xeon Gold 5218 + V100",
-        "gn002": "Grace Hopper",
-        "dine2": "Intel Xeon Gold 6430 + A30",
-        #  "gn002": "Grace Hopper",
-        #  "gn001": "Intel+V100",
-        #  "dine2": "Intel + A30",
-    }
+    "gn001": "Intel Xeon Gold 5218 + V100",
+    "gn002": "Grace Hopper",
+    "dine2": "Intel Xeon Gold 6430 + A30",
+    #  "gn002": "Grace Hopper",
+    #  "gn001": "Intel+V100",
+    #  "dine2": "Intel + A30",
+}
 # ------------------------------------------------------
 
 
@@ -129,25 +129,20 @@ parser.add_argument(
     "--dine-grace",
     action="store_true",
     default=False,
-    help="Plot results for dine2 and gracehopper"
+    help="Plot results for dine2 and gracehopper",
 )
 parser.add_argument(
     "--dine-grace-gn001",
     action="store_true",
     default=False,
-    help="Plot results for dine2 and gracehopper and gn001"
+    help="Plot results for dine2 and gracehopper and gn001",
 )
 parser.add_argument(
     "--intel",
     action="store_true",
     default=False,
-    help="Plot results for dine2 and gn001"
+    help="Plot results for dine2 and gn001",
 )
-
-
-
-
-
 
 
 args = parser.parse_args()
@@ -181,7 +176,6 @@ elif args.intel:
 elif args.dine_grace_gn001:
     node_dirs = ["dine2", "gn001", "gn002"]
     outfile_suffix += "_dine-grace-gn001"
-
 
 
 # Read in data
@@ -300,9 +294,9 @@ def plot_by_task_subtype(ax, task_type, title):
             ax.bar(x[1] + offset, launch / total, **pltkwargs)
             ax.bar(x[2] + offset, unpack / total, **pltkwargs)
 
-            print(node, "pack:", pack/total * 100, "%")
-            print(node, "launch:", launch/total * 100, "%")
-            print(node, "unpack:", unpack/total * 100, "%")
+            print(node, "pack:", pack / total * 100, "%")
+            print(node, "launch:", launch / total * 100, "%")
+            print(node, "unpack:", unpack / total * 100, "%")
 
             index += 1
 
@@ -356,9 +350,23 @@ def plot_by_operation(ax, operation, title):
             ax.bar(x[1] + offset, gradient / total_gradient, **pltkwargs)
             ax.bar(x[2] + offset, force / total_force, **pltkwargs)
 
-            print(experiment, node, operation, "density:", density/total_density * 100, "%")
-            print(experiment, node, operation, "gradient:", gradient/total_gradient * 100, "%")
-            print(experiment, node, operation, "force:", force/total_force * 100, "%")
+            print(
+                experiment,
+                node,
+                operation,
+                "density:",
+                density / total_density * 100,
+                "%",
+            )
+            print(
+                experiment,
+                node,
+                operation,
+                "gradient:",
+                gradient / total_gradient * 100,
+                "%",
+            )
+            print(experiment, node, operation, "force:", force / total_force * 100, "%")
             index += 1
 
     ax.set_title(title)

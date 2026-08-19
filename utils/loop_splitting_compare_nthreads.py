@@ -127,11 +127,11 @@ if args.equal_axis_limits:
     raise NotImplementedError()
 
 if srcdir.endswith("gn003") or srcdir.endswith("gn003/"):
-    NTHREADS=[1, 9, 18, 36, 72]
+    NTHREADS = [1, 9, 18, 36, 72]
 elif srcdir.endswith("dine2") or srcdir.endswith("dine2/"):
-    NTHREADS=[4, 8, 16, 32, 64]
+    NTHREADS = [4, 8, 16, 32, 64]
 elif srcdir.endswith("mad06") or srcdir.endswith("mad06/"):
-    NTHREADS=[4, 8, 16, 32, 64, 128]
+    NTHREADS = [4, 8, 16, 32, 64, 128]
 
 if args.local_hp:
     NTHREADS = [4]
@@ -302,7 +302,13 @@ if __name__ == "__main__":
             for ax in fig.axes:
                 ax.set_xlabel("particle data layouts")
                 #  ax.tick_params("x", rotation=45)
-                ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+                ax.set_xticks(
+                    ax.get_xticks(),
+                    labels=ax.get_xticklabels(),
+                    rotation=30,
+                    ha="right",
+                    rotation_mode="anchor",
+                )
                 ax.grid()
                 #  ax.legend()
                 if args.equal_axis_limits:

@@ -3,7 +3,13 @@
 import os
 
 LOOP_SPLITS = ["none", "by-struct", "by-element", "by-type", "by-struct-and-type"]
-LOOP_SPLIT_AXIS_LABELS = ["by-particle" , "by-struct", "by-element", "by-type", "by-struct-and-type"]
+LOOP_SPLIT_AXIS_LABELS = [
+    "by-particle",
+    "by-struct",
+    "by-element",
+    "by-type",
+    "by-struct-and-type",
+]
 
 LOOP_SPLIT_LABELS = [
     "loop split by-particle",
@@ -28,36 +34,35 @@ NTHREADS = ["36", "72"]
 #  NODES = ["dine2", "gn003"]
 NODES = ["dine2_5steps", "gn003_5steps"]
 NODE_LABELS = {
-        "dine2": "Intel+A30",
-        "dine2_5steps": "Intel+A30",
-        "gn003": "Grace Hopper",
-        "gn003_5steps": "Grace Hopper",
-        }
+    "dine2": "Intel+A30",
+    "dine2_5steps": "Intel+A30",
+    "gn003": "Grace Hopper",
+    "gn003_5steps": "Grace Hopper",
+}
 
 LAYOUTS_TO_USE = [
-        "aos",
-        "random-order",
-        "pack-gradient",
-        "pack-force",
-        "pack-shared",
-        "pack-gradient-type",
-        "pack-force-type",
-        "pack-shared-type",
-        #  "soa",
-        #  "upstream",
-        ]
+    "aos",
+    "random-order",
+    "pack-gradient",
+    "pack-force",
+    "pack-shared",
+    "pack-gradient-type",
+    "pack-force-type",
+    "pack-shared-type",
+    #  "soa",
+    #  "upstream",
+]
 
 LAYOUTS_TO_USE_MINIMAL = [
-        "aos",
-        #  "random-order",
-        "pack-gradient",
-        "pack-shared",
-        "pack-force",
-        #  "pack-force-type",
-        "soa",
-        #  "upstream",
-        ]
-
+    "aos",
+    #  "random-order",
+    "pack-gradient",
+    "pack-shared",
+    "pack-force",
+    #  "pack-force-type",
+    "soa",
+    #  "upstream",
+]
 
 
 # Plot parameters
@@ -87,7 +92,7 @@ mymplparams = {
 
 mydpi = 120
 
-markers = ["o", "s", "D", "X", "p", "P", "^","*"]
+markers = ["o", "s", "D", "X", "p", "P", "^", "*"]
 linestyles = ["-", ":", "--", "-."]
 
 
@@ -151,7 +156,7 @@ def get_result_dir(
         nthreads = int(nthreads)
     if nthreads > 0:
         dirname += str(nthreads) + "threads_"
-    dirname+= access_variant + "_" + loop_split_variant + other_variant
+    dirname += access_variant + "_" + loop_split_variant + other_variant
 
     fulldirname = os.path.join(srcdir, dirname)
     if check_dir_exists and not os.path.exists(fulldirname):

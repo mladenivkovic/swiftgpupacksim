@@ -156,7 +156,7 @@ if __name__ == "__main__":
 
     # get available layouts
     layouts = LAYOUTS_TO_USE
-#      firstdir = get_result_dir(
+    #      firstdir = get_result_dir(
     #      srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0]
     #  )
     #  ls = os.listdir(firstdir)
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     #      if f.startswith("results_") and f.endswith(".csv"):
     #          layout = f[len("results_") : -len(".csv")]
     #          layouts.append(layout)
-#      layouts.sort()
+    #      layouts.sort()
 
     fig = plt.figure(figsize=(12, 5))
     ax1 = fig.add_subplot(1, 2, 1)
@@ -191,7 +191,6 @@ if __name__ == "__main__":
         )
         res = ResultData(fname_norm, verbose=False)
         normalisation = res.total_time
-
 
         for a, part_access in enumerate(PART_ACCESS):
 
@@ -234,7 +233,7 @@ if __name__ == "__main__":
 
                 ax.plot(
                     layouts,
-                    results/normalisation,
+                    results / normalisation,
                     c=color,
                     ls=ls,
                     marker=marker,
@@ -249,7 +248,13 @@ if __name__ == "__main__":
     for ax in fig.axes:
         #  ax.set_xlabel("particle data layouts")
         #  ax.tick_params("x", rotation=90)
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid(which="both")
         #  ax.legend()
         if args.equal_axis_limits:
@@ -260,13 +265,25 @@ if __name__ == "__main__":
             #  r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{part-struct}}$"
         )
         if NODE_LABELS[srcdir] == "gracehopper":
-            ax.annotate(NODE_LABELS[srcdir], xy=(0.05, 0.06), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
+            ax.annotate(
+                NODE_LABELS[srcdir],
+                xy=(0.05, 0.06),
+                xycoords="axes fraction",
+                backgroundcolor="lightgrey",
+                fontsize="large",
+            )
         else:
-            ax.annotate(NODE_LABELS[srcdir], xy=(0.85, 0.9), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
+            ax.annotate(
+                NODE_LABELS[srcdir],
+                xy=(0.85, 0.9),
+                xycoords="axes fraction",
+                backgroundcolor="lightgrey",
+                fontsize="large",
+            )
 
     # the others
-        #  if args.equal_axis_limits:
-        #      ax.set_yticklabels([])
+    #  if args.equal_axis_limits:
+    #      ax.set_yticklabels([])
 
     hand, lab = ax1.get_legend_handles_labels()
     #  ncols=int(len(layouts)*0.5 + 0.5)

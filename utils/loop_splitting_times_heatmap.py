@@ -174,8 +174,17 @@ plotkwargs = {
 def plot_heatmap(ax, heatmap):
 
     im = ax.imshow(heatmap, cmap="viridis_r")
-    ax.set_xticks(range(len(LOOP_SPLITS)), labels=LOOP_SPLITS, rotation=30, ha="right", rotation_mode="anchor")
-    ax.set_yticks(range(len(layouts)), labels=layouts,)
+    ax.set_xticks(
+        range(len(LOOP_SPLITS)),
+        labels=LOOP_SPLITS,
+        rotation=30,
+        ha="right",
+        rotation_mode="anchor",
+    )
+    ax.set_yticks(
+        range(len(layouts)),
+        labels=layouts,
+    )
 
     maxval = heatmap.max()
     mean = heatmap.mean()
@@ -184,14 +193,13 @@ def plot_heatmap(ax, heatmap):
     for l in range(len(layouts)):
         for s in range(len(LOOP_SPLITS)):
             colour = "black"
-            if heatmap[l,s] > 0.5 * (maxval + mean):
+            if heatmap[l, s] > 0.5 * (maxval + mean):
                 colour = "white"
-            text = ax.text(s, l, f"{heatmap[l,s]:.2f}", ha="center", va="center", color=colour)
+            text = ax.text(
+                s, l, f"{heatmap[l,s]:.2f}", ha="center", va="center", color=colour
+            )
 
     return im
-
-
-
 
 
 if __name__ == "__main__":

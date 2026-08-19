@@ -120,15 +120,24 @@ if __name__ == "__main__":
     part_struct_accessors = args.part_struct_accessors
     verify_file_exists(input_file)
 
-    if (not part_struct_accessors) and (not global_var_accessors) and (not explicit_var_accessors):
-        raise ValueError("Neither '--part-struct-accessors' nor '--global-var-accessors' nor '--explicit-var-accessors' selected. You must select at least one.")
+    if (
+        (not part_struct_accessors)
+        and (not global_var_accessors)
+        and (not explicit_var_accessors)
+    ):
+        raise ValueError(
+            "Neither '--part-struct-accessors' nor '--global-var-accessors' nor '--explicit-var-accessors' selected. You must select at least one."
+        )
 
     # read in data
     particle_fields_d, metadata_d = read_input_file(input_file)
 
     # add required auxiliary fields
     particle_fields_d = add_auxiliary_fields(
-        particle_fields_d, id_checks=id_checks, part_struct_accessors=part_struct_accessors, verbose=verbose,
+        particle_fields_d,
+        id_checks=id_checks,
+        part_struct_accessors=part_struct_accessors,
+        verbose=verbose,
     )
 
     # check that everything is sensible

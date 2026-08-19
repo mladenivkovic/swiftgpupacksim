@@ -121,7 +121,7 @@ args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
 if isinstance(nthreads, list):
-    nthreads=nthreads[0]
+    nthreads = nthreads[0]
 local = args.local_legion or args.local_hp
 
 if args.equal_axis_limits:
@@ -159,7 +159,12 @@ if __name__ == "__main__":
     # get available layouts
     layouts = []
     firstdir = get_result_dir(
-        srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0], other_variant=variants[0]
+        srcdir,
+        EXPERIMENTS[0],
+        nthreads,
+        PART_ACCESS[0],
+        LOOP_SPLITS[0],
+        other_variant=variants[0],
     )
     ls = os.listdir(firstdir)
     for f in ls:
@@ -177,7 +182,6 @@ if __name__ == "__main__":
         raise ValueError(
             "Something went wrong determining index of AoS in array,", layouts
         )
-
 
     fig = plt.figure(figsize=(16, 9))
     ax1 = fig.add_subplot(2, 3, 1)
@@ -224,7 +228,13 @@ if __name__ == "__main__":
 
                 for l, layout in enumerate(layouts):
                     fname = get_result_fname(
-                        srcdir, experiment, nthreads, access, split, variant_dir_suffix_nopack, layout
+                        srcdir,
+                        experiment,
+                        nthreads,
+                        access,
+                        split,
+                        variant_dir_suffix_nopack,
+                        layout,
                     )
                     res = ResultData(fname, verbose=False)
                     result_data_nopack.append(res)
@@ -257,7 +267,13 @@ if __name__ == "__main__":
 
                 for l, layout in enumerate(layouts):
                     fname = get_result_fname(
-                        srcdir, experiment, nthreads, access, split, variant_dir_suffix_pack, layout
+                        srcdir,
+                        experiment,
+                        nthreads,
+                        access,
+                        split,
+                        variant_dir_suffix_pack,
+                        layout,
                     )
                     res = ResultData(fname, verbose=False)
                     result_data_pack.append(res)
@@ -285,31 +301,61 @@ if __name__ == "__main__":
                     [res.data_dict["unpack/force"] for res in result_data_pack]
                 )
 
-
                 label = (
-                        experiment + " " +
-                    PART_ACCESS_LABELS[a]
+                    experiment
+                    + " "
+                    + PART_ACCESS_LABELS[a]
                     + " "
                     + LOOP_SPLIT_LABELS[s]
                 )
 
                 ax1.plot(
-                    layouts, dens_pack_pack/dens_pack_nopack, c=color, ls=ls, label=label, **plotkwargs
+                    layouts,
+                    dens_pack_pack / dens_pack_nopack,
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
                 )
                 ax2.plot(
-                    layouts, grad_pack_pack/grad_pack_nopack, c=color, ls=ls, label=label, **plotkwargs
+                    layouts,
+                    grad_pack_pack / grad_pack_nopack,
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
                 )
                 ax3.plot(
-                    layouts, forc_pack_pack/forc_pack_nopack, c=color, ls=ls, label=label, **plotkwargs
+                    layouts,
+                    forc_pack_pack / forc_pack_nopack,
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
                 )
                 ax4.plot(
-                    layouts, dens_unpack_pack/dens_unpack_nopack, c=color, ls=ls, label=label, **plotkwargs
+                    layouts,
+                    dens_unpack_pack / dens_unpack_nopack,
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
                 )
                 ax5.plot(
-                    layouts, grad_unpack_pack/grad_unpack_nopack, c=color, ls=ls, label=label, **plotkwargs
+                    layouts,
+                    grad_unpack_pack / grad_unpack_nopack,
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
                 )
                 ax6.plot(
-                    layouts, forc_unpack_pack/forc_unpack_nopack, c=color, ls=ls, label=label, **plotkwargs
+                    layouts,
+                    forc_unpack_pack / forc_unpack_nopack,
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    **plotkwargs,
                 )
 
     #  if mintime < 200.0:
@@ -319,7 +365,13 @@ if __name__ == "__main__":
     for ax in fig.axes:
         ax.set_xlabel("particle data layouts")
         #  ax.tick_params("x", rotation=45)
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid()
         #  ax.legend()
         if args.equal_axis_limits:
@@ -327,9 +379,7 @@ if __name__ == "__main__":
 
     # leftmost axes
     for ax in [ax1, ax4]:
-        ax.set_ylabel(
-            r"$t / t_{\mathrm{pack}} / t_{\mathrm{unpack}}$"
-        )
+        ax.set_ylabel(r"$t / t_{\mathrm{pack}} / t_{\mathrm{unpack}}$")
 
     # top row axes
     for ax in [ax1, ax2, ax3]:

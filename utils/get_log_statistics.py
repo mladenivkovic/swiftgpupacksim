@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("srcdir", help="directory to read in")
 parser.add_argument(
-        "-v",
+    "-v",
     "--verbose",
     dest="verbose",
     action="store_true",
@@ -25,7 +25,6 @@ parser.add_argument(
 args = parser.parse_args()
 verbose = args.verbose
 srcdir = args.srcdir
-
 
 
 if not os.path.exists(srcdir):
@@ -45,7 +44,8 @@ for f in ls:
 nsteps = len(fstepcount)
 nthreads = len(fthreadcount)
 
-if verbose: print(f"Found {nthreads} threads and {nsteps} steps")
+if verbose:
+    print(f"Found {nthreads} threads and {nsteps} steps")
 
 
 subtypes_all = None
@@ -54,25 +54,39 @@ counts_all = None
 
 for step in range(nsteps):
 
-    if verbose: print("Running step", step)
+    if verbose:
+        print("Running step", step)
 
     subtypes = None
     types = None
     counts = None
 
     for thread in range(nthreads):
-        if verbose: print("Running thread", thread)
+        if verbose:
+            print("Running thread", thread)
 
         logfile = f"log_thread{thread:03}_step{step:03}.dat"
         fulllogfile = os.path.join(srcdir, logfile)
-        subtype, pou, count = np.genfromtxt(fulllogfile,
-                                         dtype = ["<U1", "<U1", np.int32, np.int32, np.int32, np.float32], # "<U1": Unicode character <= 1 character in length
-                                         comments="/",
-                                         delimiter=",",
-                                         #  usecols=[0,1,2,3,4,5], # ignore timing
-                                         usecols=[0,1,3,], # ignore timing
-                                         unpack=True,
-                             )
+        subtype, pou, count = np.genfromtxt(
+            fulllogfile,
+            dtype=[
+                "<U1",
+                "<U1",
+                np.int32,
+                np.int32,
+                np.int32,
+                np.float32,
+            ],  # "<U1": Unicode character <= 1 character in length
+            comments="/",
+            delimiter=",",
+            #  usecols=[0,1,2,3,4,5], # ignore timing
+            usecols=[
+                0,
+                1,
+                3,
+            ],  # ignore timing
+            unpack=True,
+        )
 
         # aggregate data over all threads
         if subtypes is None:
@@ -88,29 +102,28 @@ for step in range(nsteps):
         else:
             counts = np.concatenate((counts, count))
 
-
-    n_density_pack = np.count_nonzero(types[subtypes == 'd'] == 'p')
-    n_density_unpack = np.count_nonzero(types[subtypes == 'd'] == 'u')
-    n_gradient_pack = np.count_nonzero(types[subtypes == 'g'] == 'p')
-    n_gradient_unpack = np.count_nonzero(types[subtypes == 'g'] == 'u')
-    n_force_pack = np.count_nonzero(types[subtypes == 'f'] == 'p')
-    n_force_unpack = np.count_nonzero(types[subtypes == 'f'] == 'u')
+    n_density_pack = np.count_nonzero(types[subtypes == "d"] == "p")
+    n_density_unpack = np.count_nonzero(types[subtypes == "d"] == "u")
+    n_gradient_pack = np.count_nonzero(types[subtypes == "g"] == "p")
+    n_gradient_unpack = np.count_nonzero(types[subtypes == "g"] == "u")
+    n_force_pack = np.count_nonzero(types[subtypes == "f"] == "p")
+    n_force_unpack = np.count_nonzero(types[subtypes == "f"] == "u")
 
     counts_sorted = np.sort(counts)
-
 
     print()
     print(f"Step {step}")
     print("-----------")
-    print( "              pack     unpack")
+    print("              pack     unpack")
     print(f"Density:      {n_density_pack:<8d} {n_density_unpack:<8d}")
     print(f"Gradient:     {n_gradient_pack:<8d} {n_gradient_unpack:<8d}")
     print(f"Force:        {n_force_pack:<8d} {n_force_unpack:<8d}")
     print()
     print(f"                   min  max  mean     median")
-    print(f"# parts in cells   {counts.min():<4d} {counts.max():<4d} {counts.mean():<8.3f} {counts_sorted[counts.size // 2]:<4d}")
+    print(
+        f"# parts in cells   {counts.min():<4d} {counts.max():<4d} {counts.mean():<8.3f} {counts_sorted[counts.size // 2]:<4d}"
+    )
     print()
-
 
     # Store aggregate data for full simulation
     if subtypes_all is None:
@@ -127,26 +140,25 @@ for step in range(nsteps):
         counts_all = np.concatenate((counts_all, counts))
 
 
-n_density_pack = np.count_nonzero(types_all[subtypes_all == 'd'] == 'p')
-n_density_unpack = np.count_nonzero(types_all[subtypes_all == 'd'] == 'u')
-n_gradient_pack = np.count_nonzero(types_all[subtypes_all == 'g'] == 'p')
-n_gradient_unpack = np.count_nonzero(types_all[subtypes_all == 'g'] == 'u')
-n_force_pack = np.count_nonzero(types_all[subtypes_all == 'f'] == 'p')
-n_force_unpack = np.count_nonzero(types_all[subtypes_all == 'f'] == 'u')
+n_density_pack = np.count_nonzero(types_all[subtypes_all == "d"] == "p")
+n_density_unpack = np.count_nonzero(types_all[subtypes_all == "d"] == "u")
+n_gradient_pack = np.count_nonzero(types_all[subtypes_all == "g"] == "p")
+n_gradient_unpack = np.count_nonzero(types_all[subtypes_all == "g"] == "u")
+n_force_pack = np.count_nonzero(types_all[subtypes_all == "f"] == "p")
+n_force_unpack = np.count_nonzero(types_all[subtypes_all == "f"] == "u")
 
 counts_all_sorted = np.sort(counts_all)
 
 print()
 print(f"Full Logs")
 print("-----------")
-print( "              pack     unpack")
+print("              pack     unpack")
 print(f"Density:      {n_density_pack:<8d} {n_density_unpack:<8d}")
 print(f"Gradient:     {n_gradient_pack:<8d} {n_gradient_unpack:<8d}")
 print(f"Force:        {n_force_pack:<8d} {n_force_unpack:<8d}")
 print()
 print(f"                   min  max  mean     median")
-print(f"# parts in cells   {counts.min():<4d} {counts.max():<4d} {counts.mean():<8.3f} {counts_sorted[counts.size // 2]:<4d}")
+print(
+    f"# parts in cells   {counts.min():<4d} {counts.max():<4d} {counts.mean():<8.3f} {counts_sorted[counts.size // 2]:<4d}"
+)
 print()
-
-
-

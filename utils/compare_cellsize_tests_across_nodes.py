@@ -116,7 +116,7 @@ plotkwargs = {
 }
 
 NODES = ["dine2_cellsize", "gn003_cellsize"]
-NODE_LABELS = {"dine2_cellsize": "dine2", "gn003_cellsize":"gracehopper"}
+NODE_LABELS = {"dine2_cellsize": "dine2", "gn003_cellsize": "gracehopper"}
 
 EXPERIMENTS = [
     "TestCellSize64",
@@ -124,16 +124,14 @@ EXPERIMENTS = [
     "TestCellSize512",
     #  "TestCellSize1024",
     "TestCellSize2048",
-    ]
+]
 EXPERIMENT_LABLES = [
-        "N=64",
-        "N=128",
-        "N=512",
-        #  "N=1024",
-        "N=2048"
-        ]
-
-
+    "N=64",
+    "N=128",
+    "N=512",
+    #  "N=1024",
+    "N=2048",
+]
 
 
 if __name__ == "__main__":
@@ -167,14 +165,14 @@ if __name__ == "__main__":
             # first, grab normalisation:
             # AoS part-struct for this experiment
             fname_norm = get_result_fname(
-                        srcdir,
-                        experiment,
-                        nthreads,
-                        "part-struct",
-                        loop_split,
-                        variant_dir_suffix,
-                        "aos",
-                    )
+                srcdir,
+                experiment,
+                nthreads,
+                "part-struct",
+                loop_split,
+                variant_dir_suffix,
+                "aos",
+            )
             res = ResultData(fname_norm, verbose=False)
             normalisation = res.total_time
 
@@ -203,21 +201,29 @@ if __name__ == "__main__":
                     #  maxtime = max(maxtime, res.timings.max())
                     #  mintime = min(mintime, res.timings.min())
 
-
                 # Unpack result data by packing operation type
                 results = np.array(result_data)
 
                 results /= normalisation
 
                 label = (
-                        EXPERIMENT_LABLES[e] + " " +
-                    PART_ACCESS_LABELS[a]
+                    EXPERIMENT_LABLES[e]
+                    + " "
+                    + PART_ACCESS_LABELS[a]
                     #  + " "
                     #  + LOOP_SPLIT_LABELS[s]
                     #  + variant_label_suffix
                 )
 
-                ax.plot(layouts, results, c=color, ls=ls, label=label, marker=marker, **plotkwargs)
+                ax.plot(
+                    layouts,
+                    results,
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    marker=marker,
+                    **plotkwargs,
+                )
 
     #  if mintime < 200.0:
     #      mintime = 0.0
@@ -225,7 +231,13 @@ if __name__ == "__main__":
     for ax in axes:
         #  ax.set_xlabel("particle data layouts")
         #  ax.tick_params("x", rotation=90)
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid(which="both")
         #  ax.legend()
         #  if args.equal_axis_limits:
@@ -233,9 +245,7 @@ if __name__ == "__main__":
         #  ax.set_ylim(0.50, 1.3)
 
         # leftmost axes
-        ax.set_ylabel(
-            r"$t / t^{\mathrm{part\ struct}}_{\mathrm{aos}}$"
-        )
+        ax.set_ylabel(r"$t / t^{\mathrm{part\ struct}}_{\mathrm{aos}}$")
         #  else:
         #      ax.set_ylabel("Timing [ms]")
 
@@ -243,7 +253,6 @@ if __name__ == "__main__":
         #  for ax in [ax2, ax3, ax5, ax6]:
         #      if args.equal_axis_limits:
         #          ax.set_yticklabels([])
-
 
     hand, lab = ax1.get_legend_handles_labels()
     #  ncols=int(len(layouts)*0.5 + 0.5)

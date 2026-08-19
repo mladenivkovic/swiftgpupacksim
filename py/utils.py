@@ -116,7 +116,10 @@ def read_input_file(filename: str):
 
     part_data_dict = {}
     # Set some default values
-    metadata_dict = {"authors": "NO AUTHORS SPECIFIED", "flavour": "NO_FLAVOUR_SPECIFIED"}
+    metadata_dict = {
+        "authors": "NO AUTHORS SPECIFIED",
+        "flavour": "NO_FLAVOUR_SPECIFIED",
+    }
 
     for key in yaml_data_d.keys():
         if key == "metadata":
@@ -127,8 +130,6 @@ def read_input_file(filename: str):
             part_data_dict[key] = yaml_data_d[key]
 
     return part_data_dict, metadata_dict
-
-
 
 
 def validate_yml_contents(contents_d: dict) -> None:
@@ -199,7 +200,10 @@ def check_part_struct_first_in_list(contents_d: dict) -> bool:
 
 
 def add_auxiliary_fields(
-    contents_d: dict, id_checks: bool = True, part_struct_accessors: bool = False, verbose: bool = False
+    contents_d: dict,
+    id_checks: bool = True,
+    part_struct_accessors: bool = False,
+    verbose: bool = False,
 ) -> dict:
     """
     Run through the read in contents (passed as contents_d) and add auxiliary

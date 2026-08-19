@@ -107,7 +107,7 @@ parser.add_argument(
 args = parser.parse_args()
 # nthreads = args.nthreads
 local = args.local_legion or args.local_hp
-access_variant=args.access_variant
+access_variant = args.access_variant
 if isinstance(access_variant, list):
     access_variant = access_variant[0]
 
@@ -160,19 +160,19 @@ if __name__ == "__main__":
         for e, experiment in enumerate(EXPERIMENTS):
 
             ls = linestyles[e]
-            marker=markers[e]
+            marker = markers[e]
 
             # first, grab normalisation:
             # AoS part-struct for this experiment
             normfname = get_result_fname(
-                        srcdir,
-                        experiment,
-                        nthreads,
-                        access_variant,
-                        "none",
-                        variant_dir_suffix,
-                        "aos",
-                    )
+                srcdir,
+                experiment,
+                nthreads,
+                access_variant,
+                "none",
+                variant_dir_suffix,
+                "aos",
+            )
             res = ResultData(normfname, verbose=False)
             normalisation = res.total_time
 
@@ -211,7 +211,15 @@ if __name__ == "__main__":
                     #  + variant_label_suffix
                 )
 
-                ax.plot(layouts, results, c=color, ls=ls, label=label, marker=marker,**plotkwargs)
+                ax.plot(
+                    layouts,
+                    results,
+                    c=color,
+                    ls=ls,
+                    label=label,
+                    marker=marker,
+                    **plotkwargs,
+                )
 
     #  if mintime < 200.0:
     #      mintime = 0.0
@@ -220,14 +228,19 @@ if __name__ == "__main__":
     for ax in fig.axes:
         #  ax.set_xlabel("particle data layouts")
         #  ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid(which="both")
         #  ax.legend()
         #  if args.equal_axis_limits:
         #      ax.set_ylim(0.9 * mintime, 1.1 * maxtime)
 
         ax.set_ylabel(r"$t / t^{\mathrm{none}}_{\mathrm{aos}}$")
-
 
     hand, lab = ax1.get_legend_handles_labels()
     #  ncols=int(len(layouts)*0.5 + 0.5)
@@ -238,7 +251,7 @@ if __name__ == "__main__":
         loc="lower center",
         ncols=ncols,
         handlelength=4.5,
-        markerscale=1.,
+        markerscale=1.0,
     )
     fig.tight_layout(w_pad=0.5, rect=(0.01, 0.16, 0.99, 0.99))
 

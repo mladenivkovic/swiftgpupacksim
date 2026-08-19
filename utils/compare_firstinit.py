@@ -148,7 +148,7 @@ args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
 if isinstance(nthreads, list):
-    nthreads=nthreads[0]
+    nthreads = nthreads[0]
 normalise = args.normalise
 access_variant = args.access_variant
 loop_split = args.loop_split
@@ -171,7 +171,10 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 )
 
 variants = [variant_dir_suffix, variant_dir_suffix + "_firstinit"]
-variants_labels = [variant_label_suffix, variant_label_suffix + ", parallel particle initialisation"]
+variants_labels = [
+    variant_label_suffix,
+    variant_label_suffix + ", parallel particle initialisation",
+]
 
 plotkwargs = {
     "marker": "o",
@@ -188,7 +191,12 @@ if __name__ == "__main__":
     # get available layouts
     layouts = []
     firstdir = get_result_dir(
-        srcdir, EXPERIMENTS[0], nthreads, access_variant, loop_split, other_variant=variants[0]
+        srcdir,
+        EXPERIMENTS[0],
+        nthreads,
+        access_variant,
+        loop_split,
+        other_variant=variants[0],
     )
     ls = os.listdir(firstdir)
     for f in ls:
@@ -237,7 +245,13 @@ if __name__ == "__main__":
 
             for l, layout in enumerate(layouts):
                 fname = get_result_fname(
-                    srcdir, experiment, nthreads, access_variant, loop_split, variant, layout
+                    srcdir,
+                    experiment,
+                    nthreads,
+                    access_variant,
+                    loop_split,
+                    variant,
+                    layout,
                 )
                 res = ResultData(fname, verbose=False)
                 result_data.append(res)
@@ -246,9 +260,7 @@ if __name__ == "__main__":
                 mintime = min(mintime, res.timings.min())
 
             # Unpack result data by packing operation type
-            dens_pack = np.array(
-                [res.data_dict["pack/density"] for res in result_data]
-            )
+            dens_pack = np.array([res.data_dict["pack/density"] for res in result_data])
             dens_unpack = np.array(
                 [res.data_dict["unpack/density"] for res in result_data]
             )
@@ -258,9 +270,7 @@ if __name__ == "__main__":
             grad_unpack = np.array(
                 [res.data_dict["unpack/gradient"] for res in result_data]
             )
-            forc_pack = np.array(
-                [res.data_dict["pack/force"] for res in result_data]
-            )
+            forc_pack = np.array([res.data_dict["pack/force"] for res in result_data])
             forc_unpack = np.array(
                 [res.data_dict["unpack/force"] for res in result_data]
             )
@@ -274,31 +284,20 @@ if __name__ == "__main__":
             #      forc_unpack /= normalisation["unpack/force"]
 
             label = (
-                    experiment + " " +
-                PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
+                experiment
+                + " "
+                + PART_ACCESS_LABELS[PART_ACCESS.index(access_variant)]
                 + " "
                 + LOOP_SPLIT_LABELS[LOOP_SPLITS.index(loop_split)]
                 + variants_labels[v]
             )
 
-            ax1.plot(
-                layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax2.plot(
-                layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax3.plot(
-                layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax4.plot(
-                layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax5.plot(
-                layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
-            ax6.plot(
-                layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs
-            )
+            ax1.plot(layouts, dens_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax2.plot(layouts, grad_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax3.plot(layouts, forc_pack, c=color, ls=ls, label=label, **plotkwargs)
+            ax4.plot(layouts, dens_unpack, c=color, ls=ls, label=label, **plotkwargs)
+            ax5.plot(layouts, grad_unpack, c=color, ls=ls, label=label, **plotkwargs)
+            ax6.plot(layouts, forc_unpack, c=color, ls=ls, label=label, **plotkwargs)
 
     #  if mintime < 200.0:
     #      mintime = 0.0
@@ -306,7 +305,13 @@ if __name__ == "__main__":
     # all axes
     for ax in fig.axes:
         ax.set_xlabel("particle data layouts")
-        ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+        ax.set_xticks(
+            ax.get_xticks(),
+            labels=ax.get_xticklabels(),
+            rotation=30,
+            ha="right",
+            rotation_mode="anchor",
+        )
         ax.grid()
         #  ax.legend()
         if args.equal_axis_limits:

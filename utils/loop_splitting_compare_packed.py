@@ -128,7 +128,7 @@ args = parser.parse_args()
 srcdir = args.srcdir
 nthreads = args.nthreads
 if isinstance(nthreads, list):
-    nthreads=nthreads[0]
+    nthreads = nthreads[0]
 normalise = args.normalise
 local = args.local_legion or args.local_hp
 
@@ -169,7 +169,12 @@ if __name__ == "__main__":
     # get available layouts
     layouts = []
     firstdir = get_result_dir(
-        srcdir, EXPERIMENTS[0], nthreads, PART_ACCESS[0], LOOP_SPLITS[0], other_variant=variants[0]
+        srcdir,
+        EXPERIMENTS[0],
+        nthreads,
+        PART_ACCESS[0],
+        LOOP_SPLITS[0],
+        other_variant=variants[0],
     )
     ls = os.listdir(firstdir)
     for f in ls:
@@ -302,7 +307,13 @@ if __name__ == "__main__":
             for ax in fig.axes:
                 ax.set_xlabel("particle data layouts")
                 #  ax.tick_params("x", rotation=45)
-                ax.set_xticks(ax.get_xticks(), labels=ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor" )
+                ax.set_xticks(
+                    ax.get_xticks(),
+                    labels=ax.get_xticklabels(),
+                    rotation=30,
+                    ha="right",
+                    rotation_mode="anchor",
+                )
                 ax.grid()
                 #  ax.legend()
                 if args.equal_axis_limits:
