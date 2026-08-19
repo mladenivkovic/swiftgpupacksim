@@ -7,6 +7,9 @@
 #error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
 #endif
 {%- endif %}
+{%- if GLOBAL_VAR_ACCESSORS %}
+extern struct part_arrays global_part_arrays;
+{%- endif %}
 
 #include <float.h>
 #include <limits.h>
