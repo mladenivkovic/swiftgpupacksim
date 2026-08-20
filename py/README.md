@@ -15,6 +15,10 @@ py generate_hydro_part.py --help
 
 to see all available cmdline options.
 
+By default, this script will create files used by `swiftgpupacksim`. If you want
+to produce header files intended for use in the `swift` code, use the `--swift`
+flag.
+
 
 Dependencies:
 - pyyaml
@@ -249,6 +253,42 @@ static __attribute__((always_inline)) INLINE float
 ```
 
 **WARNING**: This currently doesn't work for unions.
+
+
+### Arrays
+
+To create fields which are fixed-size arrays, add the `size` parameter to the
+yaml file. For example:
+
+```
+  part:
+    v:
+      size: 3
+
+    radiation_energy:
+      size: RT_NGROUPS
+
+    matrix:
+      size: 3,3
+```
+
+results in
+
+```
+  struct part {
+
+    float v[3];
+
+    float radiation_energy[RT_NGROUPS];
+
+    float matrix[3][3];
+  }
+```
+
+
+
+
+
 
 
 ### Reserved names

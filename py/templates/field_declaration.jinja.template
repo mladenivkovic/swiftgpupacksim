@@ -11,7 +11,13 @@
 {{TYPE}} _{{NAME}}
 
 {%- if IS_ARRAY -%}
+	{%- if IS_MULTIDIM_ARRAY -%}
+	  {%- for entry in MULTIDIM_ARRAY_DIMENSIONS -%}
+			[{{entry}}] 
+		{%- endfor -%}
+	{%- else -%}
     [{{SIZE}}] 
+	{%- endif -%}
 {%- endif -%};
 
 {%- if HAS_IFDEF %}
