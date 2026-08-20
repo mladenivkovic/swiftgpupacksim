@@ -3,7 +3,7 @@
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "Minimal"
-  authors: "2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
+  authors: "2016 Matthieu Schaller (schaller@strw.leidenuniv.nl)"
 
 # now for the actual particle content
 
@@ -111,7 +111,7 @@ union1:
     type: union
     doc: Store density/force specific stuff
     contents:
-      density:
+	  density:
         type: struct
         doc: Structure for the variables only used in the density loop over neighbours 
              Quantities in this sub-structure should only be accessed in the density loop 
@@ -126,8 +126,8 @@ union1:
           rho_dh:
             doc: Derivative of density with respect to h
           
-	  div_v:
-	    doc: Velocity divergence
+	  	  div_v:
+	    	doc: Velocity divergence
 	  
           rot_v:
             doc: Particle velocity curl
@@ -144,9 +144,9 @@ union1:
       
           soundspeed: 
             doc: Particle soundspeed
-
-	  v_sig:
-	    doc: Particle signal velocity
+			
+	  	  v_sig:
+	    	doc: Particle signal velocity
 
           h_dt: 
             doc: Time derivative of smoothing length 
