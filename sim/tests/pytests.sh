@@ -33,6 +33,7 @@ for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-acc
   for testcase in \
     "test_data_types" \
     "test_arrays" \
+    "test_multidim_arrays" \
     "test_ifdefs" \
     "test_struct" \
     "test_union" \
