@@ -8,46 +8,75 @@ metadata:
 # now for the actual particle content
 
 part:
+  id:
+    type: long long
+    doc: Particle ID
+
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
+
   x:
     type: double
     size: 3
     doc: Particle position
 
-  h:
-    doc: Particle cutoff radius
-
   v:
     size: 3
     doc: Particle predicted velocity
 
-  mass:
-    doc: Particle mass
-
   a_hydro:
-    type: float
     size: 3
     doc: Particle acceleration 
+  h:
+    doc: Particle cutoff radius
 
+  mass:
+    doc: Particle mass
+  
   rho:
-    type: float
     doc: Particle density
 
   entropy:
-    type: float
     doc: Particle entropy
 
   entropy_dt:
-    type: float
     doc: Entropy time derivative
 
-
-  id: 
-    type: long long
-    doc:  Particle unique ID
-
-  gpart:
-    type: struct gpart*
-    doc:  Pointer to corresponding gravity part
+  union1:
+    type: union
+    contents:
+      density:
+        type: struct
+        contents:
+          wcount:
+            doc: Number of neighbours
+          wcount_dh:
+            doc: Number of neighbours spatial derivative
+          rho_dh:
+            doc: Derivative of density with respect to h
+          rot_v:
+            doc: Particle velocity curl
+            size: 3
+          div_v:
+            doc: Particle velocity divergence
+      force:
+        type: struct
+        contents:
+          balsara:
+            doc: Balsara switch
+          f:
+            doc: Grad h term
+          P_over_rho2:
+            doc: Pressure over density squared
+          soundspeed:
+            doc: Particle soundspeed
+          v_sig: 
+            doc: Signal velocity
+          h_dt:
+            doc: Time derivative of smoothing length 
+          
+          
 
   adaptive_softening_data:
     type: struct adaptive_softening_part_data
@@ -89,13 +118,13 @@ part:
     type: struct rt_timestepping_data
     doc: RT sub-cycling time stepping data
 
-  depth_h:
-    doc: Tree-depth at which size / 2 <= h * gamma < size
-    type: char
-
   time_bin:
     type: timebin_t
     doc: Time-step length
+
+  depth_h:
+    doc: Tree-depth at which size / 2 <= h * gamma < size
+    type: char
 
   limiter_data:
     type: struct timestep_limiter_data
@@ -111,15 +140,6 @@ part:
     doc: Time of the last kick
     ifdef: SWIFT_DEBUG_CHECKS
 
-  num_ngb_density:
-    type: int
-    doc: Number of interactions in the density SELF and PAIR
-    ifdef: DEBUG_INTERACTIONS_SPH
-
-  num_ngb_force:
-    type: int
-    doc: Number of interactions in the force SELF and PAIR
-    ifdef: DEBUG_INTERACTIONS_SPH
 
   ids_ngbs_density:
     type: long long
@@ -134,6 +154,15 @@ part:
     ifdef: DEBUG_INTERACTIONS_SPH
 
 
+  num_ngb_density:
+    type: int
+    doc: Number of interactions in the density SELF and PAIR
+    ifdef: DEBUG_INTERACTIONS_SPH
+
+  num_ngb_force:
+    type: int
+    doc: Number of interactions in the force SELF and PAIR
+    ifdef: DEBUG_INTERACTIONS_SPH
 
 
 xpart:
@@ -155,7 +184,6 @@ xpart:
     doc: "Gravitational acceleration at the end of the last step"
 
   entropy_full:
-    type: float
     doc: "Entropy at the last full step."
 
   extra_split_data:
@@ -182,56 +210,14 @@ xpart:
     doc: "Additional data used by the MHD scheme"
     type: "struct mhd_xpart_data"
 
+  forcing_data:
+    doc: "Additional data used by the forcing scheme"
+    type: "struct forcing_xpart_data"
+  
   extra_csds_data:
     type: "struct csds_part_data"
     doc: "Additional data for the particle csds"
     ifdef: "WITH_CSDS"
 
-  forcing_data:
-    type: "struct forcing_xpart_data"
-    doc: "Additional data used by the forcing scheme"
 
 
-  union1:
-    type: union
-    contents:
-      density:
-        type: struct
-        contents:
-          rho_dh:
-            type: float
-            doc: Derivative of density with respect to h
-          wcount:
-            type: float
-            doc: Number of neighbours
-          wcount_dh:
-            type: float
-            doc: Number of neighbours spatial derivative
-          rot_v:
-            type: float
-            doc: Particle velocity curl
-            size: 3
-          div_v:
-            type: float
-            doc: Particle velocity divergence
-      force:
-        type: struct
-        contents:
-          balsara:
-            type: float
-            doc: Balsara switch
-          soundspeed:
-            type: float
-            doc: Particle soundspeed
-          h_dt:
-            type: float
-            doc: Time derivative of smoothing length 
-          f:
-            type: float
-            doc: Grad h term
-          P_over_rho2:
-            type: float
-            doc: Pressure over density squared
-          v_sig: 
-            type: float
-            doc: Signal velocity
