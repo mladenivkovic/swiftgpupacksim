@@ -62,10 +62,10 @@ xpart:
     type: "struct forcing_xpart_data"
     doc: "Additional data used by the forcing scheme"
 
-csds_data:
-  type: "struct csds_part_data"
-  doc: "Additional data for the particle csds"
-  ifdef: WITH_CSDS
+  csds_data:
+  	type: "struct csds_part_data"
+  	doc: "Additional data for the particle csds"
+  	ifdef: WITH_CSDS
 
 part:
   doc: | 
@@ -125,14 +125,13 @@ part:
     type: struct
     doc: store viscosity information in a separate struct
     contents:
-    
-      velocity_gradient:
-	type: float_ptr
-	size: 3
-	doc: Velocity gradient tensor physical
-	velocity_gradient_inner:
-	  size: 3
-	  doc: Velocity gradient tensor physical
+  	  velocity_gradient:
+	  	type: float_ptr
+		size: 3
+		doc: Velocity gradient tensor physical
+		velocity_gradient_inner:
+	  	  size: 3
+		  doc: Velocity gradient tensor physical
 
       tensor_norm:
         doc: Velocity gradient tensor trace norm |T|
@@ -175,7 +174,7 @@ part:
             doc: Neighbour number count
           wcount_dh:
             doc: Derivative of the neighbour number with respect to h
-	  rho_dh:
+	  	  rho_dh:
             doc: Derivative of density with respect to h  
 
       force:
@@ -190,7 +189,7 @@ part:
             doc: Particle pressure
           soundspeed: 
             doc: Particle soundspeed
-           h_dt: 
+          h_dt: 
             doc: Time derivative of smoothing length 
 
 
