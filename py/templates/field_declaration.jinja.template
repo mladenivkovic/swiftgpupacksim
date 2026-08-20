@@ -1,24 +1,19 @@
 {%- if HAS_IFDEF -%}
-    #ifdef {{IFDEF}}
+#ifdef {{IFDEF}}
 {% endif -%}
 
 {% if HAS_DOC -%}
 {% for i in range(INDENT_LEVEL) %}  {% endfor -%} {#- adds indent -#}
-    /*! {{DOC}} */
+  /*! {{DOC}} */
 {% endif -%} 
 
-{% for i in range(INDENT_LEVEL) %}  {% endfor %} {#- adds indent -#}
-{{TYPE}} _{{NAME}}
-
+{%- for i in range(INDENT_LEVEL) %}  {% endfor -%} {#- adds indent -#}
 {%- if IS_ARRAY -%}
-	[{{SIZE}}];
+  {{TYPE}} _{{NAME}}[{{SIZE}}];
 {%- elif IS_MULTIDIM_ARRAY -%}
-	{%- for entry in MULTIDIM_ARRAY_DIMENSIONS -%}
-		[{{entry}}] 
-	{%- endfor -%}
-	;
-{%- else -%} {# regular scalar field #}
-;
+  {{TYPE}} _{{NAME}} {%- for entry in MULTIDIM_ARRAY_DIMENSIONS -%} [{{entry}}] {%- endfor -%};
+{%- else -%} {#- regular scalar field -#}
+  {{TYPE}} _{{NAME}};
 {%- endif -%}
 
 {%- if HAS_IFDEF %}

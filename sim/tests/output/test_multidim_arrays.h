@@ -42,14 +42,12 @@ struct part {
 
 #ifdef USE_PART_STRUCT_ACCESSORS
   /*! offset/index of particle in cell particle data array */
-  size_t _cell_offset
-;
+  size_t _cell_offset;
 #endif
 
 #ifdef USE_PART_STRUCT_ACCESSORS
   /*! pointer to particle data array struct of the cell this particle is located in */
-  struct part_arrays* _cell_part_arrays
-;
+  struct part_arrays* _cell_part_arrays;
 #endif
 
   /*! my integer */
@@ -67,8 +65,7 @@ struct part {
 
 #ifdef SWIFT_DEBUG_CHECKS
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
-  long long _accessor_id
-;
+  long long _accessor_id;
 #endif
 
 };
@@ -81,8 +78,7 @@ struct part2 {
 
 #ifdef SWIFT_DEBUG_CHECKS
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
-  long long _accessor_id
-;
+  long long _accessor_id;
 #endif
 
 };
