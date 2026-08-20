@@ -1,0 +1,30 @@
+# Test fixed-size array generation.
+
+part:
+    my_2D_arr:
+        type: int
+        doc: my integer
+        size: 4,4
+
+    my_macro_2D_arr:
+        type: int
+        size: NDIM1, NDIM2
+
+    my_3D_arr:
+        type: int
+        size: 4,4,4
+
+    my_macro_3D_arr:
+        type: int
+        size: NDIM1, 2, NDIM3
+
+    my_3D_arr2:
+        type: int
+        size: 3, 3, 3
+        ifdef: DEBUG
+
+part2:
+    my_3D_arr3:
+        type: int
+        size: 3, 3, 3
+        ifdef: DEBUG

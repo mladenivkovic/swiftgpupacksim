@@ -15,6 +15,10 @@ py generate_hydro_part.py --help
 
 to see all available cmdline options.
 
+By default, this script will create files used by `swiftgpupacksim`. If you want
+to produce header files intended for use in the `swift` code, use the `--swift`
+flag.
+
 
 Dependencies:
 - pyyaml
@@ -186,9 +190,31 @@ discarded. So just make sure you give them a unique identifier.
 This also works with structs as elements of the union.
 
 
+### enums
 
+Enums (enumerations) are allowed as a data type for field members if they are
+defined somewhere else, i.e. this script will not provide a definition for them
+in the resulting header files.
 
+Example:
 
+```
+part:
+  my_enum:
+    type: enum color
+    doc: some enumeration, defined elsewhere
+```
+
+Should result in:
+
+```
+struct part {
+
+  /*! some enumeration, defined elsewhere */
+  enum color my_enum;
+
+}
+```
 
 ### IFDEF macros
 
@@ -249,6 +275,42 @@ static __attribute__((always_inline)) INLINE float
 ```
 
 **WARNING**: This currently doesn't work for unions.
+
+
+### Arrays
+
+To create fields which are fixed-size arrays, add the `size` parameter to the
+yaml file. For example:
+
+```
+  part:
+    v:
+      size: 3
+
+    radiation_energy:
+      size: RT_NGROUPS
+
+    matrix:
+      size: 3,3
+```
+
+results in
+
+```
+  struct part {
+
+    float v[3];
+
+    float radiation_energy[RT_NGROUPS];
+
+    float matrix[3][3];
+  }
+```
+
+
+
+
+
 
 
 ### Reserved names

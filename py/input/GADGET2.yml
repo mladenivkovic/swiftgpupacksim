@@ -8,32 +8,32 @@ metadata:
 # now for the actual particle content
 
 part:
-  doc: | 
-    @brief Particle fields for the SPH particles
+  id:
+    type: long long
+    doc: Particle ID
 
-    The density and force substructures are used to contain variables only used
-    within the density and force loops over neighbours. All more permanent
-    variables should be declared in the main part of the part structure,
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
 
   x:
     type: double
     size: 3
     doc: Particle position
 
-  h:
-    doc: Particle cutoff radius
-
   v:
     size: 3
     doc: Particle predicted velocity
 
-  mass:
-    doc: Particle mass
-
   a_hydro:
     size: 3
     doc: Particle acceleration 
+  h:
+    doc: Particle cutoff radius
 
+  mass:
+    doc: Particle mass
+  
   rho:
     doc: Particle density
 
@@ -42,56 +42,41 @@ part:
 
   entropy_dt:
     doc: Entropy time derivative
-#19/08 start adding data types to this union
+
   union1:
     type: union
-    doc: Store density/force specific stuff
     contents:
       density:
         type: struct
-        doc: Structure for the variables only used in the density loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the density loop 
-             over neighbours and the ghost task
         contents:
+          wcount:
+            doc: Number of neighbours
+          wcount_dh:
+            doc: Number of neighbours spatial derivative
           rho_dh:
             doc: Derivative of density with respect to h
-          wcount:
-            doc: Neighbour number count
-          wcount_dh:
-            doc: Derivative of the neighbour number with respect to h
           rot_v:
             doc: Particle velocity curl
             size: 3
+          div_v:
+            doc: Particle velocity divergence
       force:
         type: struct
-        doc: Structure for the variables only used in the force loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the force loop 
-             over neighbours and the ghost, drift and kick tasks
         contents:
           balsara:
             doc: Balsara switch
-          soundspeed: 
+          f:
+            doc: Grad h term
+          P_over_rho2:
+            doc: Pressure over density squared
+          soundspeed:
             doc: Particle soundspeed
-          h_dt: 
+          v_sig: 
+            doc: Signal velocity
+          h_dt:
             doc: Time derivative of smoothing length 
-
-  viscosity:
-    type: struct
-    doc: store viscosity information in a separate struct
-    contents:
-      div_v:
-        doc: Particle velocity divergence
-      v_sig:
-        doc: Signal velocity
-
-#removed all of internal energy stuff
-  id: 
-    type: long long
-    doc:  Particle unique ID
-
-  gpart:
-    type: struct gpart*
-    doc:  Pointer to corresponding gravity part
+          
+          
 
   adaptive_softening_data:
     type: struct adaptive_softening_part_data
@@ -133,13 +118,13 @@ part:
     type: struct rt_timestepping_data
     doc: RT sub-cycling time stepping data
 
-  depth_h:
-    doc: Tree-depth at which size / 2 <= h * gamma < size
-    type: char
-
   time_bin:
     type: timebin_t
     doc: Time-step length
+
+  depth_h:
+    doc: Tree-depth at which size / 2 <= h * gamma < size
+    type: char
 
   limiter_data:
     type: struct timestep_limiter_data
@@ -155,35 +140,32 @@ part:
     doc: Time of the last kick
     ifdef: SWIFT_DEBUG_CHECKS
 
-#question: what to do about ids_ngbs_density/force[MAX_NUM]   
-  num_ngb_density:
-    type: integer
-    doc: Number of interactions in the density SELF and PAIR
-    ifdef: DEBUG_INTERACTIONS_SPH
 
-  num_ngb_force:
-    type: integer
-    doc: Number of interactions in the force SELF and PAIR
-    ifdef: DEBUG_INTERACTIONS_SPH
-
-  ids_ngbs_density[MAX_NUM_OF_NEIGHBOURS]:
+  ids_ngbs_density:
     type: long long
+    size: MAX_NUM_OF_NEIGHBOURS
     doc: List of interesting particles in the density SELF and PAIR
     ifdef: DEBUG_INTERACTIONS_SPH
 
-  ids_ngbs_force[MAX_NUM_OF_NEIGHBOURS]:
+  ids_ngbs_force:
     type: long long
+    size: MAX_NUM_OF_NEIGHBOURS
     doc: List of interesting particles in the force SELF and PAIR
     ifdef: DEBUG_INTERACTIONS_SPH
 
 
-xpart:
-  doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
+  num_ngb_density:
+    type: int
+    doc: Number of interactions in the density SELF and PAIR
+    ifdef: DEBUG_INTERACTIONS_SPH
 
-    This structure contains the particle fields that are not used in the
-    density or force loops. Quantities should be used in the kick, drift and
-    potentially ghost tasks only.
+  num_ngb_force:
+    type: int
+    doc: Number of interactions in the force SELF and PAIR
+    ifdef: DEBUG_INTERACTIONS_SPH
+
+
+xpart:
 
   x_diff:
     size: 3
@@ -201,10 +183,10 @@ xpart:
     size: 3
     doc: "Gravitational acceleration at the end of the last step"
 
-  u_full:
-    doc: "Internal energy at the last full step."
+  entropy_full:
+    doc: "Entropy at the last full step."
 
-  split_data:
+  extra_split_data:
     type: "struct particle_splitting_data"
     doc: "Additional data used to record particle splits"
 
@@ -217,7 +199,7 @@ xpart:
     type: "struct tracers_xpart_data"
 
   extra_sf_data:
-    doc: "Additional data used by the tracers"
+    doc: "Additional data used by the star formation"
     type: "struct star_formation_xpart_data"
 
   extra_feedback_data:
@@ -228,8 +210,14 @@ xpart:
     doc: "Additional data used by the MHD scheme"
     type: "struct mhd_xpart_data"
 
-  csds_data:
+  forcing_data:
+    doc: "Additional data used by the forcing scheme"
+    type: "struct forcing_xpart_data"
+  
+  extra_csds_data:
     type: "struct csds_part_data"
     doc: "Additional data for the particle csds"
     ifdef: "WITH_CSDS"
+
+
 

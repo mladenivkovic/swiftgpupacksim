@@ -21,7 +21,10 @@ def init_jinja_env(template_dir: str = _default_template_dir) -> jinja2.Environm
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(template_dir), keep_trailing_newline=True
     )
-
+    # add 'ord' and 'chr' builtin to environment so I can use it within the
+    # templates to make i, j, k indices for multidim arrays
+    env.globals.update(ord=ord)
+    env.globals.update(chr=chr)
     return env
 
 
