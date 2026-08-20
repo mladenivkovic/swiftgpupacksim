@@ -110,32 +110,32 @@ part:
   pressure_bar:
     doc: Particle pressure (weighted)
 
-viscosity:
-  type: struct
-  doc: store viscosity information in a separate struct
-  contents:
-    div_v:
-      doc: Particle velocity divergence
+  viscosity:
+    type: struct
+    doc: store viscosity information in a separate struct
+    contents:
+      div_v:
+        doc: Particle velocity divergence
 
-    div_v_previous_step:
-      doc: Particle velocity divergence from previous step
+      div_v_previous_step:
+        doc: Particle velocity divergence from previous step
 
-    alpha:
-      doc: Artificial viscosity parameter
+      alpha:
+        doc: Artificial viscosity parameter
       
-    v_sig:
-      doc: Signal velocity
+      v_sig:
+        doc: Signal velocity
 
-diffusion:
-  type: struct
-  doc: Store thermal diffusion information in a separate struct
-  contents:
+  diffusion:
+    type: struct
+    doc: Store thermal diffusion information in a separate struct
+    contents:
 
-    laplace_u:
-      doc: del^2 u, a smoothed quantity
+      laplace_u:
+        doc: del^2 u, a smoothed quantity
 
-    alpha: 
-      doc: Thermal diffusion coefficient
+      alpha: 
+        doc: Thermal diffusion coefficient
 
 
 
