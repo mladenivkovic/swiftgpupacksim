@@ -1,11 +1,17 @@
 {# deliberately empty line #}
+{# 
+
+No full-array getters here. It's too complicated to make it look usable.
+
+
+
 /**
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %}
  * for read and write access. For read-only access, use
  * part_get_const_{{NAME}}() instead.
  */
-static __attribute__((always_inline)) INLINE {{TYPE}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}*{% endfor %}
-  part_get_{{NAME}}{{API_SUFFIX}}(struct part *restrict p) {
+static __attribute__((always_inline)) INLINE {{TYPE}}
+  (*part_get_{{NAME}}{{API_SUFFIX}}(struct part *restrict p)){% for entry in MULTIDIM_ARRAY_DIMENSIONS %}[{{entry}}]{%endfor%} {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -98,6 +104,10 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}{% for i in range(MUL
 #endif
 {%- endif %}
 }
+
+
+END OF COMMENTED OUT CODE
+#}
 
 /**
  * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %} by index.
@@ -238,7 +248,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE void
   part_set_{{NAME}}_ind{{API_SUFFIX}}(struct part *restrict p, 
   {%- for ind in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %} const int {{chr(ord('i')+ind)}}, {% endfor -%}
-  val) {
+  {{TYPE}} val) {
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
@@ -264,15 +274,15 @@ static __attribute__((always_inline)) INLINE void
   {%- if HAS_PARENT_STRUCT %}
   {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
   {%- else %}
-  {{ROOT_STRUCT}}_s->_{{NAME}}._{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
+  {{ROOT_STRUCT}}_s->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
   {%- endif -%}
 
 {%- else -%} {# is not in split struct #}
 
   {%- if HAS_PARENT_STRUCT %}
-  p->_{{PARENT_STRUCT}}._{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = {{NAME}};
+  p->_{{PARENT_STRUCT}}._{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
   {%- else %}
-  p->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = {{NAME}};
+  p->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
   {%- endif %}
 {%- endif %}
 

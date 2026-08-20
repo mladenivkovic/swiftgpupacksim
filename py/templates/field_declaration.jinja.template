@@ -11,14 +11,15 @@
 {{TYPE}} _{{NAME}}
 
 {%- if IS_ARRAY -%}
-	{%- if IS_MULTIDIM_ARRAY -%}
-	  {%- for entry in MULTIDIM_ARRAY_DIMENSIONS -%}
-			[{{entry}}] 
-		{%- endfor -%}
-	{%- else -%}
-    [{{SIZE}}] 
-	{%- endif -%}
-{%- endif -%};
+	[{{SIZE}}];
+{%- elif IS_MULTIDIM_ARRAY -%}
+	{%- for entry in MULTIDIM_ARRAY_DIMENSIONS -%}
+		[{{entry}}] 
+	{%- endfor -%}
+	;
+{%- else -%} {# regular scalar field #}
+;
+{%- endif -%}
 
 {%- if HAS_IFDEF %}
 #endif
