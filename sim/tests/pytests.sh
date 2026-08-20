@@ -29,8 +29,7 @@ function DIFF(){
 
 
 
-# for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
-for flag in "--part-struct-accessor"; do
+for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
   for testcase in \
     "test_data_types" \
     "test_arrays" \

@@ -14,6 +14,7 @@
 
 #include "hydro_part_arrays_struct.h"
 
+/* Some definitions and declarations to make the test programs compile */
 #ifndef MY_ARRAY_SIZE
 #define MY_ARRAY_SIZE 4
 #endif
@@ -22,11 +23,19 @@
 #define NDIM2 3
 #define NDIM3 4
 
-/* workaround for unit tests to produce compilable headers */
 #define INLINE inline
 #define DEBUG
 typedef unsigned long long integertime_t;
 typedef char timebin_t;
+
+enum color {
+  red = 0,
+  green,
+  blue,
+  purple,
+  white,
+  black
+  };
 
 struct my_struct{};
 struct gpart{

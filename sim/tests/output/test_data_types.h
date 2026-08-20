@@ -14,6 +14,7 @@
 
 #include "hydro_part_arrays_struct.h"
 
+/* Some definitions and declarations to make the test programs compile */
 #ifndef MY_ARRAY_SIZE
 #define MY_ARRAY_SIZE 4
 #endif
@@ -22,11 +23,19 @@
 #define NDIM2 3
 #define NDIM3 4
 
-/* workaround for unit tests to produce compilable headers */
 #define INLINE inline
 #define DEBUG
 typedef unsigned long long integertime_t;
 typedef char timebin_t;
+
+enum color {
+  red = 0,
+  green,
+  blue,
+  purple,
+  white,
+  black
+  };
 
 struct my_struct{};
 struct gpart{
@@ -72,6 +81,8 @@ struct part {
 
   /*! pointer to integer array */
   int* _my_pointer;
+
+  enum color _my_enum;
 
 };
 
@@ -517,6 +528,48 @@ static __attribute__((always_inline)) INLINE int**
 static __attribute__((always_inline)) INLINE void
   part_set_my_pointer_part_struct(struct part *restrict p,  int* my_pointer) {
   p->_my_pointer = my_pointer;
+}
+
+
+
+
+
+/**
+ * @brief get my_enum.
+ */
+static __attribute__((always_inline)) INLINE enum color
+  part_get_my_enum_part_struct(const struct part *restrict p) {
+  return p->_my_enum;
+}
+
+
+/**
+ * @brief get a pointer to my_enum.
+ * Use this only if you need to modify the value, i.e. if you need write access
+ * to my_enum. If you need read-only access to my_enum, use part_get_const_my_enum_p() instead.
+ */
+static __attribute__((always_inline)) INLINE enum color*
+  part_get_my_enum_p_part_struct(struct part *restrict p) {
+  return &p->_my_enum;
+}
+
+
+/**
+ * @brief get read-only access to pointer to my_enum.
+ * If you need write access to my_enum, use part_get_my_enum_p() instead.
+ */
+static __attribute__((always_inline)) INLINE const enum color*
+  part_get_const_my_enum_p_part_struct(const struct part *restrict p) {
+  return &p->_my_enum;
+}
+
+
+/**
+ * @brief set the value of my_enum.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_my_enum_part_struct(struct part *restrict p, const enum color my_enum) {
+  p->_my_enum = my_enum;
 }
 
 
