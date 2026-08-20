@@ -116,10 +116,10 @@ part:
     size: 3
 
   weighted_wcount:
-    doc: Weightings for correction factor
+    doc: mj / rho_i r^2 W Weightings for correction factor
 
   weighted_neighbour_wcount:
-    doc: Weightings for correction factor
+    doc: mj / rho_i r^2 W Weightings for correction factor
 
   viscosity:
     type: struct
