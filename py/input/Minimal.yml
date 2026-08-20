@@ -32,7 +32,7 @@ part:
     size: 3
     doc: Particle predicted velocity
     
- a_hydro:
+  a_hydro:
     size: 3
     doc: Particle acceleration 
 
@@ -51,11 +51,11 @@ part:
   rho:
     doc: Particle density
 
-union1:
+  union1:
     type: union
     doc: Store density/force specific stuff
     contents:
-	  density:
+      density:
         type: struct
         doc: Structure for the variables only used in the density loop over neighbours 
              Quantities in this sub-structure should only be accessed in the density loop 
@@ -69,10 +69,10 @@ union1:
             
           rho_dh:
             doc: Derivative of density with respect to h
-          
-	  	  div_v:
-	    	doc: Velocity divergence
-	  
+
+          div_v:
+            doc: Velocity divergence
+
           rot_v:
             doc: Particle velocity curl
             size: 3
@@ -88,9 +88,9 @@ union1:
       
           soundspeed: 
             doc: Particle soundspeed
-			
-	  	  v_sig:
-	    	doc: Particle signal velocity
+
+          v_sig:
+            doc: Particle signal velocity
 
           h_dt: 
             doc: Time derivative of smoothing length 
@@ -187,7 +187,7 @@ xpart:
     type: "struct particle_splitting_data split_data"
     doc: "Additional data used to record particle splits"
 
-  cooling_data:
+  extra_cooling_data:
     type: "struct cooling_xpart_data"
     doc: "Additional data used to record cooling information"
 
@@ -199,16 +199,14 @@ xpart:
     doc: "Additional data used by the tracers"
     type: "struct star_formation_xpart_data"
 
-  feedback_data:
+  extra_feedback_data:
     doc: "Additional data used by the feedback"
     type: "struct feedback_xpart_data"
 
-  mhd_data:
+  extra_mhd_data:
     doc: "Additional data used by the MHD scheme"
     type: "struct mhd_xpart_data"
 
   forcing_data:
     type: "struct forcing_xpart_data"
     doc: "Additional data used by the forcing scheme"
-
-
