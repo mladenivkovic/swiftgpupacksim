@@ -32,7 +32,7 @@ part:
     size: 3
     doc: Particle predicted velocity
 
- a_hydro:
+  a_hydro:
     size: 3
     doc: Particle acceleration 
 
@@ -65,13 +65,13 @@ part:
     type: struct
     doc: store viscosity information in a separate struct
     contents:
-  	  velocity_gradient:
-	  	type: float_ptr
-		size: 3
-		doc: Velocity gradient tensor physical
-		velocity_gradient_inner:
-	  	  size: 3
-		  doc: Velocity gradient tensor physical
+      velocity_gradient:
+        type: float_ptr
+        size: 3
+        doc: Velocity gradient tensor physical
+        velocity_gradient_inner:
+          size: 3
+          doc: Velocity gradient tensor physical
 
       tensor_norm:
         doc: Velocity gradient tensor trace norm |T|
@@ -96,7 +96,7 @@ part:
     doc: Store thermal diffusion information in a separate struct
     contents:
         rate:
-    	  doc: Thermal diffusion rate
+          doc: Thermal diffusion rate
 
 
   union1:
@@ -114,7 +114,7 @@ part:
             doc: Neighbour number count
           wcount_dh:
             doc: Derivative of the neighbour number with respect to h
-	  	  rho_dh:
+          rho_dh:
             doc: Derivative of density with respect to h  
 
       force:
@@ -124,7 +124,7 @@ part:
              over neighbours and the ghost, drift and kick tasks
         contents:
           f:
-            doc: "Grad h" term -- only partial in P-U
+            doc: "'Grad h' term -- only partial in P-U"
           pressure:
             doc: Particle pressure
           soundspeed: 
@@ -163,7 +163,7 @@ part:
 
   pressure_floor_data:
     type: struct pressure_floor_part_data
-    doc: Additional data used by the pressure floor	
+    doc: Additional data used by the pressure floor
 
   rt_data:
     type: struct rt_part_data
@@ -228,7 +228,7 @@ xpart:
 
   extra_cooling_data:
     type:"struct cooling_xpart_data"
-    doc: "Additional data used to record cooling information"
+    doc:"Additional data used to record cooling information"
 
   tracers_data:
     doc: "Additional data used by the tracers"
@@ -251,6 +251,6 @@ xpart:
     doc: "Additional data used by the forcing scheme"
 
   csds_data:
-  	type: "struct csds_part_data"
-  	doc: "Additional data for the particle csds"
-  	ifdef: WITH_CSDS
+    type: "struct csds_part_data"
+    doc: "Additional data for the particle csds"
+    ifdef: WITH_CSDS
