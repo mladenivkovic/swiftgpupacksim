@@ -66,12 +66,9 @@ part:
     doc: store viscosity information in a separate struct
     contents:
       velocity_gradient:
-        type: float_ptr
-        size: 3
+        type: float
+        size: 3,3
         doc: Velocity gradient tensor physical
-        velocity_gradient_inner:
-          size: 3
-          doc: Velocity gradient tensor physical
 
       tensor_norm:
         doc: Velocity gradient tensor trace norm |T|
@@ -227,8 +224,8 @@ xpart:
     doc: "Additional data used to record particle splits"
 
   extra_cooling_data:
-    type:"struct cooling_xpart_data"
-    doc:"Additional data used to record cooling information"
+    type: "struct cooling_xpart_data"
+    doc: "Additional data used to record cooling information"
 
   tracers_data:
     doc: "Additional data used by the tracers"
