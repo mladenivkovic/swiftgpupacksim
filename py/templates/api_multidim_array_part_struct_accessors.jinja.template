@@ -1,0 +1,293 @@
+{# deliberately empty line #}
+{# 
+
+No full-array getters here. It's too complicated to make it look usable.
+
+
+
+/**
+ * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %}
+ * for read and write access. For read-only access, use
+ * part_get_const_{{NAME}}() instead.
+ */
+static __attribute__((always_inline)) INLINE {{TYPE}}
+  (*part_get_{{NAME}}{{API_SUFFIX}}(struct part *restrict p)){% for entry in MULTIDIM_ARRAY_DIMENSIONS %}[{{entry}}]{%endfor%} {
+
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+ 
+  {%- if DEBUG_ID_CHECKS %}
+    {% if DEBUG_ID_CHECKS_MACRO_GUARD -%}
+#ifdef SWIFT_DEBUG_CHECKS
+    {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+    {%- endif %}
+  {%- endif %}
+
+  {%- if HAS_PARENT_STRUCT %}
+  return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return {{ROOT_STRUCT}}_s->_{{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
+  return p->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return p->_{{NAME}};
+  {%- endif %}
+{%- endif %}
+
+{%- if HAS_IFDEF %}
+#else
+  return NULL;
+#endif
+{%- endif %}
+}
+
+/**
+ * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %} for read-only access.
+ */
+static __attribute__((always_inline)) INLINE const {{TYPE}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}*{% endfor %}
+  part_get_const_{{NAME}}{{API_SUFFIX}}(const struct part *restrict p) {
+
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+ 
+  {%- if DEBUG_ID_CHECKS %}
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+    {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+    {%- endif %}
+  {%- endif %}
+
+  {%- if HAS_PARENT_STRUCT %}
+  return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return {{ROOT_STRUCT}}_s->_{{NAME}};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
+  return p->_{{PARENT_STRUCT}}._{{NAME}};
+  {%- else %}
+  return p->_{{NAME}};
+  {%- endif %}
+{%- endif %}
+
+{%- if HAS_IFDEF %}
+#else
+  return NULL;
+#endif
+{%- endif %}
+}
+
+
+END OF COMMENTED OUT CODE
+#}
+
+/**
+ * @brief get {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %} by index.
+ */
+static __attribute__((always_inline)) INLINE {{TYPE}}
+  part_get_{{NAME}}_ind{{API_SUFFIX}}(const struct part *restrict p, {% for ind in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) -%}
+  const int {{chr(ord('i')+ind)}}
+  {%- if ind < MULTIDIM_ARRAY_DIMENSIONS_COUNT - 1 %}, {% endif -%}
+  {%- endfor -%}
+  ) {
+
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+
+    {%- if DEBUG_ID_CHECKS -%}
+      {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+      {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
+      {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+      {%- endif %}
+    {%- endif %}
+
+  {%- if HAS_PARENT_STRUCT %}
+  return {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
+
+  {%- else %}
+  return {{ROOT_STRUCT}}_s->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
+  {%- endif -%}
+
+{%- else -%}
+
+  {%- if HAS_PARENT_STRUCT %}
+  return p->_{{PARENT_STRUCT}}._{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
+  {%- else %}
+  return p->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
+  {%- endif %}
+{%- endif %}
+
+{%- if HAS_IFDEF %}
+#else
+  return {{IFDEF_RETURN_VAL}};
+#endif
+{%- endif %}
+}
+
+/**
+ * @brief set all values of {{NAME}}{% if HAS_DOC %}, {{DOC}}{% endif %},
+ * from an array.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_{{NAME}}{{API_SUFFIX}}(struct part *restrict p, const {{TYPE}} {{NAME}}
+	 {%- for entry in MULTIDIM_ARRAY_DIMENSIONS -%}[{{entry}}]{%- endfor -%}
+ ) {
+
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+
+  {%- if DEBUG_ID_CHECKS %}
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+    {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
+    {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#endif
+    {%- endif %}
+  {%- endif %}
+
+  {% for ind in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}
+    {% for i in range(ind)%}  {% endfor %} {#- add indent -#}
+  for (int {{chr(ord('i')+ind)}} = 0; {{chr(ord('i')+ind)}} < {{MULTIDIM_ARRAY_DIMENSIONS[ind]}}; {{chr(ord('i')+ind)}}++){
+  {%- endfor %}
+  {%- if HAS_PARENT_STRUCT %}
+    {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT)%}  {% endfor %} {#- add indent -#}
+      {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}
+        {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = {{NAME}}
+        {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
+  {%- else %}
+    {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT)%}  {% endfor %} {#- add indent -#}
+      {{ROOT_STRUCT}}_s->_{{NAME}}
+        {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = {{NAME}}
+        {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
+  {%- endif %}
+  {% for ind in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT, 0, -1) %}
+  {% for i in range(ind)%}  {% endfor -%}{#- add indent -#}
+  }
+  {% endfor %}
+
+{%- else -%} {# is NOT in split struct #}
+
+  {% for ind in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}
+    {% for i in range(ind)%}  {% endfor %} {#- add indent -#}
+  for (int {{chr(ord('i')+ind)}} = 0; {{chr(ord('i')+ind)}} < {{MULTIDIM_ARRAY_DIMENSIONS[ind]}}; {{chr(ord('i')+ind)}}++){
+  {%- endfor %}
+  {%- if HAS_PARENT_STRUCT %}
+    {% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT)%}  {% endfor %} {#- add indent -#}
+      p->_{{PARENT_STRUCT}}._{{NAME}}
+    {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = {{NAME}}
+    {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
+  {%- else %}
+    {% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT)%}  {% endfor %} {#- add indent -#}
+      p->_{{NAME}}
+    {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = {{NAME}}
+    {%- for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
+  {%- endif %}
+  {% for ind in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT, 0, -1) %}
+    {%- for i in range(ind)%}  {% endfor -%} {#- add indent -#}
+  }
+  {% endfor %}
+
+{%- endif %}
+
+{%- if HAS_IFDEF %}
+#endif
+{%- endif %}
+}
+
+/**
+ * @brief set the value of {{NAME}}{% if HAS_DOC %}, {{DOC}},{% endif %} by index.
+ */
+static __attribute__((always_inline)) INLINE void
+  part_set_{{NAME}}_ind{{API_SUFFIX}}(struct part *restrict p, 
+  {%- for ind in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %} const int {{chr(ord('i')+ind)}}, {% endfor -%}
+  {{TYPE}} val) {
+
+{%- if HAS_IFDEF %}
+#ifdef {{IFDEF}}
+{%- endif %}
+
+{%- if IS_IN_SPLIT_STRUCT %}
+  struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = p->_cell_part_arrays->_{{ROOT_STRUCT}} + p->_cell_offset;
+
+    {%- if DEBUG_ID_CHECKS %}
+      {%- if DEBUG_ID_CHECKS_MACRO_GUARD %}
+#ifdef SWIFT_DEBUG_CHECKS
+      {%- endif %}
+  /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
+  swift_assert(p->_accessor_id != 0);
+  /* Make sure we're accessing the correct data */
+  if({{ROOT_STRUCT}}_s->_accessor_id != p->_accessor_id)
+    error("Accessor IDs not equal: %lld %lld", {{ROOT_STRUCT}}_s->_accessor_id, p->_accessor_id);
+      {% if DEBUG_ID_CHECKS_MACRO_GUARD -%}
+#endif
+      {%- endif %}
+    {%- endif %}
+
+  {%- if HAS_PARENT_STRUCT %}
+  {{ROOT_STRUCT}}_s->_{{PARENT_STRUCT}}._{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
+  {%- else %}
+  {{ROOT_STRUCT}}_s->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
+  {%- endif -%}
+
+{%- else -%} {# is not in split struct #}
+
+  {%- if HAS_PARENT_STRUCT %}
+  p->_{{PARENT_STRUCT}}._{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
+  {%- else %}
+  p->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
+  {%- endif %}
+{%- endif %}
+
+{%- if HAS_IFDEF %}
+#endif
+{%- endif %}
+}
+{# deliberately empty line #}

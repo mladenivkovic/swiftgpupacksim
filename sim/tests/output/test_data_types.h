@@ -18,6 +18,10 @@
 #define MY_ARRAY_SIZE 4
 #endif
 
+#define NDIM1 2
+#define NDIM2 3
+#define NDIM3 4
+
 /* workaround for unit tests to produce compilable headers */
 #define INLINE inline
 #define DEBUG

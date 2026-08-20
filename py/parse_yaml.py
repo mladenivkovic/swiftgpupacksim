@@ -324,12 +324,27 @@ class FieldEntry(object):
                     + f"name: {self.name}, type: {self.type}"
                 )
 
-        # allow for array sizes defined by macros
+        # allow for array sizes defined by macros and to be multi-dimensional
         is_array = False
         array_size_is_macro = False
+        is_multidim_array = False
+        multidim_array_dimensions = None
+        multidim_array_dimensions_count = 0
+        multidim_array_size_is_macro = False
+
         if isinstance(self.size, str):
             is_array = True
-            array_size_is_macro = True
+            # distinguish multidim arrays by having a comma
+            if "," in self.size:
+                is_multidim_array = True
+                is_array = False # don't treat this as a simple array in this script nor in the templates!!
+                dims = self.size.split(",")
+                multidim_array_dimensions = [d.strip() for d in dims]
+                multidim_array_dimensions_count = len(dims)
+                multidim_array_size_is_macro = [d.isdigit() for d in dims]
+            else:
+                # This is just a macro.
+                array_size_is_macro = True
         else:
             try:
                 is_array = self.size > 1
@@ -355,6 +370,10 @@ class FieldEntry(object):
             "HAS_PARENT_STRUCT": parent_struct is not None,
             "IS_ARRAY": is_array,
             "ARRAY_SIZE_IS_MACRO": array_size_is_macro,
+            "IS_MULTIDIM_ARRAY": is_multidim_array,
+            "MULTIDIM_ARRAY_DIMENSIONS": multidim_array_dimensions,
+            "MULTIDIM_ARRAY_DIMENSIONS_COUNT": multidim_array_dimensions_count,
+            "MULTIDIM_ARRAY_SIZE_IS_MACRO": multidim_array_size_is_macro,
             "IS_UNION": self.type == "union",
             "IS_INTERNAL_STRUCT": self.type == "struct",
             "IS_IN_SPLIT_STRUCT": self.root_struct != "part",
@@ -515,6 +534,16 @@ class FieldEntry(object):
                 )
                 templ_global = self.jinja_env.get_template(
                     "api_array_global_var_accessors.jinja.template"
+                )
+            elif params_dict["IS_MULTIDIM_ARRAY"]:
+                templ_part_struct = self.jinja_env.get_template(
+                    "api_multidim_array_part_struct_accessors.jinja.template"
+                )
+                templ_explicit = self.jinja_env.get_template(
+                    "api_multidim_array_explicit_var_accessors.jinja.template"
+                )
+                templ_global = self.jinja_env.get_template(
+                    "api_multidim_array_global_var_accessors.jinja.template"
                 )
             else:
                 templ_part_struct = self.jinja_env.get_template(
