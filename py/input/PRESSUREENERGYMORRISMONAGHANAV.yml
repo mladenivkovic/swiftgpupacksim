@@ -71,7 +71,7 @@ part:
           wcount:
             doc: Neighbour number count
           wcount_dh:
-            doc:Derivative of the neighbour number with respect to h
+            doc: Derivative of the neighbour number with respect to h
           rho_dh:
             doc: Derivative of the density with respect to h
           pressure_bar_dh:
