@@ -190,9 +190,31 @@ discarded. So just make sure you give them a unique identifier.
 This also works with structs as elements of the union.
 
 
+### enums
 
+Enums (enumerations) are allowed as a data type for field members if they are
+defined somewhere else, i.e. this script will not provide a definition for them
+in the resulting header files.
 
+Example:
 
+```
+part:
+  my_enum:
+    type: enum color
+    doc: some enumeration, defined elsewhere
+```
+
+Should result in:
+
+```
+struct part {
+
+  /*! some enumeration, defined elsewhere */
+  enum color my_enum;
+
+}
+```
 
 ### IFDEF macros
 
