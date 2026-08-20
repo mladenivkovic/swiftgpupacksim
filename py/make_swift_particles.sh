@@ -19,7 +19,7 @@ done
 
 # Now, to the actual work
 
-./generate_hydro_part.py --global-var-access --swift input/SPHENIX.yml -o $SWIFT_SRC_HYDRO_PATH/SPHENIX
+./generate_hydro_part.py --global-var-access --swift input/AnarchyPU.yml -o $SWIFT_SRC_HYDRO_PATH/AnarchyPU
 
 
 
