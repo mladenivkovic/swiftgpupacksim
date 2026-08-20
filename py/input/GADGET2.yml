@@ -8,13 +8,6 @@ metadata:
 # now for the actual particle content
 
 part:
-  doc: | 
-    @brief Particle fields for the SPH particles
-
-    The density and force substructures are used to contain variables only used
-    within the density and force loops over neighbours. All more permanent
-    variables should be declared in the main part of the part structure,
-
   x:
     type: double
     size: 3
@@ -31,60 +24,23 @@ part:
     doc: Particle mass
 
   a_hydro:
+    type: float
     size: 3
     doc: Particle acceleration 
 
   rho:
+    type: float
     doc: Particle density
 
   entropy:
+    type: float
     doc: Particle entropy
 
   entropy_dt:
+    type: float
     doc: Entropy time derivative
-#19/08 start adding data types to this union
-  union1:
-    type: union
-    doc: Store density/force specific stuff
-    contents:
-      density:
-        type: struct
-        doc: Structure for the variables only used in the density loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the density loop 
-             over neighbours and the ghost task
-        contents:
-          rho_dh:
-            doc: Derivative of density with respect to h
-          wcount:
-            doc: Neighbour number count
-          wcount_dh:
-            doc: Derivative of the neighbour number with respect to h
-          rot_v:
-            doc: Particle velocity curl
-            size: 3
-      force:
-        type: struct
-        doc: Structure for the variables only used in the force loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the force loop 
-             over neighbours and the ghost, drift and kick tasks
-        contents:
-          balsara:
-            doc: Balsara switch
-          soundspeed: 
-            doc: Particle soundspeed
-          h_dt: 
-            doc: Time derivative of smoothing length 
 
-  viscosity:
-    type: struct
-    doc: store viscosity information in a separate struct
-    contents:
-      div_v:
-        doc: Particle velocity divergence
-      v_sig:
-        doc: Signal velocity
 
-#removed all of internal energy stuff
   id: 
     type: long long
     doc:  Particle unique ID
@@ -155,35 +111,32 @@ part:
     doc: Time of the last kick
     ifdef: SWIFT_DEBUG_CHECKS
 
-#question: what to do about ids_ngbs_density/force[MAX_NUM]   
   num_ngb_density:
-    type: integer
+    type: int
     doc: Number of interactions in the density SELF and PAIR
     ifdef: DEBUG_INTERACTIONS_SPH
 
   num_ngb_force:
-    type: integer
+    type: int
     doc: Number of interactions in the force SELF and PAIR
     ifdef: DEBUG_INTERACTIONS_SPH
 
-  ids_ngbs_density[MAX_NUM_OF_NEIGHBOURS]:
+  ids_ngbs_density:
     type: long long
+    size: MAX_NUM_OF_NEIGHBOURS
     doc: List of interesting particles in the density SELF and PAIR
     ifdef: DEBUG_INTERACTIONS_SPH
 
-  ids_ngbs_force[MAX_NUM_OF_NEIGHBOURS]:
+  ids_ngbs_force:
     type: long long
+    size: MAX_NUM_OF_NEIGHBOURS
     doc: List of interesting particles in the force SELF and PAIR
     ifdef: DEBUG_INTERACTIONS_SPH
 
 
-xpart:
-  doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
 
-    This structure contains the particle fields that are not used in the
-    density or force loops. Quantities should be used in the kick, drift and
-    potentially ghost tasks only.
+
+xpart:
 
   x_diff:
     size: 3
@@ -201,10 +154,11 @@ xpart:
     size: 3
     doc: "Gravitational acceleration at the end of the last step"
 
-  u_full:
-    doc: "Internal energy at the last full step."
+  entropy_full:
+    type: float
+    doc: "Entropy at the last full step."
 
-  split_data:
+  extra_split_data:
     type: "struct particle_splitting_data"
     doc: "Additional data used to record particle splits"
 
@@ -217,7 +171,7 @@ xpart:
     type: "struct tracers_xpart_data"
 
   extra_sf_data:
-    doc: "Additional data used by the tracers"
+    doc: "Additional data used by the star formation"
     type: "struct star_formation_xpart_data"
 
   extra_feedback_data:
@@ -228,8 +182,56 @@ xpart:
     doc: "Additional data used by the MHD scheme"
     type: "struct mhd_xpart_data"
 
-  csds_data:
+  extra_csds_data:
     type: "struct csds_part_data"
     doc: "Additional data for the particle csds"
     ifdef: "WITH_CSDS"
 
+  forcing_data:
+    type: "struct forcing_xpart_data"
+    doc: "Additional data used by the forcing scheme"
+
+
+  union1:
+    type: union
+    contents:
+      density:
+        type: struct
+        contents:
+          rho_dh:
+            type: float
+            doc: Derivative of density with respect to h
+          wcount:
+            type: float
+            doc: Number of neighbours
+          wcount_dh:
+            type: float
+            doc: Number of neighbours spatial derivative
+          rot_v:
+            type: float
+            doc: Particle velocity curl
+            size: 3
+          div_v:
+            type: float
+            doc: Particle velocity divergence
+      force:
+        type: struct
+        contents:
+          balsara:
+            type: float
+            doc: Balsara switch
+          soundspeed:
+            type: float
+            doc: Particle soundspeed
+          h_dt:
+            type: float
+            doc: Time derivative of smoothing length 
+          f:
+            type: float
+            doc: Grad h term
+          P_over_rho2:
+            type: float
+            doc: Pressure over density squared
+          v_sig: 
+            type: float
+            doc: Signal velocity
