@@ -3,7 +3,7 @@
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "AnarchyPu"
-  authors: "2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
+  authors: "2016 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
 
 # now for the actual particle content
 
@@ -38,7 +38,7 @@ xpart:
     type: "struct particle_splitting_data split_data"
     doc: "Additional data used to record particle splits"
 
-  cooling_data:
+  extra_cooling_data:
     type: "struct cooling_xpart_data"
     doc: "Additional data used to record cooling information"
 
@@ -50,11 +50,11 @@ xpart:
     doc: "Additional data used by the tracers"
     type: "struct star_formation_xpart_data"
 
-  feedback_data:
+  extra_feedback_data:
     doc: "Additional data used by the feedback"
     type: "struct feedback_xpart_data"
 
-  mhd_data:
+  extra_mhd_data:
     doc: "Additional data used by the MHD scheme"
     type: "struct mhd_xpart_data"
 
