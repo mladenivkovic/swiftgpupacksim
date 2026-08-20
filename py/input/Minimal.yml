@@ -7,62 +7,6 @@ metadata:
 
 # now for the actual particle content
 
-xpart:
-  doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
-
-    This structure contains the particle fields that are not used in the
-    density or force loops. Quantities should be used in the kick, drift and
-    potentially ghost tasks only.
-
-  x_diff:
-    size: 3
-    doc: "Offset between current position and position at last tree rebuild."
-
-  x_diff_sort:
-    size: 3
-    doc: "Offset between the current position and position at the last sort."
-
-  v_full:
-    size: 3
-    doc: "Velocity at the last full step."
-
-  a_grav:
-    size: 3
-    doc: "Gravitational acceleration at the end of the last step"
-
-  u_full:
-    doc: "Internal energy at the last full step."
-    
-  split_data:
-    type: "struct particle_splitting_data split_data"
-    doc: "Additional data used to record particle splits"
-
-  cooling_data:
-    type: "struct cooling_xpart_data"
-    doc: "Additional data used to record cooling information"
-
-  tracers_data:
-    doc: "Additional data used by the tracers"
-    type: "struct tracers_xpart_data"
-
-  sf_data:
-    doc: "Additional data used by the tracers"
-    type: "struct star_formation_xpart_data"
-
-  feedback_data:
-    doc: "Additional data used by the feedback"
-    type: "struct feedback_xpart_data"
-
-  mhd_data:
-    doc: "Additional data used by the MHD scheme"
-    type: "struct mhd_xpart_data"
-
-  forcing_data:
-    type: "struct forcing_xpart_data"
-    doc: "Additional data used by the forcing scheme"
-
-
 part:
   doc: | 
     @brief Particle fields for the SPH particles
@@ -212,5 +156,59 @@ union1:
     doc: Time of the last kick
     ifdef: SWIFT_DEBUG_CHECKS
 
+xpart:
+  doc: |
+    @brief Particle fields not needed during the SPH loops over neighbours.
 
- 
+    This structure contains the particle fields that are not used in the
+    density or force loops. Quantities should be used in the kick, drift and
+    potentially ghost tasks only.
+
+  x_diff:
+    size: 3
+    doc: "Offset between current position and position at last tree rebuild."
+
+  x_diff_sort:
+    size: 3
+    doc: "Offset between the current position and position at the last sort."
+
+  v_full:
+    size: 3
+    doc: "Velocity at the last full step."
+
+  a_grav:
+    size: 3
+    doc: "Gravitational acceleration at the end of the last step"
+
+  u_full:
+    doc: "Internal energy at the last full step."
+    
+  split_data:
+    type: "struct particle_splitting_data split_data"
+    doc: "Additional data used to record particle splits"
+
+  cooling_data:
+    type: "struct cooling_xpart_data"
+    doc: "Additional data used to record cooling information"
+
+  tracers_data:
+    doc: "Additional data used by the tracers"
+    type: "struct tracers_xpart_data"
+
+  sf_data:
+    doc: "Additional data used by the tracers"
+    type: "struct star_formation_xpart_data"
+
+  feedback_data:
+    doc: "Additional data used by the feedback"
+    type: "struct feedback_xpart_data"
+
+  mhd_data:
+    doc: "Additional data used by the MHD scheme"
+    type: "struct mhd_xpart_data"
+
+  forcing_data:
+    type: "struct forcing_xpart_data"
+    doc: "Additional data used by the forcing scheme"
+
+
