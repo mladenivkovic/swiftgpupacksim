@@ -2,8 +2,8 @@
 
 # First, some metadata about this SPH flavour.
 metadata:
-  flavour: "SPHENIX"
-  authors: "2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
+  flavour: "PRESSURE_ENERGY"
+  authors: "2016 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
 
 # now for the actual particle content
 
@@ -56,17 +56,17 @@ part:
              Quantities in this sub-structure should only be accessed in the density loop 
              over neighbours and the ghost task
         contents:
-          rho_dh:
-            doc: Derivative of density with respect to h
           wcount:
             doc: Neighbour number count
           wcount_dh:
             doc: Derivative of the neighbour number with respect to h
+          rho_dh:
+            doc: Derivative of density with respect to h
+          pressure_bar_dh:
+            doc: Derivative of the weighted pressure with respect to h
           rot_v:
             doc: Particle velocity curl
             size: 3
-          pressure_bar_dh:
-            doc: Derivative of the weighted pressure with respect to h
           div_v:
             doc: Particle velocity divergence
  
@@ -78,35 +78,16 @@ part:
         contents:
           f:
             doc: "'Grad h' term -- only partial in P-U"
-          pressure_bar_with_floor:
-            doc: Pressure term including the pressure floor
-          balsara:
-            doc: Balsara switch
           soundspeed: 
             doc: Particle soundspeed
           v_sig:
             doc: Particle signal velocity
-          h_dt: 
-            doc: Time derivative of smoothing length 
-
-  viscosity:
-    type: struct
-    doc: store viscosity information in a separate struct
-    contents:
-      div_v:
-        doc: Particle velocity divergence
-
-      div_v_dt:
-        doc: Time differential of velocity divergence
-
-      div_v_previous_step:
-        doc: Particle velocity divergence from previous step
-
-      alpha_av:
-        doc: Artificial viscosity parameter
-      
-      v_sig:
-        doc: Signal velocity
+          h_dt:
+            doc: Time derivative of smoothing length
+          balsara:
+            doc: Balsara switch
+          pressure_bar_with_floor:
+            doc: Pressure term including the pressure floor
 
 
   id: 
@@ -232,4 +213,6 @@ xpart:
     doc: "Additional data used by the MHD scheme"
     type: "struct mhd_xpart_data"
 
-
+  extra_forcing_data:
+    doc: "Additional data used by the forcing scheme"
+    type: "struct forcing_xpart_data"
