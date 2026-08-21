@@ -2,8 +2,8 @@
 
 # First, some metadata about this SPH flavour.
 metadata:
-  flavour: "SPHENIX"
-  authors: "2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
+  flavour: "PLANETARY"
+  authors: "2016 Matthieu Schaller (schaller@strw.leidenuniv.nl) & 2018   Jacob Kegerreis (jacob.kegerreis@durham.ac.uk)"
 
 # now for the actual particle content
 
@@ -53,12 +53,14 @@ part:
              Quantities in this sub-structure should only be accessed in the density loop 
              over neighbours and the ghost task
         contents:
-          rho_dh:
-            doc: Derivative of density with respect to h
           wcount:
             doc: Neighbour number count
           wcount_dh:
             doc: Derivative of the neighbour number with respect to h
+          rho_dh:
+            doc: Derivative of density with respect to h
+          div_v:
+            doc: Velocity divergence 
           rot_v:
             doc: Particle velocity curl
             size: 3
@@ -72,14 +74,14 @@ part:
             doc: "'Grad h' term -- only partial in P-U"
           pressure:
             doc: Particle pressure
-          balsara:
-            doc: Balsara switch
           soundspeed: 
             doc: Particle soundspeed
           v_sig:
             doc: Particle signal velocity
           h_dt: 
-            doc: Time derivative of smoothing length 
+            doc: Time derivative of smoothing length
+          balsara:
+            doc: Balsara switch 
 
   id: 
     type: long long
