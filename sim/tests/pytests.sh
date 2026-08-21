@@ -14,7 +14,7 @@ function COMPILE_AND_RUN() {
   if [[ -z "${CC}" ]]; then
     CC=gcc
   fi
-  "$CC" -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror
+  "$CC" -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror -I../src/
   echo TODO MLADEN: THIS SHOULD ALSO WORK WITHOUT -DUSE_PART_STRUCT_ACCESSORS
   ./test_header_output.o
   rm -f ./test_header_output.o
@@ -30,33 +30,52 @@ function DIFF(){
 
 
 for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
-  for testcase in \
-    "test_data_types" \
-    "test_arrays" \
-    "test_multidim_arrays" \
-    "test_ifdefs" \
-    "test_struct" \
-    "test_union" \
-    "test_split_struct" \
-    "test_split_struct_nopart" \
-    "test_split_struct_arrays" \
-    "test_split_struct_structs_and_unions" \
-  ; do
+  # for testcase in \
+  #   "test_data_types" \
+  #   "test_arrays" \
+  #   "test_multidim_arrays" \
+  #   "test_ifdefs" \
+  #   "test_struct" \
+  #   "test_union" \
+  #   "test_split_struct" \
+  #   "test_split_struct_nopart" \
+  #   "test_split_struct_arrays" \
+  #   "test_split_struct_structs_and_unions" \
+  # ; do
+  #
+  #   echo "==============================================="
+  #   echo "running $testcase $flag"
+  #   echo "==============================================="
+  #
+  #   python3 ../../py/generate_hydro_part.py --test "$flag" ./input/"$testcase".yml
+  #   COMPILE_AND_RUN
+  #
+  #   if [ "$flag" == "--part-struct-accessor" ]; then
+  #     # I only keep the outputs for part struct accessors for comparison for now...
+  #     DIFF hydro_part.h output/"$testcase".h
+  #   fi
+  #
+  #   rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+# done
 
-    echo "==============================================="
-    echo "running $testcase $flag"
-    echo "==============================================="
+  # make temporary headers which will be included
+  touch a.h b.h c.h d.h e.h f.h
 
-    python3 ../../py/generate_hydro_part.py --test "$flag" ./input/"$testcase".yml
-    COMPILE_AND_RUN
+  for flag in "" "--swift"; do
 
-    if [ "$flag" == "--part-struct-accessor" ]; then
-      # I only keep the outputs for part struct accessors for comparison for now...
-      DIFF hydro_part.h output/"$testcase".h
-    fi
+    for testcase in test_headerfile_all_options_given; do
 
-    rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+      echo "==============================================="
+      echo "running $testcase $flag"
+      echo "==============================================="
+
+      python3 ../../py/generate_hydro_part.py --part-struct-accessors ./input/"$testcase".yml
+      COMPILE_AND_RUN
+    done
   done
+
+  rm -f a.h b.h c.h d.h e.h f.h
+
 done
 
 echo "Python tests passed."

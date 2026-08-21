@@ -8,6 +8,7 @@ from utils import (
     check_output_directory,
     print_separator,
     validate_yml_contents,
+    process_yml_metadata,
     add_auxiliary_fields,
     read_input_file,
 )
@@ -145,6 +146,7 @@ if __name__ == "__main__":
 
     # check that everything is sensible
     validate_yml_contents(particle_fields_d)
+    process_yml_metadata(metadata_d, swift_header=swift_header, verbose=verbose)
 
     if (len(particle_fields_d.keys()) == 1) and id_checks:
         print("Have only a single particle struct. Skipping accessor ID checks.")
