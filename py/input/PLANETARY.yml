@@ -70,8 +70,8 @@ part:
              Quantities in this sub-structure should only be accessed in the force loop 
              over neighbours and the ghost, drift and kick tasks
         contents:
-          f_gradh:
-            doc: "'Grad h' term -- only partial in P-U"
+          f:
+            doc: "'Grad h' term"
           pressure:
             doc: Particle pressure
           soundspeed: 
@@ -223,9 +223,9 @@ part:
     doc: Has this particle been woken up by the limiter?
     ifdef: SWIFT_HYDRO_DENSITY_CHECKS
 
-  geometry:
-    type: struct fvpm_geometry_struct
-    doc: Geometrical quantities used for Finite Volume Particle Method RT
+  s_fixed:
+    type: float
+    doc: PLANETARY_FIXED_ENTROPY
 
 
 
