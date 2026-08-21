@@ -1,11 +1,26 @@
 # Particle Struct Generation Scripts
 
-This directory contains the scripts used to generate the various realisations of
-particle structs.
+This directory contains the scripts used to generate the various C header files
+containint the realisations of particle structs used in SWIFT.
 
 Documentation to be updated as script grows.
 
-For now, run e.g. `./generate_hydro_part.py input/SPHENIX.yml`.
+
+
+
+## Usage
+
+For now, run e.g.
+
+```
+./generate_hydro_part.py --global-var-accessor input/SPHENIX.yml
+```
+to generate files for `swiftgpupacksim`, or
+
+```
+./generate_hydro_part.py --global-var-accessor --swift input/SPHENIX.yml
+```
+to generate files for use in SWIFT.
 
 Use
 
@@ -19,21 +34,36 @@ By default, this script will create files used by `swiftgpupacksim`. If you want
 to produce header files intended for use in the `swift` code, use the `--swift`
 flag.
 
-
-Dependencies:
-- pyyaml
-- jinja2
-
-Install them e.g. using
-```
-pip3 install pyyaml jinja2
-```
+As input, the script requires a `yaml` file specifying the particle struct and
+field layouts. Some are provided in the `input/` directory. For further
+specification, see the [documentation below](#yaml-particle-specification-file).
 
 
 Look at the `./make_all_sphenix_variations.sh` script to re-generate all files
 used in swiftgpupacksim.
 Look at the `./make_swift_particles.sh` script for an example how to generate
 particle files for the actual SWIFT codebase, not swiftgpupacksim.
+
+
+
+## Dependencies
+
+- `pyyaml`
+- `jinja2`
+
+Install them e.g. using
+
+```
+pip3 install pyyaml jinja2
+```
+
+
+
+## Installation
+
+No installation needed. The script should run out-of box, provided the
+[dependencies](#dependencies) are installed.
+
 
 
 
@@ -48,12 +78,77 @@ particle files for the actual SWIFT codebase, not swiftgpupacksim.
 TODO: there's more now... to be updated when version converges.
 
 
-## Yaml syntax
 
-The structs are generated using specifications in yaml files.
-Some defaults are stored in `input/`.
+# Yaml Particle Specification File
 
-### Scalar and array native data types
+The header files containing particle structs are generated using specifications
+in `yaml` files. Some defaults are stored in `input/`.
+
+The specification requires you to provide all particle fields necessary for a
+specific particle flavour realisation. The script will then generate header
+files required to incorporate those structs into `SWIFT` and `swiftgpupacksim`.
+
+In general, you need to provide at least 2 items:
+
+- a [`metadata` item](#file-metadata), containing file metadata
+- one (or arbitrarily many) [`struct`s containing particle
+  fields](#particle-structs).
+
+Here's a minimal example:
+
+
+```
+metadata:
+  authors: "2026 John Doe"       # year and authors of file, to be inserted into the license
+  flavour: my_sph_flavour_name   # name of the SPH flavour. Mainly used in header guard macro
+
+part_struct1_name:          # name of struct (e.g. 'part', 'density', 'force'...)
+  field1_name:              # name of particle field (e.g. 'x', 'm', 'h'...)
+    type: DATA_TYPE         # Optional: C data type of the field. E.g. float,
+                            # double, int, long long, timebin_t...
+                            # If not provided, defaults to 'float'.
+    size: N                 # Optional. If > 1, field is assumed to be fixed size array.
+    doc: documentation text # Optional. Documents particle data field.
+```
+
+
+
+
+
+## File Metadata
+
+The `metadata` item in the `yaml` specification file carries all file metadata,
+such as:
+
+- `authors`: Year + author names + emails to be inserted into the GPL3 license
+  in the file
+- `flavour`: The name of the SPH flavour contained in this file. Mainly used to
+  define a header guard and in the file description
+- `doc`: File documentation. What will go in the `/** @file` doxygen
+  documentation of the file.
+- `includes`: list of headers to include. If this field is not provided, a
+  default will be used, stored in `input/default_headers_swift.h` and
+  `input/default_headers_swiftgpupacksim.h`, respectively.
+- `includes_add`: Rather than providing a full list of includes, only add these
+  to the default selection.
+
+
+
+
+## Particle Structs
+
+Your `yaml` specification file must contain at least one particle struct
+containing fields, but can contain as many as you like.
+
+A new particle struct containing data is defined by adding a new top-level item
+(= item with no indent). To add fields (=actual data) to it, see instructions
+below.
+
+
+
+
+
+### Scalar and Array Native Data Types
 
 The general specification requirement is as follows:
 
@@ -67,7 +162,7 @@ part_struct1_name:          # name of struct (e.g. 'part', 'density', 'force'...
   field1_name:              # name of particle field (e.g. 'x', 'm', 'h'...)
     type: DATA_TYPE         # Optional: C data type of the field. E.g. float,
                             # double, int, long long, timebin_t...
-                            # If not provided, defaults to 'float'.
+                            # !! If not provided, defaults to 'float'. !!
     size: N                 # Optional. If > 1, field is assumed to be fixed size array.
     doc: documentation text # Optional. Documents particle data field.
 
@@ -89,11 +184,11 @@ part_struct2_name:
 
 **IMPORTANT**:
 
-- The top-level entries in the hierarchies will be transformed into separate
-  structs with that name.
+- The top-level entries in the indent hierarchies will be transformed into
+  separate structs with that name.
 - An exception is the group `metadata`, which should contain the file metadata
   and will not be turned into a struct.
-- No duplicate names - not even between two different structs!
+- No duplicate names of particle fields - not even between two different structs!
   - If there are several top level/root particle data structs with identical
     names, the yaml reader will only keep the last one.
   - If there are several fields with identical names, even if they are stored in
@@ -102,7 +197,7 @@ part_struct2_name:
 
 
 
-### Structs
+### Nested Structs
 
 To specify a struct defined within a parent particle struct, use the following
 syntax:
@@ -142,8 +237,10 @@ struct parent_struct {
 
 ```
 
+
 To use a struct which is defined somewhere else as a data type, just add it as a
 type descriptor. Example:
+
 
 ```
 parent_struct:         # such as part, xpart, ...
@@ -190,6 +287,7 @@ discarded. So just make sure you give them a unique identifier.
 This also works with structs as elements of the union.
 
 
+
 ### enums
 
 Enums (enumerations) are allowed as a data type for field members if they are
@@ -215,6 +313,9 @@ struct part {
 
 }
 ```
+
+
+
 
 ### IFDEF macros
 
@@ -277,6 +378,8 @@ static __attribute__((always_inline)) INLINE float
 **WARNING**: This currently doesn't work for unions.
 
 
+
+
 ### Arrays
 
 To create fields which are fixed-size arrays, add the `size` parameter to the
@@ -332,7 +435,8 @@ You may want to split the particle data such that they are contained within
 multiple structs instead of a single one. To do so, some restrictions apply:
 
 - You *may* define a struct which is named ``part``
-  - If you do, it *must* be the first defined struct.
+  - If you do, it *must* be the first defined struct. TODO: Double-check this,
+    it may not be up-to-date any more.
   - If you do, the script will also automatically generate getter functions to
     all other structs holding particle data as defined in the yaml file.
 - You *may* not define a struct which is named ``part``.
