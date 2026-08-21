@@ -113,6 +113,11 @@ def jinja_generate_hydro_part_dot_h(
 
     d["AUTHORS"] = metadata_d["authors"]
     d["FLAVOUR_NAME"] = metadata_d["flavour"].upper()
+    d["HAS_FILE_DOC"] = metadata_d["has_doc"]
+    d["FILE_DOC"] = metadata_d["doc"]
+    d["INCLUDES"] = metadata_d["includes"]
+    d["HAS_EXTRA_INCLUDES"] = metadata_d["has_extra_includes"]
+    d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
 
     header_template = templ.render(d)
 

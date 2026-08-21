@@ -16,6 +16,11 @@ _permitted_duplicate_field_names = [
     "accessor_id",
 ]
 
+_required_file_metadata_swift = [
+    "authors",
+    "flavour",
+    ]
+
 
 def verify_file_exists(fname: str, message: str = ""):
     """
@@ -164,6 +169,105 @@ def validate_yml_contents(contents_d: dict) -> None:
                     + "This will create multiply defined getters and setters."
                 )
             field_names.append(field)
+
+    return
+
+def process_yml_metadata(metadata_d: dict, swift_header: bool = False, verbose: bool = False) -> None:
+    """
+    Run through the read-in metadata from the yml file, passed as the dict
+    `metadata_d`, validate that there are no issues, and set up defaults if
+    necessary.
+
+    Parameters
+    ----------
+
+    metadata_d: dict
+        dict containing read-in metadata items from the yml file
+
+    swift_header: bool
+        if True, we're creating header files for SWIFT. Otherwise, for
+        SWIFTGPUPACKSIM.
+
+    verbose: bool
+        are we talkative?
+    """
+
+    passed_fields = list(metadata_d.keys())
+
+    if swift_header:
+        # we only require metadata to be present if we're compiling swift headers.
+
+        for field in _required_file_metadata_swift:
+            if field not in passed_fields:
+                raise ValueError(f"Required field {field} not found in read-in metadata")
+
+    # Now go through fields one-by-one
+
+    if "authors" not in passed_fields:
+        metadata_d["author"] = "NO AUTHORS SPECIFIED"
+        if verbose:
+            print("-- checking metadata: No authors found")
+
+    if "flavour" not in passed_fields:
+        metadata_d["flavour"] = get_git_hash()
+        if verbose:
+            print("-- checking metadata: No SPH flavour found")
+
+    if ("doc" not in passed_fields) and ("documentation" not in passed_fields):
+        metadata_d["has_doc"] = False
+        if verbose:
+            print("-- checking metadata: No file documentation found")
+
+        # place documentation contents with a key you'll know to search for later
+        if "doc" not in passed_fields:
+            doc = ""
+            if "documentation" in passed_fields:
+                doc = metadata_d["documentation"]
+            metadata_d["doc"] = doc
+    else:
+        metadata_d["has_doc"] = True
+
+    if ("includes") not in passed_fields:
+        # use defaults.
+
+        fname = "default_headers_swiftgpupacksim.h"
+        if swift_header:
+            fname = "default_headers_swift.h"
+
+        fname_full = os.path.join("input", fname)
+
+        f = open(fname_full, "r")
+        lines=f.readlines()
+        metadata_d["includes"] = [l.strip() for l in lines]
+        f.close()
+
+        if verbose:
+            print(f"-- checking metadata: No header includes found, using defaults from {fname_full}")
+
+    if ("includes_add") in passed_fields:
+        # use defaults for 'includes' field, then add these later.
+
+        fname = "default_headers_swiftgpupacksim.h"
+        if swift_header:
+            fname = "default_headers_swift.h"
+
+        fname_full = os.path.join("input", fname)
+
+        f = open(fname_full, "r")
+        lines=f.readlines()
+        metadata_d["includes"] = [l.strip() for l in lines]
+        f.close()
+
+        if verbose:
+            print(f"-- checking metadata: Using defaults from {fname_full} with additions from yml file")
+
+        metadata_d["has_extra_includes"] = True
+    else:
+        metadata_d["includes_add"] = [""]
+        metadata_d["has_extra_includes"] = False
+
+
+
 
     return
 
