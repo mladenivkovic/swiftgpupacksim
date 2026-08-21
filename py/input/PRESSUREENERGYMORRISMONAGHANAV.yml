@@ -2,7 +2,7 @@
 
 # First, some metadata about this SPH flavour.
 metadata:
-  flavour: "PRESSUREENERGYMORRISMONAGHANAV"
+  flavour: "PRESSURE_ENERGY_MORRIS_MONAGHAN_AV"
   authors: "2016 Matthieu Schaller (schaller@strw.leidenuniv.nl) & Josh Borrow (joshua.borrow@durham.ac.uk)"
 
 # now for the actual particle content
