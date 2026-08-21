@@ -45,6 +45,29 @@ Look at the `./make_swift_particles.sh` script for an example how to generate
 particle files for the actual SWIFT codebase, not swiftgpupacksim.
 
 
+## Accessor Variations
+
+This script offers three variants of accessing the getters/setters API:
+
+- part struct accessors: (`--part-struct-accessors`) getters/setters require a
+  `struct part* p` to access correct particle fields. If the field is not
+  contained within `struct part` itself, but some other particle sub-struct, it
+  will access it using the particle's index in the global particle arrays as
+  well as a pointer to all global particle arrays, which are two additional
+  variables automatically added to the `struct part`.
+
+- explicit accessors: (`--explicit-var-accessors`) getters/setters require a
+  struct which holds pointers to all global particle arrays as well as the
+  particle's index in that array to be passed explicitly as arguments. The
+  header file containin the definition of the struct holding pointers to all
+  global particle arrays is automatically generated too.
+
+- global var accessors: (`--global-var-accessors`) getters/setters only require
+  a particle's index in the global particle arrays to access its data. The
+  global particle arrays are kept as a global variable somewhere in the code.
+
+
+
 
 ## Dependencies
 
