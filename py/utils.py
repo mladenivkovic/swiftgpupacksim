@@ -145,6 +145,26 @@ def sanitize_include_headers(headerfiles: list):
     """
     sanitized = []
 
+    if not isinstance(headerfiles, list):
+        raise ValueError(f"""
+headers to include must be a list, not a {type(headerfiles)}.
+
+Use
+```
+includes:
+    - a.h
+    - b.h
+```
+
+not
+
+```
+includes: a.h b.h
+```
+
+in your yml file.
+ """)
+
     for inc in headerfiles:
         inc = inc.strip()
         if len(inc) == 0:
