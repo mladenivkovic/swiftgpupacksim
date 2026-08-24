@@ -3,14 +3,10 @@
 metadata:
     authors: "anonymous"
     flavour: "header_test"
-    includes: |
-        "a.h"
-        "b.h"
-        "c.h"
-        "<d.h>"
-    includes_add: |
-        "e.h"
-        "f.h"
+    includes_add: 
+        - "a.h"
+        - "b.h"
+        - <stdio.h>
     doc: "Test file to test header outputs."
 
 part:

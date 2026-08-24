@@ -14,7 +14,7 @@ function COMPILE_AND_RUN() {
   if [[ -z "${CC}" ]]; then
     CC=gcc
   fi
-  "$CC" -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror -I../src/
+  "$CC" -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror -I../src/ -I../src/swift_placeholders
   echo TODO MLADEN: THIS SHOULD ALSO WORK WITHOUT -DUSE_PART_STRUCT_ACCESSORS
   ./test_header_output.o
   rm -f ./test_header_output.o
@@ -59,22 +59,22 @@ for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-acc
 # done
 
   # make temporary headers which will be included
-  touch a.h b.h c.h d.h e.h f.h
+  touch a.h b.h c.h
 
   for flag in "" "--swift"; do
 
-    for testcase in test_headerfile_all_options_given; do
+    for testcase in test_headerfile_includes test_headerfile_includes_add; do
 
       echo "==============================================="
       echo "running $testcase $flag"
       echo "==============================================="
 
-      python3 ../../py/generate_hydro_part.py --part-struct-accessors ./input/"$testcase".yml
+      python3 ../../py/generate_hydro_part.py --part-struct-accessors --test ./input/"$testcase".yml
       COMPILE_AND_RUN
     done
   done
 
-  rm -f a.h b.h c.h d.h e.h f.h
+  rm -f a.h b.h c.h
 
 done
 

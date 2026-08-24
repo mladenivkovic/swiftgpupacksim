@@ -137,6 +137,52 @@ def read_input_file(filename: str):
     return part_data_dict, metadata_dict
 
 
+def sanitize_include_headers(headerfiles: list):
+    """
+    Sanitize header file names, passed as a list of strings
+
+    Returns: list of sanitized file names
+    """
+    sanitized = []
+
+    for inc in headerfiles:
+        inc = inc.strip()
+        if len(inc) == 0:
+            continue
+        if (not inc.startswith('"')) and (not inc.startswith("<")):
+            inc = '"' + inc
+        if (not inc.endswith('"')) and (not inc.endswith(">")):
+            inc = inc + '"'
+        sanitized.append(inc)
+    return sanitized
+
+
+def read_default_includes(swift_header: bool = False, verbose: bool=False):
+    """
+    Read default headers to be included.
+
+    Returns: List of headers as strings
+    """
+
+    fname = "default_headers_swiftgpupacksim.h"
+    if swift_header:
+        fname = "default_headers_swift.h"
+
+    fname_full = os.path.join("input", fname)
+
+    if verbose:
+        print(f"-- checking metadata: Using defaults from {fname_full} with additions from yml file")
+
+    f = open(fname_full, "r")
+    lines=f.readlines()
+    headers = [l.strip() for l in lines]
+    f.close()
+
+    sanitized = sanitize_include_headers(headers)
+    return sanitized
+
+
+
 def validate_yml_contents(contents_d: dict) -> None:
     """
     Run through the read-in data from the yml file, passed as the dict
@@ -228,44 +274,37 @@ def process_yml_metadata(metadata_d: dict, swift_header: bool = False, verbose: 
         metadata_d["has_doc"] = True
 
     if ("includes") not in passed_fields:
-        # use defaults.
-
-        fname = "default_headers_swiftgpupacksim.h"
-        if swift_header:
-            fname = "default_headers_swift.h"
-
-        fname_full = os.path.join("input", fname)
-
-        f = open(fname_full, "r")
-        lines=f.readlines()
-        metadata_d["includes"] = [l.strip() for l in lines]
-        f.close()
-
         if verbose:
-            print(f"-- checking metadata: No header includes found, using defaults from {fname_full}")
+            print(f"-- checking metadata: No header includes provided.")
+
+        # use defaults.
+        incs = read_default_includes(swift_header=swift_header, verbose=verbose)
+        metadata_d["includes"] = incs
+
+    else:
+        # sanitize input
+        sanitized = sanitize_include_headers(metadata_d["includes"])
+        metadata_d["includes"] = sanitized
+
 
     if ("includes_add") in passed_fields:
-        # use defaults for 'includes' field, then add these later.
 
-        fname = "default_headers_swiftgpupacksim.h"
-        if swift_header:
-            fname = "default_headers_swift.h"
+        if ("includes") in passed_fields:
+            raise ValueError("Got both 'includes' and 'includes_add' parameters, pick one!")
 
-        fname_full = os.path.join("input", fname)
-
-        f = open(fname_full, "r")
-        lines=f.readlines()
-        metadata_d["includes"] = [l.strip() for l in lines]
-        f.close()
-
-        if verbose:
-            print(f"-- checking metadata: Using defaults from {fname_full} with additions from yml file")
-
+        # sanitize input
+        sanitized = sanitize_include_headers(metadata_d["includes_add"])
+        metadata_d["includes_add"] = sanitized
         metadata_d["has_extra_includes"] = True
+
+        # now use defaults for 'includes' field, then add these later.
+        incs = read_default_includes(swift_header=swift_header, verbose=verbose)
+        metadata_d["includes"] = incs
+
+
     else:
         metadata_d["includes_add"] = [""]
         metadata_d["has_extra_includes"] = False
-
 
 
 
