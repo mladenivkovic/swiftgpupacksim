@@ -16,6 +16,11 @@ _permitted_duplicate_field_names = [
     "accessor_id",
 ]
 
+_required_file_metadata_swift = [
+    "authors",
+    "flavour",
+    ]
+
 
 def verify_file_exists(fname: str, message: str = ""):
     """
@@ -132,6 +137,72 @@ def read_input_file(filename: str):
     return part_data_dict, metadata_dict
 
 
+def sanitize_include_headers(headerfiles: list):
+    """
+    Sanitize header file names, passed as a list of strings
+
+    Returns: list of sanitized file names
+    """
+    sanitized = []
+
+    if not isinstance(headerfiles, list):
+        raise ValueError(f"""
+headers to include must be a list, not a {type(headerfiles)}.
+
+Use
+```
+includes:
+    - a.h
+    - b.h
+```
+
+not
+
+```
+includes: a.h b.h
+```
+
+in your yml file.
+ """)
+
+    for inc in headerfiles:
+        inc = inc.strip()
+        if len(inc) == 0:
+            continue
+        if (not inc.startswith('"')) and (not inc.startswith("<")):
+            inc = '"' + inc
+        if (not inc.endswith('"')) and (not inc.endswith(">")):
+            inc = inc + '"'
+        sanitized.append(inc)
+    return sanitized
+
+
+def read_default_includes(swift_header: bool = False, verbose: bool=False):
+    """
+    Read default headers to be included.
+
+    Returns: List of headers as strings
+    """
+
+    fname = "default_headers_swiftgpupacksim.h"
+    if swift_header:
+        fname = "default_headers_swift.h"
+
+    fname_full = os.path.join("input", fname)
+
+    if verbose:
+        print(f"-- checking metadata: Using defaults from {fname_full} with additions from yml file")
+
+    f = open(fname_full, "r")
+    lines=f.readlines()
+    headers = [l.strip() for l in lines]
+    f.close()
+
+    sanitized = sanitize_include_headers(headers)
+    return sanitized
+
+
+
 def validate_yml_contents(contents_d: dict) -> None:
     """
     Run through the read-in data from the yml file, passed as the dict
@@ -164,6 +235,98 @@ def validate_yml_contents(contents_d: dict) -> None:
                     + "This will create multiply defined getters and setters."
                 )
             field_names.append(field)
+
+    return
+
+def process_yml_metadata(metadata_d: dict, swift_header: bool = False, verbose: bool = False) -> None:
+    """
+    Run through the read-in metadata from the yml file, passed as the dict
+    `metadata_d`, validate that there are no issues, and set up defaults if
+    necessary.
+
+    Parameters
+    ----------
+
+    metadata_d: dict
+        dict containing read-in metadata items from the yml file
+
+    swift_header: bool
+        if True, we're creating header files for SWIFT. Otherwise, for
+        SWIFTGPUPACKSIM.
+
+    verbose: bool
+        are we talkative?
+    """
+
+    passed_fields = list(metadata_d.keys())
+
+    if swift_header:
+        # we only require metadata to be present if we're compiling swift headers.
+
+        for field in _required_file_metadata_swift:
+            if field not in passed_fields:
+                raise ValueError(f"Required field {field} not found in read-in metadata")
+
+    # Now go through fields one-by-one
+
+    if "authors" not in passed_fields:
+        metadata_d["author"] = "NO AUTHORS SPECIFIED"
+        if verbose:
+            print("-- checking metadata: No authors found")
+
+    if "flavour" not in passed_fields:
+        metadata_d["flavour"] = get_git_hash()
+        if verbose:
+            print("-- checking metadata: No SPH flavour found")
+
+    if ("doc" not in passed_fields) and ("documentation" not in passed_fields):
+        metadata_d["has_doc"] = False
+        if verbose:
+            print("-- checking metadata: No file documentation found")
+
+        # place documentation contents with a key you'll know to search for later
+        if "doc" not in passed_fields:
+            doc = ""
+            if "documentation" in passed_fields:
+                doc = metadata_d["documentation"]
+            metadata_d["doc"] = doc
+    else:
+        metadata_d["has_doc"] = True
+
+    if ("includes") not in passed_fields:
+        if verbose:
+            print(f"-- checking metadata: No header includes provided.")
+
+        # use defaults.
+        incs = read_default_includes(swift_header=swift_header, verbose=verbose)
+        metadata_d["includes"] = incs
+
+    else:
+        # sanitize input
+        sanitized = sanitize_include_headers(metadata_d["includes"])
+        metadata_d["includes"] = sanitized
+
+
+    if ("includes_add") in passed_fields:
+
+        if ("includes") in passed_fields:
+            raise ValueError("Got both 'includes' and 'includes_add' parameters, pick one!")
+
+        # sanitize input
+        sanitized = sanitize_include_headers(metadata_d["includes_add"])
+        metadata_d["includes_add"] = sanitized
+        metadata_d["has_extra_includes"] = True
+
+        # now use defaults for 'includes' field, then add these later.
+        incs = read_default_includes(swift_header=swift_header, verbose=verbose)
+        metadata_d["includes"] = incs
+
+
+    else:
+        metadata_d["includes_add"] = [""]
+        metadata_d["has_extra_includes"] = False
+
+
 
     return
 

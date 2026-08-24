@@ -14,7 +14,7 @@ function COMPILE_AND_RUN() {
   if [[ -z "${CC}" ]]; then
     CC=gcc
   fi
-  "$CC" -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror
+  "$CC" -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror -I../src/ -I../src/swift_placeholders
   echo TODO MLADEN: THIS SHOULD ALSO WORK WITHOUT -DUSE_PART_STRUCT_ACCESSORS
   ./test_header_output.o
   rm -f ./test_header_output.o
@@ -52,11 +52,35 @@ for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-acc
 
     if [ "$flag" == "--part-struct-accessor" ]; then
       # I only keep the outputs for part struct accessors for comparison for now...
+      # cp hydro_part.h output/"$testcase".h
       DIFF hydro_part.h output/"$testcase".h
     fi
 
     rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+done
+
+  # make temporary headers which will be included
+  touch a.h b.h c.h
+
+  for flag in "" "--swift"; do
+
+    for testcase in test_headerfile_includes test_headerfile_includes_add; do
+
+      echo "==============================================="
+      echo "running $testcase $flag"
+      echo "==============================================="
+
+      python3 ../../py/generate_hydro_part.py --part-struct-accessors --test ./input/"$testcase".yml
+      COMPILE_AND_RUN
+
+      # cp hydro_part.h output/"$testcase".h
+      DIFF hydro_part.h output/"$testcase".h
+
+    done
   done
+
+  rm -f a.h b.h c.h
+
 done
 
 echo "Python tests passed."

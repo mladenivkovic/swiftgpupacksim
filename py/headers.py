@@ -82,11 +82,18 @@ def generate_hydro_part_dot_h(
 
         declarations = []
         apis = []
+        has_doc = False
+        doc = ""
 
         for field in list(part_d[struct_name].keys()):
             if FieldEntry.prohibited_name(field):
-                if verbose:
-                    print(f"-- Found prohibited field name {field}, skipping it.")
+                if field == "doc" or field == "documentation":
+                    has_doc = True
+                    doc = part_d[struct_name][field]
+                else:
+                    if verbose:
+                        print(f"-- Found prohibited field name {field}, skipping it.")
+                # in either case, don't process further
                 continue
             # parse the field specification
             field_props = part_d[struct_name][field]
@@ -106,7 +113,7 @@ def generate_hydro_part_dot_h(
             apis.append(api)
 
         # store the parsed data
-        part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations}
+        part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations, "HAS_DOC":has_doc, "DOC" : doc}
 
     # Now generate the file from template
     header_file = jinja_generate_hydro_part_dot_h(
