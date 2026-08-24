@@ -59,6 +59,7 @@ extern struct part_arrays global_part_arrays;
 
 {# --------------------------------- GENERATE STUCTS -------------------------------- #}
 {% for STRUCT_NAME in STRUCT_NAMES %}
+{% if STRUCT_CONTENTS[STRUCT_NAME]["HAS_DOC"] %}/*! {{STRUCT_CONTENTS[STRUCT_NAME]["DOC"]}} */{% endif %} 
 struct {{STRUCT_NAME}} {
 {% for DECL in STRUCT_CONTENTS[STRUCT_NAME]["DECLARATIONS"] -%}
     {{DECL}}
