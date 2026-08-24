@@ -35,10 +35,7 @@ _allowed_field_data_types = [
     "enum",
 ]
 
-_allowed_composite_field_data_types = [
-        "struct",
-        "enum"
-    ]
+_allowed_composite_field_data_types = ["struct", "enum"]
 
 
 # Default return values for variables hidden behind macros
@@ -356,7 +353,7 @@ class FieldEntry(object):
             # distinguish multidim arrays by having a comma
             if "," in self.size:
                 is_multidim_array = True
-                is_array = False # don't treat this as a simple array in this script nor in the templates!!
+                is_array = False  # don't treat this as a simple array in this script nor in the templates!!
                 dims = self.size.split(",")
                 multidim_array_dimensions = [d.strip() for d in dims]
                 multidim_array_dimensions_count = len(dims)

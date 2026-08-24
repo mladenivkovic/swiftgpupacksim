@@ -19,7 +19,7 @@ _permitted_duplicate_field_names = [
 _required_file_metadata_swift = [
     "authors",
     "flavour",
-    ]
+]
 
 
 def verify_file_exists(fname: str, message: str = ""):
@@ -146,7 +146,8 @@ def sanitize_include_headers(headerfiles: list):
     sanitized = []
 
     if not isinstance(headerfiles, list):
-        raise ValueError(f"""
+        raise ValueError(
+            f"""
 headers to include must be a list, not a {type(headerfiles)}.
 
 Use
@@ -163,7 +164,8 @@ includes: a.h b.h
 ```
 
 in your yml file.
- """)
+ """
+        )
 
     for inc in headerfiles:
         inc = inc.strip()
@@ -177,7 +179,7 @@ in your yml file.
     return sanitized
 
 
-def read_default_includes(swift_header: bool = False, verbose: bool=False):
+def read_default_includes(swift_header: bool = False, verbose: bool = False):
     """
     Read default headers to be included.
 
@@ -191,16 +193,17 @@ def read_default_includes(swift_header: bool = False, verbose: bool=False):
     fname_full = os.path.join("input", fname)
 
     if verbose:
-        print(f"-- checking metadata: Using defaults from {fname_full} with additions from yml file")
+        print(
+            f"-- checking metadata: Using defaults from {fname_full} with additions from yml file"
+        )
 
     f = open(fname_full, "r")
-    lines=f.readlines()
+    lines = f.readlines()
     headers = [l.strip() for l in lines]
     f.close()
 
     sanitized = sanitize_include_headers(headers)
     return sanitized
-
 
 
 def validate_yml_contents(contents_d: dict) -> None:
@@ -238,7 +241,10 @@ def validate_yml_contents(contents_d: dict) -> None:
 
     return
 
-def process_yml_metadata(metadata_d: dict, swift_header: bool = False, verbose: bool = False) -> None:
+
+def process_yml_metadata(
+    metadata_d: dict, swift_header: bool = False, verbose: bool = False
+) -> None:
     """
     Run through the read-in metadata from the yml file, passed as the dict
     `metadata_d`, validate that there are no issues, and set up defaults if
@@ -265,7 +271,9 @@ def process_yml_metadata(metadata_d: dict, swift_header: bool = False, verbose: 
 
         for field in _required_file_metadata_swift:
             if field not in passed_fields:
-                raise ValueError(f"Required field {field} not found in read-in metadata")
+                raise ValueError(
+                    f"Required field {field} not found in read-in metadata"
+                )
 
     # Now go through fields one-by-one
 
@@ -306,11 +314,12 @@ def process_yml_metadata(metadata_d: dict, swift_header: bool = False, verbose: 
         sanitized = sanitize_include_headers(metadata_d["includes"])
         metadata_d["includes"] = sanitized
 
-
     if ("includes_add") in passed_fields:
 
         if ("includes") in passed_fields:
-            raise ValueError("Got both 'includes' and 'includes_add' parameters, pick one!")
+            raise ValueError(
+                "Got both 'includes' and 'includes_add' parameters, pick one!"
+            )
 
         # sanitize input
         sanitized = sanitize_include_headers(metadata_d["includes_add"])
@@ -321,12 +330,9 @@ def process_yml_metadata(metadata_d: dict, swift_header: bool = False, verbose: 
         incs = read_default_includes(swift_header=swift_header, verbose=verbose)
         metadata_d["includes"] = incs
 
-
     else:
         metadata_d["includes_add"] = [""]
         metadata_d["has_extra_includes"] = False
-
-
 
     return
 

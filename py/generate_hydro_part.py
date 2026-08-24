@@ -127,10 +127,10 @@ if __name__ == "__main__":
         and (not explicit_var_accessors)
     ):
         raise ValueError(
-            "Neither '--part-struct-accessors' nor "+
-            "'--global-var-accessors' nor "+
-            "'--explicit-var-accessors' selected."+
-            " You must select at least one."
+            "Neither '--part-struct-accessors' nor "
+            + "'--global-var-accessors' nor "
+            + "'--explicit-var-accessors' selected."
+            + " You must select at least one."
         )
 
     # read in data

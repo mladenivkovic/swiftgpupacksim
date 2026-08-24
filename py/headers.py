@@ -113,7 +113,12 @@ def generate_hydro_part_dot_h(
             apis.append(api)
 
         # store the parsed data
-        part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations, "HAS_DOC":has_doc, "DOC" : doc}
+        part_struct_d[struct_name] = {
+            "API": apis,
+            "DECLARATIONS": declarations,
+            "HAS_DOC": has_doc,
+            "DOC": doc,
+        }
 
     # Now generate the file from template
     header_file = jinja_generate_hydro_part_dot_h(
