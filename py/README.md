@@ -155,6 +155,25 @@ such as:
 - `includes_add`: Rather than providing a full list of includes, only add these
   to the default selection.
 
+Here's an example metadata setup:
+
+
+```
+metadata:
+  authors: "2026 John Doe"       # year and authors of file, to be inserted into the license
+  flavour: my_sph_flavour_name   # name of the SPH flavour. Mainly used in header guard macro
+  doc: |                         # file documentation
+    This file contains X, Y, and Z.
+  includes:                      # headers to be included. If not provided, default headers will
+    - a.h                        # be used, read in from `input/default_headers_swift.h` or
+    - b.h                        # `input/default_headers_swiftgpupacksim.h`.
+    - <stdio.h>
+  includes_add:                  # WARNING: Cannot be used together with `includes` parameter.
+    - a.h                        # Additional header files to include aside from the "default" ones
+    - b.h
+    - <stdio.h>
+```
+
 
 
 
