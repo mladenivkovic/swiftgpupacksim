@@ -30,33 +30,34 @@ function DIFF(){
 
 
 for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
-  # for testcase in \
-  #   "test_data_types" \
-  #   "test_arrays" \
-  #   "test_multidim_arrays" \
-  #   "test_ifdefs" \
-  #   "test_struct" \
-  #   "test_union" \
-  #   "test_split_struct" \
-  #   "test_split_struct_nopart" \
-  #   "test_split_struct_arrays" \
-  #   "test_split_struct_structs_and_unions" \
-  # ; do
-  #
-  #   echo "==============================================="
-  #   echo "running $testcase $flag"
-  #   echo "==============================================="
-  #
-  #   python3 ../../py/generate_hydro_part.py --test "$flag" ./input/"$testcase".yml
-  #   COMPILE_AND_RUN
-  #
-  #   if [ "$flag" == "--part-struct-accessor" ]; then
-  #     # I only keep the outputs for part struct accessors for comparison for now...
-  #     DIFF hydro_part.h output/"$testcase".h
-  #   fi
-  #
-  #   rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-# done
+  for testcase in \
+    "test_data_types" \
+    "test_arrays" \
+    "test_multidim_arrays" \
+    "test_ifdefs" \
+    "test_struct" \
+    "test_union" \
+    "test_split_struct" \
+    "test_split_struct_nopart" \
+    "test_split_struct_arrays" \
+    "test_split_struct_structs_and_unions" \
+  ; do
+
+    echo "==============================================="
+    echo "running $testcase $flag"
+    echo "==============================================="
+
+    python3 ../../py/generate_hydro_part.py --test "$flag" ./input/"$testcase".yml
+    COMPILE_AND_RUN
+
+    if [ "$flag" == "--part-struct-accessor" ]; then
+      # I only keep the outputs for part struct accessors for comparison for now...
+      # cp hydro_part.h output/"$testcase".h
+      DIFF hydro_part.h output/"$testcase".h
+    fi
+
+    rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+done
 
   # make temporary headers which will be included
   touch a.h b.h c.h
@@ -71,6 +72,10 @@ for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-acc
 
       python3 ../../py/generate_hydro_part.py --part-struct-accessors --test ./input/"$testcase".yml
       COMPILE_AND_RUN
+
+      # cp hydro_part.h output/"$testcase".h
+      DIFF hydro_part.h output/"$testcase".h
+
     done
   done
 
