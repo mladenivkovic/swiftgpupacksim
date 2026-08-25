@@ -74,17 +74,16 @@ part:
     type: struct
     doc: Store thermal diffusion information in a separate struct
     contents:
-<<<<<<< HEAD
 
       laplace_u:
         doc: del^2 u, a smoothed quantity
 
       alpha: 
         doc: Thermal diffusion coefficient
-=======
+        
       laplace_u:
         doc: del^2 u, a smoothed quantity
->>>>>>> ca15999 (put part before xpart)
+          ca15999 (put part before xpart)
 
       alpha: 
         doc: Thermal diffusion coefficient
