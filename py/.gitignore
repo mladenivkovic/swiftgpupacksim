@@ -2,4 +2,5 @@ hydro_part.h
 parts.h
 hydro_part_arrays_struct.h
 hydro_part_arrays_flush.h
+hydro_space.c
 swift/

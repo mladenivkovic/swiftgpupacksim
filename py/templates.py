@@ -286,3 +286,58 @@ def jinja_generate_hydro_part_arrays_flush_dot_h(
     header_template = templ.render(d)
 
     return header_template
+
+
+
+def jinja_generate_hydro_space_dot_c(
+    part_structs_d: dict,
+    metadata_d: dict,
+    template_dir: str = _default_template_dir,
+    swift_header: bool = True,
+    verbose: bool = False,
+) -> str:
+    """
+    Generates the full hydro_part_arrays_flush.h header.
+
+    Parameters
+    ----------
+
+    part_structs_d: dict
+        dict containing processed data ready to be inserted into the template.
+
+    metadata_d: dict
+        dict containing particle (flavour) metadata
+
+    template_dir: str
+        the directory to search for templates
+
+    swift_header: bool
+        if True, generate headers compatible with swift, not swiftgpupacksim
+
+    verbose: bool
+        if True, be talkative
+
+    Returns
+    -------
+
+    header_template: str
+        the rendered template as a string
+    """
+
+    env = init_jinja_env(template_dir)
+    templ_fname = "hydro_space.c.jinja.template"
+    templ = env.get_template(templ_fname)
+    templ_full_fname = os.path.join(template_dir, templ_fname)
+
+    # fill up dict for template rendering
+    d = {}
+    d["STRUCT_NAMES"] = part_structs_d["names"]
+    d["TEMPLATE_FILENAME"] = templ_full_fname
+    d["HEADER_FOR_SWIFT"] = swift_header
+    d["HEADER_GUARD"] = get_git_hash()
+
+    d["FLAVOUR_NAME"] = metadata_d["flavour"].upper()
+
+    basefile_template = templ.render(d)
+
+    return basefile_template
