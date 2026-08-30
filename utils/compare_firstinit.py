@@ -186,9 +186,17 @@ plotkwargs = {
 if __name__ == "__main__":
 
     if not os.path.exists(srcdir):
+        raise FileNotFoundError(f"directory {srcdir} not found.")
+
+    # get available layouts
     #  layouts = []
     #  firstdir = get_result_dir(
-    #      srcdir, EXPERIMENTS[0], nthreads, access_variant, loop_split, other_variant=variants[0]
+    #      srcdir,
+    #      EXPERIMENTS[0],
+    #      nthreads,
+    #      access_variant,
+    #      loop_split,
+    #      other_variant=variants[0],
     #  )
     #  ls = os.listdir(firstdir)
     #  for f in ls:

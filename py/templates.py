@@ -288,7 +288,6 @@ def jinja_generate_hydro_part_arrays_flush_dot_h(
     return header_template
 
 
-
 def jinja_generate_hydro_space_dot_c(
     part_structs_d: dict,
     metadata_d: dict,

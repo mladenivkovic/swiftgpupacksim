@@ -185,7 +185,6 @@ if __name__ == "__main__":
         particle_fields_d, metadata_d, swift_header=swift_header, verbose=verbose
     )
 
-
     if dry_run:
         print_separator("hydro_part_header")
         print(hydro_part_header)
@@ -218,7 +217,6 @@ if __name__ == "__main__":
             fp.write(hydro_space_base)
             fp.close()
             print("Written", outfile)
-
 
         else:
 

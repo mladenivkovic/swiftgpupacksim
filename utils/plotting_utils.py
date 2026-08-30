@@ -34,12 +34,12 @@ NTHREADS = ["36", "72"]
 NODES = ["dine2", "gn003"]
 # try a "data/" top level directory, if directories aren't here already
 if not os.path.isdir(NODES[0]):
-    NODES=[os.path.join("data", n) for n in NODES]
+    NODES = [os.path.join("data", n) for n in NODES]
 
 NODES_5STEPS = ["dine2_5steps", "gn003_5steps"]
 # try a "data/" top level directory, if directories aren't here already
 if not os.path.isdir(NODES_5STEPS[0]):
-    NODES_5STEPS=[os.path.join("data", n) for n in NODES_5STEPS]
+    NODES_5STEPS = [os.path.join("data", n) for n in NODES_5STEPS]
 
 NODE_LABELS = {
     "dine2": "Intel+A30",

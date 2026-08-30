@@ -120,11 +120,11 @@ if not os.path.isdir(NODES[0]):
     NODES = [os.path.join("data", n) for n in NODES]
 
 NODE_LABELS = {
-        "dine2_cellsize": "dine2",
-        "data/dine2_cellsize": "dine2",
-        "gn003_cellsize":"gracehopper",
-        "data/gn003_cellsize":"gracehopper",
-        }
+    "dine2_cellsize": "dine2",
+    "data/dine2_cellsize": "dine2",
+    "gn003_cellsize": "gracehopper",
+    "data/gn003_cellsize": "gracehopper",
+}
 
 EXPERIMENTS = [
     "TestCellSize64",

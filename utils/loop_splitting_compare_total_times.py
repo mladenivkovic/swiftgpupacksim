@@ -276,7 +276,7 @@ if __name__ == "__main__":
             ax.annotate(
                 NODE_LABELS[srcdir],
                 xy=(0.8, 0.9),
-                xycoords='axes fraction',
+                xycoords="axes fraction",
                 backgroundcolor="lightgrey",
                 fontsize="large",
             )
