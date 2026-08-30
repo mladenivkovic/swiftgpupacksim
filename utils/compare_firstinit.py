@@ -186,24 +186,18 @@ plotkwargs = {
 if __name__ == "__main__":
 
     if not os.path.exists(srcdir):
-        raise FileNotFoundError(f"directory {srcdir} not found.")
-
-    # get available layouts
-    layouts = []
-    firstdir = get_result_dir(
-        srcdir,
-        EXPERIMENTS[0],
-        nthreads,
-        access_variant,
-        loop_split,
-        other_variant=variants[0],
-    )
-    ls = os.listdir(firstdir)
-    for f in ls:
-        if f.startswith("results_") and f.endswith(".csv"):
-            layout = f[len("results_") : -len(".csv")]
-            layouts.append(layout)
-    layouts.sort()
+    #  layouts = []
+    #  firstdir = get_result_dir(
+    #      srcdir, EXPERIMENTS[0], nthreads, access_variant, loop_split, other_variant=variants[0]
+    #  )
+    #  ls = os.listdir(firstdir)
+    #  for f in ls:
+    #      if f.startswith("results_") and f.endswith(".csv"):
+    #          layout = f[len("results_") : -len(".csv")]
+    #          layouts.append(layout)
+    #  layouts.sort()
+    print("Warning: Using hardcoded list of layouts.")
+    layouts = ["aos", "pack-force", "pack-gradient", "pack-shared", "soa", "upstream"]
 
     aos_ind = -1
     for i in range(len(layouts)):
@@ -351,7 +345,7 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"compare_firstinit_{srcdir}_{access_variant}"
+    outfname = f"compare_firstinit_{os.path.basename(srcdir)}_{access_variant}"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if normalise:

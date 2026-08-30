@@ -405,7 +405,7 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=0, rect=(0.01, 0.15, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"loop_splitting_compare_packed_{srcdir}_{access}"
+    outfname = f"loop_splitting_compare_packed_{os.path.basename(srcdir)}_{access}"
     if variant_dir_suffix_nopack != "":
         outfname += variant_dir_suffix_nopack
     outfname += "_relative"

@@ -372,7 +372,7 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=1, rect=(0.01, 0.07, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"compare_part_access_{srcdir}_{nthreads}threads"
+    outfname = f"compare_part_access_{os.path.basename(srcdir)}_{nthreads}threads"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if normalise:

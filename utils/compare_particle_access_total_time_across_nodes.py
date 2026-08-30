@@ -21,7 +21,7 @@ from plotting_utils import (
     EXPERIMENTS,
     LAYOUTS_TO_USE,
     LAYOUTS_TO_USE_MINIMAL,
-    NODES,
+    NODES_5STEPS,
     NODE_LABELS,
     mymplparams,
     mydpi,
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     #  maxtime = -1.0
     #  mintime = 1e32
 
-    for n, srcdir in enumerate(NODES):
+    for n, srcdir in enumerate(NODES_5STEPS):
 
         if not os.path.exists(srcdir):
             raise FileNotFoundError(f"directory {srcdir} not found.")
@@ -196,9 +196,9 @@ if __name__ == "__main__":
         ax = axes[n]
         ax.set_title(NODE_LABELS[srcdir])
 
-        if srcdir.startswith("dine2"):
+        if srcdir.startswith("dine2") or srcdir.startswith("data/dine2"):
             nthreads = 64
-        elif srcdir.startswith("gn003"):
+        elif srcdir.startswith("gn003") or srcdir.startswith("data/gn003"):
             nthreads = 72
         else:
             raise NotImplementedError

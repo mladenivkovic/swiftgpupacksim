@@ -275,8 +275,8 @@ if __name__ == "__main__":
         else:
             ax.annotate(
                 NODE_LABELS[srcdir],
-                xy=(0.85, 0.9),
-                xycoords="axes fraction",
+                xy=(0.8, 0.9),
+                xycoords='axes fraction',
                 backgroundcolor="lightgrey",
                 fontsize="large",
             )
@@ -300,7 +300,8 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=0.5, rect=(0.0, 0.12, 1.0, 1.0))
 
     # construct output file name
-    outfname = f"loop_splitting_compare_total_time_{srcdir}_{nthreads}threads"
+    outfname = f"compare_part_access_{os.path.basename(srcdir)}_{nthreads}threads"
+    outfname = f"loop_splitting_compare_part_access_to_part-struct_no-split_{os.path.basename(srcdir)}_{nthreads}threads"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if args.png:
