@@ -166,7 +166,10 @@ if __name__ == "__main__":
     #          layouts.append(layout)
     #      layouts.sort()
 
-    fig = plt.figure(figsize=(12, 5))
+    if "dine2" in srcdir:
+        fig = plt.figure(figsize=(12, 3.5))
+    else:
+        fig = plt.figure(figsize=(12, 4.5))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
@@ -176,7 +179,7 @@ if __name__ == "__main__":
 
     for e, experiment in enumerate(EXPERIMENTS):
         ax = axes[e]
-        ax.set_title(experiment)
+        ax.set_title(experiment + ", " + NODE_LABELS[srcdir])
 
         # first, get the normalisation
         # AoS part-struct no-loop-split for this experiment
@@ -264,43 +267,52 @@ if __name__ == "__main__":
             r"$t / t_{\mathrm{aos,\ by-particle}}^{\mathrm{part-struct}}$"
             #  r"$t / t_{\mathrm{aos,\ no\ loop\ split}}^{\mathrm{part-struct}}$"
         )
-        if NODE_LABELS[srcdir] == "gracehopper":
-            ax.annotate(
-                NODE_LABELS[srcdir],
-                xy=(0.05, 0.06),
-                xycoords="axes fraction",
-                backgroundcolor="lightgrey",
-                fontsize="large",
-            )
-        else:
-            ax.annotate(
-                NODE_LABELS[srcdir],
-                xy=(0.8, 0.9),
-                xycoords="axes fraction",
-                backgroundcolor="lightgrey",
-                fontsize="large",
-            )
+        #  if NODE_LABELS[srcdir] == "gracehopper":
+        #      ax.annotate(NODE_LABELS[srcdir], xy=(0.03, 0.83), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large")
+        #  else:
+        #      ax.annotate(NODE_LABELS[srcdir], xy=(0.83, 0.83), xycoords='axes fraction', backgroundcolor="lightgrey", fontsize="large", ha="center")
+
+        #  if NODE_LABELS[srcdir] == "gracehopper":
+        #      ax.set_yticks([0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5])
+        #  if NODE_LABELS[srcdir] == "gracehopper":
+        #      ax.annotate(
+        #          NODE_LABELS[srcdir],
+        #          xy=(0.05, 0.06),
+        #          xycoords="axes fraction",
+        #          backgroundcolor="lightgrey",
+        #          fontsize="large",
+        #      )
+        #  else:
+        #      ax.annotate(
+        #          NODE_LABELS[srcdir],
+        #          xy=(0.8, 0.9),
+        #          xycoords="axes fraction",
+        #          backgroundcolor="lightgrey",
+        #          fontsize="large",
+        #      )
 
     # the others
     #  if args.equal_axis_limits:
     #      ax.set_yticklabels([])
 
-    hand, lab = ax1.get_legend_handles_labels()
-    #  ncols=int(len(layouts)*0.5 + 0.5)
-    ncols = 3
-    fig.legend(
-        handles=hand,
-        labels=lab,
-        loc="lower center",
-        ncols=ncols,
-        handlelength=4.5,
-        markerscale=1.0,
-    )
-    #  fig.suptitle(NODE_LABELS[srcdir])
-    fig.tight_layout(w_pad=0.5, rect=(0.0, 0.12, 1.0, 1.0))
+    if "dine2" in srcdir:
+        fig.tight_layout(w_pad=0.7, rect=(0.0, 0.0, 1.0, 1.0))
+    else:
+        hand, lab = ax1.get_legend_handles_labels()
+        #  ncols=int(len(layouts)*0.5 + 0.5)
+        ncols = 3
+        fig.legend(
+            handles=hand,
+            labels=lab,
+            loc="lower center",
+            ncols=ncols,
+            handlelength=4.5,
+            markerscale=1.0,
+        )
+        #  fig.suptitle(NODE_LABELS[srcdir])
+        fig.tight_layout(w_pad=0.5, rect=(0.0, 0.15, 1.0, 1.0))
 
     # construct output file name
-    outfname = f"compare_part_access_{os.path.basename(srcdir)}_{nthreads}threads"
     outfname = f"loop_splitting_compare_part_access_to_part-struct_no-split_{os.path.basename(srcdir)}_{nthreads}threads"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix

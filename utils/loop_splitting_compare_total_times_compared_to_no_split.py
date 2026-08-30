@@ -137,9 +137,9 @@ if __name__ == "__main__":
     #      layouts.sort()
 
     if "dine2" in srcdir:
-        fig = plt.figure(figsize=(12, 3))
-    else:
         fig = plt.figure(figsize=(12, 3.5))
+    else:
+        fig = plt.figure(figsize=(12, 4.5))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]

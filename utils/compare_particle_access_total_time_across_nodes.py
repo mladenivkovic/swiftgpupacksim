@@ -180,7 +180,7 @@ plotkwargs = {
 
 if __name__ == "__main__":
 
-    fig = plt.figure(figsize=(10, 3))
+    fig = plt.figure(figsize=(10, 4))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
