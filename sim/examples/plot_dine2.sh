@@ -22,7 +22,7 @@ fi
 # ---------------------------------------------
 
 # compare_part_access_dine2_5steps_64threads_noflush_normalised.pdf
-# python3 ../../utils/compare_particle_access.py --no-flush -t 64 data/dine2_5steps --normalise $PNGFLAG
+python3 ../../utils/compare_particle_access.py --no-flush -t 64 data/dine2_5steps --normalise $PNGFLAG
 
 
 
@@ -31,14 +31,14 @@ fi
 # ---------------------------------------------
 
 # loop_splitting_compare_part_access_to_part-struct_no-split_dine2_5steps_64threads_noflush.png
-# python3 ../../utils/loop_splitting_compare_total_times.py --no-flush -t 64 data/dine2_5steps $PNGFLAG
+python3 ../../utils/loop_splitting_compare_total_times.py --no-flush -t 64 data/dine2_5steps $PNGFLAG
 
 # loop_splitting_compare_part_access_to_no-split_dine2_5steps_64threads_noflush.png
-# python3 ../../utils/loop_splitting_compare_total_times_compared_to_no_split.py --no-flush -t 64 data/dine2_5steps $PNGFLAG
+python3 ../../utils/loop_splitting_compare_total_times_compared_to_no_split.py --no-flush -t 64 data/dine2_5steps $PNGFLAG
 
 # loop_splitting_compare_part_access_dine2_5steps_Gresho256_64threads_noflush.png
 # loop_splitting_compare_part_access_dine2_5steps_EAGLE25_64threads_noflush.png
-# python3 ../../utils/loop_splitting_compare_particle_access.py data/dine2_5steps --no-flush -t 64 $PNGFLAG
+python3 ../../utils/loop_splitting_compare_particle_access.py data/dine2_5steps --no-flush -t 64 $PNGFLAG
 
 
 # ---------------------------------------------
@@ -46,10 +46,10 @@ fi
 # ---------------------------------------------
 
 # compare_flush_variants_dine2_explicit-var_none.png
-# ../../utils/compare_flush_variants.py -t 64 data/dine2 $PNGFLAG
+../../utils/compare_flush_variants.py -t 64 data/dine2 $PNGFLAG
 
 # compare_flush_variants_dine2_explicit-var_none_normalised.png
-# ../../utils/compare_flush_variants.py -t 64 data/dine2 --normalise $PNGFLAG
+../../utils/compare_flush_variants.py -t 64 data/dine2 --normalise $PNGFLAG
 
 
 # ---------------------------------------------
@@ -57,10 +57,10 @@ fi
 # ---------------------------------------------
 
 # compare_firstinit_dine2_explicit-var_none.png
-# python3 ../../utils/compare_firstinit.py -t 64 data/dine2 --no-flush $PNGFLAG
+python3 ../../utils/compare_firstinit.py -t 64 data/dine2 --no-flush $PNGFLAG
 
 # compare_nthreads_dine2_explicit-var_none.png
-# python3 ../../utils/compare_nthreads.py data/dine2 --no-flush $PNGFLAG
+python3 ../../utils/compare_nthreads.py data/dine2 --no-flush $PNGFLAG
 
 
 
@@ -74,10 +74,10 @@ fi
 # loop_splitting_compare_packed_dine2_EAGLE25_part-struct_noflush.png
 # loop_splitting_compare_packed_dine2_EAGLE25_explicit-var_noflush.png
 # loop_splitting_compare_packed_dine2_EAGLE25_global-var_noflush.png
-# python3 ../../utils/loop_splitting_compare_packed.py data/dine2 --no-flush -t 64 $PNGFLAG
+python3 ../../utils/loop_splitting_compare_packed.py data/dine2 --no-flush -t 64 $PNGFLAG
 
 # loop_splitting_compare_packed_dine2_global-var_noflush_relative.png
-# python3 ../../utils/loop_splitting_compare_packed_relative.py data/dine2 --no-flush -t 64 $PNGFLAG
+python3 ../../utils/loop_splitting_compare_packed_relative.py data/dine2 --no-flush -t 64 $PNGFLAG
 
 
 
