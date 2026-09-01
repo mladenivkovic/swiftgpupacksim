@@ -1,0 +1,286 @@
+# SPHENIX particle struct as it is in the GPUSwift branch
+
+# First, some metadata about this SPH flavour.
+metadata:
+  flavour: "PLANETARY"
+  authors: "2016 Matthieu Schaller (schaller@strw.leidenuniv.nl) & 2018   Jacob Kegerreis (jacob.kegerreis@durham.ac.uk)"
+
+# now for the actual particle content
+
+part:
+  doc: | 
+    @brief Particle fields for the SPH particles
+
+    The density and force substructures are used to contain variables only used
+    within the density and force loops over neighbours. All more permanent
+    variables should be declared in the main part of the part structure,
+
+  x:
+    type: double
+    size: 3
+    doc: the particle position
+
+  h:
+    doc: Particle smoothing length
+
+  v:
+    size: 3
+    doc: Particle predicted velocity
+
+  mass:
+    doc: Particle mass
+
+  a_hydro:
+    size: 3
+    doc: Particle acceleration 
+
+  u_dt:
+    doc: Time derivative of the internal energy
+
+  u:
+    doc: Particle internal energy
+
+  rho:
+    doc: Particle density
+
+  union1:
+    type: union
+    doc: Store density/force specific stuff
+    contents:
+      density:
+        type: struct
+        doc: Structure for the variables only used in the density loop over neighbours 
+             Quantities in this sub-structure should only be accessed in the density loop 
+             over neighbours and the ghost task
+        contents:
+          wcount:
+            doc: Neighbour number count
+          wcount_dh:
+            doc: Derivative of the neighbour number with respect to h
+          rho_dh:
+            doc: Derivative of density with respect to h
+          div_v:
+            doc: Velocity divergence 
+          rot_v:
+            doc: Particle velocity curl
+            size: 3
+      force:
+        type: struct
+        doc: Structure for the variables only used in the force loop over neighbours 
+             Quantities in this sub-structure should only be accessed in the force loop 
+             over neighbours and the ghost, drift and kick tasks
+        contents:
+          f:
+            doc: "'Grad h' term"
+          pressure:
+            doc: Particle pressure
+          soundspeed: 
+            doc: Particle soundspeed
+          v_sig:
+            doc: Particle signal velocity
+          h_dt: 
+            doc: Time derivative of smoothing length
+          balsara:
+            doc: Balsara switch 
+
+  id: 
+    type: long long
+    doc:  Particle unique ID
+
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
+  adaptive_softening_data:
+    type: struct adaptive_softening_part_data
+    doc: Additional data used for adaptive softening
+
+  mhd_data:
+    type: struct mhd_part_data
+    doc: Additional data used by the MHD scheme
+
+  chemistry_data:
+    type: struct chemistry_part_data 
+    doc: Chemistry information
+
+  cooling_data:
+    type: struct cooling_part_data
+    doc: Cooling information
+
+  black_holes_data:
+    type: struct black_holes_part_data
+    doc: Black holes information (eg swallowing ID)
+
+  sink_part_data:
+    type: struct sink_part_data
+    doc: Sink information (eg swallowing ID)
+
+  mat_id:
+    type: enum eos_planetary_material_id
+    doc: Material identifier flag
+
+  rt_data:
+    type: struct rt_part_data
+    doc: Additional Radiative Transfer Data
+
+  rt_time_data:
+    type: struct rt_timestepping_data
+    doc: RT sub-cycling time stepping data
+
+  depth_h:
+    doc: Tree-depth at which size / 2 <= h * gamma < size
+    type: char
+
+  time_bin:
+    type: timebin_t
+    doc: Time-step length
+
+  limiter_data:
+    type: struct timestep_limiter_data
+    doc: Time-step limiter information
+
+  ti_drift:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS
+
+  ti_kick:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS
+
+  N_density:
+    type: int
+    doc: Integer number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_density_exact:
+    type: int
+    doc: Exact integer number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_gradient:
+    type: int
+    doc: Integer number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_gradient_exact:
+    type: int
+    doc: Exact integer number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_force:
+    type: int
+    doc: Integer number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  N_force_exact:
+    type: int
+    doc: Exact integer number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  rho_exact:
+    type: float
+    doc: Exact value of the density field obtained via brute-force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_density:
+    type: float
+    doc: Weighted number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_density_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the density loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_gradient:
+    type: float
+    doc: Weighted number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_gradient_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the gradient loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_force:
+    type: float
+    doc: Weighted number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  n_force_exact:
+    type: float
+    doc: Exact value of the weighted number of neighbours in the force loop
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  inhibited_exact:
+    type: char
+    doc: Has this particle interacted with any unhibited neighbour?
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  limited_part:
+    type: char
+    doc: Has this particle been woken up by the limiter?
+    ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+  s_fixed:
+    type: float
+    doc: PLANETARY_FIXED_ENTROPY
+
+
+
+xpart:
+  doc: |
+    @brief Particle fields not needed during the SPH loops over neighbours.
+
+    This structure contains the particle fields that are not used in the
+    density or force loops. Quantities should be used in the kick, drift and
+    potentially ghost tasks only.
+
+  x_diff:
+    size: 3
+    doc: "Offset between current position and position at last tree rebuild."
+
+  x_diff_sort:
+    size: 3
+    doc: "Offset between the current position and position at the last sort."
+
+  v_full:
+    size: 3
+    doc: "Velocity at the last full step."
+
+  a_grav:
+    size: 3
+    doc: "Gravitational acceleration at the end of the last step"
+
+  u_full:
+    doc: "Internal energy at the last full step."
+
+  split_data:
+    type: "struct particle_splitting_data split_data"
+    doc: "Additional data used to record particle splits"
+
+  extra_cooling_data:
+    type: "struct cooling_xpart_data"
+    doc: "Additional data used to record cooling information"
+
+  extra_tracers_data:
+    doc: "Additional data used by the tracers"
+    type: "struct tracers_xpart_data"
+
+  extra_sf_data:
+    doc: "Additional data used by the tracers"
+    type: "struct star_formation_xpart_data"
+
+  extra_feedback_data:
+    doc: "Additional data used by the feedback"
+    type: "struct feedback_xpart_data"
+
+  extra_mhd_data:
+    doc: "Additional data used by the MHD scheme"
+    type: "struct mhd_xpart_data"
+
+  extra_forcing_data:
+    doc: "Additional data used by the forcing scheme"
+    type: "struct forcing_xpart_data"
+
