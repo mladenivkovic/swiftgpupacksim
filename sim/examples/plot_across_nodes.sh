@@ -28,6 +28,9 @@ python3 ../../utils/plot_GPU_timers.py ./timer_data --by-operation $PNGFLAG --di
 python3 ../../utils/plot_GPU_timers.py ./timer_data --by-operation $PNGFLAG --intel            --all
 python3 ../../utils/plot_GPU_timers.py ./timer_data --by-operation $PNGFLAG --dine-grace-gn001 --all
 
+# gpu_timers_singlebar_all-experiments_dine-grace.pdf
+python3 ../../utils/plot_GPU_timers_singlebar.py ./timer_data --dine-grace --all-experiments
+
 # compare_part_access_total_across_nodes_noflush_normalised.png
 python3 ../../utils/compare_particle_access_total_time_across_nodes.py --no-flush --normalise $PNGFLAG
 
