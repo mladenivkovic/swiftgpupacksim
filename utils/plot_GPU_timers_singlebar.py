@@ -308,7 +308,7 @@ for e, experiment in enumerate(experiment_dirs):
 for n, node in enumerate(node_dirs):
     hatch = hatches[n]
     ax3.bar([0.], [1.], label=node_dir_labels[node], fill=False, color="k", edgecolor="k", hatch=hatch)
-for t, task_type in enumerate(["Density", "Gradient", "Force"]):
+for t, task_type in enumerate(["Launch", "Packing", "Unpacking"]):
     col = "C"+str(t)
     ax3.bar([0.], [1.], label=task_type, fill=True, color=col, edgecolor=col)
 

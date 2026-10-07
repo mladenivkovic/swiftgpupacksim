@@ -29,6 +29,9 @@ from plotting_utils import (
 
 PART_ACCESS = ["part-struct", "explicit-var"]
 
+mymplparams["legend.fontsize"] = 16
+mymplparams["xtick.labelsize"] = 14
+mymplparams["ytick.labelsize"] = 14
 matplotlib.rcParams.update(mymplparams)
 
 parser = argparse.ArgumentParser(
@@ -116,7 +119,7 @@ plotkwargs = {
     #  "marker": "o",
     "lw": 2,
     "alpha": 0.6,
-    "markersize": 5,
+    "markersize": 8,
 }
 
 if __name__ == "__main__":
@@ -137,9 +140,9 @@ if __name__ == "__main__":
     #      layouts.sort()
 
     if "dine2" in srcdir:
-        fig = plt.figure(figsize=(12, 3.5))
+        fig = plt.figure(figsize=(12, 4.))
     else:
-        fig = plt.figure(figsize=(12, 4.5))
+        fig = plt.figure(figsize=(12, 6))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
@@ -255,7 +258,7 @@ if __name__ == "__main__":
     else:
         hand, lab = ax1.get_legend_handles_labels()
         #  ncols=int(len(layouts)*0.5 + 0.5)
-        ncols = 3
+        ncols = 2
         fig.legend(
             handles=hand,
             labels=lab,
@@ -266,6 +269,7 @@ if __name__ == "__main__":
         )
         #  fig.suptitle(NODE_LABELS[srcdir])
         fig.tight_layout(w_pad=0.5, rect=(0.0, 0.15, 1.0, 1.0))
+        fig.subplots_adjust(bottom=0.45)
 
     # construct output file name
     outfname = f"loop_splitting_compare_part_access_to_no-split_{os.path.basename(srcdir)}_{nthreads}threads"

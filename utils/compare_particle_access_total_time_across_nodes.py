@@ -173,14 +173,14 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 plotkwargs = {
     #  "marker": "o",
     "lw": 2,
-    "alpha": 0.8,
-    "markersize": 5,
+    "alpha": 0.6,
+    "markersize": 8,
 }
 
 
 if __name__ == "__main__":
 
-    fig = plt.figure(figsize=(10, 4))
+    fig = plt.figure(figsize=(10, 4.5))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
@@ -309,7 +309,7 @@ if __name__ == "__main__":
         ncols=ncols,
         handlelength=2.5,
         markerscale=1.0,
-        fontsize="medium",
+        #  fontsize="large",
     )
     fig.tight_layout(w_pad=1, rect=(0.01, 0.16, 0.99, 0.99))
 

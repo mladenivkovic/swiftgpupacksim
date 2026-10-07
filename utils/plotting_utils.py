@@ -43,13 +43,21 @@ if not os.path.isdir(NODES_5STEPS[0]):
 
 NODE_LABELS = {
     "dine2": "Intel+A30",
+    "./dine2": "Intel+A30",
     "data/dine2": "Intel+A30",
+    "./data/dine2": "Intel+A30",
     "dine2_5steps": "Intel+A30",
+    "./dine2_5steps": "Intel+A30",
     "data/dine2_5steps": "Intel+A30",
+    "./data/dine2_5steps": "Intel+A30",
     "gn003": "Grace Hopper",
+    "./gn003": "Grace Hopper",
     "data/gn003": "Grace Hopper",
+    "./data/gn003": "Grace Hopper",
     "gn003_5steps": "Grace Hopper",
+    "./gn003_5steps": "Grace Hopper",
     "data/gn003_5steps": "Grace Hopper",
+    "./data/gn003_5steps": "Grace Hopper",
 }
 
 LAYOUTS_TO_USE = [
@@ -79,13 +87,13 @@ LAYOUTS_TO_USE_MINIMAL = [
 
 # Plot parameters
 mymplparams = {
-    "axes.labelsize": 12,
-    "axes.titlesize": 14,
+    "axes.labelsize": 14,
+    "axes.titlesize": 16,
     "font.size": 12,
     "font.family": "serif",
-    "legend.fontsize": 8,
-    "xtick.labelsize": 12,
-    "ytick.labelsize": 12,
+    "legend.fontsize": 14,
+    "xtick.labelsize": 14,
+    "ytick.labelsize": 14,
     "xtick.direction": "in",
     "ytick.direction": "in",
     "xtick.top": True,
