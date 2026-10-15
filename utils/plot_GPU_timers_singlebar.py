@@ -23,7 +23,7 @@ node_dirs = ["gn001", "dine2", "gn002"]
 #  node_dirs = ["gn001", "gn002"]
 experiment_dirs = ["eagle12", "gresho256"]
 experiment_titles = {
-        "eagle12": "Eagle12 (highly clustered)",
+        "eagle12": "Eagle25 (highly clustered)",
         "gresho256": "Gresho256 (uniform)",
         }
 #  experiment_dirs = ["gresho256"]
@@ -32,7 +32,10 @@ timer_file = "timers_0.txt"
 node_dir_labels = {
     "gn001": "Intel Xeon Gold 5218 + V100",
     "gn002": "Grace Hopper",
-    "dine2": "Intel Xeon Gold 6430 + A30",
+    "dine2": "Intel Xeon Gold 6430 \n+ A30",
+    #  "gn001": "Intel Xeon Gold 5218 + V100",
+    #  "gn002": "Grace Hopper",
+    #  "dine2": "Intel Xeon Gold 6430 + A30",
     #  "gn002": "Grace Hopper",
     #  "gn001": "Intel+V100",
     #  "dine2": "Intel + A30",
@@ -46,7 +49,7 @@ params = {
     "axes.titlesize": 18,
     "font.size": 16,
     "font.family": "serif",
-    "legend.fontsize": 12,
+    "legend.fontsize": 16,
     "xtick.labelsize": 16,
     "ytick.labelsize": 16,
     "xtick.direction": "in",
