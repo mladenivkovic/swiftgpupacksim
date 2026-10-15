@@ -247,7 +247,6 @@ if __name__ == "__main__":
 
         if NODE_LABELS[srcdir] == "Grace Hopper":
             ax.set_yticks([0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5])
-        print("CHECK", NODE_LABELS[srcdir])
 
     # the others
     #  if args.equal_axis_limits:
