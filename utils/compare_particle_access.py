@@ -27,6 +27,7 @@ from plotting_utils import (
     linestyles,
 )
 
+mymplparams["legend.fontsize"] = 16
 matplotlib.rcParams.update(mymplparams)
 
 parser = argparse.ArgumentParser(
@@ -369,7 +370,7 @@ if __name__ == "__main__":
         markerscale=1.0,
         #  fontsize="medium",
     )
-    fig.tight_layout(w_pad=1, rect=(0.01, 0.07, 0.99, 0.99))
+    fig.tight_layout(w_pad=1, rect=(0.01, 0.09, 0.99, 0.99))
 
     # construct output file name
     outfname = f"compare_part_access_{os.path.basename(srcdir)}_{nthreads}threads"
