@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Plots used in the PPAM paper.
-# git commit hash of plotting scripts: da281815d1efa4ab36bb2fdfc558d3e5f0c3758a
+# git commit hash of plotting scripts: 1306492c9522057e4b4caa7a07862e43989d66c8
 
 set -e
 
