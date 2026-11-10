@@ -72,7 +72,7 @@ class FieldEntry(object):
     """
 
     # jinja environment used to load and generate templates
-    jinja_env = init_jinja_env()
+    jinja_env = init_jinja_env(template_dir = "api")
 
     def __init__(
         self,
@@ -269,6 +269,7 @@ class FieldEntry(object):
         explicit_var_accessors: bool = False,
         global_var_accessors: bool = False,
         part_struct_accessors: bool = False,
+        root_struct_special_name: Union[str, None] = None,
         verbose: bool = False,
     ) -> dict:
         """
@@ -297,6 +298,11 @@ class FieldEntry(object):
         part_struct_accessors: bool
             if True, generate getters/setters which use part structs
 
+        root_struct_special_name: None or str
+            specialised root struct name, to be used for APIs in files outside of
+            src/hydro/<flavour>/.
+            If not None, this implies to use the specialised API template, not the
+            default particle one.
 
         verbose: bool
             Set verbosity
@@ -379,6 +385,7 @@ class FieldEntry(object):
             "IFDEF_RETURN_VAL": self.ifdef_return_val,
             "PARENT_STRUCT": parent_struct,
             "ROOT_STRUCT": self.root_struct,
+            "ROOT_STRUCT_SPECIAL_NAME": root_struct_special_name,
             "IS_POINTER": is_pointer,
             "IS_STRUCT": is_struct,
             "HAS_DOC": self.documentation is not None,
@@ -443,11 +450,17 @@ class FieldEntry(object):
         explicit_var_accessors: bool = False,
         global_var_accessors: bool = False,
         part_struct_accessors: bool = False,
+        root_struct_special_name: Union[str, None] = None,
         id_checks: bool = True,
         verbose: bool = False,
     ) -> str:
         """
         Generate the getters and setters C code.
+
+        Note: For SWIFTGPUPACKSIM, we want to allow the simultaneous
+        co-existence of all 3 accessor variants, so all of
+        `explicit_var_accessors`, `global_var_accessors`, and
+        `part_struct_accessors` may be True simultaneously.
 
         Parameters
         ----------
@@ -468,6 +481,12 @@ class FieldEntry(object):
 
         part_struct_accessors: bool
             if True, generate getters/setters which use part structs
+
+        root_struct_special_name: None or str
+            specialised root struct name, to be used for APIs in files outside of
+            src/hydro/<flavour>/.
+            If not None, this implies to use the specialised API template, not the
+            default particle one.
 
         id_checks: bool
             If True, add debugging checks whether the struct's accessor IDs align
@@ -492,6 +511,7 @@ class FieldEntry(object):
 
         params_dict = self._get_field_dict(
             parent_struct=parent_struct,
+            root_struct_special_name=root_struct_special_name,
             id_checks=id_checks,
             verbose=verbose,
         )
@@ -508,6 +528,7 @@ class FieldEntry(object):
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
                         part_struct_accessors=part_struct_accessors,
+                        root_struct_special_name=root_struct_special_name,
                         id_checks=id_checks,
                         verbose=verbose,
                     )
@@ -524,6 +545,7 @@ class FieldEntry(object):
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
                         part_struct_accessors=part_struct_accessors,
+                        root_struct_special_name=root_struct_special_name,
                         id_checks=id_checks,
                         verbose=verbose,
                     )
@@ -536,45 +558,46 @@ class FieldEntry(object):
             templ_part_struct = None
             templ_explicit = None
             templ_global = None
+
+            # construct template file name to read in from for the current case
+            scalar = "scalar"
+
             if params_dict["IS_ARRAY"]:
                 if params_dict["IS_POINTER"]:
                     raise NotImplementedError(
                         f"Field {self.type} {self.name}[{self.size}]:"
                         + "arrays of pointers is untested, could contain errors."
                     )
-                templ_part_struct = self.jinja_env.get_template(
-                    "api_array_part_struct_accessors.jinja.template"
-                )
-                templ_explicit = self.jinja_env.get_template(
-                    "api_array_explicit_var_accessors.jinja.template"
-                )
-                templ_global = self.jinja_env.get_template(
-                    "api_array_global_var_accessors.jinja.template"
-                )
-            elif params_dict["IS_MULTIDIM_ARRAY"]:
-                templ_part_struct = self.jinja_env.get_template(
-                    "api_multidim_array_part_struct_accessors.jinja.template"
-                )
-                templ_explicit = self.jinja_env.get_template(
-                    "api_multidim_array_explicit_var_accessors.jinja.template"
-                )
-                templ_global = self.jinja_env.get_template(
-                    "api_multidim_array_global_var_accessors.jinja.template"
-                )
-            else:
-                templ_part_struct = self.jinja_env.get_template(
-                    "api_scalar_part_struct_accessors.jinja.template"
-                )
-                templ_explicit = self.jinja_env.get_template(
-                    "api_scalar_explicit_var_accessors.jinja.template"
-                )
-                templ_global = self.jinja_env.get_template(
-                    "api_scalar_global_var_accessors.jinja.template"
-                )
+                scalar="array"
 
+            elif params_dict["IS_MULTIDIM_ARRAY"]:
+                scalar = "multidim_array"
+            #  else:
+                # must be scalar
+                #  pass
+
+
+            templ_fname_explicit = f"api_{scalar}_explicit_var_accessors.jinja.template"
+            templ_fname_global = f"api_{scalar}_global_var_accessors.jinja.template"
+            templ_fname_part_struct = f"api_{scalar}_part_struct_accessors.jinja.template"
+
+
+            if params_dict["ROOT_STRUCT_SPECIAL_NAME"] is not None:
+                # for the "special" version, we don't require accessor differences, as data
+                # is accessed by a struct directly. So set all 3 to the same.
+                templ_fname = f"api_{scalar}_special.jinja.template"
+                templ_fname_explicit = templ_fname
+                templ_fname_global = templ_fname
+                templ_fname_part_struct = templ_fname
+
+            # For SWIFTGPUPACKSIM, we want to be able to generate all 3
+            # accessor variant APIs simultaneously, so allow for that.
             api_part_struct = ""
             api_explicit = ""
             api_global = ""
+            templ_explicit = self.jinja_env.get_template(templ_fname_explicit)
+            templ_global = self.jinja_env.get_template(templ_fname_global)
+            templ_part_struct = self.jinja_env.get_template(templ_fname_part_struct)
 
             if part_struct_accessors:
                 if not swift_header:

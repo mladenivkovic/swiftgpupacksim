@@ -44,12 +44,31 @@ def verify_dir_exists(dname: str, message: str = ""):
     return
 
 
-def check_output_directory(outdir: Union[str, list], verbose: bool = True):
+def check_output_directory(outdir: Union[str, list], swift_header: bool = False, full_output: bool = False, verbose: bool = True):
     """
     Extract the output directory from the parsed args.
     If it doesn't exist, make it.
+
+    Parameters
+    ----------
+
+    outdir: str or list
+        (top level) output directory to write output into.
+
+    swift_header: bool
+        If True, assume we're writing files for SWIFT, not SWIFTGPUPACKSIM.
+
+    full_output: bool
+        If True, we're writing all files, not just (hydro) particles
+
+    Return
+    ------
+
+    outdir: string
+        cleaned and verified output dir.
     """
 
+    # argparse may interpret input as a list, so check for that.
     if isinstance(outdir, list):
         if len(outdir) > 1:
             raise ValueError(
@@ -66,6 +85,12 @@ def check_output_directory(outdir: Union[str, list], verbose: bool = True):
         if verbose:
             print(f"output directory '{outdir}' doesn't exist, creating it.")
         os.makedirs(outdir)
+
+    if swift_header or full_output:
+        # Assume we're given top level dir. Look for /src and create it if necessary.
+        outdir = os.path.join(outdir, "src")
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
 
     return outdir
 
@@ -97,6 +122,43 @@ def get_git_hash() -> str:
     return hashstr
 
 
+def truncate_repo_file_path(path: str) -> str:
+    """
+    cut out everything except this repository's top level dir from the given
+    file `path`.
+
+    Assumes that `path` is within the repository.
+    """
+
+    # get full path, just in case
+    path = os.path.abspath(path)
+
+    # get repository root dir
+    cmd = "git rev-parse --show-toplevel"
+
+    gitrevparse = subprocess.run(
+        cmd,
+        shell=True,
+        check=True,
+        capture_output=True,
+    )
+    gitstdout = gitrevparse.stdout
+    if isinstance(gitstdout, bytes):
+        gitstdout = gitstdout.decode("utf8")
+    gitrootdir = gitstdout.strip()
+
+    # get directory name of this repository
+    repodirname = os.path.basename(gitrootdir)
+
+    # get relative path of the file provided
+    relfilepath = os.path.relpath(path, start=gitrootdir)
+
+    return os.path.join(repodirname, relfilepath)
+
+
+
+
+
 def print_separator(msg: str = ""):
     print("----------------------------------------------------------------", msg)
     return
@@ -109,9 +171,9 @@ def read_input_file(filename: str):
     Returns
     -------
 
-    part_data_dict: Dict containing all particle fields specified in yaml file
+    data_d: Dict containing all particle fields specified in yaml file
 
-    metadata_dict: Dict containing (SPH flavour) metadata specified in yaml file
+    metadata_d: Dict containing (SPH flavour) metadata specified in yaml file
     """
 
     verify_file_exists(filename)
@@ -119,22 +181,24 @@ def read_input_file(filename: str):
     yaml_data_d = yaml.safe_load(input_fp)
     input_fp.close()
 
-    part_data_dict = {}
+    data_d = {}
     # Set some default values
-    metadata_dict = {
+    metadata_d = {
         "authors": "NO AUTHORS SPECIFIED",
         "flavour": "NO_FLAVOUR_SPECIFIED",
+        "input_file": truncate_repo_file_path(filename),
     }
 
     for key in yaml_data_d.keys():
         if key == "metadata":
             # copy contents of group "metadata", not entire group
             for key2 in yaml_data_d[key].keys():
-                metadata_dict[key2] = yaml_data_d[key][key2]
+                metadata_d[key2] = yaml_data_d[key][key2]
+                print(key2)
         else:
-            part_data_dict[key] = yaml_data_d[key]
+            data_d[key] = yaml_data_d[key]
 
-    return part_data_dict, metadata_dict
+    return data_d, metadata_d
 
 
 def sanitize_include_headers(headerfiles: list):
@@ -243,7 +307,7 @@ def validate_yml_contents(contents_d: dict) -> None:
 
 
 def process_yml_metadata(
-    metadata_d: dict, swift_header: bool = False, verbose: bool = False
+    metadata_d: dict, is_particle: bool = False, swift_header: bool = False, verbose: bool = False
 ) -> None:
     """
     Run through the read-in metadata from the yml file, passed as the dict
@@ -255,6 +319,9 @@ def process_yml_metadata(
 
     metadata_d: dict
         dict containing read-in metadata items from the yml file
+
+    is_particle: bool
+        if True, assume we're working with a (hydro) particle.
 
     swift_header: bool
         if True, we're creating header files for SWIFT. Otherwise, for
@@ -282,11 +349,6 @@ def process_yml_metadata(
         if verbose:
             print("-- checking metadata: No authors found")
 
-    if "flavour" not in passed_fields:
-        metadata_d["flavour"] = get_git_hash()
-        if verbose:
-            print("-- checking metadata: No SPH flavour found")
-
     if ("doc" not in passed_fields) and ("documentation" not in passed_fields):
         metadata_d["has_doc"] = False
         if verbose:
@@ -301,40 +363,52 @@ def process_yml_metadata(
     else:
         metadata_d["has_doc"] = True
 
-    if ("includes") not in passed_fields:
+
+    if "flavour" not in passed_fields:
+        metadata_d["flavour"] = get_git_hash()
+        if verbose:
+            print("-- checking metadata: No SPH flavour found")
+
+    if "includes" not in passed_fields:
         if verbose:
             print(f"-- checking metadata: No header includes provided.")
 
-        # use defaults.
-        incs = read_default_includes(swift_header=swift_header, verbose=verbose)
-        metadata_d["includes"] = incs
+        metadata_d["includes"] = ""
+        if is_particle:
+            # use defaults.
+            incs = read_default_includes(swift_header=swift_header, verbose=verbose)
+            metadata_d["includes"] = incs
 
     else:
         # sanitize input
         sanitized = sanitize_include_headers(metadata_d["includes"])
         metadata_d["includes"] = sanitized
 
-    if ("includes_add") in passed_fields:
+    if "includes_add" in passed_fields:
 
-        if ("includes") in passed_fields:
+        if "includes" in passed_fields:
             raise ValueError(
                 "Got both 'includes' and 'includes_add' parameters, pick one!"
             )
 
-        # sanitize input
-        sanitized = sanitize_include_headers(metadata_d["includes_add"])
-        metadata_d["includes_add"] = sanitized
-        metadata_d["has_extra_includes"] = True
+        if is_particle:
+            # sanitize input
+            sanitized = sanitize_include_headers(metadata_d["includes_add"])
+            metadata_d["includes_add"] = sanitized
+            metadata_d["has_extra_includes"] = True
 
-        # now use defaults for 'includes' field, then add these later.
-        incs = read_default_includes(swift_header=swift_header, verbose=verbose)
-        metadata_d["includes"] = incs
+            # now use defaults for 'includes' field, then add these later.
+            incs = read_default_includes(swift_header=swift_header, verbose=verbose)
+            metadata_d["includes"] = incs
 
     else:
         metadata_d["includes_add"] = [""]
         metadata_d["has_extra_includes"] = False
 
     return
+
+
+
 
 
 def check_part_struct_first_in_list(contents_d: dict) -> bool:
@@ -390,7 +464,9 @@ def add_auxiliary_fields(
         if True, add a field for IDs for each struct for debugging checks
 
     part_struct_accessors: bool
-        if True, add auxiliary fields needed for part struct accessors (offset/index in cell's particle arrays for this particle, and pointer to cell_part_arrays)
+        if True, add auxiliary fields needed for part struct accessors
+        (offset/index in cell's particle arrays for this particle, and pointer
+        to cell_part_arrays)
 
     verbose: bool
         if True, be talkative
