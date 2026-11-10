@@ -1,0 +1,50 @@
+# timestep_limiter data struct. Should be identical for each particle flavour.
+
+# First, some metadata about this SPH flavour.
+metadata:
+  authors: |
+      2018 Matthieu Schaller (schaller@strw.leidenuniv.nl)
+      2026 Mladen Ivkovic (mladen.ivkovic@durham.ac.uk)
+  includes: 
+    - <config.h>
+    - timeline.h
+
+
+
+timestep_limiter_data:
+
+    doc: |
+        @brief particle-carried quantities for the time-step limiter
+
+    wakeup:
+        type: timebin_t
+        doc: Need waking-up ?
+
+    min_ngb_time_bin:
+        type: timebin_t
+        doc: Minimal time-bin across all neighbours 
+
+    to_be_synchronized:
+        type: timebin_t
+        doc: Do we want this particle to be synched back on the time-line?
+
+    n_limiter:
+        type: float
+        doc: Weighted number of neighbours in the limiter loop
+        ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+    n_limiter_exact:
+        type: float
+        doc: Exact weighted number of neighbours in the limiter loop
+        ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+    N_limiter:
+        type: int
+        doc: Integer number of neighbours in the limiter loop 
+        ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
+    N_limiter_exact:
+        type: int
+        doc: Exact integer number of neighbours in the limiter loop
+        ifdef: SWIFT_HYDRO_DENSITY_CHECKS
+
