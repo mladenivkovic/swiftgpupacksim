@@ -538,6 +538,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].vx_m.w = part_get_mass_global(pi);
   }
 
+#else
 
 #ifdef VECTORIZE
 #pragma omp simd
