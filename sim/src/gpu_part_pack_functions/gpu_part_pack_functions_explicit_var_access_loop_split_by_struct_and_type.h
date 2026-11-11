@@ -633,8 +633,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     /* struct force_pack_limiter */
-    ps[i].timebin_minngbtimebin_pjs_pje.x =
-        (int)part_get_time_bin_explicit(pd, i);
     int mintbin =
         (int)part_get_timestep_limiter_min_ngb_time_bin_explicit(pd, i);
     ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
