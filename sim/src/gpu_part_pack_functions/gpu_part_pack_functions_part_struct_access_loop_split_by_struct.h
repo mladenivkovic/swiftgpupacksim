@@ -487,7 +487,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
     /* struct force_pack */
     const struct part* restrict p = &parts[i];
-    ps[i].u_rho_c_avisc.x = part_get_alpha_av(p);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
   }
 
 #ifdef VECTORIZE
@@ -772,7 +772,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].u_rho_c_avisc.x = part_get_u(p);
     ps[i].u_rho_c_avisc.y = part_get_rho(p);
     ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
-    ps[i].u_rho_c_avisc.z = part_get_alpha_av(p);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
   }
 
 #ifdef VECTORIZE
@@ -808,7 +808,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].u_rho_c_avisc.x = part_get_u(p);
     ps[i].u_rho_c_avisc.y = part_get_rho(p);
     ps[i].u_rho_c_avisc.z = part_get_soundspeed(p);
-    ps[i].u_rho_c_avisc.z = part_get_alpha_av(p);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av(p);
   }
 
 #ifdef VECTORIZE

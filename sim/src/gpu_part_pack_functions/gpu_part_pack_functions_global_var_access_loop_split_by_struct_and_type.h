@@ -452,7 +452,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
     /* struct force_pack */
-    ps[i].u_rho_c_avisc.x = part_get_alpha_av_global(pi);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av_global(pi);
   }
 
 #ifdef VECTORIZE
@@ -721,7 +721,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].u_rho_c_avisc.x = part_get_u_global(pi);
     ps[i].u_rho_c_avisc.y = part_get_rho_global(pi);
     ps[i].u_rho_c_avisc.z = part_get_soundspeed_global(pi);
-    ps[i].u_rho_c_avisc.z = part_get_alpha_av_global(pi);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av_global(pi);
   }
 
 #ifdef VECTORIZE
@@ -763,7 +763,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].u_rho_c_avisc.x = part_get_u_global(pi);
     ps[i].u_rho_c_avisc.y = part_get_rho_global(pi);
     ps[i].u_rho_c_avisc.z = part_get_soundspeed_global(pi);
-    ps[i].u_rho_c_avisc.z = part_get_alpha_av_global(pi);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av_global(pi);
   }
 
 #ifdef VECTORIZE
