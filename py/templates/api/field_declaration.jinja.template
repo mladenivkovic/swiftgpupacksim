@@ -2,7 +2,7 @@
 #ifdef {{IFDEF}}
 {%- elif HAS_IFNDEF -%}
 #ifndef {{IFNDEF}}
-{% endif -%}
+{%- endif %}
 
 {% if HAS_DOC -%}
 {% for i in range(INDENT_LEVEL) %}  {% endfor -%} {#- adds indent -#}

@@ -114,7 +114,7 @@ def jinja_render_hydro_part_dot_h(
         templ_fname = "test_hydro_part.h.jinja.template"
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join("templates", "files", templ_fname)
-    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+    templ_trunc_name = truncate_repo_file_path(templ_full_fname)
 
     # fill up dict for template rendering
     d = {}

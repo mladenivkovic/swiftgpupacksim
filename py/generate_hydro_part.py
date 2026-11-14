@@ -13,13 +13,14 @@ from headers import (
     generate_top_level_hydro_part_dot_h,
 )
 from utils import (
-    verify_file_exists,
-    check_output_directory,
-    print_separator,
-    validate_yml_contents,
-    process_yml_metadata,
     add_auxiliary_fields,
+    check_output_directory,
+    get_full_file_path_relative_to_script,
+    print_separator,
+    process_yml_metadata,
     read_input_file,
+    validate_yml_contents,
+    verify_file_exists,
 )
 from verbosity import *
 
@@ -104,7 +105,7 @@ parser.add_argument(
     "--global-var-accessors",
     dest="global_var_accessors",
     action="store_true",
-    default=True,
+    default=False,
     help="Generate getters/setters using global variable pointer",
 )
 parser.add_argument(
@@ -197,7 +198,7 @@ if __name__ == "__main__":
     )
 
     # check again that everything is sensible
-    validate_yml_contents(particle_fields_d, input_file)
+    validate_yml_contents(particle_fields_d, input_file, testing=testing)
     process_yml_metadata(metadata_d, swift_header=swift_header)
 
     if (len(particle_fields_d.keys()) == 1) and id_checks:
@@ -205,19 +206,19 @@ if __name__ == "__main__":
         id_checks = False
 
     # get timestep limiter data
-    timestep_limiter_input_file = os.path.join("input", "timestep_limiter_struct.yml")
+    timestep_limiter_input_file = get_full_file_path_relative_to_script(os.path.join("input", "timestep_limiter_struct.yml"))
     timestep_limiter_d, timestep_limiter_metadata_d = read_input_file(timestep_limiter_input_file)
 
     # check that everything is sensible
-    validate_yml_contents(timestep_limiter_d, timestep_limiter_input_file, is_particle=False)
+    validate_yml_contents(timestep_limiter_d, timestep_limiter_input_file, is_particle=False, testing=testing)
     process_yml_metadata(timestep_limiter_metadata_d, swift_header=swift_header)
 
     # get rt_struct data
-    rt_struct_input_file = os.path.join("input", "rt_struct.yml")
+    rt_struct_input_file = get_full_file_path_relative_to_script(os.path.join("input", "rt_struct.yml"))
     rt_struct_d, rt_struct_metadata_d = read_input_file(rt_struct_input_file)
 
     # check that everything is sensible
-    validate_yml_contents(rt_struct_d, rt_struct_input_file, is_particle=False)
+    validate_yml_contents(rt_struct_d, rt_struct_input_file, is_particle=False, testing=testing)
     process_yml_metadata(rt_struct_metadata_d, swift_header=swift_header)
 
 

@@ -4,6 +4,8 @@
 # - Generate different cases
 # - Compare with expected output (save for whitespace differences)
 # - Compile and run simple program to ensure you're producing valid C-code
+#
+# These tests require a C compiler. Specify which one to use using the ${CC} environment variable.
 
 set -e
 rm -f ./hydro_part.h ./hydro_part_arrays_struct.h
@@ -71,6 +73,7 @@ done
       echo "==============================================="
 
       python3 ../../py/generate_hydro_part.py --part-struct-accessors --test ./input/"$testcase".yml
+      # python3 ../../py/generate_hydro_part.py --part-struct-accessors --explicit-var-accessors --global-var-accessors --test ./input/"$testcase".yml
       COMPILE_AND_RUN
 
       # cp hydro_part.h output/"$testcase".h

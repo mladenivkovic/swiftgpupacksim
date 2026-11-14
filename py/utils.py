@@ -156,7 +156,16 @@ def truncate_repo_file_path(path: str) -> str:
     return os.path.join(repodirname, relfilepath)
 
 
+def get_full_file_path_relative_to_script(relpath: str) -> str:
+    """
+    get the full (absolute) file path of a file, where the file is specified by
+    `relpath`, the relative to the location of this script
+    """
 
+    # get full path, just in case
+    dname = os.path.dirname(__file__)
+    fullpath = os.path.join(dname, relpath)
+    return fullpath
 
 
 def print_separator(msg: str = ""):
@@ -266,7 +275,7 @@ def read_default_includes(swift_header: bool = False):
     return sanitized
 
 
-def validate_yml_contents(contents_d: dict, filename: str, is_particle: bool=True) -> None:
+def validate_yml_contents(contents_d: dict, filename: str, is_particle: bool=True, testing: bool=False) -> None:
     """
     Run through the read-in data from the yml file, passed as the dict
     `contents_d`, and validate that there is no issues:
@@ -280,6 +289,10 @@ def validate_yml_contents(contents_d: dict, filename: str, is_particle: bool=Tru
 
     is_particle: bool
         if True, assume this is the data for a hydro particle
+
+    testing: bool
+        if True, assume the output is intended for unit tests
+        and skip some checks.
 
     (- no top level struct defined twice)
     - no fields with same name defined twice
@@ -309,12 +322,15 @@ def validate_yml_contents(contents_d: dict, filename: str, is_particle: bool=Tru
                 )
             field_names.append(field)
 
-    if is_particle:
-        # make sure all required fields exist.
-        for f in _required_particle_fields:
-            if f not in field_names:
-                print(f"validate_yml_contents(): Error: required field '{f}' not found in particle yml parameter file {filename}.")
-                quit(1)
+    if not is_particle or testing:
+        # no more checks necessary.
+        return
+
+    # make sure all required fields exist.
+    for f in _required_particle_fields:
+        if f not in field_names:
+            print(f"validate_yml_contents(): Error: required field '{f}' not found in particle yml parameter file {filename}.")
+            quit(1)
 
     return
 

@@ -12,7 +12,7 @@ from render_templates import (
     jinja_render_timestep_limiter_struct_dot_h,
     jinja_render_top_level_hydro_part_dot_h,
 )
-from utils import check_part_struct_first_in_list, read_input_file
+from utils import check_part_struct_first_in_list, get_full_file_path_relative_to_script, read_input_file
 from verbosity import *
 
 
@@ -670,7 +670,7 @@ def generate_top_level_hydro_part_dot_h(
 
     # Now grab data for each file we need to process
     for fname in inputs.keys():
-        fullfname = os.path.join("input", fname)
+        fullfname = get_full_file_path_relative_to_script(os.path.join("input", fname))
         data_d, metadata_d = read_input_file(fullfname)
 
         root_struct_override = inputs[fname]["struct"]

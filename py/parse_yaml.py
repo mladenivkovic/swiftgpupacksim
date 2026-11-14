@@ -595,13 +595,6 @@ class FieldEntry(object):
                     raise NotImplementedError("jinja template for multidim arrays is not implemented yet.")
 
                 if use_struct_template:
-                    if part_struct_accessors:
-                        raise NotImplementedError("Use-struct jinja template not implemented for part-struct accessors")
-                    if explicit_var_accessors:
-                        raise NotImplementedError("Use-struct jinja template not implemented for explicit-var accessors")
-
-                    # for the "special" version, we don't require accessor differences, as data
-                    # is accessed by a struct directly. So set all 3 to the same.
                     templ_fname_explicit = f"api_{scalar}_use_struct_explicit_var_accessors.jinja.template"
                     templ_fname_global = f"api_{scalar}_use_struct_global_var_accessors.jinja.template"
                     templ_fname_part_struct = f"api_{scalar}_use_struct_part_struct_accessors.jinja.template"
