@@ -12,12 +12,31 @@ rm -f ./hydro_part.h ./hydro_part_arrays_struct.h ./test_header_output.o
 
 
 function COMPILE_AND_RUN() {
-  # Compile the test program.
+  # Compile and run the test program.
+
+  if [[ -z ${SWIFTSRCDIR} ]]; then
+    # try to find either swiftsim or swiftgpupacksim
+    if [ -d ../../../swiftgpupacksim/sim/src ]; then
+      SWIFTSRCDIR=../../../swiftgpupacksim/sim/src
+    elif [ -d ../../../swiftsim/src ]; then
+      SWIFTSRCDIR=../../../swiftsim/src
+    else
+      echo "Didn't find a swiftgpupacksim or swiftsim root dir for header includes."
+      echo "Provide it as SWIFTSRCDIR environment variable, e.g."
+      echo "SWIFTSRCDIR=/home/user/swiftgpupacksim/sim/src ./pytests.sh"
+      echo "or"
+      echo "SWIFTSRCDIR=/home/user/swiftsim/src ./pytests.sh"
+    fi
+  fi
+
+  # try a default compiler
   if [[ -z "${CC}" ]]; then
     CC="gcc -fopenmp"
   fi
+
   echo COMPILE_AND_RUN: compiling
-  $CC -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror -I../src/ -I../src/swift_placeholders
+  # we need -DUSE_PART_STRUCT_ACCESSORS for certain APIs which access cell particle arrays directly to compile
+  $CC -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror -I${SWIFTSRCDIR} -I${SWIFTSRCDIR}/swift_placeholders
 
   echo COMPILE_AND_RUN: running
   ./test_header_output.o
