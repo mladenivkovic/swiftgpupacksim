@@ -124,3 +124,126 @@ part:
     #     size: 4
     #     ifdef: DEBUG
 
+    my_int2:
+        type: int
+        doc: my integer
+        ifndef: NODEBUG
+
+    my_long2:
+        type: long
+        doc: my long
+        ifndef: NODEBUG
+
+    my_longlong2:
+        type: long long
+        doc: my long long
+        ifndef: NODEBUG
+    
+    my_float2:
+        doc: my float
+        ifndef: NODEBUG
+
+    my_dble2:
+        type: double
+        doc: my double
+        ifndef: NODEBUG
+
+    my_char2:
+        type: char
+        doc: my_char
+        ifndef: NODEBUG
+
+    my_integertime2:
+        type: integertime_t
+        doc: my integertime
+        ifndef: NODEBUG
+
+    my_timebin2:
+        type: timebin_t
+        doc: my timebin
+        ifndef: NODEBUG
+
+    # Not implemented yet
+    # my_external_struct2:
+    #     type: struct my_struct
+    #     doc: some externally defined struct
+    #     ifndef: NODEBUG
+
+    my_pointer_struct2:
+        type: struct gpart*
+        doc: pointer to externally defined struct
+        ifndef: NODEBUG
+
+    my_pointer2:
+        type: int*
+        doc: pointer to integer array
+        ifndef: NODEBUG
+
+    my_int_arr2:
+        type: int
+        doc: my integer
+        size: 4
+        ifndef: NODEBUG
+
+    my_long_arr2:
+        type: long
+        doc: my long
+        size: 4
+        ifndef: NODEBUG
+
+    my_longlong_arr2:
+        type: long long
+        doc: my long long
+        size: 4
+        ifndef: NODEBUG
+    
+    my_float_arr2:
+        doc: my float
+        size: 4
+        ifndef: NODEBUG
+
+    my_dble_arr2:
+        type: double
+        doc: my double
+        size: 4
+        ifndef: NODEBUG
+
+    my_char_arr2:
+        type: char
+        doc: my_char
+        size: 4
+        ifndef: NODEBUG
+
+    my_integertime_arr2:
+        type: integertime_t
+        doc: my integertime
+        size: 4
+        ifndef: NODEBUG
+
+    my_timebin_arr2:
+        type: timebin_t
+        doc: my timebin
+        size: 4
+        ifndef: NODEBUG
+
+    # Not implemented yet
+    # my_external_struct_arr2:
+    #     type: struct my_struct
+    #     doc: some externally defined struct
+    #     size: 4
+    #     ifndef: NODEBUG
+
+    # Not implemented yet
+    # my_pointer_struct_arr2:
+    #     type: struct gpart*
+    #     doc: pointer to externally defined struct
+    #     size: 4
+    #     ifndef: NODEBUG
+
+    # Not implemented yet
+    # my_pointer_arr2:
+    #     type: int*
+    #     doc: pointer to integer array
+    #     size: 4
+    #     ifndef: NODEBUG
+
