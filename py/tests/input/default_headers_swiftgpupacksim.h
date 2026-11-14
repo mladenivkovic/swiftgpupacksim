@@ -1,1 +1,1 @@
-../../../py/input/default_headers_swiftgpupacksim.h
+../../input/default_headers_swiftgpupacksim.h

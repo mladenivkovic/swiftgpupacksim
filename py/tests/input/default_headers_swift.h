@@ -1,1 +1,1 @@
-../../../py/input/default_headers_swift.h
+../../input/default_headers_swift.h
