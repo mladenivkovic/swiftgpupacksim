@@ -1,4 +1,5 @@
 TODO: UPDATE API OUTPUT EXAMPLES TO GLOBALVAR
+TODO: ADD DOC FOR IFNDEF
 
 
 # Particle Struct Generation Scripts
