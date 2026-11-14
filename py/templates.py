@@ -607,7 +607,7 @@ def jinja_generate_top_level_hydro_part_dot_h(
     templ_trunc_name= truncate_repo_file_path(templ_full_fname)
 
     inputs_full = [os.path.join("input", i) for i in inputfiles]
-    inputs = ",".join([truncate_repo_file_path(i) for i in inputs_full])
+    inputs = ", ".join([truncate_repo_file_path(i) for i in inputs_full])
 
     # fill up dict for template rendering
     d = {}
