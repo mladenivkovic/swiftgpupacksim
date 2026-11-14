@@ -487,3 +487,12 @@ multiple structs instead of a single one. To do so, some restrictions apply:
     all other structs holding particle data as defined in the yaml file.
 
 
+
+### ToDo
+
+- Documentation:
+  - special files
+  - list which wiles should be generated
+  - document --full, --swift, and which files should be in the output
+
+

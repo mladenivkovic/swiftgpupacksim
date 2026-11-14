@@ -6,6 +6,7 @@ Stuff related to templates.
 
 import jinja2
 import os
+from pprint import pprint
 from utils import verify_dir_exists, get_git_hash, truncate_repo_file_path
 
 _root_dir = os.path.dirname(__file__)
@@ -141,6 +142,10 @@ def jinja_generate_hydro_part_dot_h(
     d["HAS_EXTRA_INCLUDES"] = metadata_d["has_extra_includes"]
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
+
+    #  if verbose:
+    print("jinja_generate_hydro_part_dot_h: dict passed to jinja renderer:")
+    pprint(d)
 
     header_template = templ.render(d)
 
@@ -368,7 +373,8 @@ def jinja_generate_hydro_space_dot_c(
 
     return basefile_template
 
-def jinja_generate_timestep_limiter_dot_h(
+
+def jinja_generate_timestep_limiter_struct_dot_h(
     limiter_structs_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
@@ -376,16 +382,15 @@ def jinja_generate_timestep_limiter_dot_h(
     explicit_var_accessors: bool = False,
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
-    testing: bool = False,
     verbose: bool = False,
 ) -> str:
     """
-    Generates the full hydro_part.h header.
+    Generates the full timestep_limiter_struct.h header.
 
     Parameters
     ----------
 
-    TODO: FIX DOCU
+    TODO: CHECK DOCU
 
     limiter_structs_d: dict
         dict containing processed data ready to be inserted into the template.
@@ -397,7 +402,7 @@ def jinja_generate_timestep_limiter_dot_h(
               for the particle field declarations
 
     metadata_d: dict
-        dict containing particle (flavour) metadata
+        dict containing file metadata, as read-in from the yml file (and postprocessed)
 
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
@@ -449,6 +454,84 @@ def jinja_generate_timestep_limiter_dot_h(
     d["HAS_EXTRA_INCLUDES"] = metadata_d["has_extra_includes"]
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
+
+    header_template = templ.render(d)
+
+    return header_template
+
+
+def jinja_generate_top_level_hydro_part_dot_h(
+    hydro_part_d: dict,
+    inputfiles: list,
+    swift_header: bool = True,
+    explicit_var_accessors: bool = False,
+    global_var_accessors: bool = False,
+    part_struct_accessors: bool = False,
+    verbose: bool = False,
+) -> str:
+    """
+    Generates the full src/hydro_part.h header.
+
+    Parameters
+    ----------
+
+    TODO: FIX DOCU
+
+    limiter_structs_d: dict
+        dict containing processed data ready to be inserted into the template.
+        The dict's keys shall be names of struct to be generated.
+        Each key shall return a dict with two keys:
+            - "API": containing a list of strings containing C-code for the
+              particle field API
+            - "DECLARATIONS": containing a list of strings containing C-code
+              for the particle field declarations
+
+    inputfiles: list
+        list of yml files read as input
+
+    swift_header: bool
+        if True, generate headers compatible with swift, not swiftgpupacksim
+
+    explicit_var_accessors: bool
+        if True, generate getters/setters which use explicitly passed pointer
+        as an argument
+
+    global_var_accessors: bool
+        if True, also generate getters/setters which use global variable pointer
+
+    part_struct_accessors: bool
+        if True, generate getters/setters using a part struct
+
+    verbose: bool
+        if True, be talkative
+
+    Returns
+    -------
+
+    header_template: str
+        the rendered template as a string
+    """
+
+    env = init_jinja_env("files")
+    templ_fname = "top_level_hydro_part.h.jinja.template"
+    templ = env.get_template(templ_fname)
+    templ_full_fname = os.path.join("templates", "files", templ_fname)
+    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+
+    inputs_full = [os.path.join("input", i) for i in inputfiles]
+    inputs = ",".join([truncate_repo_file_path(i) for i in inputs_full])
+
+    # fill up dict for template rendering
+    d = {}
+    d["STRUCT_NAMES"] = list(hydro_part_d.keys())
+    d["STRUCT_COUNT"] = len(list(hydro_part_d.keys()))
+    d["STRUCT_CONTENTS"] = hydro_part_d
+    d["TEMPLATE_FILENAME"] = templ_trunc_name
+    d["INPUTFILES"] = inputs
+    d["HEADER_FOR_SWIFT"] = swift_header
+    d["GLOBAL_VAR_ACCESSORS"] = global_var_accessors
+    d["EXPLICIT_VAR_ACCESSORS"] = explicit_var_accessors
+    d["PART_STRUCT_ACCESSORS"] = part_struct_accessors
 
     header_template = templ.render(d)
 

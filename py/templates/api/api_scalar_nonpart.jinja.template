@@ -43,7 +43,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 #ifdef {{IFDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE {{TYPE}}*
-  {{ROOT_STRUCT_SPECIAL_NAME}}_get_{{NAME}}_p{{API_SUFFIX}}(const struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s) {
+  {{ROOT_STRUCT_SPECIAL_NAME}}_get_{{NAME}}_p{{API_SUFFIX}}(struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
