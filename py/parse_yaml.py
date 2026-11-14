@@ -269,6 +269,7 @@ class FieldEntry(object):
         explicit_var_accessors: bool = False,
         global_var_accessors: bool = False,
         part_struct_accessors: bool = False,
+        root_struct_override: Union[str, None] = None,
         root_struct_special_name: Union[str, None] = None,
         verbose: bool = False,
     ) -> dict:
@@ -297,6 +298,13 @@ class FieldEntry(object):
 
         part_struct_accessors: bool
             if True, generate getters/setters which use part structs
+
+        root_struct_override: None or str
+            specify which root struct to use. This is needed in cases like for
+            src/hydro_part.h, which doesn't host the `struct timestep_limiter`
+            itself, but needs to know which struct to use within the API.
+            If not None, this implies to use the specialised API template
+            ("use_struct"), not the default particle one.
 
         root_struct_special_name: None or str
             specialised root struct name, to be used for APIs in files outside of
@@ -385,6 +393,7 @@ class FieldEntry(object):
             "IFDEF_RETURN_VAL": self.ifdef_return_val,
             "PARENT_STRUCT": parent_struct,
             "ROOT_STRUCT": self.root_struct,
+            "ROOT_STRUCT_OVERRIDE": root_struct_override,
             "ROOT_STRUCT_SPECIAL_NAME": root_struct_special_name,
             "IS_POINTER": is_pointer,
             "IS_STRUCT": is_struct,
@@ -450,6 +459,7 @@ class FieldEntry(object):
         explicit_var_accessors: bool = False,
         global_var_accessors: bool = False,
         part_struct_accessors: bool = False,
+        root_struct_override: Union[str, None] = None,
         root_struct_special_name: Union[str, None] = None,
         id_checks: bool = True,
         verbose: bool = False,
@@ -482,11 +492,19 @@ class FieldEntry(object):
         part_struct_accessors: bool
             if True, generate getters/setters which use part structs
 
+        root_struct_override: None or str
+            specify which root struct to use. This is needed in cases like for
+            src/hydro_part.h, which doesn't host the `struct timestep_limiter`
+            itself, but needs to know which struct to use within the API.
+            If not None, this implies to use the specialised API template
+            ("use_struct"), not the default particle one.
+
         root_struct_special_name: None or str
             specialised root struct name, to be used for APIs in files outside of
-            src/hydro/<flavour>/.
-            If not None, this implies to use the specialised API template, not the
-            default particle one.
+            src/hydro/<flavour>/, in particular API which uses a struct as the
+            argument and accesses members of that struct.
+            If not None, this implies to use the specialised API template
+            ("nonpart"), not the default particle one.
 
         id_checks: bool
             If True, add debugging checks whether the struct's accessor IDs align
@@ -511,6 +529,7 @@ class FieldEntry(object):
 
         params_dict = self._get_field_dict(
             parent_struct=parent_struct,
+            root_struct_override=root_struct_override,
             root_struct_special_name=root_struct_special_name,
             id_checks=id_checks,
             verbose=verbose,
@@ -528,6 +547,7 @@ class FieldEntry(object):
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
                         part_struct_accessors=part_struct_accessors,
+                        root_struct_override=root_struct_override,
                         root_struct_special_name=root_struct_special_name,
                         id_checks=id_checks,
                         verbose=verbose,
@@ -545,6 +565,7 @@ class FieldEntry(object):
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
                         part_struct_accessors=part_struct_accessors,
+                        root_struct_override=root_struct_override,
                         root_struct_special_name=root_struct_special_name,
                         id_checks=id_checks,
                         verbose=verbose,
@@ -560,7 +581,6 @@ class FieldEntry(object):
             templ_global = None
 
             # construct template file name to read in from for the current case
-            scalar = "scalar"
 
             if params_dict["IS_ARRAY"]:
                 if params_dict["IS_POINTER"]:
@@ -572,42 +592,75 @@ class FieldEntry(object):
 
             elif params_dict["IS_MULTIDIM_ARRAY"]:
                 scalar = "multidim_array"
-            #  else:
-                # must be scalar
-                #  pass
+            else:
+                scalar = "scalar"
+
+            nonpart_template = params_dict["ROOT_STRUCT_SPECIAL_NAME"] is not None
+            use_struct_template = params_dict["ROOT_STRUCT_OVERRIDE"] is not None
+
+            if use_struct_template and not nonpart_template:
+                raise ValueError(
+                        "Trying to use `use_struct` type template, but fROOT_STRUCT_SPECIAL_NAME is not specified."
+                        )
 
 
-            templ_fname_explicit = f"api_{scalar}_explicit_var_accessors.jinja.template"
-            templ_fname_global = f"api_{scalar}_global_var_accessors.jinja.template"
-            templ_fname_part_struct = f"api_{scalar}_part_struct_accessors.jinja.template"
+            if nonpart_template or use_struct_template:
+                if params_dict["IS_ARRAY"] or params_dict["IS_MULTIDIM_ARRAY"]:
+                    raise NotImplementedError(
+                        f"Field {self.type} {self.name}[{self.size}] ({params_dict["ROOT_STRUCT_SPECIAL_NAME"]}): non-scalar types not implemented yet for special templates"
+                    )
 
+                if scalar == "array":
+                    raise NotImplementedError("jinja template for arrays is not implemented yet.")
+                if scalar == "multidim_array":
+                    raise NotImplementedError("jinja template for multidim arrays is not implemented yet.")
 
-            if params_dict["ROOT_STRUCT_SPECIAL_NAME"] is not None:
-                # for the "special" version, we don't require accessor differences, as data
-                # is accessed by a struct directly. So set all 3 to the same.
-                templ_fname = f"api_{scalar}_special.jinja.template"
-                templ_fname_explicit = templ_fname
-                templ_fname_global = templ_fname
-                templ_fname_part_struct = templ_fname
+                if use_struct_template:
+                    if part_struct_accessors:
+                        raise NotImplementedError("Use-struct jinja template not implemented for part-struct accessors")
+                    if explicit_var_accessors:
+                        raise NotImplementedError("Use-struct jinja template not implemented for explicit-var accessors")
+
+                    # for the "special" version, we don't require accessor differences, as data
+                    # is accessed by a struct directly. So set all 3 to the same.
+                    templ_fname_explicit = f"api_{scalar}_use_struct_explicit_var_accessors.jinja.template"
+                    templ_fname_global = f"api_{scalar}_use_struct_global_var_accessors.jinja.template"
+                    templ_fname_part_struct = f"api_{scalar}_use_struct_part_struct_accessors.jinja.template"
+
+                elif nonpart_template:
+                    # No difference for accessors here.
+                    templ_fname_explicit = f"api_{scalar}_nonpart.jinja.template"
+                    templ_fname_global = f"api_{scalar}_nonpart.jinja.template"
+                    templ_fname_part_struct = f"api_{scalar}_nonpart.jinja.template"
+
+                else:
+                    raise ValueError("We shouldn't be here.")
+
+            else:
+                # default templates
+                templ_fname_explicit = f"api_{scalar}_explicit_var_accessors.jinja.template"
+                templ_fname_global = f"api_{scalar}_global_var_accessors.jinja.template"
+                templ_fname_part_struct = f"api_{scalar}_part_struct_accessors.jinja.template"
 
             # For SWIFTGPUPACKSIM, we want to be able to generate all 3
-            # accessor variant APIs simultaneously, so allow for that.
+            # accessor variant APIs simultaneously, so allow for that, but mark
+            # getters/setters with a suffix so they can co-exist
             api_part_struct = ""
             api_explicit = ""
             api_global = ""
-            templ_explicit = self.jinja_env.get_template(templ_fname_explicit)
-            templ_global = self.jinja_env.get_template(templ_fname_global)
-            templ_part_struct = self.jinja_env.get_template(templ_fname_part_struct)
 
             if part_struct_accessors:
+                templ_part_struct = self.jinja_env.get_template(templ_fname_part_struct)
                 if not swift_header:
                     params_dict["API_SUFFIX"] = "_part_struct"
                 api_part_struct = templ_part_struct.render(params_dict)
             if explicit_var_accessors:
+                templ_explicit = self.jinja_env.get_template(templ_fname_explicit)
                 if not swift_header:
                     params_dict["API_SUFFIX"] = "_explicit"
                 api_explicit = templ_explicit.render(params_dict)
             if global_var_accessors:
+                templ_global = self.jinja_env.get_template(templ_fname_global)
                 if not swift_header:
                     params_dict["API_SUFFIX"] = "_global"
                 api_global = templ_global.render(params_dict)

@@ -17,8 +17,8 @@ from headers import (
     generate_parts_dot_h,
     generate_hydro_part_arrays_struct_dot_h,
     generate_hydro_part_arrays_flush_dot_h,
-    generate_hydro_space_dot_c,
     generate_timestep_limiter_struct_dot_h,
+    generate_top_level_hydro_part_dot_h,
 )
 
 
@@ -154,21 +154,21 @@ if __name__ == "__main__":
         accessor_type = "explicit-var"
     elif part_struct_accessors:
         accessor_type = "part-struct"
+
+    print_separator()
     print("Starting file generation")
-    print(f"Output directory:                 {outdir}")
-    print(f"Particle input file:              {input_file}")
-    print(f"Accessor type:                    {accessor_type}")
-    print(f"Dry run?                          {dry_run}")
-    print(f"Generate files besides src/hydro? {full_output}")
-    print(f"Outputs for unit tests?           {testing}")
-    print(f"Add part ID checks in accessor?   {id_checks}")
-    print(f"Manual struct alignment?          {manual_align}")
+    print(f"Output directory:                            {outdir}")
+    print(f"Particle input file:                         {input_file}")
+    print(f"Accessor type:                               {accessor_type}")
+    print(f"Dry run?                                     {dry_run}")
+    print(f"Generate files besides src/hydro/<flavour>/? {full_output}")
+    print(f"Outputs for unit tests?                      {testing}")
+    print(f"Add part ID checks in accessor?              {id_checks}")
+    print(f"Manual struct alignment?                     {manual_align}")
+    print_separator()
 
-    # read in data
+    # read in particle data
     particle_fields_d, metadata_d = read_input_file(input_file)
-
-    timestep_limiter_input_file = os.path.join("input", "timestep_limiter_struct.yml")
-    timestep_limiter_d, timestep_limiter_metadata_d = read_input_file(timestep_limiter_input_file)
 
     # add required auxiliary fields to particle structs
     particle_fields_d = add_auxiliary_fields(
@@ -179,10 +179,15 @@ if __name__ == "__main__":
     )
 
     # check again that everything is sensible
-    validate_yml_contents(particle_fields_d)
+    validate_yml_contents(particle_fields_d, input_file)
     process_yml_metadata(metadata_d, swift_header=swift_header, verbose=verbose)
 
-    validate_yml_contents(timestep_limiter_d)
+    # get timestep limiter data
+    timestep_limiter_input_file = os.path.join("input", "timestep_limiter_struct.yml")
+    timestep_limiter_d, timestep_limiter_metadata_d = read_input_file(timestep_limiter_input_file)
+
+    # check that everything is sensible
+    validate_yml_contents(timestep_limiter_d, timestep_limiter_input_file, is_particle=False)
     process_yml_metadata(timestep_limiter_metadata_d, swift_header=swift_header, verbose=verbose)
 
     if (len(particle_fields_d.keys()) == 1) and id_checks:
@@ -204,19 +209,21 @@ if __name__ == "__main__":
     )
 
 
-    # generate src/hydro_part.h
-    #  top_level_hydro_part_header = generate_top_level_hydro_part_dot_h(
-    #      particle_fields_d,
-    #      metadata_d,
-    #      swift_header=swift_header,
-    #      id_checks=id_checks,
-    #      manual_align=manual_align,
-    #      explicit_var_accessors=explicit_var_accessors,
-    #      global_var_accessors=global_var_accessors,
-    #      part_struct_accessors=part_struct_accessors,
-    #      testing=testing,
-    #      verbose=verbose,
-    #  )
+    #  generate src/hydro_part.h
+    inputs = {
+            "timestep_limiter_struct.yml": {
+                "struct": "timestep_limiter_data",
+                "name": "timestep_limiter",}
+            }
+
+    top_level_hydro_part_header = generate_top_level_hydro_part_dot_h(
+        inputs,
+        swift_header=swift_header,
+        explicit_var_accessors=explicit_var_accessors,
+        global_var_accessors=global_var_accessors,
+        part_struct_accessors=part_struct_accessors,
+        verbose=verbose,
+    )
 
 
     # generate src/timestep_limiter_struct.h
@@ -257,11 +264,6 @@ if __name__ == "__main__":
         verbose=verbose
     )
 
-    # TODO: Replace with hydro_data.h
-    #  hydro_space_base = generate_hydro_space_dot_c(
-    #      particle_fields_d, metadata_d, swift_header=swift_header, verbose=verbose
-    #  )
-
     if dry_run:
         # ToDo: add new files here
         print_separator("hydro_part_header")
@@ -272,8 +274,6 @@ if __name__ == "__main__":
         print(hydro_part_arrays_struct_header)
         print_separator("hydro_part_arrays_flush_header")
         print(hydro_part_arrays_struct_header)
-        #  print_separator("hydro_space_base")
-        #  print(hydro_space_base)
     else:
 
         outdir_particle = outdir
@@ -315,22 +315,15 @@ if __name__ == "__main__":
         # are we writing full output?
         if full_output:
 
-            # TODO: does any of this need to be moved outside of --full?
-
             outfile = os.path.join(outdir, "timestep_limiter_struct.h")
             fp = open(outfile, "w")
             fp.write(timestep_limiter_struct_header)
             fp.close()
             print("Written", outfile)
 
-            #  outfile = os.path.join(outdir, "hydro_part.h")
-            #  fp = open(outfile, "w")
-            #  fp.write(top_level_hydro_part_header)
-            #  fp.close()
-            #  print("Written", outfile)
+            outfile = os.path.join(outdir, "hydro_part.h")
+            fp = open(outfile, "w")
+            fp.write(top_level_hydro_part_header)
+            fp.close()
+            print("Written", outfile)
 
-            #  outfile = os.path.join(outdir, "hydro_space.c")
-            #  fp = open(outfile, "w")
-            #  fp.write(hydro_space_base)
-            #  fp.close()
-            #  print("Written", outfile)

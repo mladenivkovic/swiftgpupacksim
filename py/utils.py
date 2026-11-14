@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+Various utilities.
+"""
+
 import os
 from typing import Union
 import subprocess
 import datetime
 import yaml
+from required_data import _required_particle_fields, _required_particle_file_metadata_swift, _required_other_file_metadata_swift
 
 
 # Allow certain "field names" to be multiply defined for validation checks
@@ -14,11 +19,6 @@ _permitted_duplicate_field_names = [
     "doc",
     "documentation",
     "accessor_id",
-]
-
-_required_file_metadata_swift = [
-    "authors",
-    "flavour",
 ]
 
 
@@ -83,7 +83,7 @@ def check_output_directory(outdir: Union[str, list], swift_header: bool = False,
 
     if not os.path.isdir(outdir):
         if verbose:
-            print(f"output directory '{outdir}' doesn't exist, creating it.")
+            print(f"check_output_directory(): output directory '{outdir}' doesn't exist, creating it.")
         os.makedirs(outdir)
 
     if swift_header or full_output:
@@ -114,9 +114,9 @@ def get_git_hash() -> str:
             gitstdout = gitstdout.decode("utf8")
         hashstr = gitstdout.strip()
     except subprocess.CalledProcessError:
-        print("Something went wrong when trying to obtain hash of latest git commit.")
-        print(f"Command that failed was '{git_hash_cmd}'")
-        print("Using current timestamp instead.")
+        print("get_git_hash(): Something went wrong when trying to obtain hash of latest git commit.")
+        print(f"get_git_hash(): Command that failed was '{git_hash_cmd}'")
+        print("get_git_hash(): Using current timestamp instead.")
         hashstr = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
 
     return hashstr
@@ -194,7 +194,6 @@ def read_input_file(filename: str):
             # copy contents of group "metadata", not entire group
             for key2 in yaml_data_d[key].keys():
                 metadata_d[key2] = yaml_data_d[key][key2]
-                print(key2)
         else:
             data_d[key] = yaml_data_d[key]
 
@@ -258,7 +257,7 @@ def read_default_includes(swift_header: bool = False, verbose: bool = False):
 
     if verbose:
         print(
-            f"-- checking metadata: Using defaults from {fname_full} with additions from yml file"
+            f"-- read_default_includes(): Using defaults from {fname_full} with additions from yml file"
         )
 
     f = open(fname_full, "r")
@@ -270,10 +269,20 @@ def read_default_includes(swift_header: bool = False, verbose: bool = False):
     return sanitized
 
 
-def validate_yml_contents(contents_d: dict) -> None:
+def validate_yml_contents(contents_d: dict, filename: str, is_particle: bool=True) -> None:
     """
     Run through the read-in data from the yml file, passed as the dict
     `contents_d`, and validate that there is no issues:
+
+    Parameters
+    ----------
+
+    contents_d: dict containing the contents of the read-in file
+
+    filename: file name of the read in yml file
+
+    is_particle: bool
+        if True, assume this is the data for a hydro particle
 
     (- no top level struct defined twice)
     - no fields with same name defined twice
@@ -303,11 +312,18 @@ def validate_yml_contents(contents_d: dict) -> None:
                 )
             field_names.append(field)
 
+    if is_particle:
+        # make sure all required fields exist.
+        for f in _required_particle_fields:
+            if f not in field_names:
+                print(f"validate_yml_contents(): Error: required field '{f}' not found in particle yml parameter file {filename}.")
+                quit(1)
+
     return
 
 
 def process_yml_metadata(
-    metadata_d: dict, is_particle: bool = False, swift_header: bool = False, verbose: bool = False
+    metadata_d: dict, is_particle: bool = True, swift_header: bool = False, verbose: bool = False
 ) -> None:
     """
     Run through the read-in metadata from the yml file, passed as the dict
@@ -336,10 +352,14 @@ def process_yml_metadata(
     if swift_header:
         # we only require metadata to be present if we're compiling swift headers.
 
-        for field in _required_file_metadata_swift:
+        checklist = _required_particle_file_metadata_swift
+        if not is_particle:
+            checklist = _required_other_file_metadata_swift
+
+        for field in checklist:
             if field not in passed_fields:
                 raise ValueError(
-                    f"Required field {field} not found in read-in metadata"
+                    f"process_yml_metadata(): Required field {field} not found in read-in metadata. "+f"metadata_d={metadata_d}, is_particle={is_particle}, "+f"swift_header={swift_header}"
                 )
 
     # Now go through fields one-by-one
@@ -347,12 +367,12 @@ def process_yml_metadata(
     if "authors" not in passed_fields:
         metadata_d["author"] = "NO AUTHORS SPECIFIED"
         if verbose:
-            print("-- checking metadata: No authors found")
+            print("-- process_yml_metadata(): No authors found")
 
     if ("doc" not in passed_fields) and ("documentation" not in passed_fields):
         metadata_d["has_doc"] = False
         if verbose:
-            print("-- checking metadata: No file documentation found")
+            print("-- process_yml_metadata(): No file documentation found")
 
         # place documentation contents with a key you'll know to search for later
         if "doc" not in passed_fields:
@@ -366,12 +386,12 @@ def process_yml_metadata(
 
     if "flavour" not in passed_fields:
         metadata_d["flavour"] = get_git_hash()
-        if verbose:
-            print("-- checking metadata: No SPH flavour found")
+        if verbose and is_particle:
+            print("-- process_yml_metadata(): No SPH flavour found")
 
     if "includes" not in passed_fields:
         if verbose:
-            print(f"-- checking metadata: No header includes provided.")
+            print(f"-- process_yml_metadata(): No header includes provided.")
 
         metadata_d["includes"] = ""
         if is_particle:
@@ -517,7 +537,7 @@ def add_auxiliary_fields(
         # Add 'struct part' manually. Contents will be filled below.
 
         if verbose:
-            print("-- Didn't find struct `part`, adding it.")
+            print("-- add_auxiliary_fields(): Didn't find struct `part`, adding it.")
 
         updated_contents_d["part"] = main_part_struct_aux_fields_props
 
@@ -548,7 +568,7 @@ def add_auxiliary_fields(
         if len(list(updated_contents_d.keys())) == 1:
             if verbose:
                 print(
-                    "-- Found only one struct for particle data, not adding accessor_id checks"
+                    "-- add_auxiliary_fields(): Found only one struct for particle data, not adding accessor_id checks"
                 )
         else:
             # Add struct ID for debugging checks to each struct
@@ -559,7 +579,7 @@ def add_auxiliary_fields(
 
                 if verbose:
                     print(
-                        f"-- Adding debug check field {debug_id_props_name} to struct {key}"
+                        f"-- add_auxiliary_fields(): Adding debug check field {debug_id_props_name} to struct {key}"
                     )
 
     return updated_contents_d
