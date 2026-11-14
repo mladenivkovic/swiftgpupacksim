@@ -7,6 +7,7 @@ make check
 
 # make
 # ./test_cmdlineargs.o
+# ./test_header_output.o
 # ./test_read_data_file.o
 # ./test_read_paramfile.o
 #
