@@ -15,6 +15,8 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
@@ -40,7 +42,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
   return {{ROOT_STRUCT}}_s->_{{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return NULL;
 #endif
@@ -55,6 +57,8 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}{% for i in range(MUL
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
@@ -80,7 +84,7 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}{% for i in range(MUL
   return {{ROOT_STRUCT}}_s->_{{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return NULL;
 #endif
@@ -103,6 +107,8 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
@@ -128,7 +134,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
   return {{ROOT_STRUCT}}_s->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return {{IFDEF_RETURN_VAL}};
 #endif
@@ -144,8 +150,10 @@ static __attribute__((always_inline)) INLINE void
 	 {%- for entry in MULTIDIM_ARRAY_DIMENSIONS -%}[{{entry}}]{%- endfor -%}
  ) {
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
@@ -185,7 +193,7 @@ static __attribute__((always_inline)) INLINE void
   }
 {% endfor %}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #endif
 {%- endif %}
 }
@@ -200,6 +208,8 @@ static __attribute__((always_inline)) INLINE void
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = pd->_{{ROOT_STRUCT}} + pind;
@@ -225,7 +235,7 @@ static __attribute__((always_inline)) INLINE void
   {{ROOT_STRUCT}}_s->_{{NAME}}{% for i in range(MULTIDIM_ARRAY_DIMENSIONS_COUNT) %}[{{chr(ord('i')+i)}}]{% endfor %} = val;
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #endif
 {%- endif %}
 }

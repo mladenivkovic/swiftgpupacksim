@@ -1,6 +1,6 @@
 # timestep_limiter data struct. Should be identical for each particle flavour.
 
-# First, some metadata about this SPH flavour.
+# First, some metadata 
 metadata:
   authors: |
       2018 Matthieu Schaller (schaller@strw.leidenuniv.nl)

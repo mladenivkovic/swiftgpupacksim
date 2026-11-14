@@ -17,6 +17,7 @@ from headers import (
     generate_parts_dot_h,
     generate_hydro_part_arrays_struct_dot_h,
     generate_hydro_part_arrays_flush_dot_h,
+    generate_rt_struct_dot_h,
     generate_timestep_limiter_struct_dot_h,
     generate_top_level_hydro_part_dot_h,
 )
@@ -148,7 +149,10 @@ if __name__ == "__main__":
             + " You must select at least one."
         )
 
+    # ---------------------------------------
     # advertise what we're doing.
+    # ---------------------------------------
+
     accessor_type = "global-var"
     if explicit_var_accessors:
         accessor_type = "explicit-var"
@@ -167,6 +171,10 @@ if __name__ == "__main__":
     print(f"Manual struct alignment?                     {manual_align}")
     print_separator()
 
+    # ---------------------------------------
+    # Read in data
+    # ---------------------------------------
+
     # read in particle data
     particle_fields_d, metadata_d = read_input_file(input_file)
 
@@ -182,6 +190,10 @@ if __name__ == "__main__":
     validate_yml_contents(particle_fields_d, input_file)
     process_yml_metadata(metadata_d, swift_header=swift_header, verbose=verbose)
 
+    if (len(particle_fields_d.keys()) == 1) and id_checks:
+        print("Have only a single particle struct. Skipping accessor ID checks.")
+        id_checks = False
+
     # get timestep limiter data
     timestep_limiter_input_file = os.path.join("input", "timestep_limiter_struct.yml")
     timestep_limiter_d, timestep_limiter_metadata_d = read_input_file(timestep_limiter_input_file)
@@ -190,9 +202,18 @@ if __name__ == "__main__":
     validate_yml_contents(timestep_limiter_d, timestep_limiter_input_file, is_particle=False)
     process_yml_metadata(timestep_limiter_metadata_d, swift_header=swift_header, verbose=verbose)
 
-    if (len(particle_fields_d.keys()) == 1) and id_checks:
-        print("Have only a single particle struct. Skipping accessor ID checks.")
-        id_checks = False
+    # get rt_struct data
+    rt_struct_input_file = os.path.join("input", "rt_struct.yml")
+    rt_struct_d, rt_struct_metadata_d = read_input_file(rt_struct_input_file)
+
+    # check that everything is sensible
+    validate_yml_contents(rt_struct_d, rt_struct_input_file, is_particle=False)
+    process_yml_metadata(rt_struct_metadata_d, swift_header=swift_header, verbose=verbose)
+
+
+    # ---------------------------------------
+    # Now, the actual file generation
+    # ---------------------------------------
 
     # generate src/hydro/<flavour>/hydro_part.h
     hydro_part_header = generate_hydro_part_dot_h(
@@ -213,7 +234,10 @@ if __name__ == "__main__":
     inputs = {
             "timestep_limiter_struct.yml": {
                 "struct": "timestep_limiter_data",
-                "name": "timestep_limiter",}
+                "name": "timestep_limiter",},
+            "rt_struct.yml": {
+                "struct": "rt_timestepping_data",
+                "name": "rt_time_data",}
             }
 
     top_level_hydro_part_header = generate_top_level_hydro_part_dot_h(
@@ -237,6 +261,16 @@ if __name__ == "__main__":
         verbose=verbose,
     )
 
+    # generate src/rt_struct.h
+    rt_struct_header = generate_rt_struct_dot_h(
+        rt_struct_d,
+        rt_struct_metadata_d,
+        swift_header=swift_header,
+        explicit_var_accessors=explicit_var_accessors,
+        global_var_accessors=global_var_accessors,
+        part_struct_accessors=part_struct_accessors,
+        verbose=verbose,
+    )
 
     # generate src/hydro/<flavour>/parts.h
     parts_header = generate_parts_dot_h(
@@ -266,14 +300,22 @@ if __name__ == "__main__":
 
     if dry_run:
         # ToDo: add new files here
-        print_separator("hydro_part_header")
+        print_separator("src/flavour/hydro_part.h")
         print(hydro_part_header)
-        print_separator("parts_header")
+        print_separator("src/flavour/hydro_part_arrays_struct.h")
+        print(hydro_part_arrays_struct_header)
+        print_separator("src/flavour/parts.h")
         print(parts_header)
-        print_separator("hydro_part_arrays_struct_header")
-        print(hydro_part_arrays_struct_header)
-        print_separator("hydro_part_arrays_flush_header")
-        print(hydro_part_arrays_struct_header)
+        if not swift_header:
+            print_separator("hydro_part_arrays_flush_header")
+            print(hydro_part_arrays_struct_header)
+        if full_output:
+            print_separator("src/hydro_part.h")
+            print(top_level_hydro_part_header)
+            print_separator("src/timestep_limiter_struct.h")
+            print(timestep_limiter_struct_header)
+            print_separator("src/rt_struct.h")
+            print(rt_struct_header)
     else:
 
         outdir_particle = outdir
@@ -315,15 +357,21 @@ if __name__ == "__main__":
         # are we writing full output?
         if full_output:
 
+            outfile = os.path.join(outdir, "hydro_part.h")
+            fp = open(outfile, "w")
+            fp.write(top_level_hydro_part_header)
+            fp.close()
+            print("Written", outfile)
+
             outfile = os.path.join(outdir, "timestep_limiter_struct.h")
             fp = open(outfile, "w")
             fp.write(timestep_limiter_struct_header)
             fp.close()
             print("Written", outfile)
 
-            outfile = os.path.join(outdir, "hydro_part.h")
+            outfile = os.path.join(outdir, "rt_struct.h")
             fp = open(outfile, "w")
-            fp.write(top_level_hydro_part_header)
+            fp.write(rt_struct_header)
             fp.close()
             print("Written", outfile)
 

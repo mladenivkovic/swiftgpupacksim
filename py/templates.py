@@ -143,9 +143,9 @@ def jinja_generate_hydro_part_dot_h(
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    #  if verbose:
-    print("jinja_generate_hydro_part_dot_h: dict passed to jinja renderer:")
-    pprint(d)
+    if verbose:
+        print("jinja_generate_hydro_part_dot_h: dict passed to jinja renderer:")
+        pprint(d)
 
     header_template = templ.render(d)
 
@@ -458,6 +458,94 @@ def jinja_generate_timestep_limiter_struct_dot_h(
     header_template = templ.render(d)
 
     return header_template
+
+
+
+def jinja_generate_rt_struct_dot_h(
+    rt_d: dict,
+    metadata_d: dict,
+    swift_header: bool = True,
+    manual_struct_align: bool = False,
+    explicit_var_accessors: bool = False,
+    global_var_accessors: bool = False,
+    part_struct_accessors: bool = False,
+    verbose: bool = False,
+) -> str:
+    """
+    Renders the full rt_struct.h header.
+
+    Parameters
+    ----------
+
+    TODO: CHECK DOCU
+
+    rt_d: dict
+        dict containing processed data ready to be inserted into the template.
+        The dict's keys shall be names of struct to be generated.
+        Each key shall return a dict with two keys:
+            - "API": containing a list of strings containing C-code for the
+              particle field API
+            - "DECLARATIONS": containing a list of strings containing C-code
+              for the particle field declarations
+
+    metadata_d: dict
+        dict containing file metadata, as read-in from the yml file (and postprocessed)
+
+    swift_header: bool
+        if True, generate headers compatible with swift, not swiftgpupacksim
+
+    explicit_var_accessors: bool
+        if True, generate getters/setters which use explicitly passed pointer
+        as an argument
+
+    global_var_accessors: bool
+        if True, also generate getters/setters which use global variable pointer
+
+    part_struct_accessors: bool
+        if True, generate getters/setters using a part struct
+
+    verbose: bool
+        if True, be talkative
+
+    Returns
+    -------
+
+    header_template: str
+        the rendered template as a string
+    """
+
+    env = init_jinja_env("files")
+    templ_fname = "rt_struct.h.jinja.template"
+    templ = env.get_template(templ_fname)
+    templ_full_fname = os.path.join("templates", "files", templ_fname)
+    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+
+    # fill up dict for template rendering
+    d = {}
+    d["STRUCT_NAMES"] = list(rt_d.keys())
+    d["STRUCT_COUNT"] = len(list(rt_d.keys()))
+    d["STRUCT_CONTENTS"] = rt_d
+    d["TEMPLATE_FILENAME"] = templ_trunc_name
+    d["HEADER_FOR_SWIFT"] = swift_header
+    d["HEADER_GUARD"] = get_git_hash()
+    d["MANUAL_STRUCT_ALIGN"] = manual_struct_align
+    d["GLOBAL_VAR_ACCESSORS"] = global_var_accessors
+    d["EXPLICIT_VAR_ACCESSORS"] = explicit_var_accessors
+    d["PART_STRUCT_ACCESSORS"] = part_struct_accessors
+
+    d["AUTHORS"] = metadata_d["authors"]
+    d["FLAVOUR_NAME"] = metadata_d["flavour"].upper()
+    d["HAS_FILE_DOC"] = metadata_d["has_doc"]
+    d["FILE_DOC"] = metadata_d["doc"]
+    d["INCLUDES"] = metadata_d["includes"]
+    d["HAS_EXTRA_INCLUDES"] = metadata_d["has_extra_includes"]
+    d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
+    d["INPUT_FILENAME"] = metadata_d["input_file"]
+
+    header_template = templ.render(d)
+
+    return header_template
+
 
 
 def jinja_generate_top_level_hydro_part_dot_h(

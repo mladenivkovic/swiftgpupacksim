@@ -8,6 +8,7 @@ from templates import (
     jinja_generate_parts_dot_h,
     jinja_generate_hydro_part_arrays_struct_dot_h,
     jinja_generate_hydro_part_arrays_flush_dot_h,
+    jinja_generate_rt_struct_dot_h,
     jinja_generate_timestep_limiter_struct_dot_h,
     jinja_generate_top_level_hydro_part_dot_h,
 )
@@ -536,6 +537,116 @@ def generate_timestep_limiter_struct_dot_h(
     # Now generate the file from template
     header_file = jinja_generate_timestep_limiter_struct_dot_h(
         limiter_struct_d,
+        metadata_d,
+        swift_header=swift_header,
+        part_struct_accessors=part_struct_accessors,
+        explicit_var_accessors=explicit_var_accessors,
+        global_var_accessors=global_var_accessors,
+        verbose=verbose,
+    )
+
+    return header_file
+
+
+
+def generate_rt_struct_dot_h(
+    rt_d: dict,
+    metadata_d: dict,
+    swift_header: bool = True,
+    explicit_var_accessors: bool = False,
+    global_var_accessors: bool = False,
+    part_struct_accessors: bool = False,
+    verbose: bool = False,
+) -> str:
+    """
+    Generate a timestep_limiter_struct.h
+
+    Parameters
+    ----------
+
+    rt_d: dict
+        dict containing the read-in rt struct fields
+
+    metadata_d: dict
+        dict containing limiter metadata
+
+    swift_header: bool
+        if True, generate headers compatible with swift, not swiftgpupacksim
+
+    explicit_var_accessors: bool
+        if True, generate getters/setters which use explicitly passed pointer
+        as an argument
+
+    global_var_accessors: bool
+        if True, generate getters/setters which use global variable pointer
+
+    part_struct_accessors: bool
+        if True, generate getters/setters using a part struct
+
+    verbose: bool
+        if True, be talkative
+
+    Returns
+    -------
+
+    header_file: str
+        The contents of the timeste_limiter_struct.h file.
+    """
+
+    if verbose:
+        print("Generating timestep_limiter_struct header")
+
+    # Create an empty dict we'll fill out with C-code for the API and
+    # declaration C-code snippets for each struct containing particle data
+    rt_struct_d = {}
+
+    # Now go through all the structs provided in the yml file
+    for struct_name in rt_d.keys():
+
+        declarations = []
+        apis = []
+        has_doc = False
+        doc = ""
+
+        for field in list(rt_d[struct_name].keys()):
+            if FieldEntry.prohibited_name(field):
+                if field == "doc" or field == "documentation":
+                    has_doc = True
+                    doc = rt_d[struct_name][field]
+                else:
+                    if verbose:
+                        print(f"-- Found prohibited field name {field}, skipping it.")
+                # in either case, don't process further
+                continue
+            # parse the field specification
+            field_props = rt_d[struct_name][field]
+            field_entry = FieldEntry(field, field_props, struct_name, verbose=verbose)
+            # get the declaration C-code
+            decl = field_entry.generate_declaration(verbose=verbose)
+            declarations.append(decl)
+            # get the API C-code
+            api = field_entry.generate_API(
+                swift_header=swift_header,
+                explicit_var_accessors=explicit_var_accessors,
+                global_var_accessors=global_var_accessors,
+                part_struct_accessors=part_struct_accessors,
+                root_struct_special_name="rt_time_data",
+                id_checks=False,
+                verbose=verbose,
+            )
+            apis.append(api)
+
+        # store the parsed data
+        rt_struct_d[struct_name] = {
+            "API": apis,
+            "DECLARATIONS": declarations,
+            "HAS_DOC": has_doc,
+            "DOC": doc,
+        }
+
+    # Now generate the file from template
+    header_file = jinja_generate_rt_struct_dot_h(
+        rt_struct_d,
         metadata_d,
         swift_header=swift_header,
         part_struct_accessors=part_struct_accessors,

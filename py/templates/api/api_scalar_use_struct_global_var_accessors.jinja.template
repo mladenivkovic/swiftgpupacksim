@@ -10,23 +10,27 @@
 {%- if HAS_IFDEF and IS_STRUCT %}
 {#- we can't return a struct which is undefined because it's hidden behind a macro, so we have to hide the entire API. #}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF and IS_STRUCT %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE {{TYPE}}
   part_get_{{NAME}}{{API_SUFFIX}}(const size_t pind) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF and not IS_STRUCT %}
+#ifndef {{IFNDEF}}
 {%- endif %}
   const struct {{ROOT_STRUCT}}* restrict d = part_get_const_{{ROOT_STRUCT_SPECIAL_NAME}}_p(pind);
   return {{ROOT_STRUCT_SPECIAL_NAME}}_get_{{NAME}}{{API_SUFFIX}}(d);
 
-{%- if HAS_IFDEF and not IS_STRUCT %} {# return some default val if function contents are hidden behind macro #}
+{%- if (HAS_IFDEF or HAS_IFNDEF) and not IS_STRUCT %} {# return some default val if function contents are hidden behind macro #}
 #else
   return {{IFDEF_RETURN_VAL}};
 #endif
 {%- endif %}
 }
-{% if HAS_IFDEF and IS_STRUCT -%}
+{% if (HAS_IFDEF or HAS_IFNDEF) and IS_STRUCT -%}
 #endif
 {%- endif %}
 
@@ -39,23 +43,27 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 {%- if HAS_IFDEF and IS_STRUCT %}
 {#- we can't return a struct which is undefined because it's hidden behind a macro, so we have to hide the entire API. #}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF and IS_STRUCT %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE {{TYPE}}*
   part_get_{{NAME}}_p{{API_SUFFIX}}(const size_t pind) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF and not IS_STRUCT %}
+#ifndef {{IFNDEF}}
 {%- endif %}
   struct {{ROOT_STRUCT}}* restrict d = part_get_{{ROOT_STRUCT_SPECIAL_NAME}}_p(pind);
   return {{ROOT_STRUCT_SPECIAL_NAME}}_get_{{NAME}}_p{{API_SUFFIX}}(d);
 
-{%- if HAS_IFDEF and not IS_STRUCT %}
+{%- if (HAS_IFDEF or HAS_IFNDEF) and not IS_STRUCT %} {# return some default val if function contents are hidden behind macro #}
 #else
   return NULL;
 #endif
 {%- endif %}
 }
-{% if HAS_IFDEF and IS_STRUCT -%}
+{% if (HAS_IFDEF or HAS_IFNDEF) and IS_STRUCT -%}
 #endif
 {%- endif %}
 
@@ -68,23 +76,27 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 {%- if HAS_IFDEF and IS_STRUCT %}
 {#- we can't return a struct which is undefined because it's hidden behind a macro, so we have to hide the entire API. #}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF and IS_STRUCT %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
   part_get_const_{{NAME}}_p{{API_SUFFIX}}(const size_t pind) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF and not IS_STRUCT %}
+#ifndef {{IFNDEF}}
 {%- endif %}
   const struct {{ROOT_STRUCT}}* restrict d = part_get_const_{{ROOT_STRUCT_SPECIAL_NAME}}_p(pind);
   return {{ROOT_STRUCT_SPECIAL_NAME}}_get_const_{{NAME}}_p{{API_SUFFIX}}(d);
 
-{%- if HAS_IFDEF and not IS_STRUCT %}
+{%- if (HAS_IFDEF or HAS_IFNDEF) and not IS_STRUCT %} {# return some default val if function contents are hidden behind macro #}
 #else
   return NULL;
 #endif
 {%- endif %}
 }
-{% if HAS_IFDEF and IS_STRUCT -%}
+{% if (HAS_IFDEF or HAS_IFNDEF) and IS_STRUCT -%}
 #endif
 {%- endif %}
 
@@ -96,21 +108,25 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 {%- if HAS_IFDEF and IS_STRUCT %}
 {#- we can't return a struct which is undefined because it's hidden behind a macro, so we have to hide the entire API. #}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF and IS_STRUCT %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE void
   part_set_{{NAME}}{{API_SUFFIX}}(const size_t pind, const {{TYPE}} {{NAME}}){
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF and not IS_STRUCT %}
+#ifndef {{IFNDEF}}
 {%- endif %}
   struct {{ROOT_STRUCT}}* restrict d = part_get_{{ROOT_STRUCT_SPECIAL_NAME}}_p(pind);
   return {{ROOT_STRUCT_SPECIAL_NAME}}_set_{{NAME}}{{API_SUFFIX}}(d, {{NAME}});
 
-{%- if HAS_IFDEF and not IS_STRUCT %}
+{%- if (HAS_IFDEF or HAS_IFNDEF) and not IS_STRUCT %} {# return some default val if function contents are hidden behind macro #}
 #endif
 {%- endif %}
 }
-{% if HAS_IFDEF and IS_STRUCT -%}
+{% if (HAS_IFDEF or HAS_IFNDEF) and IS_STRUCT -%}
 #endif
 {%- endif %}
 {# deliberately empty line #}

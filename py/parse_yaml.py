@@ -14,6 +14,7 @@ _allowed_field_descriptors = [
     "doc",
     "documentation",
     "contents",
+    "ifndef",
     "ifdef",
     "ifdef_return_val",
 ]
@@ -129,6 +130,7 @@ class FieldEntry(object):
         self.documentation = None
         self.sub_entries = []
         self.ifdef = None
+        self.ifndef = None
         self.ifdef_return_val = None
 
         # Now read what was written.
@@ -215,7 +217,13 @@ class FieldEntry(object):
         try:
             self.ifdef = self.props["ifdef"]
             if self.verbose:
-                print("  macro guard:", self.ifdef)
+                print("  macro ifdef guard:", self.ifdef)
+        except KeyError:
+            pass
+        try:
+            self.ifndef = self.props["ifndef"]
+            if self.verbose:
+                print("  macro ifndef guard:", self.ifndef)
         except KeyError:
             pass
         try:
@@ -244,14 +252,19 @@ class FieldEntry(object):
                 self.sub_entries.append(new_entry)
 
         if self.type == "union":
-            if self.ifdef != None:
+            if self.ifdef != None or self.ifndef != None:
                 raise NotImplementedError(
-                    f"'{self.type} {self.name}': Union hidden behind macro guards not implemented. Use 'ifdef' on its members, instead."
+                    f"'{self.type} {self.name}': Union hidden behind macro guards not implemented. Use 'ifdef' or 'ifndef' on its members, instead."
                 )
             if self.size != 1:
                 raise ValueError(
                     f"'{self.type} {self.name}': fixed-size arrays of unions are illegal. You requested size[{self.size}]"
                 )
+
+        if self.ifdef != None and self.ifndef != None:
+            raise ValueError(
+                f"'{self.type} {self.name}': can't have both ifdef and ifndef guards, pick one!"
+            )
 
         return
 
@@ -332,7 +345,7 @@ class FieldEntry(object):
             # structs need special ifdef treatment for return values - it's not guaranteed they exist if macro undefined
             is_struct = True
 
-        if self.ifdef:
+        if self.ifdef or self.ifndef:
             # do we use the default return value?
             if self.ifdef_return_val is None:
                 if is_pointer:
@@ -347,12 +360,6 @@ class FieldEntry(object):
                     self.ifdef_return_val = _field_data_type_default_return_vals[
                         self.type
                     ]
-            # if still None, something is wrong.
-            if self.ifdef_return_val is None:
-                raise ValueError(
-                    "No return value available for field with IFDEF."
-                    + f"name: {self.name}, type: {self.type}"
-                )
 
         # allow for array sizes defined by macros and to be multi-dimensional
         is_array = False
@@ -390,6 +397,7 @@ class FieldEntry(object):
             "TYPE": self.type,
             "INDENT_LEVEL": indent_level,
             "IFDEF": self.ifdef,
+            "IFNDEF": self.ifndef,
             "IFDEF_RETURN_VAL": self.ifdef_return_val,
             "PARENT_STRUCT": parent_struct,
             "ROOT_STRUCT": self.root_struct,
@@ -399,6 +407,7 @@ class FieldEntry(object):
             "IS_STRUCT": is_struct,
             "HAS_DOC": self.documentation is not None,
             "HAS_IFDEF": self.ifdef is not None,
+            "HAS_IFNDEF": self.ifndef is not None,
             "HAS_PARENT_STRUCT": parent_struct is not None,
             "IS_ARRAY": is_array,
             "ARRAY_SIZE_IS_MACRO": array_size_is_macro,
@@ -414,7 +423,7 @@ class FieldEntry(object):
         }
 
         if verbose:
-            print("----", d)
+            pprint("----", d)
 
         return d
 
@@ -649,6 +658,9 @@ class FieldEntry(object):
             api_explicit = ""
             api_global = ""
 
+            if params_dict["IFNDEF"] is not None:
+                print(params_dict["IFNDEF"])
+                print(params_dict)
             if part_struct_accessors:
                 templ_part_struct = self.jinja_env.get_template(templ_fname_part_struct)
                 if not swift_header:

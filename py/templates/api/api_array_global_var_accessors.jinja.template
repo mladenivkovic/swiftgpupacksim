@@ -9,6 +9,8 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
@@ -34,7 +36,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
   return {{ROOT_STRUCT}}_s->_{{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return NULL;
 #endif
@@ -49,6 +51,8 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
@@ -74,7 +78,7 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
   return {{ROOT_STRUCT}}_s->_{{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return NULL;
 #endif
@@ -89,6 +93,8 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   const struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
@@ -114,7 +120,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
   return {{ROOT_STRUCT}}_s->_{{NAME}}[i];
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return {{IFDEF_RETURN_VAL}};
 #endif
@@ -130,6 +136,8 @@ static __attribute__((always_inline)) INLINE void
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
@@ -167,7 +175,7 @@ static __attribute__((always_inline)) INLINE void
   {%- endfor %}
 {%- endif %}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #endif
 {%- endif %}
 }
@@ -180,6 +188,8 @@ static __attribute__((always_inline)) INLINE void
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
   struct {{ROOT_STRUCT}}* restrict {{ROOT_STRUCT}}_s = global_part_arrays._{{ROOT_STRUCT}} + pind;
@@ -205,7 +215,7 @@ static __attribute__((always_inline)) INLINE void
   {{ROOT_STRUCT}}_s->_{{NAME}}[i] = {{NAME}};
 {%- endif -%}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #endif
 {%- endif %}
 }

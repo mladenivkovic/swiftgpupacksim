@@ -9,6 +9,8 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
@@ -43,7 +45,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
   {%- endif %}
 {%- endif %}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return NULL;
 #endif
@@ -56,8 +58,10 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
   part_get_const_{{NAME}}{{API_SUFFIX}}(const struct part *restrict p) {
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
@@ -92,7 +96,7 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
   {%- endif %}
 {%- endif %}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return NULL;
 #endif
@@ -107,6 +111,8 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
@@ -141,7 +147,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
   {%- endif %}
 {%- endif %}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #else
   return {{IFDEF_RETURN_VAL}};
 #endif
@@ -157,6 +163,8 @@ static __attribute__((always_inline)) INLINE void
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
@@ -218,7 +226,7 @@ static __attribute__((always_inline)) INLINE void
   {%- endif %}
 {%- endif %}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #endif
 {%- endif %}
 }
@@ -231,6 +239,8 @@ static __attribute__((always_inline)) INLINE void
 
 {%- if HAS_IFDEF %}
 #ifdef {{IFDEF}}
+{%- elif HAS_IFNDEF %}
+#ifndef {{IFNDEF}}
 {%- endif %}
 
 {%- if IS_IN_SPLIT_STRUCT %}
@@ -265,7 +275,7 @@ static __attribute__((always_inline)) INLINE void
   {%- endif %}
 {%- endif %}
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #endif
 {%- endif %}
 }

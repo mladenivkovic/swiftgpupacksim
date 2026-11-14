@@ -1,5 +1,7 @@
 {%- if HAS_IFDEF -%}
     #ifdef {(IFDEF}}
+{%- elif HAS_IFNDEF -%}
+    #ifndef {(IFNDEF}}
 {% endif -%}
 
 {% if HAS_DOC -%}
@@ -18,7 +20,7 @@
     _{{NAME}}
 {%- endif %}; 
 
-{%- if HAS_IFDEF %}
+{%- if HAS_IFDEF or HAS_IFNDEF %}
 #endif
 {%- endif %}
 {# deliberately empty line #}
