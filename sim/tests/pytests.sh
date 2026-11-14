@@ -66,29 +66,30 @@ for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-acc
     rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
   done
 
-  # make temporary headers which will be included
-  touch a.h b.h c.h
+done # loop over accessor flags
 
-  for flag in "" "--swift"; do
 
-    for testcase in test_headerfile_includes test_headerfile_includes_add; do
+# testing header inclusion:
+# we're not generating particle API here, so no point in testing all accessor methods.
 
-      echo "==============================================="
-      echo "running $testcase $flag"
-      echo "==============================================="
+# make temporary headers which will be included
+touch a.h b.h c.h
 
-      python3 ../../py/generate_hydro_part.py --part-struct-accessors --test ./input/"$testcase".yml
-      # python3 ../../py/generate_hydro_part.py --part-struct-accessors --explicit-var-accessors --global-var-accessors --test ./input/"$testcase".yml
-      COMPILE_AND_RUN
+for testcase in test_headerfile_includes test_headerfile_includes_add; do
 
-      # cp hydro_part.h output/"$testcase".h
-      DIFF output/"$testcase".h hydro_part.h
+  echo "==============================================="
+  echo "running $testcase $flag"
+  echo "==============================================="
 
-    done
-  done
+  python3 ../../py/generate_hydro_part.py --part-struct-accessors --test ./input/"$testcase".yml
+  COMPILE_AND_RUN
 
-  rm -f a.h b.h c.h
+  # cp hydro_part.h output/"$testcase".h
+  DIFF output/"$testcase".h hydro_part.h
 
 done
+
+rm -f a.h b.h c.h
+
 
 echo "Python tests passed."
