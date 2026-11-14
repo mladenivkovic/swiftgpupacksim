@@ -15,7 +15,7 @@
 
 
 #ifndef USE_PART_STRUCT_ACCESSORS
-#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. Test was written assuming part-struct accessors will be used (among others). This won't compile."
 #endif
 
 #include <float.h>
@@ -75,74 +75,49 @@ struct gpart{
 struct part {
 
 #ifdef USE_PART_STRUCT_ACCESSORS
-
   /*! offset/index of particle in cell particle data array */
   size_t _cell_offset;
 #endif
 
 #ifdef USE_PART_STRUCT_ACCESSORS
-
   /*! pointer to particle data array struct of the cell this particle is located in */
   struct part_arrays* _cell_part_arrays;
 #endif
 
-
-
   /*! my integer */
   int _my_int;
-
-
 
   /*! my long */
   long _my_long;
 
-
-
   /*! my long long */
   long long _my_longlong;
-
-
 
   /*! my float */
   float _my_float;
 
-
-
   /*! my double */
   double _my_dble;
-
-
 
   /*! my_char */
   char _my_char;
 
-
-
   /*! my integertime */
   integertime_t _my_integertime;
-
-
 
   /*! my timebin */
   timebin_t _my_timebin;
 
-
-
   /*! some externally defined struct */
   struct my_struct _my_external_struct;
 
-
-
   /*! pointer to externally defined struct */
   struct gpart* _my_pointer_struct;
-
-
 
   /*! pointer to integer array */
   int* _my_pointer;
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif
@@ -151,63 +126,40 @@ struct part {
 
 struct part2 {
 
-
-
   /*! my integer */
   int _my_int2;
-
-
 
   /*! my long */
   long _my_long2;
 
-
-
   /*! my long long */
   long long _my_longlong2;
-
-
 
   /*! my float */
   float _my_float2;
 
-
-
   /*! my double */
   double _my_dble2;
-
-
 
   /*! my_char */
   char _my_char2;
 
-
-
   /*! my integertime */
   integertime_t _my_integertime2;
-
-
 
   /*! my timebin */
   timebin_t _my_timebin2;
 
-
-
   /*! some externally defined struct */
   struct my_struct _my_external_struct2;
 
-
-
   /*! pointer to externally defined struct */
   struct gpart* _my_pointer_struct2;
-
-
 
   /*! pointer to integer array */
   int* _my_pointer2;
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif
@@ -217,67 +169,56 @@ struct part2 {
 struct part3 {
 
 #ifdef DEBUG
-
   /*! my integer */
   int _my_int3;
 #endif
 
 #ifdef DEBUG
-
   /*! my long */
   long _my_long3;
 #endif
 
 #ifdef DEBUG
-
   /*! my long long */
   long long _my_longlong3;
 #endif
 
 #ifdef DEBUG
-
   /*! my float */
   float _my_float3;
 #endif
 
 #ifdef DEBUG
-
   /*! my double */
   double _my_dble3;
 #endif
 
 #ifdef DEBUG
-
   /*! my_char */
   char _my_char3;
 #endif
 
 #ifdef DEBUG
-
   /*! my integertime */
   integertime_t _my_integertime3;
 #endif
 
 #ifdef DEBUG
-
   /*! my timebin */
   timebin_t _my_timebin3;
 #endif
 
 #ifdef DEBUG
-
   /*! pointer to externally defined struct */
   struct gpart* _my_pointer_struct3;
 #endif
 
 #ifdef DEBUG
-
   /*! pointer to integer array */
   int* _my_pointer3;
 #endif
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif
@@ -287,67 +228,56 @@ struct part3 {
 struct part4 {
 
 #ifdef NODEBUG
-
   /*! my integer */
   int _my_int4;
 #endif
 
 #ifdef NODEBUG
-
   /*! my long */
   long _my_long4;
 #endif
 
 #ifdef NODEBUG
-
   /*! my long long */
   long long _my_longlong4;
 #endif
 
 #ifdef NODEBUG
-
   /*! my float */
   float _my_float4;
 #endif
 
 #ifdef NODEBUG
-
   /*! my double */
   double _my_dble4;
 #endif
 
 #ifdef NODEBUG
-
   /*! my_char */
   char _my_char4;
 #endif
 
 #ifdef NODEBUG
-
   /*! my integertime */
   integertime_t _my_integertime4;
 #endif
 
 #ifdef NODEBUG
-
   /*! my timebin */
   timebin_t _my_timebin4;
 #endif
 
 #ifdef NODEBUG
-
   /*! pointer to externally defined struct */
   struct gpart* _my_pointer_struct4;
 #endif
 
 #ifdef NODEBUG
-
   /*! pointer to integer array */
   int* _my_pointer4;
 #endif
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif

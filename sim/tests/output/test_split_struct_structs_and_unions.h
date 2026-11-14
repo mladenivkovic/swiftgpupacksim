@@ -15,7 +15,7 @@
 
 
 #ifndef USE_PART_STRUCT_ACCESSORS
-#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. Test was written assuming part-struct accessors will be used (among others). This won't compile."
 #endif
 
 #include <float.h>
@@ -75,29 +75,22 @@ struct gpart{
 struct part {
 
 #ifdef USE_PART_STRUCT_ACCESSORS
-
   /*! offset/index of particle in cell particle data array */
   size_t _cell_offset;
 #endif
 
 #ifdef USE_PART_STRUCT_ACCESSORS
-
   /*! pointer to particle data array struct of the cell this particle is located in */
   struct part_arrays* _cell_part_arrays;
 #endif
 
   struct {
 
-
-
     float _a;
-
-
 
     float _b[3];
 
 #ifdef DEBUG
-
     long long _c;
 #endif
 
@@ -105,17 +98,11 @@ struct part {
 
   struct {
 
-
-
     double _d;
 
     struct {
 
-
-
       struct gpart* _gps;
-
-
 
       timebin_t _ts;
 
@@ -125,17 +112,13 @@ struct part {
 
   union {
 
-
-
     float _au;
 
 #ifdef DEBUG
-
     float _bu;
 #endif
 
 #ifdef NODEBUG
-
     float _cu;
 #endif
 
@@ -143,17 +126,11 @@ struct part {
 
   union {
 
-
-
     struct gp* _gpu;
 
     struct {
 
-
-
       float _du;
-
-
 
       float _eu;
 
@@ -162,7 +139,6 @@ struct part {
    };
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif
@@ -173,16 +149,11 @@ struct part2 {
 
   struct {
 
-
-
     float _a2;
-
-
 
     float _b2[3];
 
 #ifdef DEBUG
-
     long long _c2;
 #endif
 
@@ -190,17 +161,11 @@ struct part2 {
 
   struct {
 
-
-
     double _d2;
 
     struct {
 
-
-
       struct gpart* _gps2;
-
-
 
       timebin_t _ts2;
 
@@ -210,17 +175,13 @@ struct part2 {
 
   union {
 
-
-
     float _au2;
 
 #ifdef DEBUG
-
     float _bu2;
 #endif
 
 #ifdef NODEBUG
-
     float _cu2;
 #endif
 
@@ -228,17 +189,11 @@ struct part2 {
 
   union {
 
-
-
     struct gp* _gpu2;
 
     struct {
 
-
-
       float _du2;
-
-
 
       float _eu2;
 
@@ -247,7 +202,6 @@ struct part2 {
    };
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif

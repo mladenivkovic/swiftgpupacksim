@@ -15,7 +15,7 @@
 
 
 #ifndef USE_PART_STRUCT_ACCESSORS
-#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. Test was written assuming part-struct accessors will be used (among others). This won't compile."
 #endif
 
 #include <float.h>
@@ -75,41 +75,29 @@ struct gpart{
 struct part {
 
 #ifdef USE_PART_STRUCT_ACCESSORS
-
   /*! offset/index of particle in cell particle data array */
   size_t _cell_offset;
 #endif
 
 #ifdef USE_PART_STRUCT_ACCESSORS
-
   /*! pointer to particle data array struct of the cell this particle is located in */
   struct part_arrays* _cell_part_arrays;
 #endif
 
-
-
   /*! my integer */
   int _my_2D_arr[4][4];
 
-
-
   int _my_macro_2D_arr[NDIM1][NDIM2];
 
-
-
   int _my_3D_arr[4][4][4];
-
-
 
   int _my_macro_3D_arr[NDIM1][2][NDIM3];
 
 #ifdef DEBUG
-
   int _my_3D_arr2[3][3][3];
 #endif
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif
@@ -119,12 +107,10 @@ struct part {
 struct part2 {
 
 #ifdef DEBUG
-
   int _my_3D_arr3[3][3][3];
 #endif
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif

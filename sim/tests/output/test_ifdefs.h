@@ -15,7 +15,7 @@
 
 
 #ifndef USE_PART_STRUCT_ACCESSORS
-#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. Test was written assuming part-struct accessors will be used (among others). This won't compile."
 #endif
 
 #include <float.h>
@@ -75,109 +75,91 @@ struct gpart{
 struct part {
 
 #ifdef DEBUG
-
   /*! my integer */
   int _my_int;
 #endif
 
 #ifdef DEBUG
-
   /*! my long */
   long _my_long;
 #endif
 
 #ifdef DEBUG
-
   /*! my long long */
   long long _my_longlong;
 #endif
 
 #ifdef DEBUG
-
   /*! my float */
   float _my_float;
 #endif
 
 #ifdef DEBUG
-
   /*! my double */
   double _my_dble;
 #endif
 
 #ifdef DEBUG
-
   /*! my_char */
   char _my_char;
 #endif
 
 #ifdef DEBUG
-
   /*! my integertime */
   integertime_t _my_integertime;
 #endif
 
 #ifdef DEBUG
-
   /*! my timebin */
   timebin_t _my_timebin;
 #endif
 
 #ifdef DEBUG
-
   /*! pointer to externally defined struct */
   struct gpart* _my_pointer_struct;
 #endif
 
 #ifdef DEBUG
-
   /*! pointer to integer array */
   int* _my_pointer;
 #endif
 
 #ifdef DEBUG
-
   /*! my integer */
   int _my_int_arr[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my long */
   long _my_long_arr[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my long long */
   long long _my_longlong_arr[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my float */
   float _my_float_arr[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my double */
   double _my_dble_arr[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my_char */
   char _my_char_arr[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my integertime */
   integertime_t _my_integertime_arr[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my timebin */
   timebin_t _my_timebin_arr[4];
 #endif

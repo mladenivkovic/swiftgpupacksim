@@ -15,7 +15,7 @@
 
 
 #ifndef USE_PART_STRUCT_ACCESSORS
-#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. Test was written assuming part-struct accessors will be used (among others). This won't compile."
 #endif
 
 #include <float.h>
@@ -76,39 +76,27 @@ struct part {
 
   /*! my integer */
   int _my_int;
-
   /*! my long */
   long _my_long;
-
   /*! my long long */
   long long _my_longlong;
-
   /*! my float */
   float _my_float;
-
   /*! my double */
   double _my_dble;
-
   /*! my_char */
   char _my_char;
-
   /*! my integertime */
   integertime_t _my_integertime;
-
   /*! my timebin */
   timebin_t _my_timebin;
-
   /*! some externally defined struct */
   struct my_struct _my_external_struct;
-
   /*! pointer to externally defined struct */
   struct gpart* _my_pointer_struct;
-
   /*! pointer to integer array */
   int* _my_pointer;
-
   enum color _my_enum;
-
 };
 
 

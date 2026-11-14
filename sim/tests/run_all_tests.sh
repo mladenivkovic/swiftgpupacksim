@@ -7,7 +7,7 @@ make check
 
 # make
 # ./test_cmdlineargs.o
-# ./test_header_output.o
+# # ./test_header_output.o # this is for pytests
 # ./test_read_data_file.o
 # ./test_read_paramfile.o
 #

@@ -15,7 +15,7 @@
 
 
 #ifndef USE_PART_STRUCT_ACCESSORS
-#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. Test was written assuming part-struct accessors will be used (among others). This won't compile."
 #endif
 
 #include <float.h>
@@ -75,64 +75,43 @@ struct gpart{
 struct part {
 
 #ifdef USE_PART_STRUCT_ACCESSORS
-
   /*! offset/index of particle in cell particle data array */
   size_t _cell_offset;
 #endif
 
 #ifdef USE_PART_STRUCT_ACCESSORS
-
   /*! pointer to particle data array struct of the cell this particle is located in */
   struct part_arrays* _cell_part_arrays;
 #endif
 
-
-
   /*! my integer */
   int _my_int_arr[4];
-
-
 
   /*! my long */
   long _my_long_arr[4];
 
-
-
   /*! my long long */
   long long _my_longlong_arr[4];
-
-
 
   /*! my float */
   float _my_float_arr[4];
 
-
-
   /*! my double */
   double _my_dble_arr[4];
-
-
 
   /*! my_char */
   char _my_char_arr[4];
 
-
-
   /*! my integertime */
   integertime_t _my_integertime_arr[4];
 
-
-
   /*! my timebin */
   timebin_t _my_timebin_arr[4];
-
-
 
   /*! some externally defined struct */
   struct my_struct _my_external_struct_arr[4];
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif
@@ -141,53 +120,34 @@ struct part {
 
 struct part2 {
 
-
-
   /*! my integer */
   int _my_int_arr2[4];
-
-
 
   /*! my long */
   long _my_long_arr2[4];
 
-
-
   /*! my long long */
   long long _my_longlong_arr2[4];
-
-
 
   /*! my float */
   float _my_float_arr2[4];
 
-
-
   /*! my double */
   double _my_dble_arr2[4];
-
-
 
   /*! my_char */
   char _my_char_arr2[4];
 
-
-
   /*! my integertime */
   integertime_t _my_integertime_arr2[4];
 
-
-
   /*! my timebin */
   timebin_t _my_timebin_arr2[4];
-
-
 
   /*! some externally defined struct */
   struct my_struct _my_external_struct_arr2[4];
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif
@@ -197,55 +157,46 @@ struct part2 {
 struct part3 {
 
 #ifdef DEBUG
-
   /*! my integer */
   int _my_int_arr3[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my long */
   long _my_long_arr3[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my long long */
   long long _my_longlong_arr3[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my float */
   float _my_float_arr3[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my double */
   double _my_dble_arr3[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my_char */
   char _my_char_arr3[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my integertime */
   integertime_t _my_integertime_arr3[4];
 #endif
 
 #ifdef DEBUG
-
   /*! my timebin */
   timebin_t _my_timebin_arr3[4];
 #endif
 
 #ifdef SWIFT_DEBUG_CHECKS
-
   /*! This particle's accessor ID, identical for all structs associated with this particle. */
   long long _accessor_id;
 #endif

@@ -15,7 +15,7 @@
 
 
 #ifndef USE_PART_STRUCT_ACCESSORS
-#error "USE_PART_STRUCT_ACCESSORS macro not defined. This won't compile."
+#error "USE_PART_STRUCT_ACCESSORS macro not defined. Test was written assuming part-struct accessors will be used (among others). This won't compile."
 #endif
 
 #include <float.h>
@@ -76,17 +76,13 @@ struct part {
 
   union {
 
-
-
     float _a;
 
 #ifdef DEBUG
-
     float _b;
 #endif
 
 #ifdef NODEBUG
-
     float _c;
 #endif
 
@@ -94,17 +90,11 @@ struct part {
 
   union {
 
-
-
     struct gp* _gp;
 
     struct {
 
-
-
       float _d;
-
-
 
       float _e;
 

@@ -2,24 +2,29 @@
 
 # Run functional tests on the header generation:
 # - Generate different cases
-# - Compare with expected output (save for whitespace differences)
-# - Compile and run simple program to ensure you're producing valid C-code
+# - Compare with expected output for part-struct accessor (save for whitespace differences)
+# - Compile and run simple program for all accessors to ensure you're producing valid C-code
 #
 # These tests require a C compiler. Specify which one to use using the ${CC} environment variable.
 
-set -e
-rm -f ./hydro_part.h ./hydro_part_arrays_struct.h
+set -eo pipefail
+rm -f ./hydro_part.h ./hydro_part_arrays_struct.h ./test_header_output.o
 
 
 function COMPILE_AND_RUN() {
   # Compile the test program.
   if [[ -z "${CC}" ]]; then
-    CC=gcc
+    CC="gcc -fopenmp"
   fi
-  "$CC" -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror -I../src/ -I../src/swift_placeholders
-  echo TODO MLADEN: THIS SHOULD ALSO WORK WITHOUT -DUSE_PART_STRUCT_ACCESSORS
+  echo COMPILE_AND_RUN: compiling
+  $CC -DUSE_PART_STRUCT_ACCESSORS test_header_output.c -o test_header_output.o -Wall -Werror -I../src/ -I../src/swift_placeholders
+
+  echo COMPILE_AND_RUN: running
   ./test_header_output.o
+
   rm -f ./test_header_output.o
+
+  echo COMPILE_AND_RUN: done
 }
 
 
@@ -55,11 +60,11 @@ for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-acc
     if [ "$flag" == "--part-struct-accessor" ]; then
       # I only keep the outputs for part struct accessors for comparison for now...
       # cp hydro_part.h output/"$testcase".h
-      DIFF hydro_part.h output/"$testcase".h
+      DIFF output/"$testcase".h hydro_part.h
     fi
 
     rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-done
+  done
 
   # make temporary headers which will be included
   touch a.h b.h c.h
@@ -77,7 +82,7 @@ done
       COMPILE_AND_RUN
 
       # cp hydro_part.h output/"$testcase".h
-      DIFF hydro_part.h output/"$testcase".h
+      DIFF output/"$testcase".h hydro_part.h
 
     done
   done
