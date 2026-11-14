@@ -69,7 +69,7 @@ force_pack_timebin:
     doc: Time-step length
 
 force_pack_limiter:
-  limiter_data:
+  timestep_limiter:
     type: struct timestep_limiter_data
     doc: Time-step limiter information
 

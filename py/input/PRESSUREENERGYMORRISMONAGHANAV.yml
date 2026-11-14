@@ -144,7 +144,7 @@ part:
     doc: Tree-depth at which size / 2 <= h * gamma < size
     type: char
 
-  limiter_data:
+  timestep_limiter:
     type: struct timestep_limiter_data
     doc: Time-step limiter information
 

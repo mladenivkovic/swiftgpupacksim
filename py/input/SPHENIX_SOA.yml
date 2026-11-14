@@ -229,7 +229,7 @@ part_time_bin:
     doc: Time-step length
 
 part_limiter_data:
-  limiter_data:
+  timestep_limiter:
     type: struct timestep_limiter_data
     doc: Time-step limiter information
 
