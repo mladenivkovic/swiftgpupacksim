@@ -10,6 +10,7 @@ import subprocess
 import datetime
 import yaml
 from required_data import _required_particle_fields, _required_particle_file_metadata_swift, _required_other_file_metadata_swift
+from verbosity import *
 
 
 # Allow certain "field names" to be multiply defined for validation checks
@@ -44,7 +45,7 @@ def verify_dir_exists(dname: str, message: str = ""):
     return
 
 
-def check_output_directory(outdir: Union[str, list], swift_header: bool = False, full_output: bool = False, verbose: bool = True):
+def check_output_directory(outdir: Union[str, list], swift_header: bool = False, full_output: bool = False):
     """
     Extract the output directory from the parsed args.
     If it doesn't exist, make it.
@@ -82,8 +83,7 @@ def check_output_directory(outdir: Union[str, list], swift_header: bool = False,
         raise ValueError("Unknown type for output_dir cmdline arg:", type(outdir))
 
     if not os.path.isdir(outdir):
-        if verbose:
-            print(f"check_output_directory(): output directory '{outdir}' doesn't exist, creating it.")
+        vprint(f"check_output_directory(): output directory '{outdir}' doesn't exist, creating it.")
         os.makedirs(outdir)
 
     if swift_header or full_output:
@@ -242,7 +242,7 @@ in your yml file.
     return sanitized
 
 
-def read_default_includes(swift_header: bool = False, verbose: bool = False):
+def read_default_includes(swift_header: bool = False):
     """
     Read default headers to be included.
 
@@ -255,10 +255,7 @@ def read_default_includes(swift_header: bool = False, verbose: bool = False):
 
     fname_full = os.path.join("input", fname)
 
-    if verbose:
-        print(
-            f"-- read_default_includes(): Using defaults from {fname_full} with additions from yml file"
-        )
+    vprint(f"read_default_includes(): Using defaults from {fname_full} with additions from yml file")
 
     f = open(fname_full, "r")
     lines = f.readlines()
@@ -323,7 +320,7 @@ def validate_yml_contents(contents_d: dict, filename: str, is_particle: bool=Tru
 
 
 def process_yml_metadata(
-    metadata_d: dict, is_particle: bool = True, swift_header: bool = False, verbose: bool = False
+    metadata_d: dict, is_particle: bool = True, swift_header: bool = False
 ) -> None:
     """
     Run through the read-in metadata from the yml file, passed as the dict
@@ -342,9 +339,6 @@ def process_yml_metadata(
     swift_header: bool
         if True, we're creating header files for SWIFT. Otherwise, for
         SWIFTGPUPACKSIM.
-
-    verbose: bool
-        are we talkative?
     """
 
     passed_fields = list(metadata_d.keys())
@@ -366,13 +360,11 @@ def process_yml_metadata(
 
     if "authors" not in passed_fields:
         metadata_d["author"] = "NO AUTHORS SPECIFIED"
-        if verbose:
-            print("-- process_yml_metadata(): No authors found")
+        vprint("process_yml_metadata(): No authors found")
 
     if ("doc" not in passed_fields) and ("documentation" not in passed_fields):
         metadata_d["has_doc"] = False
-        if verbose:
-            print("-- process_yml_metadata(): No file documentation found")
+        vprint("process_yml_metadata(): No file documentation found")
 
         # place documentation contents with a key you'll know to search for later
         if "doc" not in passed_fields:
@@ -386,17 +378,15 @@ def process_yml_metadata(
 
     if "flavour" not in passed_fields:
         metadata_d["flavour"] = get_git_hash()
-        if verbose and is_particle:
-            print("-- process_yml_metadata(): No SPH flavour found")
+        vprint("process_yml_metadata(): No SPH flavour found")
 
     if "includes" not in passed_fields:
-        if verbose:
-            print(f"-- process_yml_metadata(): No header includes provided.")
+        vprint(f"process_yml_metadata(): No header includes provided.")
 
         metadata_d["includes"] = ""
         if is_particle:
             # use defaults.
-            incs = read_default_includes(swift_header=swift_header, verbose=verbose)
+            incs = read_default_includes(swift_header=swift_header)
             metadata_d["includes"] = incs
 
     else:
@@ -418,7 +408,7 @@ def process_yml_metadata(
             metadata_d["has_extra_includes"] = True
 
             # now use defaults for 'includes' field, then add these later.
-            incs = read_default_includes(swift_header=swift_header, verbose=verbose)
+            incs = read_default_includes(swift_header=swift_header)
             metadata_d["includes"] = incs
 
     else:
@@ -466,7 +456,6 @@ def add_auxiliary_fields(
     contents_d: dict,
     id_checks: bool = True,
     part_struct_accessors: bool = False,
-    verbose: bool = False,
 ) -> dict:
     """
     Run through the read in contents (passed as contents_d) and add auxiliary
@@ -487,9 +476,6 @@ def add_auxiliary_fields(
         if True, add auxiliary fields needed for part struct accessors
         (offset/index in cell's particle arrays for this particle, and pointer
         to cell_part_arrays)
-
-    verbose: bool
-        if True, be talkative
 
 
     Returns:
@@ -536,8 +522,7 @@ def add_auxiliary_fields(
     if not have_part_struct:
         # Add 'struct part' manually. Contents will be filled below.
 
-        if verbose:
-            print("-- add_auxiliary_fields(): Didn't find struct `part`, adding it.")
+        vprint("add_auxiliary_fields(): Didn't find struct `part`, adding it.")
 
         updated_contents_d["part"] = main_part_struct_aux_fields_props
 
@@ -566,10 +551,9 @@ def add_auxiliary_fields(
 
     if id_checks:
         if len(list(updated_contents_d.keys())) == 1:
-            if verbose:
-                print(
-                    "-- add_auxiliary_fields(): Found only one struct for particle data, not adding accessor_id checks"
-                )
+            vprint(
+                "add_auxiliary_fields(): Found only one struct for particle data, not adding accessor_id checks"
+            )
         else:
             # Add struct ID for debugging checks to each struct
             for key in updated_contents_d.keys():
@@ -577,9 +561,8 @@ def add_auxiliary_fields(
                     debug_id_props_name
                 ]
 
-                if verbose:
-                    print(
-                        f"-- add_auxiliary_fields(): Adding debug check field {debug_id_props_name} to struct {key}"
-                    )
+                vprint(
+                    f"add_auxiliary_fields(): Adding debug check field {debug_id_props_name} to struct {key}"
+                )
 
     return updated_contents_d

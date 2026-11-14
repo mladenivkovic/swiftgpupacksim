@@ -4,6 +4,7 @@ import yaml
 import sys
 from typing import Union
 from templates import init_jinja_env
+from verbosity import *
 
 
 # List of all permissible field descriptors for a particle field.
@@ -80,7 +81,6 @@ class FieldEntry(object):
         field_name: str,
         field_props: Union[dict, None],
         root_struct: str,
-        verbose=False,
         allow_prohibited=False,
         recursion_level=0,
     ):
@@ -97,9 +97,6 @@ class FieldEntry(object):
 
         root_struct: str
             name of "root" or "top level" struct this field is assigned to
-
-        verbose: bool
-            If true, be talkative about what we find.
 
         allow_prohibited: bool
             Allow the creation of prohibited/reserved field names.
@@ -121,7 +118,6 @@ class FieldEntry(object):
         self.name = field_name
         self.root_struct = root_struct
         self.props = field_props
-        self.verbose = verbose
         self.recursion_level = recursion_level
 
         # initialise default values
@@ -145,17 +141,15 @@ class FieldEntry(object):
         if self.name == "union":
             raise ValueError("SWITCH TO NEW SYNTAX WITH UNION AS TYPE")
 
-        if self.verbose:
-            print(f"Found field '{self.name}'")
+        dprint(f"  Found field '{self.name}'")
 
         if self.props is None:
             if self.type == "union":
                 raise ValueError("Found 'union' with no further specification?")
             if self.type == "struct":
                 raise ValueError("Found 'struct' with no further specification?")
-            if self.verbose:
                 # default is set in initialiser
-                print(f"  type: default [{self.type}]")
+                dprint(f"    type: default [{self.type}]")
 
             # nothing else to do.
             return
@@ -173,8 +167,7 @@ class FieldEntry(object):
         # Now see what's around.
         try:
             self.type = self.props["type"]
-            if self.verbose:
-                print("  type:", self.type)
+            dprint("    _extract_field_data(): type:", self.type)
         except KeyError:
             pass
 
@@ -197,39 +190,33 @@ class FieldEntry(object):
 
         try:
             self.size = self.props["size"]
-            if self.verbose:
-                print("  size:", self.size)
+            dprint("    _extract_field_data(): size:", self.size)
         except KeyError:
             pass
 
         try:
             self.documentation = self.props["doc"]
-            if self.verbose:
-                print("  documentation:", self.documentation)
+            dprint("    _extract_field_data(): documentation:", self.documentation)
         except KeyError:
             pass
         try:
             self.documentation = self.props["documentation"]
-            if self.verbose:
-                print("  documentation:", self.documentation)
+            dprint("    _extract_field_data(): documentation:", self.documentation)
         except KeyError:
             pass
         try:
             self.ifdef = self.props["ifdef"]
-            if self.verbose:
-                print("  macro ifdef guard:", self.ifdef)
+            dprint("    _extract_field_data(): macro ifdef guard:", self.ifdef)
         except KeyError:
             pass
         try:
             self.ifndef = self.props["ifndef"]
-            if self.verbose:
-                print("  macro ifndef guard:", self.ifndef)
+            dprint("    _extract_field_data(): macro ifndef guard:", self.ifndef)
         except KeyError:
             pass
         try:
             self.ifdef_return_val = self.props["ifdef_return_val"]
-            if self.verbose:
-                print("  getter return value:", self.ifdef_return_val)
+            dprint("    _extract_field_data(): getter return value:", self.ifdef_return_val)
         except KeyError:
             pass
 
@@ -246,7 +233,6 @@ class FieldEntry(object):
                     key,
                     contents[key],
                     self.root_struct,
-                    verbose=self.verbose,
                     recursion_level=self.recursion_level + 1,
                 )
                 self.sub_entries.append(new_entry)
@@ -284,7 +270,6 @@ class FieldEntry(object):
         part_struct_accessors: bool = False,
         root_struct_override: Union[str, None] = None,
         root_struct_special_name: Union[str, None] = None,
-        verbose: bool = False,
     ) -> dict:
         """
         Generate a dict with this field's properties for the jinja templates.
@@ -324,9 +309,6 @@ class FieldEntry(object):
             src/hydro/<flavour>/.
             If not None, this implies to use the specialised API template, not the
             default particle one.
-
-        verbose: bool
-            Set verbosity
 
         Returns
         -------
@@ -422,12 +404,12 @@ class FieldEntry(object):
             "DEBUG_ID_CHECKS_MACRO_GUARD": not (self.ifdef == "SWIFT_DEBUG_CHECKS"),
         }
 
-        if verbose:
-            pprint("----", d)
+        #  dprint("field_dict:")
+        #  dpprint(d)
 
         return d
 
-    def generate_declaration(self, indent_level: int = 1, verbose: bool = False):
+    def generate_declaration(self, indent_level: int = 1):
         """
         Generate the field declaration
 
@@ -435,14 +417,11 @@ class FieldEntry(object):
             Increment the indent level of the declaration. Each indent_level
             indents the line by 2 whitespaces.
 
-        verbose: bool
-            Set verbosity level
         """
 
-        if verbose:
-            print(f"-- Generating declaration for {self.type} {self.name}")
+        vprint(f"generate_declaration() for {self.type} {self.name}")
 
-        params_dict = self._get_field_dict(indent_level=indent_level, verbose=verbose)
+        params_dict = self._get_field_dict(indent_level=indent_level)
 
         if params_dict["IS_INTERNAL_STRUCT"] or params_dict["IS_UNION"]:
             decl_subfields = ""
@@ -471,7 +450,6 @@ class FieldEntry(object):
         root_struct_override: Union[str, None] = None,
         root_struct_special_name: Union[str, None] = None,
         id_checks: bool = True,
-        verbose: bool = False,
     ) -> str:
         """
         Generate the getters and setters C code.
@@ -518,9 +496,6 @@ class FieldEntry(object):
         id_checks: bool
             If True, add debugging checks whether the struct's accessor IDs align
 
-        verbose: bool
-            Set verbosity level
-
         Returns
         -------
 
@@ -529,19 +504,16 @@ class FieldEntry(object):
         """
 
         if self.name in _fields_without_api:
-            if verbose:
-                print(f"-- Skipping API for {self.type} {self.name}")
+            vprint(f"Skipping API for '{self.type} {self.name}'")
             return ""
 
-        if verbose:
-            print(f"-- Generating API for {self.type} {self.name}")
+        vprint(f"generate_API() for '{self.type} {self.name}'")
 
         params_dict = self._get_field_dict(
             parent_struct=parent_struct,
             root_struct_override=root_struct_override,
             root_struct_special_name=root_struct_special_name,
             id_checks=id_checks,
-            verbose=verbose,
         )
 
         # If we have sub-entries (e.g. members of a struct or union), generate
@@ -559,7 +531,6 @@ class FieldEntry(object):
                         root_struct_override=root_struct_override,
                         root_struct_special_name=root_struct_special_name,
                         id_checks=id_checks,
-                        verbose=verbose,
                     )
                 else:
                     parent = parent_struct
@@ -577,7 +548,6 @@ class FieldEntry(object):
                         root_struct_override=root_struct_override,
                         root_struct_special_name=root_struct_special_name,
                         id_checks=id_checks,
-                        verbose=verbose,
                     )
 
                 api_sub_entries.append(api_entry)
@@ -658,9 +628,6 @@ class FieldEntry(object):
             api_explicit = ""
             api_global = ""
 
-            if params_dict["IFNDEF"] is not None:
-                print(params_dict["IFNDEF"])
-                print(params_dict)
             if part_struct_accessors:
                 templ_part_struct = self.jinja_env.get_template(templ_fname_part_struct)
                 if not swift_header:

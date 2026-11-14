@@ -3,15 +3,6 @@
 import argparse
 import os
 
-from utils import (
-    verify_file_exists,
-    check_output_directory,
-    print_separator,
-    validate_yml_contents,
-    process_yml_metadata,
-    add_auxiliary_fields,
-    read_input_file,
-)
 from headers import (
     generate_hydro_part_dot_h,
     generate_parts_dot_h,
@@ -21,6 +12,16 @@ from headers import (
     generate_timestep_limiter_struct_dot_h,
     generate_top_level_hydro_part_dot_h,
 )
+from utils import (
+    verify_file_exists,
+    check_output_directory,
+    print_separator,
+    validate_yml_contents,
+    process_yml_metadata,
+    add_auxiliary_fields,
+    read_input_file,
+)
+from verbosity import *
 
 
 parser = argparse.ArgumentParser(description="Generate the particle header files.")
@@ -32,6 +33,13 @@ parser.add_argument(
     action="store_true",
     default=False,
     help="Toggle verbosity",
+)
+parser.add_argument(
+    "--debug",
+    dest="debug",
+    action="store_true",
+    default=False,
+    help="Toggle debug verbosity",
 )
 parser.add_argument(
     "-s",
@@ -120,7 +128,6 @@ parser.add_argument(
 if __name__ == "__main__":
 
     args = parser.parse_args()
-    verbose = args.verbose
     swift_header = args.swift
     input_file = args.input_file
     explicit_var_accessors = args.explicit_var_accessors
@@ -132,7 +139,11 @@ if __name__ == "__main__":
     id_checks = not args.no_id_checks
     manual_align = not args.no_manual_align
 
-    outdir = check_output_directory(args.output_dir, swift_header=swift_header, full_output=full_output, verbose=verbose)
+    global verbose_settings
+    verbose_settings["verbose"] = args.verbose
+    verbose_settings["debug"] = args.debug
+
+    outdir = check_output_directory(args.output_dir, swift_header=swift_header, full_output=full_output)
 
     # Check our setup is sensible.
     verify_file_exists(input_file)
@@ -183,12 +194,11 @@ if __name__ == "__main__":
         particle_fields_d,
         id_checks=id_checks,
         part_struct_accessors=part_struct_accessors,
-        verbose=verbose,
     )
 
     # check again that everything is sensible
     validate_yml_contents(particle_fields_d, input_file)
-    process_yml_metadata(metadata_d, swift_header=swift_header, verbose=verbose)
+    process_yml_metadata(metadata_d, swift_header=swift_header)
 
     if (len(particle_fields_d.keys()) == 1) and id_checks:
         print("Have only a single particle struct. Skipping accessor ID checks.")
@@ -200,7 +210,7 @@ if __name__ == "__main__":
 
     # check that everything is sensible
     validate_yml_contents(timestep_limiter_d, timestep_limiter_input_file, is_particle=False)
-    process_yml_metadata(timestep_limiter_metadata_d, swift_header=swift_header, verbose=verbose)
+    process_yml_metadata(timestep_limiter_metadata_d, swift_header=swift_header)
 
     # get rt_struct data
     rt_struct_input_file = os.path.join("input", "rt_struct.yml")
@@ -208,7 +218,7 @@ if __name__ == "__main__":
 
     # check that everything is sensible
     validate_yml_contents(rt_struct_d, rt_struct_input_file, is_particle=False)
-    process_yml_metadata(rt_struct_metadata_d, swift_header=swift_header, verbose=verbose)
+    process_yml_metadata(rt_struct_metadata_d, swift_header=swift_header)
 
 
     # ---------------------------------------
@@ -226,7 +236,6 @@ if __name__ == "__main__":
         global_var_accessors=global_var_accessors,
         part_struct_accessors=part_struct_accessors,
         testing=testing,
-        verbose=verbose,
     )
 
 
@@ -246,7 +255,6 @@ if __name__ == "__main__":
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
         part_struct_accessors=part_struct_accessors,
-        verbose=verbose,
     )
 
 
@@ -258,7 +266,6 @@ if __name__ == "__main__":
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
         part_struct_accessors=part_struct_accessors,
-        verbose=verbose,
     )
 
     # generate src/rt_struct.h
@@ -269,7 +276,6 @@ if __name__ == "__main__":
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
         part_struct_accessors=part_struct_accessors,
-        verbose=verbose,
     )
 
     # generate src/hydro/<flavour>/parts.h
@@ -278,7 +284,6 @@ if __name__ == "__main__":
         metadata_d,
         swift_header=swift_header,
         id_checks=id_checks,
-        verbose=verbose,
     )
 
     # generate src/hydro/<flavour>/hydro_part_arrays.h
@@ -286,7 +291,6 @@ if __name__ == "__main__":
         particle_fields_d,
         metadata_d,
         swift_header=swift_header,
-        verbose=verbose
     )
 
     # generate src/hydro/<flavour>/hydro_part_arrays_flush.h
@@ -295,7 +299,6 @@ if __name__ == "__main__":
         particle_fields_d,
         metadata_d,
         swift_header=swift_header,
-        verbose=verbose
     )
 
     if dry_run:

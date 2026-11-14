@@ -8,6 +8,7 @@ import jinja2
 import os
 from pprint import pprint
 from utils import verify_dir_exists, get_git_hash, truncate_repo_file_path
+from verbosity import *
 
 _root_dir = os.path.dirname(__file__)
 _default_template_dir = os.path.join(_root_dir, "templates")
@@ -62,7 +63,6 @@ def jinja_generate_hydro_part_dot_h(
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
     testing: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
     Generates the full hydro_part.h header.
@@ -102,9 +102,6 @@ def jinja_generate_hydro_part_dot_h(
         if True, use minimalistic header template for unit tests to generate
         header file
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -143,9 +140,8 @@ def jinja_generate_hydro_part_dot_h(
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    if verbose:
-        print("jinja_generate_hydro_part_dot_h: dict passed to jinja renderer:")
-        pprint(d)
+    dprint("jinja_generate_hydro_part_dot_h(): dict passed to jinja renderer:")
+    dpprint(d)
 
     header_template = templ.render(d)
 
@@ -157,7 +153,6 @@ def jinja_generate_parts_dot_h(
     metadata_d: dict,
     swift_header: bool = True,
     id_checks: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generates the full parts.h header.
@@ -180,9 +175,6 @@ def jinja_generate_parts_dot_h(
 
     id_checks: bool
         If True, add initialisation of particle accessor_id variables
-
-    verbose: bool
-        if True, be talkative
 
     Returns
     -------
@@ -207,6 +199,9 @@ def jinja_generate_parts_dot_h(
     d["DEBUG_ID_CHECKS"] = id_checks
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
+    dprint("jinja_generate_parts_dot_h(): dict passed to jinja renderer:")
+    dpprint(d)
+
     header_template = templ.render(d)
 
     return header_template
@@ -216,7 +211,6 @@ def jinja_generate_hydro_part_arrays_struct_dot_h(
     part_structs_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generates the full hydro_part_arrays_struct.h header.
@@ -236,9 +230,6 @@ def jinja_generate_hydro_part_arrays_struct_dot_h(
 
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
-
-    verbose: bool
-        if True, be talkative
 
     Returns
     -------
@@ -262,6 +253,9 @@ def jinja_generate_hydro_part_arrays_struct_dot_h(
     d["HEADER_GUARD"] = get_git_hash()
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
+    dprint("jinja_generate_hydro_part_arrays_struct_dot_h(): dict passed to jinja renderer:")
+    dpprint(d)
+
     header_template = templ.render(d)
 
     return header_template
@@ -271,7 +265,6 @@ def jinja_generate_hydro_part_arrays_flush_dot_h(
     part_structs_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generates the full hydro_part_arrays_flush.h header.
@@ -291,9 +284,6 @@ def jinja_generate_hydro_part_arrays_flush_dot_h(
 
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
-
-    verbose: bool
-        if True, be talkative
 
     Returns
     -------
@@ -317,61 +307,12 @@ def jinja_generate_hydro_part_arrays_flush_dot_h(
     d["HEADER_GUARD"] = get_git_hash()
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
+    dprint("jinja_generate_hydro_part_arrays_flush_dot_h(): dict passed to jinja renderer:")
+    dpprint(d)
+
     header_template = templ.render(d)
 
     return header_template
-
-
-def jinja_generate_hydro_space_dot_c(
-    part_structs_d: dict,
-    metadata_d: dict,
-    swift_header: bool = True,
-    verbose: bool = False,
-) -> str:
-    """
-    Generates the full hydro_part_arrays_flush.h header.
-
-    Parameters
-    ----------
-
-    part_structs_d: dict
-        dict containing processed data ready to be inserted into the template.
-
-    metadata_d: dict
-        dict containing particle (flavour) metadata
-
-    swift_header: bool
-        if True, generate headers compatible with swift, not swiftgpupacksim
-
-    verbose: bool
-        if True, be talkative
-
-    Returns
-    -------
-
-    header_template: str
-        the rendered template as a string
-    """
-
-    env = init_jinja_env("files")
-    templ_fname = "hydro_space.c.jinja.template"
-    templ = env.get_template(templ_fname)
-    templ_full_fname = os.path.join("templates", "files", templ_fname)
-    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
-
-    # fill up dict for template rendering
-    d = {}
-    d["STRUCT_NAMES"] = part_structs_d["names"]
-    d["TEMPLATE_FILENAME"] = templ_trunc_name
-    d["HEADER_FOR_SWIFT"] = swift_header
-    d["HEADER_GUARD"] = get_git_hash()
-
-    d["INPUT_FILENAME"] = metadata_d["input_file"]
-    d["FLAVOUR_NAME"] = metadata_d["flavour"].upper()
-
-    basefile_template = templ.render(d)
-
-    return basefile_template
 
 
 def jinja_generate_timestep_limiter_struct_dot_h(
@@ -382,7 +323,6 @@ def jinja_generate_timestep_limiter_struct_dot_h(
     explicit_var_accessors: bool = False,
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
     Generates the full timestep_limiter_struct.h header.
@@ -416,9 +356,6 @@ def jinja_generate_timestep_limiter_struct_dot_h(
 
     part_struct_accessors: bool
         if True, generate getters/setters using a part struct
-
-    verbose: bool
-        if True, be talkative
 
     Returns
     -------
@@ -455,6 +392,9 @@ def jinja_generate_timestep_limiter_struct_dot_h(
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
+    dprint("jinja_generate_timestep_limiter_struct_dot_h(): dict passed to jinja renderer:")
+    dpprint(d)
+
     header_template = templ.render(d)
 
     return header_template
@@ -469,7 +409,6 @@ def jinja_generate_rt_struct_dot_h(
     explicit_var_accessors: bool = False,
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
     Renders the full rt_struct.h header.
@@ -503,9 +442,6 @@ def jinja_generate_rt_struct_dot_h(
 
     part_struct_accessors: bool
         if True, generate getters/setters using a part struct
-
-    verbose: bool
-        if True, be talkative
 
     Returns
     -------
@@ -542,6 +478,9 @@ def jinja_generate_rt_struct_dot_h(
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
+    dprint("jinja_generate_rt_struct_dot_h(): dict passed to jinja renderer:")
+    dpprint(d)
+
     header_template = templ.render(d)
 
     return header_template
@@ -555,7 +494,6 @@ def jinja_generate_top_level_hydro_part_dot_h(
     explicit_var_accessors: bool = False,
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
     Generates the full src/hydro_part.h header.
@@ -590,9 +528,6 @@ def jinja_generate_top_level_hydro_part_dot_h(
     part_struct_accessors: bool
         if True, generate getters/setters using a part struct
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -621,9 +556,10 @@ def jinja_generate_top_level_hydro_part_dot_h(
     d["EXPLICIT_VAR_ACCESSORS"] = explicit_var_accessors
     d["PART_STRUCT_ACCESSORS"] = part_struct_accessors
 
+    dprint("jinja_generate_top_level_hydro_part_dot_h(): dict passed to jinja renderer:")
+    dpprint(d)
+
     header_template = templ.render(d)
 
     return header_template
-
-
 

@@ -13,6 +13,7 @@ from templates import (
     jinja_generate_top_level_hydro_part_dot_h,
 )
 from utils import check_part_struct_first_in_list, read_input_file
+from verbosity import *
 
 
 def generate_hydro_part_dot_h(
@@ -25,7 +26,6 @@ def generate_hydro_part_dot_h(
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
     testing: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a src/<flavour>/hydro_part.h.
@@ -63,9 +63,6 @@ def generate_hydro_part_dot_h(
         if True, use minimalistic header template for unit tests to generate
         header file
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -73,8 +70,7 @@ def generate_hydro_part_dot_h(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating particle struct header")
+    vprint("Generating particle struct header")
 
     have_part_struct = check_part_struct_first_in_list(part_d)
 
@@ -96,15 +92,14 @@ def generate_hydro_part_dot_h(
                     has_doc = True
                     doc = part_d[struct_name][field]
                 else:
-                    if verbose:
-                        print(f"-- Found prohibited field name {field}, skipping it.")
+                    vprint(f"Found prohibited field name {field}, skipping it.")
                 # in either case, don't process further
                 continue
             # parse the field specification
             field_props = part_d[struct_name][field]
-            field_entry = FieldEntry(field, field_props, struct_name, verbose=verbose)
+            field_entry = FieldEntry(field, field_props, struct_name)
             # get the declaration C-code
-            decl = field_entry.generate_declaration(verbose=verbose)
+            decl = field_entry.generate_declaration()
             declarations.append(decl)
             # get the API C-code
             api = field_entry.generate_API(
@@ -113,7 +108,6 @@ def generate_hydro_part_dot_h(
                 global_var_accessors=global_var_accessors,
                 part_struct_accessors=part_struct_accessors,
                 id_checks=id_checks,
-                verbose=verbose,
             )
             apis.append(api)
 
@@ -135,7 +129,6 @@ def generate_hydro_part_dot_h(
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
         testing=testing,
-        verbose=verbose,
     )
 
     return header_file
@@ -146,7 +139,6 @@ def generate_parts_dot_h(
     metadata_d: dict,
     swift_header: bool = True,
     id_checks: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a parts.h, which contains:
@@ -169,9 +161,6 @@ def generate_parts_dot_h(
     id_checks: bool
         If True, add initialisation of particle accessor_id variables
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -179,8 +168,7 @@ def generate_parts_dot_h(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating parts.h")
+    vprint("Generating parts.h")
 
     have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
@@ -200,14 +188,12 @@ def generate_parts_dot_h(
         documentation = None
         try:
             documentation = props["doc"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
         try:
             documentation = props["documentation"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
 
@@ -216,14 +202,15 @@ def generate_parts_dot_h(
             "HAS_DOC": documentation is not None,
         }
 
-    if verbose:
-        print("--", part_struct_d)
+    dprint("part_struct_d")
+    dpprint(part_struct_d)
 
     #  generate the file from template
     header_file = jinja_generate_parts_dot_h(
         part_struct_d,
         metadata_d,
-        swift_header=swift_header, id_checks=id_checks, verbose=verbose
+        swift_header=swift_header,
+        id_checks=id_checks,
     )
 
     return header_file
@@ -233,7 +220,6 @@ def generate_hydro_part_arrays_struct_dot_h(
     part_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a hydro_part_arrays_struct.h, which contains a `struct part_arrays`, containing
@@ -251,9 +237,6 @@ def generate_hydro_part_arrays_struct_dot_h(
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -261,8 +244,7 @@ def generate_hydro_part_arrays_struct_dot_h(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating hydro_part_arrays_struct.h header")
+    vprint("Generating hydro_part_arrays_struct.h header")
 
     have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
@@ -282,14 +264,12 @@ def generate_hydro_part_arrays_struct_dot_h(
         documentation = None
         try:
             documentation = props["doc"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
         try:
             documentation = props["documentation"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
 
@@ -298,14 +278,14 @@ def generate_hydro_part_arrays_struct_dot_h(
             "HAS_DOC": documentation is not None,
         }
 
-    if verbose:
-        print("--", part_struct_d)
+    dprint("part_struct_d")
+    dpprint(part_struct_d)
 
     #  generate the file from template
     header_file = jinja_generate_hydro_part_arrays_struct_dot_h(
         part_struct_d,
         metadata_d,
-        swift_header=swift_header, verbose=verbose
+        swift_header=swift_header
     )
 
     return header_file
@@ -315,7 +295,6 @@ def generate_hydro_part_arrays_flush_dot_h(
     part_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a hydro_part_arrays_flush.h, which contains the functions needed for
@@ -333,9 +312,6 @@ def generate_hydro_part_arrays_flush_dot_h(
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -343,8 +319,7 @@ def generate_hydro_part_arrays_flush_dot_h(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating hydro_part_arrays_flush.h header")
+    vprint("Generating hydro_part_arrays_flush.h header")
 
     have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
@@ -364,14 +339,12 @@ def generate_hydro_part_arrays_flush_dot_h(
         documentation = None
         try:
             documentation = props["doc"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
         try:
             documentation = props["documentation"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
 
@@ -380,14 +353,14 @@ def generate_hydro_part_arrays_flush_dot_h(
             "HAS_DOC": documentation is not None,
         }
 
-    if verbose:
-        print("--", part_struct_d)
+    dprint("part_struct_d")
+    dpprint(part_struct_d)
 
     #  generate the file from template
     header_file = jinja_generate_hydro_part_arrays_flush_dot_h(
         part_struct_d,
         metadata_d,
-        swift_header=swift_header, verbose=verbose
+        swift_header=swift_header,
     )
 
     return header_file
@@ -397,7 +370,6 @@ def generate_hydro_space_dot_c(
     part_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a hydro_space.c which contains the functions needed for
@@ -415,9 +387,6 @@ def generate_hydro_space_dot_c(
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -425,8 +394,7 @@ def generate_hydro_space_dot_c(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating hydro_space.c")
+    vprint("Generating hydro_space.c")
 
     struct_names = [name for name in part_d.keys()]
 
@@ -434,7 +402,7 @@ def generate_hydro_space_dot_c(
 
     #  generate the file from template
     base_file = jinja_generate_hydro_space_dot_c(
-        part_struct_d, metadata_d, swift_header=swift_header, verbose=verbose
+        part_struct_d, metadata_d, swift_header=swift_header,
     )
 
     return base_file
@@ -446,7 +414,6 @@ def generate_timestep_limiter_struct_dot_h(
     explicit_var_accessors: bool = False,
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a timestep_limiter_struct.h
@@ -473,9 +440,6 @@ def generate_timestep_limiter_struct_dot_h(
     part_struct_accessors: bool
         if True, generate getters/setters using a part struct
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -483,8 +447,7 @@ def generate_timestep_limiter_struct_dot_h(
         The contents of the timeste_limiter_struct.h file.
     """
 
-    if verbose:
-        print("Generating timestep_limiter_struct header")
+    vprint("Generating timestep_limiter_struct header")
 
     # Create an empty dict we'll fill out with C-code for the API and
     # declaration C-code snippets for each struct containing particle data
@@ -504,15 +467,14 @@ def generate_timestep_limiter_struct_dot_h(
                     has_doc = True
                     doc = limiter_d[struct_name][field]
                 else:
-                    if verbose:
-                        print(f"-- Found prohibited field name {field}, skipping it.")
+                    vprint(f"Found prohibited field name {field}, skipping it.")
                 # in either case, don't process further
                 continue
             # parse the field specification
             field_props = limiter_d[struct_name][field]
-            field_entry = FieldEntry(field, field_props, struct_name, verbose=verbose)
+            field_entry = FieldEntry(field, field_props, struct_name)
             # get the declaration C-code
-            decl = field_entry.generate_declaration(verbose=verbose)
+            decl = field_entry.generate_declaration()
             declarations.append(decl)
             # get the API C-code
             api = field_entry.generate_API(
@@ -522,7 +484,6 @@ def generate_timestep_limiter_struct_dot_h(
                 part_struct_accessors=part_struct_accessors,
                 root_struct_special_name="timestep_limiter",
                 id_checks=False,
-                verbose=verbose,
             )
             apis.append(api)
 
@@ -542,7 +503,6 @@ def generate_timestep_limiter_struct_dot_h(
         part_struct_accessors=part_struct_accessors,
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
-        verbose=verbose,
     )
 
     return header_file
@@ -556,7 +516,6 @@ def generate_rt_struct_dot_h(
     explicit_var_accessors: bool = False,
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a timestep_limiter_struct.h
@@ -583,9 +542,6 @@ def generate_rt_struct_dot_h(
     part_struct_accessors: bool
         if True, generate getters/setters using a part struct
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -593,8 +549,7 @@ def generate_rt_struct_dot_h(
         The contents of the timeste_limiter_struct.h file.
     """
 
-    if verbose:
-        print("Generating timestep_limiter_struct header")
+    vprint("Generating timestep_limiter_struct header")
 
     # Create an empty dict we'll fill out with C-code for the API and
     # declaration C-code snippets for each struct containing particle data
@@ -614,15 +569,14 @@ def generate_rt_struct_dot_h(
                     has_doc = True
                     doc = rt_d[struct_name][field]
                 else:
-                    if verbose:
-                        print(f"-- Found prohibited field name {field}, skipping it.")
+                    vprint(f"Found prohibited field name {field}, skipping it.")
                 # in either case, don't process further
                 continue
             # parse the field specification
             field_props = rt_d[struct_name][field]
-            field_entry = FieldEntry(field, field_props, struct_name, verbose=verbose)
+            field_entry = FieldEntry(field, field_props, struct_name)
             # get the declaration C-code
-            decl = field_entry.generate_declaration(verbose=verbose)
+            decl = field_entry.generate_declaration()
             declarations.append(decl)
             # get the API C-code
             api = field_entry.generate_API(
@@ -632,7 +586,6 @@ def generate_rt_struct_dot_h(
                 part_struct_accessors=part_struct_accessors,
                 root_struct_special_name="rt_time_data",
                 id_checks=False,
-                verbose=verbose,
             )
             apis.append(api)
 
@@ -652,7 +605,6 @@ def generate_rt_struct_dot_h(
         part_struct_accessors=part_struct_accessors,
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
-        verbose=verbose,
     )
 
     return header_file
@@ -665,7 +617,6 @@ def generate_top_level_hydro_part_dot_h(
     explicit_var_accessors: bool = False,
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a top level hydro_part.h file, i.e. src/hydro_part.h.
@@ -704,9 +655,6 @@ def generate_top_level_hydro_part_dot_h(
     part_struct_accessors: bool
         if True, generate getters/setters using a part struct
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -714,8 +662,7 @@ def generate_top_level_hydro_part_dot_h(
         The contents of the timeste_limiter_struct.h file.
     """
 
-    if verbose:
-        print("Generating src/hydro_part.h header")
+    vprint("Generating src/hydro_part.h header")
 
     # Create an empty dict we'll fill out with C-code for the API and
     # declaration C-code snippets for each struct containing particle data
@@ -742,16 +689,15 @@ def generate_top_level_hydro_part_dot_h(
                         has_doc = True
                         doc = data_d[struct_name][field]
                     else:
-                        if verbose:
-                            print(f"-- Found prohibited field name {field}, skipping it.")
+                        vprint(f"Found prohibited field name {field}, skipping it.")
                     # in either case, don't process further
                     continue
 
                 # parse the field specification
                 field_props = data_d[struct_name][field]
-                field_entry = FieldEntry(field, field_props, struct_name, verbose=verbose)
+                field_entry = FieldEntry(field, field_props, struct_name)
                 # we don't need the declaration C-code here.
-                #  decl = field_entry.generate_declaration(verbose=verbose)
+                #  decl = field_entry.generate_declaration()
                 #  declarations.append(decl)
 
                 # get the API C-code
@@ -763,7 +709,6 @@ def generate_top_level_hydro_part_dot_h(
                     root_struct_override=root_struct_override,
                     root_struct_special_name=root_struct_special_name,
                     id_checks=False,
-                    verbose=verbose,
                 )
                 apis.append(api)
 
@@ -783,10 +728,8 @@ def generate_top_level_hydro_part_dot_h(
         part_struct_accessors=part_struct_accessors,
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
-        verbose=verbose,
     )
 
     return header_file
-
 
 
