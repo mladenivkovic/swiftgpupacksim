@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Stuff related to templates.
+Stuff related to rendering templates.
 """
 
 import jinja2
 import os
-from pprint import pprint
 from utils import verify_dir_exists, get_git_hash, truncate_repo_file_path
 from verbosity import *
 
@@ -54,7 +53,7 @@ def init_jinja_env(template_dir: str = "") -> jinja2.Environment:
     return env
 
 
-def jinja_generate_hydro_part_dot_h(
+def jinja_render_hydro_part_dot_h(
     part_structs_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
@@ -140,7 +139,7 @@ def jinja_generate_hydro_part_dot_h(
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_generate_hydro_part_dot_h(): dict passed to jinja renderer:")
+    dprint("jinja_render_hydro_part_dot_h(): dict passed to jinja renderer:")
     dpprint(d)
 
     header_template = templ.render(d)
@@ -148,7 +147,7 @@ def jinja_generate_hydro_part_dot_h(
     return header_template
 
 
-def jinja_generate_parts_dot_h(
+def jinja_render_parts_dot_h(
     part_structs_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
@@ -199,7 +198,7 @@ def jinja_generate_parts_dot_h(
     d["DEBUG_ID_CHECKS"] = id_checks
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_generate_parts_dot_h(): dict passed to jinja renderer:")
+    dprint("jinja_render_parts_dot_h(): dict passed to jinja renderer:")
     dpprint(d)
 
     header_template = templ.render(d)
@@ -207,7 +206,7 @@ def jinja_generate_parts_dot_h(
     return header_template
 
 
-def jinja_generate_hydro_part_arrays_struct_dot_h(
+def jinja_render_hydro_part_arrays_struct_dot_h(
     part_structs_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
@@ -253,7 +252,7 @@ def jinja_generate_hydro_part_arrays_struct_dot_h(
     d["HEADER_GUARD"] = get_git_hash()
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_generate_hydro_part_arrays_struct_dot_h(): dict passed to jinja renderer:")
+    dprint("jinja_render_hydro_part_arrays_struct_dot_h(): dict passed to jinja renderer:")
     dpprint(d)
 
     header_template = templ.render(d)
@@ -261,7 +260,7 @@ def jinja_generate_hydro_part_arrays_struct_dot_h(
     return header_template
 
 
-def jinja_generate_hydro_part_arrays_flush_dot_h(
+def jinja_render_hydro_part_arrays_flush_dot_h(
     part_structs_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
@@ -307,7 +306,7 @@ def jinja_generate_hydro_part_arrays_flush_dot_h(
     d["HEADER_GUARD"] = get_git_hash()
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_generate_hydro_part_arrays_flush_dot_h(): dict passed to jinja renderer:")
+    dprint("jinja_render_hydro_part_arrays_flush_dot_h(): dict passed to jinja renderer:")
     dpprint(d)
 
     header_template = templ.render(d)
@@ -315,7 +314,7 @@ def jinja_generate_hydro_part_arrays_flush_dot_h(
     return header_template
 
 
-def jinja_generate_timestep_limiter_struct_dot_h(
+def jinja_render_timestep_limiter_struct_dot_h(
     limiter_structs_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
@@ -392,7 +391,7 @@ def jinja_generate_timestep_limiter_struct_dot_h(
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_generate_timestep_limiter_struct_dot_h(): dict passed to jinja renderer:")
+    dprint("jinja_render_timestep_limiter_struct_dot_h(): dict passed to jinja renderer:")
     dpprint(d)
 
     header_template = templ.render(d)
@@ -401,7 +400,7 @@ def jinja_generate_timestep_limiter_struct_dot_h(
 
 
 
-def jinja_generate_rt_struct_dot_h(
+def jinja_render_rt_struct_dot_h(
     rt_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
@@ -478,7 +477,7 @@ def jinja_generate_rt_struct_dot_h(
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_generate_rt_struct_dot_h(): dict passed to jinja renderer:")
+    dprint("jinja_render_rt_struct_dot_h(): dict passed to jinja renderer:")
     dpprint(d)
 
     header_template = templ.render(d)
@@ -487,7 +486,7 @@ def jinja_generate_rt_struct_dot_h(
 
 
 
-def jinja_generate_top_level_hydro_part_dot_h(
+def jinja_render_top_level_hydro_part_dot_h(
     hydro_part_d: dict,
     inputfiles: list,
     swift_header: bool = True,
@@ -556,7 +555,7 @@ def jinja_generate_top_level_hydro_part_dot_h(
     d["EXPLICIT_VAR_ACCESSORS"] = explicit_var_accessors
     d["PART_STRUCT_ACCESSORS"] = part_struct_accessors
 
-    dprint("jinja_generate_top_level_hydro_part_dot_h(): dict passed to jinja renderer:")
+    dprint("jinja_render_top_level_hydro_part_dot_h(): dict passed to jinja renderer:")
     dpprint(d)
 
     header_template = templ.render(d)

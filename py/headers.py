@@ -3,14 +3,14 @@
 import os
 
 from parse_yaml import FieldEntry
-from templates import (
-    jinja_generate_hydro_part_dot_h,
-    jinja_generate_parts_dot_h,
-    jinja_generate_hydro_part_arrays_struct_dot_h,
-    jinja_generate_hydro_part_arrays_flush_dot_h,
-    jinja_generate_rt_struct_dot_h,
-    jinja_generate_timestep_limiter_struct_dot_h,
-    jinja_generate_top_level_hydro_part_dot_h,
+from render_templates import (
+    jinja_render_hydro_part_dot_h,
+    jinja_render_parts_dot_h,
+    jinja_render_hydro_part_arrays_struct_dot_h,
+    jinja_render_hydro_part_arrays_flush_dot_h,
+    jinja_render_rt_struct_dot_h,
+    jinja_render_timestep_limiter_struct_dot_h,
+    jinja_render_top_level_hydro_part_dot_h,
 )
 from utils import check_part_struct_first_in_list, read_input_file
 from verbosity import *
@@ -120,7 +120,7 @@ def generate_hydro_part_dot_h(
         }
 
     # Now generate the file from template
-    header_file = jinja_generate_hydro_part_dot_h(
+    header_file = jinja_render_hydro_part_dot_h(
         part_struct_d,
         metadata_d,
         swift_header=swift_header,
@@ -206,7 +206,7 @@ def generate_parts_dot_h(
     dpprint(part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_parts_dot_h(
+    header_file = jinja_render_parts_dot_h(
         part_struct_d,
         metadata_d,
         swift_header=swift_header,
@@ -282,7 +282,7 @@ def generate_hydro_part_arrays_struct_dot_h(
     dpprint(part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_hydro_part_arrays_struct_dot_h(
+    header_file = jinja_render_hydro_part_arrays_struct_dot_h(
         part_struct_d,
         metadata_d,
         swift_header=swift_header
@@ -357,7 +357,7 @@ def generate_hydro_part_arrays_flush_dot_h(
     dpprint(part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_hydro_part_arrays_flush_dot_h(
+    header_file = jinja_render_hydro_part_arrays_flush_dot_h(
         part_struct_d,
         metadata_d,
         swift_header=swift_header,
@@ -401,7 +401,7 @@ def generate_hydro_space_dot_c(
     part_struct_d = {"names": struct_names}
 
     #  generate the file from template
-    base_file = jinja_generate_hydro_space_dot_c(
+    base_file = jinja_render_hydro_space_dot_c(
         part_struct_d, metadata_d, swift_header=swift_header,
     )
 
@@ -496,7 +496,7 @@ def generate_timestep_limiter_struct_dot_h(
         }
 
     # Now generate the file from template
-    header_file = jinja_generate_timestep_limiter_struct_dot_h(
+    header_file = jinja_render_timestep_limiter_struct_dot_h(
         limiter_struct_d,
         metadata_d,
         swift_header=swift_header,
@@ -598,7 +598,7 @@ def generate_rt_struct_dot_h(
         }
 
     # Now generate the file from template
-    header_file = jinja_generate_rt_struct_dot_h(
+    header_file = jinja_render_rt_struct_dot_h(
         rt_struct_d,
         metadata_d,
         swift_header=swift_header,
@@ -721,7 +721,7 @@ def generate_top_level_hydro_part_dot_h(
             }
 
     # Now generate the file from template
-    header_file = jinja_generate_top_level_hydro_part_dot_h(
+    header_file = jinja_render_top_level_hydro_part_dot_h(
         hydro_part_d,
         list(inputs.keys()),
         swift_header=swift_header,
