@@ -9,7 +9,7 @@
  * Copyright (c) NO AUTHORS SPECIFIED
  ******************************************************************************/
 
-  
+
 
 
 
@@ -26,13 +26,14 @@
 #include "hydro_part_arrays_struct.h"
 
 
-  
+
 #include "align.h"
 #include "error.h"
 #include "hydro_part_placeholder_structs.h"
 #include "hydro_part_arrays_struct.h"
 #include "rt_struct.h"
 #include "timestep_limiter_struct.h"
+#include "timeline.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
@@ -263,7 +264,7 @@ struct part {
 static __attribute__((always_inline)) INLINE int
   part_get_my_int_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_int; 
+  return p->_my_int;
 #else
   return INT_MAX;
 #endif
@@ -278,7 +279,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE int*
   part_get_my_int_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_int; 
+  return &p->_my_int;
 #else
   return NULL;
 #endif
@@ -293,7 +294,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_my_int_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_int; 
+  return &p->_my_int;
 #else
   return NULL;
 #endif
@@ -306,7 +307,7 @@ static __attribute__((always_inline)) INLINE const int*
 static __attribute__((always_inline)) INLINE void
   part_set_my_int_part_struct(struct part *restrict p, const int my_int) {
 #ifdef DEBUG
-  p->_my_int = my_int; 
+  p->_my_int = my_int;
 #endif
 }
 
@@ -320,7 +321,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE long
   part_get_my_long_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_long; 
+  return p->_my_long;
 #else
   return LONG_MAX;
 #endif
@@ -335,7 +336,7 @@ static __attribute__((always_inline)) INLINE long
 static __attribute__((always_inline)) INLINE long*
   part_get_my_long_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_long; 
+  return &p->_my_long;
 #else
   return NULL;
 #endif
@@ -350,7 +351,7 @@ static __attribute__((always_inline)) INLINE long*
 static __attribute__((always_inline)) INLINE const long*
   part_get_const_my_long_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_long; 
+  return &p->_my_long;
 #else
   return NULL;
 #endif
@@ -363,7 +364,7 @@ static __attribute__((always_inline)) INLINE const long*
 static __attribute__((always_inline)) INLINE void
   part_set_my_long_part_struct(struct part *restrict p, const long my_long) {
 #ifdef DEBUG
-  p->_my_long = my_long; 
+  p->_my_long = my_long;
 #endif
 }
 
@@ -377,7 +378,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE long long
   part_get_my_longlong_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_longlong; 
+  return p->_my_longlong;
 #else
   return LLONG_MAX;
 #endif
@@ -392,7 +393,7 @@ static __attribute__((always_inline)) INLINE long long
 static __attribute__((always_inline)) INLINE long long*
   part_get_my_longlong_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_longlong; 
+  return &p->_my_longlong;
 #else
   return NULL;
 #endif
@@ -407,7 +408,7 @@ static __attribute__((always_inline)) INLINE long long*
 static __attribute__((always_inline)) INLINE const long long*
   part_get_const_my_longlong_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_longlong; 
+  return &p->_my_longlong;
 #else
   return NULL;
 #endif
@@ -420,7 +421,7 @@ static __attribute__((always_inline)) INLINE const long long*
 static __attribute__((always_inline)) INLINE void
   part_set_my_longlong_part_struct(struct part *restrict p, const long long my_longlong) {
 #ifdef DEBUG
-  p->_my_longlong = my_longlong; 
+  p->_my_longlong = my_longlong;
 #endif
 }
 
@@ -434,7 +435,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_my_float_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_float; 
+  return p->_my_float;
 #else
   return FLT_MAX;
 #endif
@@ -449,7 +450,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_my_float_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_float; 
+  return &p->_my_float;
 #else
   return NULL;
 #endif
@@ -464,7 +465,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_my_float_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_float; 
+  return &p->_my_float;
 #else
   return NULL;
 #endif
@@ -477,7 +478,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_my_float_part_struct(struct part *restrict p, const float my_float) {
 #ifdef DEBUG
-  p->_my_float = my_float; 
+  p->_my_float = my_float;
 #endif
 }
 
@@ -491,7 +492,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE double
   part_get_my_dble_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_dble; 
+  return p->_my_dble;
 #else
   return DBL_MAX;
 #endif
@@ -506,7 +507,7 @@ static __attribute__((always_inline)) INLINE double
 static __attribute__((always_inline)) INLINE double*
   part_get_my_dble_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_dble; 
+  return &p->_my_dble;
 #else
   return NULL;
 #endif
@@ -521,7 +522,7 @@ static __attribute__((always_inline)) INLINE double*
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_my_dble_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_dble; 
+  return &p->_my_dble;
 #else
   return NULL;
 #endif
@@ -534,7 +535,7 @@ static __attribute__((always_inline)) INLINE const double*
 static __attribute__((always_inline)) INLINE void
   part_set_my_dble_part_struct(struct part *restrict p, const double my_dble) {
 #ifdef DEBUG
-  p->_my_dble = my_dble; 
+  p->_my_dble = my_dble;
 #endif
 }
 
@@ -548,7 +549,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE char
   part_get_my_char_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_char; 
+  return p->_my_char;
 #else
   return CHAR_MAX;
 #endif
@@ -563,7 +564,7 @@ static __attribute__((always_inline)) INLINE char
 static __attribute__((always_inline)) INLINE char*
   part_get_my_char_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_char; 
+  return &p->_my_char;
 #else
   return NULL;
 #endif
@@ -578,7 +579,7 @@ static __attribute__((always_inline)) INLINE char*
 static __attribute__((always_inline)) INLINE const char*
   part_get_const_my_char_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_char; 
+  return &p->_my_char;
 #else
   return NULL;
 #endif
@@ -591,7 +592,7 @@ static __attribute__((always_inline)) INLINE const char*
 static __attribute__((always_inline)) INLINE void
   part_set_my_char_part_struct(struct part *restrict p, const char my_char) {
 #ifdef DEBUG
-  p->_my_char = my_char; 
+  p->_my_char = my_char;
 #endif
 }
 
@@ -605,7 +606,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE integertime_t
   part_get_my_integertime_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_integertime; 
+  return p->_my_integertime;
 #else
   return LLONG_MAX;
 #endif
@@ -620,7 +621,7 @@ static __attribute__((always_inline)) INLINE integertime_t
 static __attribute__((always_inline)) INLINE integertime_t*
   part_get_my_integertime_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_integertime; 
+  return &p->_my_integertime;
 #else
   return NULL;
 #endif
@@ -635,7 +636,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
 static __attribute__((always_inline)) INLINE const integertime_t*
   part_get_const_my_integertime_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_integertime; 
+  return &p->_my_integertime;
 #else
   return NULL;
 #endif
@@ -648,7 +649,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
 static __attribute__((always_inline)) INLINE void
   part_set_my_integertime_part_struct(struct part *restrict p, const integertime_t my_integertime) {
 #ifdef DEBUG
-  p->_my_integertime = my_integertime; 
+  p->_my_integertime = my_integertime;
 #endif
 }
 
@@ -662,7 +663,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_my_timebin_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_timebin; 
+  return p->_my_timebin;
 #else
   return CHAR_MAX;
 #endif
@@ -677,7 +678,7 @@ static __attribute__((always_inline)) INLINE timebin_t
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_my_timebin_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_timebin; 
+  return &p->_my_timebin;
 #else
   return NULL;
 #endif
@@ -692,7 +693,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_my_timebin_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_timebin; 
+  return &p->_my_timebin;
 #else
   return NULL;
 #endif
@@ -705,7 +706,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
 static __attribute__((always_inline)) INLINE void
   part_set_my_timebin_part_struct(struct part *restrict p, const timebin_t my_timebin) {
 #ifdef DEBUG
-  p->_my_timebin = my_timebin; 
+  p->_my_timebin = my_timebin;
 #endif
 }
 
@@ -752,7 +753,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int*
   part_get_my_pointer_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_my_pointer; 
+  return p->_my_pointer;
 #else
   return NULL;
 #endif
@@ -767,7 +768,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE int**
   part_get_my_pointer_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_my_pointer; 
+  return &p->_my_pointer;
 #else
   return NULL;
 #endif
@@ -778,7 +779,7 @@ static __attribute__((always_inline)) INLINE int**
 static __attribute__((always_inline)) INLINE void
   part_set_my_pointer_part_struct(struct part *restrict p,  int* my_pointer) {
 #ifdef DEBUG
-  p->_my_pointer = my_pointer; 
+  p->_my_pointer = my_pointer;
 #endif
 }
 
@@ -1312,7 +1313,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int
   part_get_my_int2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_int2; 
+  return p->_my_int2;
 #else
   return INT_MAX;
 #endif
@@ -1327,7 +1328,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE int*
   part_get_my_int2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_int2; 
+  return &p->_my_int2;
 #else
   return NULL;
 #endif
@@ -1342,7 +1343,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE const int*
   part_get_const_my_int2_p_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_int2; 
+  return &p->_my_int2;
 #else
   return NULL;
 #endif
@@ -1355,7 +1356,7 @@ static __attribute__((always_inline)) INLINE const int*
 static __attribute__((always_inline)) INLINE void
   part_set_my_int2_part_struct(struct part *restrict p, const int my_int2) {
 #ifndef NODEBUG
-  p->_my_int2 = my_int2; 
+  p->_my_int2 = my_int2;
 #endif
 }
 
@@ -1369,7 +1370,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE long
   part_get_my_long2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_long2; 
+  return p->_my_long2;
 #else
   return LONG_MAX;
 #endif
@@ -1384,7 +1385,7 @@ static __attribute__((always_inline)) INLINE long
 static __attribute__((always_inline)) INLINE long*
   part_get_my_long2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_long2; 
+  return &p->_my_long2;
 #else
   return NULL;
 #endif
@@ -1399,7 +1400,7 @@ static __attribute__((always_inline)) INLINE long*
 static __attribute__((always_inline)) INLINE const long*
   part_get_const_my_long2_p_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_long2; 
+  return &p->_my_long2;
 #else
   return NULL;
 #endif
@@ -1412,7 +1413,7 @@ static __attribute__((always_inline)) INLINE const long*
 static __attribute__((always_inline)) INLINE void
   part_set_my_long2_part_struct(struct part *restrict p, const long my_long2) {
 #ifndef NODEBUG
-  p->_my_long2 = my_long2; 
+  p->_my_long2 = my_long2;
 #endif
 }
 
@@ -1426,7 +1427,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE long long
   part_get_my_longlong2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_longlong2; 
+  return p->_my_longlong2;
 #else
   return LLONG_MAX;
 #endif
@@ -1441,7 +1442,7 @@ static __attribute__((always_inline)) INLINE long long
 static __attribute__((always_inline)) INLINE long long*
   part_get_my_longlong2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_longlong2; 
+  return &p->_my_longlong2;
 #else
   return NULL;
 #endif
@@ -1456,7 +1457,7 @@ static __attribute__((always_inline)) INLINE long long*
 static __attribute__((always_inline)) INLINE const long long*
   part_get_const_my_longlong2_p_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_longlong2; 
+  return &p->_my_longlong2;
 #else
   return NULL;
 #endif
@@ -1469,7 +1470,7 @@ static __attribute__((always_inline)) INLINE const long long*
 static __attribute__((always_inline)) INLINE void
   part_set_my_longlong2_part_struct(struct part *restrict p, const long long my_longlong2) {
 #ifndef NODEBUG
-  p->_my_longlong2 = my_longlong2; 
+  p->_my_longlong2 = my_longlong2;
 #endif
 }
 
@@ -1483,7 +1484,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_my_float2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_float2; 
+  return p->_my_float2;
 #else
   return FLT_MAX;
 #endif
@@ -1498,7 +1499,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_my_float2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_float2; 
+  return &p->_my_float2;
 #else
   return NULL;
 #endif
@@ -1513,7 +1514,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_my_float2_p_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_float2; 
+  return &p->_my_float2;
 #else
   return NULL;
 #endif
@@ -1526,7 +1527,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_my_float2_part_struct(struct part *restrict p, const float my_float2) {
 #ifndef NODEBUG
-  p->_my_float2 = my_float2; 
+  p->_my_float2 = my_float2;
 #endif
 }
 
@@ -1540,7 +1541,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE double
   part_get_my_dble2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_dble2; 
+  return p->_my_dble2;
 #else
   return DBL_MAX;
 #endif
@@ -1555,7 +1556,7 @@ static __attribute__((always_inline)) INLINE double
 static __attribute__((always_inline)) INLINE double*
   part_get_my_dble2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_dble2; 
+  return &p->_my_dble2;
 #else
   return NULL;
 #endif
@@ -1570,7 +1571,7 @@ static __attribute__((always_inline)) INLINE double*
 static __attribute__((always_inline)) INLINE const double*
   part_get_const_my_dble2_p_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_dble2; 
+  return &p->_my_dble2;
 #else
   return NULL;
 #endif
@@ -1583,7 +1584,7 @@ static __attribute__((always_inline)) INLINE const double*
 static __attribute__((always_inline)) INLINE void
   part_set_my_dble2_part_struct(struct part *restrict p, const double my_dble2) {
 #ifndef NODEBUG
-  p->_my_dble2 = my_dble2; 
+  p->_my_dble2 = my_dble2;
 #endif
 }
 
@@ -1597,7 +1598,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE char
   part_get_my_char2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_char2; 
+  return p->_my_char2;
 #else
   return CHAR_MAX;
 #endif
@@ -1612,7 +1613,7 @@ static __attribute__((always_inline)) INLINE char
 static __attribute__((always_inline)) INLINE char*
   part_get_my_char2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_char2; 
+  return &p->_my_char2;
 #else
   return NULL;
 #endif
@@ -1627,7 +1628,7 @@ static __attribute__((always_inline)) INLINE char*
 static __attribute__((always_inline)) INLINE const char*
   part_get_const_my_char2_p_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_char2; 
+  return &p->_my_char2;
 #else
   return NULL;
 #endif
@@ -1640,7 +1641,7 @@ static __attribute__((always_inline)) INLINE const char*
 static __attribute__((always_inline)) INLINE void
   part_set_my_char2_part_struct(struct part *restrict p, const char my_char2) {
 #ifndef NODEBUG
-  p->_my_char2 = my_char2; 
+  p->_my_char2 = my_char2;
 #endif
 }
 
@@ -1654,7 +1655,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE integertime_t
   part_get_my_integertime2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_integertime2; 
+  return p->_my_integertime2;
 #else
   return LLONG_MAX;
 #endif
@@ -1669,7 +1670,7 @@ static __attribute__((always_inline)) INLINE integertime_t
 static __attribute__((always_inline)) INLINE integertime_t*
   part_get_my_integertime2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_integertime2; 
+  return &p->_my_integertime2;
 #else
   return NULL;
 #endif
@@ -1684,7 +1685,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
 static __attribute__((always_inline)) INLINE const integertime_t*
   part_get_const_my_integertime2_p_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_integertime2; 
+  return &p->_my_integertime2;
 #else
   return NULL;
 #endif
@@ -1697,7 +1698,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
 static __attribute__((always_inline)) INLINE void
   part_set_my_integertime2_part_struct(struct part *restrict p, const integertime_t my_integertime2) {
 #ifndef NODEBUG
-  p->_my_integertime2 = my_integertime2; 
+  p->_my_integertime2 = my_integertime2;
 #endif
 }
 
@@ -1711,7 +1712,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE timebin_t
   part_get_my_timebin2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_timebin2; 
+  return p->_my_timebin2;
 #else
   return CHAR_MAX;
 #endif
@@ -1726,7 +1727,7 @@ static __attribute__((always_inline)) INLINE timebin_t
 static __attribute__((always_inline)) INLINE timebin_t*
   part_get_my_timebin2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_timebin2; 
+  return &p->_my_timebin2;
 #else
   return NULL;
 #endif
@@ -1741,7 +1742,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
 static __attribute__((always_inline)) INLINE const timebin_t*
   part_get_const_my_timebin2_p_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_timebin2; 
+  return &p->_my_timebin2;
 #else
   return NULL;
 #endif
@@ -1754,7 +1755,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
 static __attribute__((always_inline)) INLINE void
   part_set_my_timebin2_part_struct(struct part *restrict p, const timebin_t my_timebin2) {
 #ifndef NODEBUG
-  p->_my_timebin2 = my_timebin2; 
+  p->_my_timebin2 = my_timebin2;
 #endif
 }
 
@@ -1801,7 +1802,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE int*
   part_get_my_pointer2_part_struct(const struct part *restrict p) {
 #ifndef NODEBUG
-  return p->_my_pointer2; 
+  return p->_my_pointer2;
 #else
   return NULL;
 #endif
@@ -1816,7 +1817,7 @@ static __attribute__((always_inline)) INLINE int*
 static __attribute__((always_inline)) INLINE int**
   part_get_my_pointer2_p_part_struct(struct part *restrict p) {
 #ifndef NODEBUG
-  return &p->_my_pointer2; 
+  return &p->_my_pointer2;
 #else
   return NULL;
 #endif
@@ -1827,7 +1828,7 @@ static __attribute__((always_inline)) INLINE int**
 static __attribute__((always_inline)) INLINE void
   part_set_my_pointer2_part_struct(struct part *restrict p,  int* my_pointer2) {
 #ifndef NODEBUG
-  p->_my_pointer2 = my_pointer2; 
+  p->_my_pointer2 = my_pointer2;
 #endif
 }
 

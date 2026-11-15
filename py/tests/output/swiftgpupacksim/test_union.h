@@ -9,7 +9,7 @@
  * Copyright (c) NO AUTHORS SPECIFIED
  ******************************************************************************/
 
-  
+
 
 
 
@@ -26,13 +26,14 @@
 #include "hydro_part_arrays_struct.h"
 
 
-  
+
 #include "align.h"
 #include "error.h"
 #include "hydro_part_placeholder_structs.h"
 #include "hydro_part_arrays_struct.h"
 #include "rt_struct.h"
 #include "timestep_limiter_struct.h"
+#include "timeline.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
@@ -151,7 +152,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_b_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_b; 
+  return p->_b;
 #else
   return FLT_MAX;
 #endif
@@ -166,7 +167,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_b_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_b; 
+  return &p->_b;
 #else
   return NULL;
 #endif
@@ -180,7 +181,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_b_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_b; 
+  return &p->_b;
 #else
   return NULL;
 #endif
@@ -193,7 +194,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_b_part_struct(struct part *restrict p, const float b) {
 #ifdef DEBUG
-  p->_b = b; 
+  p->_b = b;
 #endif
 }
 
@@ -205,7 +206,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_c_part_struct(const struct part *restrict p) {
 #ifdef NODEBUG
-  return p->_c; 
+  return p->_c;
 #else
   return FLT_MAX;
 #endif
@@ -220,7 +221,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_c_p_part_struct(struct part *restrict p) {
 #ifdef NODEBUG
-  return &p->_c; 
+  return &p->_c;
 #else
   return NULL;
 #endif
@@ -234,7 +235,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_c_p_part_struct(const struct part *restrict p) {
 #ifdef NODEBUG
-  return &p->_c; 
+  return &p->_c;
 #else
   return NULL;
 #endif
@@ -247,7 +248,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_c_part_struct(struct part *restrict p, const float c) {
 #ifdef NODEBUG
-  p->_c = c; 
+  p->_c = c;
 #endif
 }
 

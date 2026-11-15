@@ -13,7 +13,7 @@
 #ifndef {{IFNDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE {{TYPE}}
-  {{ROOT_STRUCT_SPECIAL_NAME}}_get_{{NAME}}{{API_SUFFIX}}(const struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s) {
+  {{ROOT_STRUCT_SPECIAL_NAME}}_get_{{NAME}}(const struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
@@ -49,7 +49,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}
 #ifndef {{IFNDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE {{TYPE}}*
-  {{ROOT_STRUCT_SPECIAL_NAME}}_get_{{NAME}}_p{{API_SUFFIX}}(struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s) {
+  {{ROOT_STRUCT_SPECIAL_NAME}}_get_{{NAME}}_p(struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s) {
 
 {%- if (HAS_IFDEF or HAS_IFNDEF) and not IS_STRUCT %} {# return some default val if function contents are hidden behind macro #}
 #ifdef {{IFDEF}}
@@ -86,7 +86,7 @@ static __attribute__((always_inline)) INLINE {{TYPE}}*
 #ifndef {{IFNDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE const {{TYPE}}*
-  {{ROOT_STRUCT_SPECIAL_NAME}}_get_const_{{NAME}}_p{{API_SUFFIX}}(const struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s) {
+  {{ROOT_STRUCT_SPECIAL_NAME}}_get_const_{{NAME}}_p(const struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}
@@ -121,7 +121,7 @@ static __attribute__((always_inline)) INLINE const {{TYPE}}*
 #ifndef {{IFNDEF}}
 {%- endif %}
 static __attribute__((always_inline)) INLINE void
-  {{ROOT_STRUCT_SPECIAL_NAME}}_set_{{NAME}}{{API_SUFFIX}}(struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
+  {{ROOT_STRUCT_SPECIAL_NAME}}_set_{{NAME}}(struct {{ROOT_STRUCT}} *restrict {{ROOT_STRUCT_SPECIAL_NAME}}_s, {% if not IS_POINTER -%} const {%- endif %} {{TYPE}} {{NAME}}) {
 
 {%- if HAS_IFDEF and not IS_STRUCT %}
 #ifdef {{IFDEF}}

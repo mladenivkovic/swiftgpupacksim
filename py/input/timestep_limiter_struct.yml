@@ -6,8 +6,11 @@ metadata:
       2018 Matthieu Schaller (schaller@strw.leidenuniv.nl)
       2026 Mladen Ivkovic (mladen.ivkovic@durham.ac.uk)
   includes: 
-    - <config.h>
     - timeline.h
+    - <config.h>
+    - <float.h>
+    - <limits.h>
+    - <stddef.h>
 
 
 

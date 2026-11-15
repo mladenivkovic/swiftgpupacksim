@@ -308,9 +308,9 @@ if __name__ == "__main__":
         print(hydro_part_header)
         print_separator("src/flavour/hydro_part_arrays_struct.h")
         print(hydro_part_arrays_struct_header)
-        print_separator("src/flavour/parts.h")
-        print(parts_header)
         if not swift_header:
+            print_separator("src/flavour/parts.h")
+            print(parts_header)
             print_separator("hydro_part_arrays_flush_header")
             print(hydro_part_arrays_struct_header)
         if full_output:
@@ -343,13 +343,15 @@ if __name__ == "__main__":
         fp.close()
         print("Written", outfile)
 
-        outfile = os.path.join(outdir_particle, "parts.h")
-        fp = open(outfile, "w")
-        fp.write(parts_header)
-        fp.close()
-        print("Written", outfile)
-
+        # headers for swiftgpupacksim only
         if not swift_header:
+
+            outfile = os.path.join(outdir_particle, "parts.h")
+            fp = open(outfile, "w")
+            fp.write(parts_header)
+            fp.close()
+            print("Written", outfile)
+
             # only needed in swiftgpupacksim
             outfile = os.path.join(outdir_particle, "hydro_part_arrays_flush.h")
             fp = open(outfile, "w")

@@ -114,6 +114,7 @@
 #endif
 
 #include "timestep_limiter_struct.h"
+#include "rt_struct.h"
 
 {# ------------------------- GENERATE GETTERS AND SETTERS  -------------------------- #}
 {%- for STRUCT_NAME in STRUCT_NAMES -%}

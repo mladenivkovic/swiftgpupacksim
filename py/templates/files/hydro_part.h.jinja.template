@@ -45,11 +45,11 @@
 {% else %} {# ----------------------- includes for swiftgpupacksim ------------------ #}
 
   {% for inc in INCLUDES %}
-  #include {{inc}}
+#include {{inc}}
   {%- endfor %}
   {%- if HAS_EXTRA_INCLUDES -%}
     {%- for inc in EXTRA_INCLUDES %}
-  #include {{inc}}
+#include {{inc}}
     {%- endfor %}
   {%- endif %}
 {% endif -%} {#- If making swift header -#}

@@ -9,7 +9,7 @@
  * Copyright (c) NO AUTHORS SPECIFIED
  ******************************************************************************/
 
-  
+
 
 
 
@@ -26,13 +26,14 @@
 #include "hydro_part_arrays_struct.h"
 
 
-  
+
 #include "align.h"
 #include "error.h"
 #include "hydro_part_placeholder_structs.h"
 #include "hydro_part_arrays_struct.h"
 #include "rt_struct.h"
 #include "timestep_limiter_struct.h"
+#include "timeline.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
@@ -124,7 +125,7 @@ struct part2 {
 static __attribute__((always_inline)) INLINE size_t
   part_get_cell_offset_part_struct(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return p->_cell_offset; 
+  return p->_cell_offset;
 #else
   return SIZE_MAX;
 #endif
@@ -139,7 +140,7 @@ static __attribute__((always_inline)) INLINE size_t
 static __attribute__((always_inline)) INLINE size_t*
   part_get_cell_offset_p_part_struct(struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return &p->_cell_offset; 
+  return &p->_cell_offset;
 #else
   return NULL;
 #endif
@@ -154,7 +155,7 @@ static __attribute__((always_inline)) INLINE size_t*
 static __attribute__((always_inline)) INLINE const size_t*
   part_get_const_cell_offset_p_part_struct(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return &p->_cell_offset; 
+  return &p->_cell_offset;
 #else
   return NULL;
 #endif
@@ -167,7 +168,7 @@ static __attribute__((always_inline)) INLINE const size_t*
 static __attribute__((always_inline)) INLINE void
   part_set_cell_offset_part_struct(struct part *restrict p, const size_t cell_offset) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  p->_cell_offset = cell_offset; 
+  p->_cell_offset = cell_offset;
 #endif
 }
 
@@ -225,13 +226,13 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE void
   part_set_my_2D_arr_part_struct(struct part *restrict p, const int my_2D_arr[4][4]) {
 
-  
+
     for (int i = 0; i < 4; i++){
       for (int j = 0; j < 4; j++){
         p->_my_2D_arr[i][j] = my_2D_arr[i][j];
       }
     }
-  
+
 }
 
 /**
@@ -262,13 +263,13 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE void
   part_set_my_macro_2D_arr_part_struct(struct part *restrict p, const int my_macro_2D_arr[NDIM1][NDIM2]) {
 
-  
+
     for (int i = 0; i < NDIM1; i++){
       for (int j = 0; j < NDIM2; j++){
         p->_my_macro_2D_arr[i][j] = my_macro_2D_arr[i][j];
       }
     }
-  
+
 }
 
 /**
@@ -299,7 +300,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE void
   part_set_my_3D_arr_part_struct(struct part *restrict p, const int my_3D_arr[4][4][4]) {
 
-  
+
     for (int i = 0; i < 4; i++){
       for (int j = 0; j < 4; j++){
         for (int k = 0; k < 4; k++){
@@ -307,7 +308,7 @@ static __attribute__((always_inline)) INLINE void
         }
       }
     }
-  
+
 }
 
 /**
@@ -338,7 +339,7 @@ static __attribute__((always_inline)) INLINE int
 static __attribute__((always_inline)) INLINE void
   part_set_my_macro_3D_arr_part_struct(struct part *restrict p, const int my_macro_3D_arr[NDIM1][2][NDIM3]) {
 
-  
+
     for (int i = 0; i < NDIM1; i++){
       for (int j = 0; j < 2; j++){
         for (int k = 0; k < NDIM3; k++){
@@ -346,7 +347,7 @@ static __attribute__((always_inline)) INLINE void
         }
       }
     }
-  
+
 }
 
 /**
@@ -382,7 +383,7 @@ static __attribute__((always_inline)) INLINE void
   part_set_my_3D_arr2_part_struct(struct part *restrict p, const int my_3D_arr2[3][3][3]) {
 #ifdef DEBUG
 
-  
+
     for (int i = 0; i < 3; i++){
       for (int j = 0; j < 3; j++){
         for (int k = 0; k < 3; k++){
@@ -390,7 +391,7 @@ static __attribute__((always_inline)) INLINE void
         }
       }
     }
-  
+
 #endif
 }
 
@@ -447,17 +448,17 @@ static __attribute__((always_inline)) INLINE void
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
 
-  
+
     for (int i = 0; i < 3; i++){
       for (int j = 0; j < 3; j++){
         for (int k = 0; k < 3; k++){      part2_s->_my_3D_arr3[i][j][k] = my_3D_arr3[i][j][k];
-  
+
         }
-  
+
       }
-  
+
     }
-  
+
 #endif
 }
 

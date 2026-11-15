@@ -33,3 +33,12 @@ struct rt_part_data {};
 
 /*! Geometrical quantities used for Finite Volume Particle Method RT. */
 struct fvpm_geometry_struct {};
+
+
+struct particle_splitting_data{};
+struct cooling_xpart_data{};
+struct tracers_xpart_data{};
+struct star_formation_xpart_data{};
+struct feedback_xpart_data{};
+struct mhd_xpart_data{};
+

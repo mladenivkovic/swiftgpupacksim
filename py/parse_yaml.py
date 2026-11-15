@@ -579,9 +579,8 @@ class FieldEntry(object):
 
             if use_struct_template and not nonpart_template:
                 raise ValueError(
-                        "Trying to use `use_struct` type template, but fROOT_STRUCT_SPECIAL_NAME is not specified."
+                        "Trying to use `use_struct` type template, but ROOT_STRUCT_SPECIAL_NAME is not specified."
                         )
-
 
             if nonpart_template or use_struct_template:
                 if params_dict["IS_ARRAY"] or params_dict["IS_MULTIDIM_ARRAY"]:
@@ -601,6 +600,8 @@ class FieldEntry(object):
 
                 elif nonpart_template:
                     # No difference for accessors here.
+                    # Needs to be elif and come second, because nonpart_tempalte is always
+                    # true when use_struct_template is true
                     templ_fname_explicit = f"api_{scalar}_nonpart.jinja.template"
                     templ_fname_global = f"api_{scalar}_nonpart.jinja.template"
                     templ_fname_part_struct = f"api_{scalar}_nonpart.jinja.template"
@@ -621,21 +622,37 @@ class FieldEntry(object):
             api_explicit = ""
             api_global = ""
 
-            if part_struct_accessors:
-                templ_part_struct = self.jinja_env.get_template(templ_fname_part_struct)
-                if not swift_header:
-                    params_dict["API_SUFFIX"] = "_part_struct"
-                api_part_struct = templ_part_struct.render(params_dict)
-            if explicit_var_accessors:
-                templ_explicit = self.jinja_env.get_template(templ_fname_explicit)
-                if not swift_header:
-                    params_dict["API_SUFFIX"] = "_explicit"
-                api_explicit = templ_explicit.render(params_dict)
-            if global_var_accessors:
+            # are we writing multiple APIs?
+            multiple_apis = (part_struct_accessors and global_var_accessors) or (part_struct_accessors and explicit_var_accessors) or (global_var_accessors and explicit_var_accessors)
+
+            if nonpart_template and not use_struct_template:
+                # for non-part templates, we don't use accessors, but specific structs
+                # to access the data. In those cases, there is no difference between
+                # the resulting code for any accessor, and if more than 1 was selected,
+                # we end up redefining functions. So only use 1 render call (shouldn't
+                # matter which accessor)
                 templ_global = self.jinja_env.get_template(templ_fname_global)
-                if not swift_header:
+                if multiple_apis or not swift_header:
                     params_dict["API_SUFFIX"] = "_global"
                 api_global = templ_global.render(params_dict)
+
+            else:
+
+                if part_struct_accessors:
+                    templ_part_struct = self.jinja_env.get_template(templ_fname_part_struct)
+                    if multiple_apis or not swift_header:
+                        params_dict["API_SUFFIX"] = "_part_struct"
+                    api_part_struct = templ_part_struct.render(params_dict)
+                if explicit_var_accessors:
+                    templ_explicit = self.jinja_env.get_template(templ_fname_explicit)
+                    if multiple_apis or not swift_header:
+                        params_dict["API_SUFFIX"] = "_explicit"
+                    api_explicit = templ_explicit.render(params_dict)
+                if global_var_accessors:
+                    templ_global = self.jinja_env.get_template(templ_fname_global)
+                    if multiple_apis or not swift_header:
+                        params_dict["API_SUFFIX"] = "_global"
+                    api_global = templ_global.render(params_dict)
 
             api = "".join((api_part_struct, api_explicit, api_global))
 

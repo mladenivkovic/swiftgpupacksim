@@ -27,12 +27,24 @@
 
 
   
+#include "adaptive_softening_struct.h"
 #include "align.h"
+#include "black_holes_struct.h"
+#include "chemistry_struct.h"
+#include "cooling_struct.h"
+#include "csds.h"
 #include "error.h"
-#include "hydro_part_placeholder_structs.h"
+#include "feedback_struct.h"
+#include "fvpm_geometry_struct.h"
 #include "hydro_part_arrays_struct.h"
+#include "mhd_struct.h"
+#include "particle_splitting_struct.h"
+#include "pressure_floor_struct.h"
 #include "rt_struct.h"
+#include "sink_struct.h"
+#include "star_formation_struct.h"
 #include "timestep_limiter_struct.h"
+#include "tracers_struct.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
@@ -289,7 +301,7 @@ struct part4 {
  * @brief get cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE size_t
-  part_get_cell_offset_part_struct(const struct part *restrict p) {
+  part_get_cell_offset(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
   return p->_cell_offset; 
 #else
@@ -304,7 +316,7 @@ static __attribute__((always_inline)) INLINE size_t
  * to cell_offset. If you need read-only access to cell_offset, use part_get_const_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE size_t*
-  part_get_cell_offset_p_part_struct(struct part *restrict p) {
+  part_get_cell_offset_p(struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
   return &p->_cell_offset; 
 #else
@@ -319,7 +331,7 @@ static __attribute__((always_inline)) INLINE size_t*
  * If you need write access to cell_offset, use part_get_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE const size_t*
-  part_get_const_cell_offset_p_part_struct(const struct part *restrict p) {
+  part_get_const_cell_offset_p(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
   return &p->_cell_offset; 
 #else
@@ -332,7 +344,7 @@ static __attribute__((always_inline)) INLINE const size_t*
  * @brief set the value of cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_offset_part_struct(struct part *restrict p, const size_t cell_offset) {
+  part_set_cell_offset(struct part *restrict p, const size_t cell_offset) {
 #ifdef USE_PART_STRUCT_ACCESSORS
   p->_cell_offset = cell_offset; 
 #endif
@@ -347,7 +359,7 @@ static __attribute__((always_inline)) INLINE void
  */
 #ifdef USE_PART_STRUCT_ACCESSORS
 static __attribute__((always_inline)) INLINE struct part_arrays*
-  part_get_cell_part_arrays_part_struct(const struct part *restrict p) {
+  part_get_cell_part_arrays(const struct part *restrict p) {
   return p->_cell_part_arrays;
 }
 #endif
@@ -359,7 +371,7 @@ static __attribute__((always_inline)) INLINE struct part_arrays*
  */
 #ifdef USE_PART_STRUCT_ACCESSORS
 static __attribute__((always_inline)) INLINE struct part_arrays**
-  part_get_cell_part_arrays_p_part_struct(struct part *restrict p) {
+  part_get_cell_part_arrays_p(struct part *restrict p) {
   return &p->_cell_part_arrays;
 }
 #endif/**
@@ -367,7 +379,7 @@ static __attribute__((always_inline)) INLINE struct part_arrays**
  */
 #ifdef USE_PART_STRUCT_ACCESSORS
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_part_arrays_part_struct(struct part *restrict p,  struct part_arrays* cell_part_arrays) {
+  part_set_cell_part_arrays(struct part *restrict p,  struct part_arrays* cell_part_arrays) {
   p->_cell_part_arrays = cell_part_arrays;
 }
 #endif
@@ -379,7 +391,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_int, my integer.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int_part_struct(const struct part *restrict p) {
+  part_get_my_int(const struct part *restrict p) {
   return p->_my_int;
 }
 
@@ -390,7 +402,7 @@ static __attribute__((always_inline)) INLINE int
  * to my_int. If you need read-only access to my_int, use part_get_const_my_int_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int_p_part_struct(struct part *restrict p) {
+  part_get_my_int_p(struct part *restrict p) {
   return &p->_my_int;
 }
 
@@ -401,7 +413,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to my_int, use part_get_my_int_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_int_p(const struct part *restrict p) {
   return &p->_my_int;
 }
 
@@ -410,7 +422,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of my_int, my integer.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_part_struct(struct part *restrict p, const int my_int) {
+  part_set_my_int(struct part *restrict p, const int my_int) {
   p->_my_int = my_int;
 }
 
@@ -422,7 +434,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_long, my long.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long_part_struct(const struct part *restrict p) {
+  part_get_my_long(const struct part *restrict p) {
   return p->_my_long;
 }
 
@@ -433,7 +445,7 @@ static __attribute__((always_inline)) INLINE long
  * to my_long. If you need read-only access to my_long, use part_get_const_my_long_p() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long_p_part_struct(struct part *restrict p) {
+  part_get_my_long_p(struct part *restrict p) {
   return &p->_my_long;
 }
 
@@ -444,7 +456,7 @@ static __attribute__((always_inline)) INLINE long*
  * If you need write access to my_long, use part_get_my_long_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_long_p(const struct part *restrict p) {
   return &p->_my_long;
 }
 
@@ -453,7 +465,7 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief set the value of my_long, my long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_part_struct(struct part *restrict p, const long my_long) {
+  part_set_my_long(struct part *restrict p, const long my_long) {
   p->_my_long = my_long;
 }
 
@@ -465,7 +477,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_longlong, my long long.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong_part_struct(const struct part *restrict p) {
+  part_get_my_longlong(const struct part *restrict p) {
   return p->_my_longlong;
 }
 
@@ -476,7 +488,7 @@ static __attribute__((always_inline)) INLINE long long
  * to my_longlong. If you need read-only access to my_longlong, use part_get_const_my_longlong_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong_p_part_struct(struct part *restrict p) {
+  part_get_my_longlong_p(struct part *restrict p) {
   return &p->_my_longlong;
 }
 
@@ -487,7 +499,7 @@ static __attribute__((always_inline)) INLINE long long*
  * If you need write access to my_longlong, use part_get_my_longlong_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_longlong_p(const struct part *restrict p) {
   return &p->_my_longlong;
 }
 
@@ -496,7 +508,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief set the value of my_longlong, my long long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_part_struct(struct part *restrict p, const long long my_longlong) {
+  part_set_my_longlong(struct part *restrict p, const long long my_longlong) {
   p->_my_longlong = my_longlong;
 }
 
@@ -508,7 +520,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_float, my float.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float_part_struct(const struct part *restrict p) {
+  part_get_my_float(const struct part *restrict p) {
   return p->_my_float;
 }
 
@@ -519,7 +531,7 @@ static __attribute__((always_inline)) INLINE float
  * to my_float. If you need read-only access to my_float, use part_get_const_my_float_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float_p_part_struct(struct part *restrict p) {
+  part_get_my_float_p(struct part *restrict p) {
   return &p->_my_float;
 }
 
@@ -530,7 +542,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to my_float, use part_get_my_float_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_float_p(const struct part *restrict p) {
   return &p->_my_float;
 }
 
@@ -539,7 +551,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of my_float, my float.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_part_struct(struct part *restrict p, const float my_float) {
+  part_set_my_float(struct part *restrict p, const float my_float) {
   p->_my_float = my_float;
 }
 
@@ -551,7 +563,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_dble, my double.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble_part_struct(const struct part *restrict p) {
+  part_get_my_dble(const struct part *restrict p) {
   return p->_my_dble;
 }
 
@@ -562,7 +574,7 @@ static __attribute__((always_inline)) INLINE double
  * to my_dble. If you need read-only access to my_dble, use part_get_const_my_dble_p() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble_p_part_struct(struct part *restrict p) {
+  part_get_my_dble_p(struct part *restrict p) {
   return &p->_my_dble;
 }
 
@@ -573,7 +585,7 @@ static __attribute__((always_inline)) INLINE double*
  * If you need write access to my_dble, use part_get_my_dble_p() instead.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_dble_p(const struct part *restrict p) {
   return &p->_my_dble;
 }
 
@@ -582,7 +594,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief set the value of my_dble, my double.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_part_struct(struct part *restrict p, const double my_dble) {
+  part_set_my_dble(struct part *restrict p, const double my_dble) {
   p->_my_dble = my_dble;
 }
 
@@ -594,7 +606,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_char, my_char.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char_part_struct(const struct part *restrict p) {
+  part_get_my_char(const struct part *restrict p) {
   return p->_my_char;
 }
 
@@ -605,7 +617,7 @@ static __attribute__((always_inline)) INLINE char
  * to my_char. If you need read-only access to my_char, use part_get_const_my_char_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char_p_part_struct(struct part *restrict p) {
+  part_get_my_char_p(struct part *restrict p) {
   return &p->_my_char;
 }
 
@@ -616,7 +628,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to my_char, use part_get_my_char_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_char_p(const struct part *restrict p) {
   return &p->_my_char;
 }
 
@@ -625,7 +637,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of my_char, my_char.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_part_struct(struct part *restrict p, const char my_char) {
+  part_set_my_char(struct part *restrict p, const char my_char) {
   p->_my_char = my_char;
 }
 
@@ -637,7 +649,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_integertime, my integertime.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime_part_struct(const struct part *restrict p) {
+  part_get_my_integertime(const struct part *restrict p) {
   return p->_my_integertime;
 }
 
@@ -648,7 +660,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * to my_integertime. If you need read-only access to my_integertime, use part_get_const_my_integertime_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime_p_part_struct(struct part *restrict p) {
+  part_get_my_integertime_p(struct part *restrict p) {
   return &p->_my_integertime;
 }
 
@@ -659,7 +671,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to my_integertime, use part_get_my_integertime_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_integertime_p(const struct part *restrict p) {
   return &p->_my_integertime;
 }
 
@@ -668,7 +680,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief set the value of my_integertime, my integertime.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_part_struct(struct part *restrict p, const integertime_t my_integertime) {
+  part_set_my_integertime(struct part *restrict p, const integertime_t my_integertime) {
   p->_my_integertime = my_integertime;
 }
 
@@ -680,7 +692,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_timebin, my timebin.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin_part_struct(const struct part *restrict p) {
+  part_get_my_timebin(const struct part *restrict p) {
   return p->_my_timebin;
 }
 
@@ -691,7 +703,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * to my_timebin. If you need read-only access to my_timebin, use part_get_const_my_timebin_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin_p_part_struct(struct part *restrict p) {
+  part_get_my_timebin_p(struct part *restrict p) {
   return &p->_my_timebin;
 }
 
@@ -702,7 +714,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * If you need write access to my_timebin, use part_get_my_timebin_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_timebin_p(const struct part *restrict p) {
   return &p->_my_timebin;
 }
 
@@ -711,7 +723,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief set the value of my_timebin, my timebin.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_part_struct(struct part *restrict p, const timebin_t my_timebin) {
+  part_set_my_timebin(struct part *restrict p, const timebin_t my_timebin) {
   p->_my_timebin = my_timebin;
 }
 
@@ -723,7 +735,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_external_struct, some externally defined struct.
  */
 static __attribute__((always_inline)) INLINE struct my_struct
-  part_get_my_external_struct_part_struct(const struct part *restrict p) {
+  part_get_my_external_struct(const struct part *restrict p) {
   return p->_my_external_struct;
 }
 
@@ -734,7 +746,7 @@ static __attribute__((always_inline)) INLINE struct my_struct
  * to my_external_struct. If you need read-only access to my_external_struct, use part_get_const_my_external_struct_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct my_struct*
-  part_get_my_external_struct_p_part_struct(struct part *restrict p) {
+  part_get_my_external_struct_p(struct part *restrict p) {
   return &p->_my_external_struct;
 }
 
@@ -745,7 +757,7 @@ static __attribute__((always_inline)) INLINE struct my_struct*
  * If you need write access to my_external_struct, use part_get_my_external_struct_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct my_struct*
-  part_get_const_my_external_struct_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_external_struct_p(const struct part *restrict p) {
   return &p->_my_external_struct;
 }
 
@@ -754,7 +766,7 @@ static __attribute__((always_inline)) INLINE const struct my_struct*
  * @brief set the value of my_external_struct, some externally defined struct.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct_part_struct(struct part *restrict p, const struct my_struct my_external_struct) {
+  part_set_my_external_struct(struct part *restrict p, const struct my_struct my_external_struct) {
   p->_my_external_struct = my_external_struct;
 }
 
@@ -766,7 +778,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_pointer_struct, pointer to externally defined struct.
  */
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_my_pointer_struct_part_struct(const struct part *restrict p) {
+  part_get_my_pointer_struct(const struct part *restrict p) {
   return p->_my_pointer_struct;
 }
 
@@ -777,14 +789,14 @@ static __attribute__((always_inline)) INLINE struct gpart*
  * to my_pointer_struct. If you need read-only access to my_pointer_struct, use part_get_const_my_pointer_struct_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_my_pointer_struct_p_part_struct(struct part *restrict p) {
+  part_get_my_pointer_struct_p(struct part *restrict p) {
   return &p->_my_pointer_struct;
 }
 /**
  * @brief set the value of my_pointer_struct, pointer to externally defined struct.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer_struct_part_struct(struct part *restrict p,  struct gpart* my_pointer_struct) {
+  part_set_my_pointer_struct(struct part *restrict p,  struct gpart* my_pointer_struct) {
   p->_my_pointer_struct = my_pointer_struct;
 }
 
@@ -796,7 +808,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_pointer, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_pointer_part_struct(const struct part *restrict p) {
+  part_get_my_pointer(const struct part *restrict p) {
   return p->_my_pointer;
 }
 
@@ -807,14 +819,14 @@ static __attribute__((always_inline)) INLINE int*
  * to my_pointer. If you need read-only access to my_pointer, use part_get_const_my_pointer_p() instead.
  */
 static __attribute__((always_inline)) INLINE int**
-  part_get_my_pointer_p_part_struct(struct part *restrict p) {
+  part_get_my_pointer_p(struct part *restrict p) {
   return &p->_my_pointer;
 }
 /**
  * @brief set the value of my_pointer, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer_part_struct(struct part *restrict p,  int* my_pointer) {
+  part_set_my_pointer(struct part *restrict p,  int* my_pointer) {
   p->_my_pointer = my_pointer;
 }
 
@@ -828,7 +840,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_int2, my integer.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int2_part_struct(const struct part *restrict p) {
+  part_get_my_int2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -847,7 +859,7 @@ static __attribute__((always_inline)) INLINE int
  * to my_int2. If you need read-only access to my_int2, use part_get_const_my_int2_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int2_p_part_struct(struct part *restrict p) {
+  part_get_my_int2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -866,7 +878,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to my_int2, use part_get_my_int2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_int2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -883,7 +895,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of my_int2, my integer.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int2_part_struct(struct part *restrict p, const int my_int2) {
+  part_set_my_int2(struct part *restrict p, const int my_int2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -903,7 +915,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_long2, my long.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long2_part_struct(const struct part *restrict p) {
+  part_get_my_long2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -922,7 +934,7 @@ static __attribute__((always_inline)) INLINE long
  * to my_long2. If you need read-only access to my_long2, use part_get_const_my_long2_p() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long2_p_part_struct(struct part *restrict p) {
+  part_get_my_long2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -941,7 +953,7 @@ static __attribute__((always_inline)) INLINE long*
  * If you need write access to my_long2, use part_get_my_long2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_long2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -958,7 +970,7 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief set the value of my_long2, my long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long2_part_struct(struct part *restrict p, const long my_long2) {
+  part_set_my_long2(struct part *restrict p, const long my_long2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -978,7 +990,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_longlong2, my long long.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong2_part_struct(const struct part *restrict p) {
+  part_get_my_longlong2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -997,7 +1009,7 @@ static __attribute__((always_inline)) INLINE long long
  * to my_longlong2. If you need read-only access to my_longlong2, use part_get_const_my_longlong2_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong2_p_part_struct(struct part *restrict p) {
+  part_get_my_longlong2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1016,7 +1028,7 @@ static __attribute__((always_inline)) INLINE long long*
  * If you need write access to my_longlong2, use part_get_my_longlong2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_longlong2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1033,7 +1045,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief set the value of my_longlong2, my long long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong2_part_struct(struct part *restrict p, const long long my_longlong2) {
+  part_set_my_longlong2(struct part *restrict p, const long long my_longlong2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1053,7 +1065,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_float2, my float.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float2_part_struct(const struct part *restrict p) {
+  part_get_my_float2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1072,7 +1084,7 @@ static __attribute__((always_inline)) INLINE float
  * to my_float2. If you need read-only access to my_float2, use part_get_const_my_float2_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float2_p_part_struct(struct part *restrict p) {
+  part_get_my_float2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1091,7 +1103,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to my_float2, use part_get_my_float2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_float2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1108,7 +1120,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of my_float2, my float.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float2_part_struct(struct part *restrict p, const float my_float2) {
+  part_set_my_float2(struct part *restrict p, const float my_float2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1128,7 +1140,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_dble2, my double.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble2_part_struct(const struct part *restrict p) {
+  part_get_my_dble2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1147,7 +1159,7 @@ static __attribute__((always_inline)) INLINE double
  * to my_dble2. If you need read-only access to my_dble2, use part_get_const_my_dble2_p() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble2_p_part_struct(struct part *restrict p) {
+  part_get_my_dble2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1166,7 +1178,7 @@ static __attribute__((always_inline)) INLINE double*
  * If you need write access to my_dble2, use part_get_my_dble2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_dble2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1183,7 +1195,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief set the value of my_dble2, my double.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble2_part_struct(struct part *restrict p, const double my_dble2) {
+  part_set_my_dble2(struct part *restrict p, const double my_dble2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1203,7 +1215,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_char2, my_char.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char2_part_struct(const struct part *restrict p) {
+  part_get_my_char2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1222,7 +1234,7 @@ static __attribute__((always_inline)) INLINE char
  * to my_char2. If you need read-only access to my_char2, use part_get_const_my_char2_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char2_p_part_struct(struct part *restrict p) {
+  part_get_my_char2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1241,7 +1253,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to my_char2, use part_get_my_char2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_char2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1258,7 +1270,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of my_char2, my_char.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char2_part_struct(struct part *restrict p, const char my_char2) {
+  part_set_my_char2(struct part *restrict p, const char my_char2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1278,7 +1290,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_integertime2, my integertime.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime2_part_struct(const struct part *restrict p) {
+  part_get_my_integertime2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1297,7 +1309,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * to my_integertime2. If you need read-only access to my_integertime2, use part_get_const_my_integertime2_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime2_p_part_struct(struct part *restrict p) {
+  part_get_my_integertime2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1316,7 +1328,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to my_integertime2, use part_get_my_integertime2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_integertime2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1333,7 +1345,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief set the value of my_integertime2, my integertime.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime2_part_struct(struct part *restrict p, const integertime_t my_integertime2) {
+  part_set_my_integertime2(struct part *restrict p, const integertime_t my_integertime2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1353,7 +1365,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_timebin2, my timebin.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin2_part_struct(const struct part *restrict p) {
+  part_get_my_timebin2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1372,7 +1384,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * to my_timebin2. If you need read-only access to my_timebin2, use part_get_const_my_timebin2_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin2_p_part_struct(struct part *restrict p) {
+  part_get_my_timebin2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1391,7 +1403,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * If you need write access to my_timebin2, use part_get_my_timebin2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_timebin2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1408,7 +1420,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief set the value of my_timebin2, my timebin.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin2_part_struct(struct part *restrict p, const timebin_t my_timebin2) {
+  part_set_my_timebin2(struct part *restrict p, const timebin_t my_timebin2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1428,7 +1440,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_external_struct2, some externally defined struct.
  */
 static __attribute__((always_inline)) INLINE struct my_struct
-  part_get_my_external_struct2_part_struct(const struct part *restrict p) {
+  part_get_my_external_struct2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1447,7 +1459,7 @@ static __attribute__((always_inline)) INLINE struct my_struct
  * to my_external_struct2. If you need read-only access to my_external_struct2, use part_get_const_my_external_struct2_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct my_struct*
-  part_get_my_external_struct2_p_part_struct(struct part *restrict p) {
+  part_get_my_external_struct2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1466,7 +1478,7 @@ static __attribute__((always_inline)) INLINE struct my_struct*
  * If you need write access to my_external_struct2, use part_get_my_external_struct2_p() instead.
  */
 static __attribute__((always_inline)) INLINE const struct my_struct*
-  part_get_const_my_external_struct2_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_external_struct2_p(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1483,7 +1495,7 @@ static __attribute__((always_inline)) INLINE const struct my_struct*
  * @brief set the value of my_external_struct2, some externally defined struct.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct2_part_struct(struct part *restrict p, const struct my_struct my_external_struct2) {
+  part_set_my_external_struct2(struct part *restrict p, const struct my_struct my_external_struct2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1503,7 +1515,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_pointer_struct2, pointer to externally defined struct.
  */
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_my_pointer_struct2_part_struct(const struct part *restrict p) {
+  part_get_my_pointer_struct2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1522,7 +1534,7 @@ static __attribute__((always_inline)) INLINE struct gpart*
  * to my_pointer_struct2. If you need read-only access to my_pointer_struct2, use part_get_const_my_pointer_struct2_p() instead.
  */
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_my_pointer_struct2_p_part_struct(struct part *restrict p) {
+  part_get_my_pointer_struct2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1537,7 +1549,7 @@ static __attribute__((always_inline)) INLINE struct gpart**
  * @brief set the value of my_pointer_struct2, pointer to externally defined struct.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer_struct2_part_struct(struct part *restrict p,  struct gpart* my_pointer_struct2) {
+  part_set_my_pointer_struct2(struct part *restrict p,  struct gpart* my_pointer_struct2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1557,7 +1569,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_pointer2, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_pointer2_part_struct(const struct part *restrict p) {
+  part_get_my_pointer2(const struct part *restrict p) {
   const struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1576,7 +1588,7 @@ static __attribute__((always_inline)) INLINE int*
  * to my_pointer2. If you need read-only access to my_pointer2, use part_get_const_my_pointer2_p() instead.
  */
 static __attribute__((always_inline)) INLINE int**
-  part_get_my_pointer2_p_part_struct(struct part *restrict p) {
+  part_get_my_pointer2_p(struct part *restrict p) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1591,7 +1603,7 @@ static __attribute__((always_inline)) INLINE int**
  * @brief set the value of my_pointer2, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer2_part_struct(struct part *restrict p,  int* my_pointer2) {
+  part_set_my_pointer2(struct part *restrict p,  int* my_pointer2) {
   struct part2* restrict part2_s = p->_cell_part_arrays->_part2 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -1613,7 +1625,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_int3, my integer.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int3_part_struct(const struct part *restrict p) {
+  part_get_my_int3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1636,7 +1648,7 @@ static __attribute__((always_inline)) INLINE int
  * to my_int3. If you need read-only access to my_int3, use part_get_const_my_int3_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int3_p_part_struct(struct part *restrict p) {
+  part_get_my_int3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1659,7 +1671,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to my_int3, use part_get_my_int3_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int3_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_int3_p(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1680,7 +1692,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of my_int3, my integer.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int3_part_struct(struct part *restrict p, const int my_int3) {
+  part_set_my_int3(struct part *restrict p, const int my_int3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1702,7 +1714,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_long3, my long.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long3_part_struct(const struct part *restrict p) {
+  part_get_my_long3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1725,7 +1737,7 @@ static __attribute__((always_inline)) INLINE long
  * to my_long3. If you need read-only access to my_long3, use part_get_const_my_long3_p() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long3_p_part_struct(struct part *restrict p) {
+  part_get_my_long3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1748,7 +1760,7 @@ static __attribute__((always_inline)) INLINE long*
  * If you need write access to my_long3, use part_get_my_long3_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long3_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_long3_p(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1769,7 +1781,7 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief set the value of my_long3, my long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long3_part_struct(struct part *restrict p, const long my_long3) {
+  part_set_my_long3(struct part *restrict p, const long my_long3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1791,7 +1803,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_longlong3, my long long.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong3_part_struct(const struct part *restrict p) {
+  part_get_my_longlong3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1814,7 +1826,7 @@ static __attribute__((always_inline)) INLINE long long
  * to my_longlong3. If you need read-only access to my_longlong3, use part_get_const_my_longlong3_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong3_p_part_struct(struct part *restrict p) {
+  part_get_my_longlong3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1837,7 +1849,7 @@ static __attribute__((always_inline)) INLINE long long*
  * If you need write access to my_longlong3, use part_get_my_longlong3_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong3_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_longlong3_p(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1858,7 +1870,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief set the value of my_longlong3, my long long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong3_part_struct(struct part *restrict p, const long long my_longlong3) {
+  part_set_my_longlong3(struct part *restrict p, const long long my_longlong3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1880,7 +1892,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_float3, my float.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float3_part_struct(const struct part *restrict p) {
+  part_get_my_float3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1903,7 +1915,7 @@ static __attribute__((always_inline)) INLINE float
  * to my_float3. If you need read-only access to my_float3, use part_get_const_my_float3_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float3_p_part_struct(struct part *restrict p) {
+  part_get_my_float3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1926,7 +1938,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to my_float3, use part_get_my_float3_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float3_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_float3_p(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1947,7 +1959,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of my_float3, my float.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float3_part_struct(struct part *restrict p, const float my_float3) {
+  part_set_my_float3(struct part *restrict p, const float my_float3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1969,7 +1981,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_dble3, my double.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble3_part_struct(const struct part *restrict p) {
+  part_get_my_dble3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -1992,7 +2004,7 @@ static __attribute__((always_inline)) INLINE double
  * to my_dble3. If you need read-only access to my_dble3, use part_get_const_my_dble3_p() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble3_p_part_struct(struct part *restrict p) {
+  part_get_my_dble3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2015,7 +2027,7 @@ static __attribute__((always_inline)) INLINE double*
  * If you need write access to my_dble3, use part_get_my_dble3_p() instead.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble3_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_dble3_p(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2036,7 +2048,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief set the value of my_dble3, my double.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble3_part_struct(struct part *restrict p, const double my_dble3) {
+  part_set_my_dble3(struct part *restrict p, const double my_dble3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2058,7 +2070,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_char3, my_char.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char3_part_struct(const struct part *restrict p) {
+  part_get_my_char3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2081,7 +2093,7 @@ static __attribute__((always_inline)) INLINE char
  * to my_char3. If you need read-only access to my_char3, use part_get_const_my_char3_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char3_p_part_struct(struct part *restrict p) {
+  part_get_my_char3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2104,7 +2116,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to my_char3, use part_get_my_char3_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char3_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_char3_p(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2125,7 +2137,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of my_char3, my_char.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char3_part_struct(struct part *restrict p, const char my_char3) {
+  part_set_my_char3(struct part *restrict p, const char my_char3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2147,7 +2159,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_integertime3, my integertime.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime3_part_struct(const struct part *restrict p) {
+  part_get_my_integertime3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2170,7 +2182,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * to my_integertime3. If you need read-only access to my_integertime3, use part_get_const_my_integertime3_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime3_p_part_struct(struct part *restrict p) {
+  part_get_my_integertime3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2193,7 +2205,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to my_integertime3, use part_get_my_integertime3_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime3_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_integertime3_p(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2214,7 +2226,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief set the value of my_integertime3, my integertime.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime3_part_struct(struct part *restrict p, const integertime_t my_integertime3) {
+  part_set_my_integertime3(struct part *restrict p, const integertime_t my_integertime3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2236,7 +2248,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_timebin3, my timebin.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin3_part_struct(const struct part *restrict p) {
+  part_get_my_timebin3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2259,7 +2271,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * to my_timebin3. If you need read-only access to my_timebin3, use part_get_const_my_timebin3_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin3_p_part_struct(struct part *restrict p) {
+  part_get_my_timebin3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2282,7 +2294,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * If you need write access to my_timebin3, use part_get_my_timebin3_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin3_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_timebin3_p(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2303,7 +2315,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief set the value of my_timebin3, my timebin.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin3_part_struct(struct part *restrict p, const timebin_t my_timebin3) {
+  part_set_my_timebin3(struct part *restrict p, const timebin_t my_timebin3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2326,7 +2338,7 @@ static __attribute__((always_inline)) INLINE void
  */
 #ifdef DEBUG
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_my_pointer_struct3_part_struct(const struct part *restrict p) {
+  part_get_my_pointer_struct3(const struct part *restrict p) {
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -2346,7 +2358,7 @@ static __attribute__((always_inline)) INLINE struct gpart*
  */
 #ifdef DEBUG
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_my_pointer_struct3_p_part_struct(struct part *restrict p) {
+  part_get_my_pointer_struct3_p(struct part *restrict p) {
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -2362,7 +2374,7 @@ static __attribute__((always_inline)) INLINE struct gpart**
  */
 #ifdef DEBUG
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer_struct3_part_struct(struct part *restrict p,  struct gpart* my_pointer_struct3) {
+  part_set_my_pointer_struct3(struct part *restrict p,  struct gpart* my_pointer_struct3) {
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -2382,7 +2394,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_pointer3, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_pointer3_part_struct(const struct part *restrict p) {
+  part_get_my_pointer3(const struct part *restrict p) {
 #ifdef DEBUG
   const struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2405,7 +2417,7 @@ static __attribute__((always_inline)) INLINE int*
  * to my_pointer3. If you need read-only access to my_pointer3, use part_get_const_my_pointer3_p() instead.
  */
 static __attribute__((always_inline)) INLINE int**
-  part_get_my_pointer3_p_part_struct(struct part *restrict p) {
+  part_get_my_pointer3_p(struct part *restrict p) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2424,7 +2436,7 @@ static __attribute__((always_inline)) INLINE int**
  * @brief set the value of my_pointer3, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer3_part_struct(struct part *restrict p,  int* my_pointer3) {
+  part_set_my_pointer3(struct part *restrict p,  int* my_pointer3) {
 #ifdef DEBUG
   struct part3* restrict part3_s = p->_cell_part_arrays->_part3 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2448,7 +2460,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_int4, my integer.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int4_part_struct(const struct part *restrict p) {
+  part_get_my_int4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2471,7 +2483,7 @@ static __attribute__((always_inline)) INLINE int
  * to my_int4. If you need read-only access to my_int4, use part_get_const_my_int4_p() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int4_p_part_struct(struct part *restrict p) {
+  part_get_my_int4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2494,7 +2506,7 @@ static __attribute__((always_inline)) INLINE int*
  * If you need write access to my_int4, use part_get_my_int4_p() instead.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int4_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_int4_p(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2515,7 +2527,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief set the value of my_int4, my integer.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int4_part_struct(struct part *restrict p, const int my_int4) {
+  part_set_my_int4(struct part *restrict p, const int my_int4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2537,7 +2549,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_long4, my long.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long4_part_struct(const struct part *restrict p) {
+  part_get_my_long4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2560,7 +2572,7 @@ static __attribute__((always_inline)) INLINE long
  * to my_long4. If you need read-only access to my_long4, use part_get_const_my_long4_p() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long4_p_part_struct(struct part *restrict p) {
+  part_get_my_long4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2583,7 +2595,7 @@ static __attribute__((always_inline)) INLINE long*
  * If you need write access to my_long4, use part_get_my_long4_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long4_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_long4_p(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2604,7 +2616,7 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief set the value of my_long4, my long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long4_part_struct(struct part *restrict p, const long my_long4) {
+  part_set_my_long4(struct part *restrict p, const long my_long4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2626,7 +2638,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_longlong4, my long long.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong4_part_struct(const struct part *restrict p) {
+  part_get_my_longlong4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2649,7 +2661,7 @@ static __attribute__((always_inline)) INLINE long long
  * to my_longlong4. If you need read-only access to my_longlong4, use part_get_const_my_longlong4_p() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong4_p_part_struct(struct part *restrict p) {
+  part_get_my_longlong4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2672,7 +2684,7 @@ static __attribute__((always_inline)) INLINE long long*
  * If you need write access to my_longlong4, use part_get_my_longlong4_p() instead.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong4_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_longlong4_p(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2693,7 +2705,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief set the value of my_longlong4, my long long.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong4_part_struct(struct part *restrict p, const long long my_longlong4) {
+  part_set_my_longlong4(struct part *restrict p, const long long my_longlong4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2715,7 +2727,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_float4, my float.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float4_part_struct(const struct part *restrict p) {
+  part_get_my_float4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2738,7 +2750,7 @@ static __attribute__((always_inline)) INLINE float
  * to my_float4. If you need read-only access to my_float4, use part_get_const_my_float4_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float4_p_part_struct(struct part *restrict p) {
+  part_get_my_float4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2761,7 +2773,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to my_float4, use part_get_my_float4_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float4_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_float4_p(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2782,7 +2794,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of my_float4, my float.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float4_part_struct(struct part *restrict p, const float my_float4) {
+  part_set_my_float4(struct part *restrict p, const float my_float4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2804,7 +2816,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_dble4, my double.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble4_part_struct(const struct part *restrict p) {
+  part_get_my_dble4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2827,7 +2839,7 @@ static __attribute__((always_inline)) INLINE double
  * to my_dble4. If you need read-only access to my_dble4, use part_get_const_my_dble4_p() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble4_p_part_struct(struct part *restrict p) {
+  part_get_my_dble4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2850,7 +2862,7 @@ static __attribute__((always_inline)) INLINE double*
  * If you need write access to my_dble4, use part_get_my_dble4_p() instead.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble4_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_dble4_p(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2871,7 +2883,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief set the value of my_dble4, my double.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble4_part_struct(struct part *restrict p, const double my_dble4) {
+  part_set_my_dble4(struct part *restrict p, const double my_dble4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2893,7 +2905,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_char4, my_char.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char4_part_struct(const struct part *restrict p) {
+  part_get_my_char4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2916,7 +2928,7 @@ static __attribute__((always_inline)) INLINE char
  * to my_char4. If you need read-only access to my_char4, use part_get_const_my_char4_p() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char4_p_part_struct(struct part *restrict p) {
+  part_get_my_char4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2939,7 +2951,7 @@ static __attribute__((always_inline)) INLINE char*
  * If you need write access to my_char4, use part_get_my_char4_p() instead.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char4_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_char4_p(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2960,7 +2972,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief set the value of my_char4, my_char.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char4_part_struct(struct part *restrict p, const char my_char4) {
+  part_set_my_char4(struct part *restrict p, const char my_char4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -2982,7 +2994,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_integertime4, my integertime.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime4_part_struct(const struct part *restrict p) {
+  part_get_my_integertime4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3005,7 +3017,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * to my_integertime4. If you need read-only access to my_integertime4, use part_get_const_my_integertime4_p() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime4_p_part_struct(struct part *restrict p) {
+  part_get_my_integertime4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3028,7 +3040,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * If you need write access to my_integertime4, use part_get_my_integertime4_p() instead.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime4_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_integertime4_p(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3049,7 +3061,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief set the value of my_integertime4, my integertime.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime4_part_struct(struct part *restrict p, const integertime_t my_integertime4) {
+  part_set_my_integertime4(struct part *restrict p, const integertime_t my_integertime4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3071,7 +3083,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_timebin4, my timebin.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin4_part_struct(const struct part *restrict p) {
+  part_get_my_timebin4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3094,7 +3106,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * to my_timebin4. If you need read-only access to my_timebin4, use part_get_const_my_timebin4_p() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin4_p_part_struct(struct part *restrict p) {
+  part_get_my_timebin4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3117,7 +3129,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * If you need write access to my_timebin4, use part_get_my_timebin4_p() instead.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin4_p_part_struct(const struct part *restrict p) {
+  part_get_const_my_timebin4_p(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3138,7 +3150,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief set the value of my_timebin4, my timebin.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin4_part_struct(struct part *restrict p, const timebin_t my_timebin4) {
+  part_set_my_timebin4(struct part *restrict p, const timebin_t my_timebin4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3161,7 +3173,7 @@ static __attribute__((always_inline)) INLINE void
  */
 #ifdef NODEBUG
 static __attribute__((always_inline)) INLINE struct gpart*
-  part_get_my_pointer_struct4_part_struct(const struct part *restrict p) {
+  part_get_my_pointer_struct4(const struct part *restrict p) {
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -3181,7 +3193,7 @@ static __attribute__((always_inline)) INLINE struct gpart*
  */
 #ifdef NODEBUG
 static __attribute__((always_inline)) INLINE struct gpart**
-  part_get_my_pointer_struct4_p_part_struct(struct part *restrict p) {
+  part_get_my_pointer_struct4_p(struct part *restrict p) {
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -3197,7 +3209,7 @@ static __attribute__((always_inline)) INLINE struct gpart**
  */
 #ifdef NODEBUG
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer_struct4_part_struct(struct part *restrict p,  struct gpart* my_pointer_struct4) {
+  part_set_my_pointer_struct4(struct part *restrict p,  struct gpart* my_pointer_struct4) {
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -3217,7 +3229,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get my_pointer4, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_pointer4_part_struct(const struct part *restrict p) {
+  part_get_my_pointer4(const struct part *restrict p) {
 #ifdef NODEBUG
   const struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3240,7 +3252,7 @@ static __attribute__((always_inline)) INLINE int*
  * to my_pointer4. If you need read-only access to my_pointer4, use part_get_const_my_pointer4_p() instead.
  */
 static __attribute__((always_inline)) INLINE int**
-  part_get_my_pointer4_p_part_struct(struct part *restrict p) {
+  part_get_my_pointer4_p(struct part *restrict p) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
@@ -3259,7 +3271,7 @@ static __attribute__((always_inline)) INLINE int**
  * @brief set the value of my_pointer4, pointer to integer array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_pointer4_part_struct(struct part *restrict p,  int* my_pointer4) {
+  part_set_my_pointer4(struct part *restrict p,  int* my_pointer4) {
 #ifdef NODEBUG
   struct part4* restrict part4_s = p->_cell_part_arrays->_part4 + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS

@@ -9,7 +9,7 @@
  * Copyright (c) NO AUTHORS SPECIFIED
  ******************************************************************************/
 
-  
+
 
 
 
@@ -26,13 +26,14 @@
 #include "hydro_part_arrays_struct.h"
 
 
-  
+
 #include "align.h"
 #include "error.h"
 #include "hydro_part_placeholder_structs.h"
 #include "hydro_part_arrays_struct.h"
 #include "rt_struct.h"
 #include "timestep_limiter_struct.h"
+#include "timeline.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
@@ -210,7 +211,7 @@ struct part3 {
 static __attribute__((always_inline)) INLINE size_t
   part_get_cell_offset_part_struct(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return p->_cell_offset; 
+  return p->_cell_offset;
 #else
   return SIZE_MAX;
 #endif
@@ -225,7 +226,7 @@ static __attribute__((always_inline)) INLINE size_t
 static __attribute__((always_inline)) INLINE size_t*
   part_get_cell_offset_p_part_struct(struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return &p->_cell_offset; 
+  return &p->_cell_offset;
 #else
   return NULL;
 #endif
@@ -240,7 +241,7 @@ static __attribute__((always_inline)) INLINE size_t*
 static __attribute__((always_inline)) INLINE const size_t*
   part_get_const_cell_offset_p_part_struct(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return &p->_cell_offset; 
+  return &p->_cell_offset;
 #else
   return NULL;
 #endif
@@ -253,7 +254,7 @@ static __attribute__((always_inline)) INLINE const size_t*
 static __attribute__((always_inline)) INLINE void
   part_set_cell_offset_part_struct(struct part *restrict p, const size_t cell_offset) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  p->_cell_offset = cell_offset; 
+  p->_cell_offset = cell_offset;
 #endif
 }
 

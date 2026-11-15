@@ -8,7 +8,6 @@
   * Input file is {{INPUT_FILENAME}}
   */
 
-{% if HEADER_FOR_SWIFT %} {# ---------------- includes for swift ---------------------- -#}
 /*******************************************************************************
  * This file is part of SWIFT.
  * Copyright (c) {{AUTHORS}}
@@ -42,9 +41,6 @@
     {%- endfor %}
   {%- endif %}
 
-{% else %} {# ----------------------- includes for swiftgpupacksim ------------------ #}
-
-{% endif -%} {#- If making swift header -#}
 
 {# --------------------------------- GENERATE STUCTS -------------------------------- #}
 {% for STRUCT_NAME in STRUCT_NAMES %}

@@ -27,12 +27,24 @@
 
 
   
+#include "adaptive_softening_struct.h"
 #include "align.h"
+#include "black_holes_struct.h"
+#include "chemistry_struct.h"
+#include "cooling_struct.h"
+#include "csds.h"
 #include "error.h"
-#include "hydro_part_placeholder_structs.h"
+#include "feedback_struct.h"
+#include "fvpm_geometry_struct.h"
 #include "hydro_part_arrays_struct.h"
+#include "mhd_struct.h"
+#include "particle_splitting_struct.h"
+#include "pressure_floor_struct.h"
 #include "rt_struct.h"
+#include "sink_struct.h"
+#include "star_formation_struct.h"
 #include "timestep_limiter_struct.h"
+#include "tracers_struct.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
@@ -122,7 +134,7 @@ struct force {
  * @brief get cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE size_t
-  part_get_cell_offset_part_struct(const struct part *restrict p) {
+  part_get_cell_offset(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
   return p->_cell_offset; 
 #else
@@ -137,7 +149,7 @@ static __attribute__((always_inline)) INLINE size_t
  * to cell_offset. If you need read-only access to cell_offset, use part_get_const_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE size_t*
-  part_get_cell_offset_p_part_struct(struct part *restrict p) {
+  part_get_cell_offset_p(struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
   return &p->_cell_offset; 
 #else
@@ -152,7 +164,7 @@ static __attribute__((always_inline)) INLINE size_t*
  * If you need write access to cell_offset, use part_get_cell_offset_p() instead.
  */
 static __attribute__((always_inline)) INLINE const size_t*
-  part_get_const_cell_offset_p_part_struct(const struct part *restrict p) {
+  part_get_const_cell_offset_p(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
   return &p->_cell_offset; 
 #else
@@ -165,7 +177,7 @@ static __attribute__((always_inline)) INLINE const size_t*
  * @brief set the value of cell_offset, offset/index of particle in cell particle data array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_offset_part_struct(struct part *restrict p, const size_t cell_offset) {
+  part_set_cell_offset(struct part *restrict p, const size_t cell_offset) {
 #ifdef USE_PART_STRUCT_ACCESSORS
   p->_cell_offset = cell_offset; 
 #endif
@@ -180,7 +192,7 @@ static __attribute__((always_inline)) INLINE void
  */
 #ifdef USE_PART_STRUCT_ACCESSORS
 static __attribute__((always_inline)) INLINE struct part_arrays*
-  part_get_cell_part_arrays_part_struct(const struct part *restrict p) {
+  part_get_cell_part_arrays(const struct part *restrict p) {
   return p->_cell_part_arrays;
 }
 #endif
@@ -192,7 +204,7 @@ static __attribute__((always_inline)) INLINE struct part_arrays*
  */
 #ifdef USE_PART_STRUCT_ACCESSORS
 static __attribute__((always_inline)) INLINE struct part_arrays**
-  part_get_cell_part_arrays_p_part_struct(struct part *restrict p) {
+  part_get_cell_part_arrays_p(struct part *restrict p) {
   return &p->_cell_part_arrays;
 }
 #endif/**
@@ -200,7 +212,7 @@ static __attribute__((always_inline)) INLINE struct part_arrays**
  */
 #ifdef USE_PART_STRUCT_ACCESSORS
 static __attribute__((always_inline)) INLINE void
-  part_set_cell_part_arrays_part_struct(struct part *restrict p,  struct part_arrays* cell_part_arrays) {
+  part_set_cell_part_arrays(struct part *restrict p,  struct part_arrays* cell_part_arrays) {
   p->_cell_part_arrays = cell_part_arrays;
 }
 #endif
@@ -214,7 +226,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get d.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_d_part_struct(const struct part *restrict p) {
+  part_get_d(const struct part *restrict p) {
   const struct density* restrict density_s = p->_cell_part_arrays->_density + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -233,7 +245,7 @@ static __attribute__((always_inline)) INLINE float
  * to d. If you need read-only access to d, use part_get_const_d_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_d_p_part_struct(struct part *restrict p) {
+  part_get_d_p(struct part *restrict p) {
   struct density* restrict density_s = p->_cell_part_arrays->_density + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -251,7 +263,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to d, use part_get_d_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_d_p_part_struct(const struct part *restrict p) {
+  part_get_const_d_p(const struct part *restrict p) {
   const struct density* restrict density_s = p->_cell_part_arrays->_density + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -268,7 +280,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of d.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_d_part_struct(struct part *restrict p, const float d) {
+  part_set_d(struct part *restrict p, const float d) {
   struct density* restrict density_s = p->_cell_part_arrays->_density + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -288,7 +300,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get e.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_e_part_struct(const struct part *restrict p) {
+  part_get_e(const struct part *restrict p) {
   const struct density* restrict density_s = p->_cell_part_arrays->_density + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -307,7 +319,7 @@ static __attribute__((always_inline)) INLINE float
  * to e. If you need read-only access to e, use part_get_const_e_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_e_p_part_struct(struct part *restrict p) {
+  part_get_e_p(struct part *restrict p) {
   struct density* restrict density_s = p->_cell_part_arrays->_density + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -325,7 +337,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to e, use part_get_e_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_e_p_part_struct(const struct part *restrict p) {
+  part_get_const_e_p(const struct part *restrict p) {
   const struct density* restrict density_s = p->_cell_part_arrays->_density + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -342,7 +354,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of e.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_e_part_struct(struct part *restrict p, const float e) {
+  part_set_e(struct part *restrict p, const float e) {
   struct density* restrict density_s = p->_cell_part_arrays->_density + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -364,7 +376,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get g.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_g_part_struct(const struct part *restrict p) {
+  part_get_g(const struct part *restrict p) {
   const struct force* restrict force_s = p->_cell_part_arrays->_force + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -383,7 +395,7 @@ static __attribute__((always_inline)) INLINE float
  * to g. If you need read-only access to g, use part_get_const_g_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_g_p_part_struct(struct part *restrict p) {
+  part_get_g_p(struct part *restrict p) {
   struct force* restrict force_s = p->_cell_part_arrays->_force + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -401,7 +413,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to g, use part_get_g_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_g_p_part_struct(const struct part *restrict p) {
+  part_get_const_g_p(const struct part *restrict p) {
   const struct force* restrict force_s = p->_cell_part_arrays->_force + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -418,7 +430,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of g.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_g_part_struct(struct part *restrict p, const float g) {
+  part_set_g(struct part *restrict p, const float g) {
   struct force* restrict force_s = p->_cell_part_arrays->_force + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -438,7 +450,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief get h.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_h_part_struct(const struct part *restrict p) {
+  part_get_h(const struct part *restrict p) {
   const struct force* restrict force_s = p->_cell_part_arrays->_force + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -457,7 +469,7 @@ static __attribute__((always_inline)) INLINE float
  * to h. If you need read-only access to h, use part_get_const_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_h_p_part_struct(struct part *restrict p) {
+  part_get_h_p(struct part *restrict p) {
   struct force* restrict force_s = p->_cell_part_arrays->_force + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -475,7 +487,7 @@ static __attribute__((always_inline)) INLINE float*
  * If you need write access to h, use part_get_h_p() instead.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_h_p_part_struct(const struct part *restrict p) {
+  part_get_const_h_p(const struct part *restrict p) {
   const struct force* restrict force_s = p->_cell_part_arrays->_force + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */
@@ -492,7 +504,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief set the value of h.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_h_part_struct(struct part *restrict p, const float h) {
+  part_set_h(struct part *restrict p, const float h) {
   struct force* restrict force_s = p->_cell_part_arrays->_force + p->_cell_offset;
 #ifdef SWIFT_DEBUG_CHECKS
   /* Forbid ID = 0 to prevent false positives by forgotten initialisation */

@@ -9,7 +9,7 @@
  * Copyright (c) anonymous
  ******************************************************************************/
 
-  
+
 /**
  * @file /hydro_part.h
  * @brief Test file to test header outputs.
@@ -30,13 +30,14 @@
 #include "hydro_part_arrays_struct.h"
 
 
-  
+
 #include "align.h"
 #include "error.h"
 #include "hydro_part_placeholder_structs.h"
 #include "hydro_part_arrays_struct.h"
 #include "rt_struct.h"
 #include "timestep_limiter_struct.h"
+#include "timeline.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>

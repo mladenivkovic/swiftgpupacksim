@@ -9,7 +9,7 @@
  * Copyright (c) NO AUTHORS SPECIFIED
  ******************************************************************************/
 
-  
+
 
 
 
@@ -26,13 +26,14 @@
 #include "hydro_part_arrays_struct.h"
 
 
-  
+
 #include "align.h"
 #include "error.h"
 #include "hydro_part_placeholder_structs.h"
 #include "hydro_part_arrays_struct.h"
 #include "rt_struct.h"
 #include "timestep_limiter_struct.h"
+#include "timeline.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
@@ -215,7 +216,7 @@ struct part2 {
 static __attribute__((always_inline)) INLINE size_t
   part_get_cell_offset_part_struct(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return p->_cell_offset; 
+  return p->_cell_offset;
 #else
   return SIZE_MAX;
 #endif
@@ -230,7 +231,7 @@ static __attribute__((always_inline)) INLINE size_t
 static __attribute__((always_inline)) INLINE size_t*
   part_get_cell_offset_p_part_struct(struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return &p->_cell_offset; 
+  return &p->_cell_offset;
 #else
   return NULL;
 #endif
@@ -245,7 +246,7 @@ static __attribute__((always_inline)) INLINE size_t*
 static __attribute__((always_inline)) INLINE const size_t*
   part_get_const_cell_offset_p_part_struct(const struct part *restrict p) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  return &p->_cell_offset; 
+  return &p->_cell_offset;
 #else
   return NULL;
 #endif
@@ -258,7 +259,7 @@ static __attribute__((always_inline)) INLINE const size_t*
 static __attribute__((always_inline)) INLINE void
   part_set_cell_offset_part_struct(struct part *restrict p, const size_t cell_offset) {
 #ifdef USE_PART_STRUCT_ACCESSORS
-  p->_cell_offset = cell_offset; 
+  p->_cell_offset = cell_offset;
 #endif
 }
 
@@ -391,7 +392,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE long long
   part_get_c_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_st1._c; 
+  return p->_st1._c;
 #else
   return 0;
 #endif
@@ -406,7 +407,7 @@ static __attribute__((always_inline)) INLINE long long
 static __attribute__((always_inline)) INLINE long long*
   part_get_c_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_st1._c; 
+  return &p->_st1._c;
 #else
   return NULL;
 #endif
@@ -420,7 +421,7 @@ static __attribute__((always_inline)) INLINE long long*
 static __attribute__((always_inline)) INLINE const long long*
   part_get_const_c_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_st1._c; 
+  return &p->_st1._c;
 #else
   return NULL;
 #endif
@@ -433,7 +434,7 @@ static __attribute__((always_inline)) INLINE const long long*
 static __attribute__((always_inline)) INLINE void
   part_set_c_part_struct(struct part *restrict p, const long long c) {
 #ifdef DEBUG
-  p->_st1._c = c; 
+  p->_st1._c = c;
 #endif
 }
 
@@ -597,7 +598,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_bu_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return p->_bu; 
+  return p->_bu;
 #else
   return FLT_MAX;
 #endif
@@ -612,7 +613,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_bu_p_part_struct(struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_bu; 
+  return &p->_bu;
 #else
   return NULL;
 #endif
@@ -626,7 +627,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_bu_p_part_struct(const struct part *restrict p) {
 #ifdef DEBUG
-  return &p->_bu; 
+  return &p->_bu;
 #else
   return NULL;
 #endif
@@ -639,7 +640,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_bu_part_struct(struct part *restrict p, const float bu) {
 #ifdef DEBUG
-  p->_bu = bu; 
+  p->_bu = bu;
 #endif
 }
 
@@ -651,7 +652,7 @@ static __attribute__((always_inline)) INLINE void
 static __attribute__((always_inline)) INLINE float
   part_get_cu_part_struct(const struct part *restrict p) {
 #ifdef NODEBUG
-  return p->_cu; 
+  return p->_cu;
 #else
   return FLT_MAX;
 #endif
@@ -666,7 +667,7 @@ static __attribute__((always_inline)) INLINE float
 static __attribute__((always_inline)) INLINE float*
   part_get_cu_p_part_struct(struct part *restrict p) {
 #ifdef NODEBUG
-  return &p->_cu; 
+  return &p->_cu;
 #else
   return NULL;
 #endif
@@ -680,7 +681,7 @@ static __attribute__((always_inline)) INLINE float*
 static __attribute__((always_inline)) INLINE const float*
   part_get_const_cu_p_part_struct(const struct part *restrict p) {
 #ifdef NODEBUG
-  return &p->_cu; 
+  return &p->_cu;
 #else
   return NULL;
 #endif
@@ -693,7 +694,7 @@ static __attribute__((always_inline)) INLINE const float*
 static __attribute__((always_inline)) INLINE void
   part_set_cu_part_struct(struct part *restrict p, const float cu) {
 #ifdef NODEBUG
-  p->_cu = cu; 
+  p->_cu = cu;
 #endif
 }
 
@@ -985,7 +986,7 @@ static __attribute__((always_inline)) INLINE long long
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_st3._c2; 
+  return part2_s->_st3._c2;
 #else
   return 0;
 #endif
@@ -1008,7 +1009,7 @@ static __attribute__((always_inline)) INLINE long long*
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return &part2_s->_st3._c2; 
+  return &part2_s->_st3._c2;
 #else
   return NULL;
 #endif
@@ -1030,7 +1031,7 @@ static __attribute__((always_inline)) INLINE const long long*
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return &part2_s->_st3._c2; 
+  return &part2_s->_st3._c2;
 #else
   return NULL;
 #endif
@@ -1051,7 +1052,7 @@ static __attribute__((always_inline)) INLINE void
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  part2_s->_st3._c2 = c2; 
+  part2_s->_st3._c2 = c2;
 #endif
 }
 
@@ -1343,7 +1344,7 @@ static __attribute__((always_inline)) INLINE float
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_bu2; 
+  return part2_s->_bu2;
 #else
   return FLT_MAX;
 #endif
@@ -1366,7 +1367,7 @@ static __attribute__((always_inline)) INLINE float*
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return &part2_s->_bu2; 
+  return &part2_s->_bu2;
 #else
   return NULL;
 #endif
@@ -1388,7 +1389,7 @@ static __attribute__((always_inline)) INLINE const float*
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return &part2_s->_bu2; 
+  return &part2_s->_bu2;
 #else
   return NULL;
 #endif
@@ -1409,7 +1410,7 @@ static __attribute__((always_inline)) INLINE void
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  part2_s->_bu2 = bu2; 
+  part2_s->_bu2 = bu2;
 #endif
 }
 
@@ -1429,7 +1430,7 @@ static __attribute__((always_inline)) INLINE float
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return part2_s->_cu2; 
+  return part2_s->_cu2;
 #else
   return FLT_MAX;
 #endif
@@ -1452,7 +1453,7 @@ static __attribute__((always_inline)) INLINE float*
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return &part2_s->_cu2; 
+  return &part2_s->_cu2;
 #else
   return NULL;
 #endif
@@ -1474,7 +1475,7 @@ static __attribute__((always_inline)) INLINE const float*
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  return &part2_s->_cu2; 
+  return &part2_s->_cu2;
 #else
   return NULL;
 #endif
@@ -1495,7 +1496,7 @@ static __attribute__((always_inline)) INLINE void
   if(part2_s->_accessor_id != p->_accessor_id)
     error("Accessor IDs not equal: %lld %lld", part2_s->_accessor_id, p->_accessor_id);
 #endif
-  part2_s->_cu2 = cu2; 
+  part2_s->_cu2 = cu2;
 #endif
 }
 

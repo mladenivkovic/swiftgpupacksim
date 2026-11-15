@@ -27,12 +27,24 @@
 
 
   
+#include "adaptive_softening_struct.h"
 #include "align.h"
+#include "black_holes_struct.h"
+#include "chemistry_struct.h"
+#include "cooling_struct.h"
+#include "csds.h"
 #include "error.h"
-#include "hydro_part_placeholder_structs.h"
+#include "feedback_struct.h"
+#include "fvpm_geometry_struct.h"
 #include "hydro_part_arrays_struct.h"
+#include "mhd_struct.h"
+#include "particle_splitting_struct.h"
+#include "pressure_floor_struct.h"
 #include "rt_struct.h"
+#include "sink_struct.h"
+#include "star_formation_struct.h"
 #include "timestep_limiter_struct.h"
+#include "tracers_struct.h"
 #include <float.h>
 #include <limits.h>
 #include <stddef.h>
@@ -113,7 +125,7 @@ struct part {
  * part_get_const_my_int_arr() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_int_arr_part_struct(struct part *restrict p) {
+  part_get_my_int_arr(struct part *restrict p) {
   return p->_my_int_arr;
 }
 
@@ -121,7 +133,7 @@ static __attribute__((always_inline)) INLINE int*
  * @brief get my_int_arr, my integer, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_int_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_int_arr(const struct part *restrict p) {
   return p->_my_int_arr;
 }
 
@@ -129,7 +141,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief get my_int_arr, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_int_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_int_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_int_arr[i];
 }
 
@@ -138,7 +150,7 @@ static __attribute__((always_inline)) INLINE int
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr_part_struct(struct part *restrict p, const int my_int_arr[4]) {
+  part_set_my_int_arr(struct part *restrict p, const int my_int_arr[4]) {
   p->_my_int_arr[0] = my_int_arr[0];
   p->_my_int_arr[1] = my_int_arr[1];
   p->_my_int_arr[2] = my_int_arr[2];
@@ -149,7 +161,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_int_arr, my integer, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_int_arr_ind_part_struct(struct part *restrict p, const int i, const int my_int_arr) {
+  part_set_my_int_arr_ind(struct part *restrict p, const int i, const int my_int_arr) {
   p->_my_int_arr[i] = my_int_arr;
 }
 
@@ -162,7 +174,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_long_arr() instead.
  */
 static __attribute__((always_inline)) INLINE long*
-  part_get_my_long_arr_part_struct(struct part *restrict p) {
+  part_get_my_long_arr(struct part *restrict p) {
   return p->_my_long_arr;
 }
 
@@ -170,7 +182,7 @@ static __attribute__((always_inline)) INLINE long*
  * @brief get my_long_arr, my long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long*
-  part_get_const_my_long_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_long_arr(const struct part *restrict p) {
   return p->_my_long_arr;
 }
 
@@ -178,7 +190,7 @@ static __attribute__((always_inline)) INLINE const long*
  * @brief get my_long_arr, my long, by index.
  */
 static __attribute__((always_inline)) INLINE long
-  part_get_my_long_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_long_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_long_arr[i];
 }
 
@@ -187,7 +199,7 @@ static __attribute__((always_inline)) INLINE long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr_part_struct(struct part *restrict p, const long my_long_arr[4]) {
+  part_set_my_long_arr(struct part *restrict p, const long my_long_arr[4]) {
   p->_my_long_arr[0] = my_long_arr[0];
   p->_my_long_arr[1] = my_long_arr[1];
   p->_my_long_arr[2] = my_long_arr[2];
@@ -198,7 +210,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_long_arr, my long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_long_arr_ind_part_struct(struct part *restrict p, const int i, const long my_long_arr) {
+  part_set_my_long_arr_ind(struct part *restrict p, const int i, const long my_long_arr) {
   p->_my_long_arr[i] = my_long_arr;
 }
 
@@ -211,7 +223,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_longlong_arr() instead.
  */
 static __attribute__((always_inline)) INLINE long long*
-  part_get_my_longlong_arr_part_struct(struct part *restrict p) {
+  part_get_my_longlong_arr(struct part *restrict p) {
   return p->_my_longlong_arr;
 }
 
@@ -219,7 +231,7 @@ static __attribute__((always_inline)) INLINE long long*
  * @brief get my_longlong_arr, my long long, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const long long*
-  part_get_const_my_longlong_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_longlong_arr(const struct part *restrict p) {
   return p->_my_longlong_arr;
 }
 
@@ -227,7 +239,7 @@ static __attribute__((always_inline)) INLINE const long long*
  * @brief get my_longlong_arr, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE long long
-  part_get_my_longlong_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_longlong_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_longlong_arr[i];
 }
 
@@ -236,7 +248,7 @@ static __attribute__((always_inline)) INLINE long long
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr_part_struct(struct part *restrict p, const long long my_longlong_arr[4]) {
+  part_set_my_longlong_arr(struct part *restrict p, const long long my_longlong_arr[4]) {
   p->_my_longlong_arr[0] = my_longlong_arr[0];
   p->_my_longlong_arr[1] = my_longlong_arr[1];
   p->_my_longlong_arr[2] = my_longlong_arr[2];
@@ -247,7 +259,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_longlong_arr, my long long, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_longlong_arr_ind_part_struct(struct part *restrict p, const int i, const long long my_longlong_arr) {
+  part_set_my_longlong_arr_ind(struct part *restrict p, const int i, const long long my_longlong_arr) {
   p->_my_longlong_arr[i] = my_longlong_arr;
 }
 
@@ -260,7 +272,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_float_arr() instead.
  */
 static __attribute__((always_inline)) INLINE float*
-  part_get_my_float_arr_part_struct(struct part *restrict p) {
+  part_get_my_float_arr(struct part *restrict p) {
   return p->_my_float_arr;
 }
 
@@ -268,7 +280,7 @@ static __attribute__((always_inline)) INLINE float*
  * @brief get my_float_arr, my float, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const float*
-  part_get_const_my_float_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_float_arr(const struct part *restrict p) {
   return p->_my_float_arr;
 }
 
@@ -276,7 +288,7 @@ static __attribute__((always_inline)) INLINE const float*
  * @brief get my_float_arr, my float, by index.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_my_float_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_float_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_float_arr[i];
 }
 
@@ -285,7 +297,7 @@ static __attribute__((always_inline)) INLINE float
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr_part_struct(struct part *restrict p, const float my_float_arr[4]) {
+  part_set_my_float_arr(struct part *restrict p, const float my_float_arr[4]) {
   p->_my_float_arr[0] = my_float_arr[0];
   p->_my_float_arr[1] = my_float_arr[1];
   p->_my_float_arr[2] = my_float_arr[2];
@@ -296,7 +308,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_float_arr, my float, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_float_arr_ind_part_struct(struct part *restrict p, const int i, const float my_float_arr) {
+  part_set_my_float_arr_ind(struct part *restrict p, const int i, const float my_float_arr) {
   p->_my_float_arr[i] = my_float_arr;
 }
 
@@ -309,7 +321,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_dble_arr() instead.
  */
 static __attribute__((always_inline)) INLINE double*
-  part_get_my_dble_arr_part_struct(struct part *restrict p) {
+  part_get_my_dble_arr(struct part *restrict p) {
   return p->_my_dble_arr;
 }
 
@@ -317,7 +329,7 @@ static __attribute__((always_inline)) INLINE double*
  * @brief get my_dble_arr, my double, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const double*
-  part_get_const_my_dble_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_dble_arr(const struct part *restrict p) {
   return p->_my_dble_arr;
 }
 
@@ -325,7 +337,7 @@ static __attribute__((always_inline)) INLINE const double*
  * @brief get my_dble_arr, my double, by index.
  */
 static __attribute__((always_inline)) INLINE double
-  part_get_my_dble_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_dble_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_dble_arr[i];
 }
 
@@ -334,7 +346,7 @@ static __attribute__((always_inline)) INLINE double
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr_part_struct(struct part *restrict p, const double my_dble_arr[4]) {
+  part_set_my_dble_arr(struct part *restrict p, const double my_dble_arr[4]) {
   p->_my_dble_arr[0] = my_dble_arr[0];
   p->_my_dble_arr[1] = my_dble_arr[1];
   p->_my_dble_arr[2] = my_dble_arr[2];
@@ -345,7 +357,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_dble_arr, my double, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_dble_arr_ind_part_struct(struct part *restrict p, const int i, const double my_dble_arr) {
+  part_set_my_dble_arr_ind(struct part *restrict p, const int i, const double my_dble_arr) {
   p->_my_dble_arr[i] = my_dble_arr;
 }
 
@@ -358,7 +370,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_char_arr() instead.
  */
 static __attribute__((always_inline)) INLINE char*
-  part_get_my_char_arr_part_struct(struct part *restrict p) {
+  part_get_my_char_arr(struct part *restrict p) {
   return p->_my_char_arr;
 }
 
@@ -366,7 +378,7 @@ static __attribute__((always_inline)) INLINE char*
  * @brief get my_char_arr, my_char, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const char*
-  part_get_const_my_char_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_char_arr(const struct part *restrict p) {
   return p->_my_char_arr;
 }
 
@@ -374,7 +386,7 @@ static __attribute__((always_inline)) INLINE const char*
  * @brief get my_char_arr, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE char
-  part_get_my_char_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_char_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_char_arr[i];
 }
 
@@ -383,7 +395,7 @@ static __attribute__((always_inline)) INLINE char
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr_part_struct(struct part *restrict p, const char my_char_arr[4]) {
+  part_set_my_char_arr(struct part *restrict p, const char my_char_arr[4]) {
   p->_my_char_arr[0] = my_char_arr[0];
   p->_my_char_arr[1] = my_char_arr[1];
   p->_my_char_arr[2] = my_char_arr[2];
@@ -394,7 +406,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_char_arr, my_char, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_char_arr_ind_part_struct(struct part *restrict p, const int i, const char my_char_arr) {
+  part_set_my_char_arr_ind(struct part *restrict p, const int i, const char my_char_arr) {
   p->_my_char_arr[i] = my_char_arr;
 }
 
@@ -407,7 +419,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_integertime_arr() instead.
  */
 static __attribute__((always_inline)) INLINE integertime_t*
-  part_get_my_integertime_arr_part_struct(struct part *restrict p) {
+  part_get_my_integertime_arr(struct part *restrict p) {
   return p->_my_integertime_arr;
 }
 
@@ -415,7 +427,7 @@ static __attribute__((always_inline)) INLINE integertime_t*
  * @brief get my_integertime_arr, my integertime, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const integertime_t*
-  part_get_const_my_integertime_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_integertime_arr(const struct part *restrict p) {
   return p->_my_integertime_arr;
 }
 
@@ -423,7 +435,7 @@ static __attribute__((always_inline)) INLINE const integertime_t*
  * @brief get my_integertime_arr, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE integertime_t
-  part_get_my_integertime_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_integertime_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_integertime_arr[i];
 }
 
@@ -432,7 +444,7 @@ static __attribute__((always_inline)) INLINE integertime_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr_part_struct(struct part *restrict p, const integertime_t my_integertime_arr[4]) {
+  part_set_my_integertime_arr(struct part *restrict p, const integertime_t my_integertime_arr[4]) {
   p->_my_integertime_arr[0] = my_integertime_arr[0];
   p->_my_integertime_arr[1] = my_integertime_arr[1];
   p->_my_integertime_arr[2] = my_integertime_arr[2];
@@ -443,7 +455,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_integertime_arr, my integertime, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_integertime_arr_ind_part_struct(struct part *restrict p, const int i, const integertime_t my_integertime_arr) {
+  part_set_my_integertime_arr_ind(struct part *restrict p, const int i, const integertime_t my_integertime_arr) {
   p->_my_integertime_arr[i] = my_integertime_arr;
 }
 
@@ -456,7 +468,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_timebin_arr() instead.
  */
 static __attribute__((always_inline)) INLINE timebin_t*
-  part_get_my_timebin_arr_part_struct(struct part *restrict p) {
+  part_get_my_timebin_arr(struct part *restrict p) {
   return p->_my_timebin_arr;
 }
 
@@ -464,7 +476,7 @@ static __attribute__((always_inline)) INLINE timebin_t*
  * @brief get my_timebin_arr, my timebin, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const timebin_t*
-  part_get_const_my_timebin_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_timebin_arr(const struct part *restrict p) {
   return p->_my_timebin_arr;
 }
 
@@ -472,7 +484,7 @@ static __attribute__((always_inline)) INLINE const timebin_t*
  * @brief get my_timebin_arr, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE timebin_t
-  part_get_my_timebin_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_timebin_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_timebin_arr[i];
 }
 
@@ -481,7 +493,7 @@ static __attribute__((always_inline)) INLINE timebin_t
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr_part_struct(struct part *restrict p, const timebin_t my_timebin_arr[4]) {
+  part_set_my_timebin_arr(struct part *restrict p, const timebin_t my_timebin_arr[4]) {
   p->_my_timebin_arr[0] = my_timebin_arr[0];
   p->_my_timebin_arr[1] = my_timebin_arr[1];
   p->_my_timebin_arr[2] = my_timebin_arr[2];
@@ -492,7 +504,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_timebin_arr, my timebin, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_timebin_arr_ind_part_struct(struct part *restrict p, const int i, const timebin_t my_timebin_arr) {
+  part_set_my_timebin_arr_ind(struct part *restrict p, const int i, const timebin_t my_timebin_arr) {
   p->_my_timebin_arr[i] = my_timebin_arr;
 }
 
@@ -505,7 +517,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_external_struct_arr() instead.
  */
 static __attribute__((always_inline)) INLINE struct my_struct*
-  part_get_my_external_struct_arr_part_struct(struct part *restrict p) {
+  part_get_my_external_struct_arr(struct part *restrict p) {
   return p->_my_external_struct_arr;
 }
 
@@ -513,7 +525,7 @@ static __attribute__((always_inline)) INLINE struct my_struct*
  * @brief get my_external_struct_arr, some externally defined struct, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const struct my_struct*
-  part_get_const_my_external_struct_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_external_struct_arr(const struct part *restrict p) {
   return p->_my_external_struct_arr;
 }
 
@@ -521,7 +533,7 @@ static __attribute__((always_inline)) INLINE const struct my_struct*
  * @brief get my_external_struct_arr, some externally defined struct, by index.
  */
 static __attribute__((always_inline)) INLINE struct my_struct
-  part_get_my_external_struct_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_external_struct_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_external_struct_arr[i];
 }
 
@@ -530,7 +542,7 @@ static __attribute__((always_inline)) INLINE struct my_struct
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct_arr_part_struct(struct part *restrict p, const struct my_struct my_external_struct_arr[4]) {
+  part_set_my_external_struct_arr(struct part *restrict p, const struct my_struct my_external_struct_arr[4]) {
   p->_my_external_struct_arr[0] = my_external_struct_arr[0];
   p->_my_external_struct_arr[1] = my_external_struct_arr[1];
   p->_my_external_struct_arr[2] = my_external_struct_arr[2];
@@ -541,7 +553,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_external_struct_arr, some externally defined struct, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_external_struct_arr_ind_part_struct(struct part *restrict p, const int i, const struct my_struct my_external_struct_arr) {
+  part_set_my_external_struct_arr_ind(struct part *restrict p, const int i, const struct my_struct my_external_struct_arr) {
   p->_my_external_struct_arr[i] = my_external_struct_arr;
 }
 
@@ -554,7 +566,7 @@ static __attribute__((always_inline)) INLINE void
  * part_get_const_my_macro_arr() instead.
  */
 static __attribute__((always_inline)) INLINE int*
-  part_get_my_macro_arr_part_struct(struct part *restrict p) {
+  part_get_my_macro_arr(struct part *restrict p) {
   return p->_my_macro_arr;
 }
 
@@ -562,7 +574,7 @@ static __attribute__((always_inline)) INLINE int*
  * @brief get my_macro_arr, array with size defined by macro, for read-only access.
  */
 static __attribute__((always_inline)) INLINE const int*
-  part_get_const_my_macro_arr_part_struct(const struct part *restrict p) {
+  part_get_const_my_macro_arr(const struct part *restrict p) {
   return p->_my_macro_arr;
 }
 
@@ -570,7 +582,7 @@ static __attribute__((always_inline)) INLINE const int*
  * @brief get my_macro_arr, array with size defined by macro, by index.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_my_macro_arr_ind_part_struct(const struct part *restrict p, const int i) {
+  part_get_my_macro_arr_ind(const struct part *restrict p, const int i) {
   return p->_my_macro_arr[i];
 }
 
@@ -579,7 +591,7 @@ static __attribute__((always_inline)) INLINE int
  * from an array.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_macro_arr_part_struct(struct part *restrict p, const int my_macro_arr[MY_ARRAY_SIZE]) {
+  part_set_my_macro_arr(struct part *restrict p, const int my_macro_arr[MY_ARRAY_SIZE]) {
   for (int i = 0; i < MY_ARRAY_SIZE; i++){
     p->_my_macro_arr[i] = my_macro_arr[i];
   }
@@ -589,7 +601,7 @@ static __attribute__((always_inline)) INLINE void
  * @brief set the value of my_macro_arr, array with size defined by macro, by index.
  */
 static __attribute__((always_inline)) INLINE void
-  part_set_my_macro_arr_ind_part_struct(struct part *restrict p, const int i, const int my_macro_arr) {
+  part_set_my_macro_arr_ind(struct part *restrict p, const int i, const int my_macro_arr) {
   p->_my_macro_arr[i] = my_macro_arr;
 }
 

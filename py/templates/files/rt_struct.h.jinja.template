@@ -8,7 +8,6 @@
   * Input file is {{INPUT_FILENAME}}
   */
 
-{% if HEADER_FOR_SWIFT %} {# ---------------- includes for swift ---------------------- -#}
 /*******************************************************************************
  * This file is part of SWIFT.
  * Copyright (c) {{AUTHORS}}
@@ -42,11 +41,8 @@
     {%- endfor %}
   {%- endif %}
 
-{% else %} {# ----------------------- includes for swiftgpupacksim ------------------ #}
 
-{% endif -%} {#- If making swift header -#}
-
-
+{% if HEADER_FOR_SWIFT %} {# omit these inclusions for swiftgpupacksim #}
 /* Import the right RT struct definition */
 #if defined(RT_NONE)
 #include "./rt/none/rt_struct.h"
@@ -59,6 +55,7 @@
 #else
 #error "Invalid choice of radiation scheme"
 #endif
+{%- endif %}
 
 
 {# --------------------------------- GENERATE STUCTS -------------------------------- #}
