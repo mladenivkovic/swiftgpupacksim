@@ -1,0 +1,289 @@
+# SPHENIX particle struct as it is in the GPUSwift branch
+
+# First, some metadata about this SPH flavour.
+metadata:
+  flavour: "REMIX"
+  authors: "2024 Thomas Sandnes (thomas.d.sandnes@durham.ac.uk) & 2024 Jacob Kegerreis (jacob.kegerreis@durham.ac.uk) & 2016 Matthieu Schaller (matthieu.schaller@durham.ac.uk)"
+
+# now for the actual particle content
+
+part:
+  doc: | 
+    @brief Particle fields for the SPH particles
+
+    The density and force substructures are used to contain variables only used
+    within the density and force loops over neighbours. All more permanent
+    variables should be declared in the main part of the part structure,
+
+  x:
+    type: double
+    size: 3
+    doc: the particle position
+
+  v:
+    size: 3
+    doc: Particle predicted velocity
+
+  a_hydro:
+    size: 3
+    doc: Particle acceleration
+
+  mass:
+    doc: Particle mass
+
+  h:
+    doc: Particle smoothing length 
+
+  u:
+    doc: Particle internal energy
+
+  u_dt:
+    doc: Time derivative of the internal energy
+
+  rho:
+    doc: Particle density
+
+  rho_evol:
+    doc: Particle density (standard SPH estimate)
+
+  drho_dt:
+    doc: Time derivative of the evolved density 
+
+  dv_norm_kernel:
+    size: 3,3
+    doc: Gradient of velocity, calculated using normalised kernel
+    
+  du_norm_kernel:
+    size: 3
+    doc: Gradient of internal energy, calculated using normalised kernel
+
+  drho_norm_kernel:
+    size: 3
+    doc: Gradient of density, calculated using normalised kernel
+
+  dh_norm_kernel:
+    size: 3 
+    doc: Gradient of smoothing length, calculated using normalised kernel
+
+  m0:
+    doc: Geometric moment m_0
+
+  grad_m0:
+    size: 3
+    doc: Gradient of geometric moment m_0
+
+  union1:
+    type: union
+    doc: Store density/force specific stuff
+    contents:
+      density:
+        type: struct
+        doc: Structure for the variables only used in the density loop over neighbours 
+             Quantities in this sub-structure should only be accessed in the density loop 
+             over neighbours and the ghost task
+        contents:
+          wcount:
+            doc: Neighbour number count
+          wcount_dh:
+            doc: Derivative of the neighbour number with respect to h
+          rho_dh:
+            doc: Derivative of density with respect to h
+      gradient:
+        type: struct
+        doc: Structure for the variables only used in the gradient loop over neighbours
+             Quantities should only be accessed in the gradient loop over neighbours and the extra ghost task
+        contents:
+          m0_bar:
+            doc: Symmetrised kernel geometric moment m0
+          grad_m0_bar:
+            size: 3
+            doc: Gradient of symmetrised kernel geometric m0
+          grad_m0_bar_gradhterm:
+            doc: Contributing term for grad-h component of grad_m0_bar
+          m1_bar:
+            size: 3
+            doc: Symmetrised kernel geometric moment m1
+          grad_m1_bar:
+            size: 3,3
+            doc: Gradient of symmetrised kernel geometric moment m1
+          grad_m1_bar_gradhterm:
+            size: 3
+            doc: Contributing term for grad-h component of grad_m1_bar
+          m2_bar:
+            type: "struct sym_matrix m2_bar"
+            doc: Symmetrised kernel geometric moment m2
+          grad_m2_bar:
+            type: "struct sym_matrix grad_m2_bar"
+            size: 3
+            doc: Gradient of symmetrised kernel geometric moment m2 (x, y, z * components"
+          grad_m2_bar_gradhterm:
+            type: "struct sym_matrix grad_m2_bar_gradhterm"
+            doc: Contributing term for grad-h component of grad_m2_bar
+      force:
+        type: struct
+        doc: Structure for the variables only used in the force loop over neighbours 
+             Quantities in this sub-structure should only be accessed in the force loop 
+             over neighbours and the ghost, drift and kick tasks
+        contents:
+          pressure:
+            doc: Particle pressure
+          soundspeed: 
+            doc: Particle soundspeed
+          v_sig:
+            doc: Particle signal velocity 
+          h_dt: 
+            doc: Time derivative of smoothing length
+          balsara:
+            doc: Balsara switch 
+          A:
+            doc: Linear-order reproducing kernel coefficient
+          B:
+            size: 3
+            doc: Linear-order reproducing kernel coefficient 
+          grad_A:
+            size: 3
+            doc: Gradient of linear-order reproducing kernel coefficient 
+          grad_B:
+            size: 3,3
+            doc: Gradient of linear-order reproducing kernel coefficient
+          vac_switch:
+            doc: Variable switch to identify proximity to vacuum boundaries
+          eta_crit:
+            doc: Constant needed for slope limiter: 1 / eta_neighbours
+
+
+  id: 
+    type: long long
+    doc:  Particle unique ID
+
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
+
+  mhd_data:
+    type: struct mhd_part_data
+    doc: Additional data used by the MHD scheme
+
+  chemistry_data:
+    type: struct chemistry_part_data 
+    doc: Chemistry information
+
+  cooling_data:
+    type: struct cooling_part_data
+    doc: Cooling information
+
+  black_holes_data:
+    type: struct black_holes_part_data
+    doc: Black holes information (eg swallowing ID)
+
+  sink_data:
+    type: struct sink_part_data
+    doc: Sink information (eg swallowing ID)
+
+  mat_id:
+    type: enum eos_planetary_material_id 
+    doc: Material identifier flag 
+
+  rt_data:
+    type: struct rt_part_data
+    doc: Additional Radiative Transfer Data
+
+  rt_time_data:
+    type: struct rt_timestepping_data
+    doc: RT sub-cycling time stepping data
+
+  time_bin:
+    type: timebin_t
+    doc: Time-step length
+
+  depth_h:
+    doc: Tree-depth at which size / 2 <= h * gamma < size
+    type: char
+
+  is_h_max
+    type: char
+    doc: Wether or not the particle has h=h_max ('1' or '0')
+
+  time_bin:
+    type: timebin_t
+    doc: Time-step length
+
+  limiter_data:
+    type: struct timestep_limiter_data
+    doc: Time-step limiter information
+
+  ti_drift:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS
+
+  ti_kick:
+    type: integertime_t
+    doc: Time of the last drift
+    ifdef: SWIFT_DEBUG_CHECKS 
+
+  s_fixed:
+    type: float
+    doc: Fixed specific entropy 
+    idef: PLANETARY_FIXED_ENTROPY
+
+
+
+xpart:
+  doc: |
+    @brief Particle fields not needed during the SPH loops over neighbours.
+
+    This structure contains the particle fields that are not used in the
+    density or force loops. Quantities should be used in the kick, drift and
+    potentially ghost tasks only.
+
+  x_diff:
+    size: 3
+    doc: "Offset between current position and position at last tree rebuild."
+
+  x_diff_sort:
+    size: 3
+    doc: "Offset between the current position and position at the last sort."
+
+  v_full:
+    size: 3
+    doc: "Velocity at the last full step."
+
+  a_grav:
+    size: 3
+    doc: "Gravitational acceleration at the end of the last step"
+
+  u_full:
+    doc: "Internal energy at the last full step."
+
+  rho_evol_full:
+    doc: "Evolved density at the last full step."
+
+  split_data:
+    type: "struct particle_splitting_data split_data"
+    doc: "Additional data used to record particle splits"
+
+  extra_cooling_data:
+    type: "struct cooling_xpart_data"
+    doc: "Additional data used to record cooling information"
+
+  extra_tracers_data:
+    doc: "Additional data used by the tracers"
+    type: "struct tracers_xpart_data"
+
+  extra_sf_data:
+    doc: "Additional data used by the tracers"
+    type: "struct star_formation_xpart_data"
+
+  extra_feedback_data:
+    doc: "Additional data used by the feedback"
+    type: "struct feedback_xpart_data"
+
+  extra_mhd_data:
+    doc: "Additional data used by the MHD scheme"
+    type: "struct mhd_xpart_data"
+
+  extra_forcing_data:
+    doc: "Additional data used by the forcing scheme"
+    type: "struct forcing_xpart_data"
+
