@@ -74,7 +74,7 @@ class FieldEntry(object):
     """
 
     # jinja environment used to load and generate templates
-    jinja_env = init_jinja_env(template_dir = "api")
+    jinja_env = init_jinja_env(template_dir="api")
 
     def __init__(
         self,
@@ -216,7 +216,9 @@ class FieldEntry(object):
             pass
         try:
             self.ifdef_return_val = self.props["ifdef_return_val"]
-            dprint("    _extract_field_data(): getter return value:", self.ifdef_return_val)
+            dprint(
+                "    _extract_field_data(): getter return value:", self.ifdef_return_val
+            )
         except KeyError:
             pass
 
@@ -567,7 +569,7 @@ class FieldEntry(object):
                         f"Field {self.type} {self.name}[{self.size}]:"
                         + "arrays of pointers is untested, could contain errors."
                     )
-                scalar="array"
+                scalar = "array"
 
             elif params_dict["IS_MULTIDIM_ARRAY"]:
                 scalar = "multidim_array"
@@ -579,8 +581,8 @@ class FieldEntry(object):
 
             if use_struct_template and not nonpart_template:
                 raise ValueError(
-                        "Trying to use `use_struct` type template, but ROOT_STRUCT_SPECIAL_NAME is not specified."
-                        )
+                    "Trying to use `use_struct` type template, but ROOT_STRUCT_SPECIAL_NAME is not specified."
+                )
 
             if nonpart_template or use_struct_template:
                 if params_dict["IS_ARRAY"] or params_dict["IS_MULTIDIM_ARRAY"]:
@@ -589,14 +591,24 @@ class FieldEntry(object):
                     )
 
                 if scalar == "array":
-                    raise NotImplementedError("jinja template for arrays is not implemented yet.")
+                    raise NotImplementedError(
+                        "jinja template for arrays is not implemented yet."
+                    )
                 if scalar == "multidim_array":
-                    raise NotImplementedError("jinja template for multidim arrays is not implemented yet.")
+                    raise NotImplementedError(
+                        "jinja template for multidim arrays is not implemented yet."
+                    )
 
                 if use_struct_template:
-                    templ_fname_explicit = f"api_{scalar}_use_struct_explicit_var_accessors.jinja.template"
-                    templ_fname_global = f"api_{scalar}_use_struct_global_var_accessors.jinja.template"
-                    templ_fname_part_struct = f"api_{scalar}_use_struct_part_struct_accessors.jinja.template"
+                    templ_fname_explicit = (
+                        f"api_{scalar}_use_struct_explicit_var_accessors.jinja.template"
+                    )
+                    templ_fname_global = (
+                        f"api_{scalar}_use_struct_global_var_accessors.jinja.template"
+                    )
+                    templ_fname_part_struct = (
+                        f"api_{scalar}_use_struct_part_struct_accessors.jinja.template"
+                    )
 
                 elif nonpart_template:
                     # No difference for accessors here.
@@ -611,9 +623,13 @@ class FieldEntry(object):
 
             else:
                 # default templates
-                templ_fname_explicit = f"api_{scalar}_explicit_var_accessors.jinja.template"
+                templ_fname_explicit = (
+                    f"api_{scalar}_explicit_var_accessors.jinja.template"
+                )
                 templ_fname_global = f"api_{scalar}_global_var_accessors.jinja.template"
-                templ_fname_part_struct = f"api_{scalar}_part_struct_accessors.jinja.template"
+                templ_fname_part_struct = (
+                    f"api_{scalar}_part_struct_accessors.jinja.template"
+                )
 
             # For SWIFTGPUPACKSIM, we want to be able to generate all 3
             # accessor variant APIs simultaneously, so allow for that, but mark
@@ -623,7 +639,11 @@ class FieldEntry(object):
             api_global = ""
 
             # are we writing multiple APIs?
-            multiple_apis = (part_struct_accessors and global_var_accessors) or (part_struct_accessors and explicit_var_accessors) or (global_var_accessors and explicit_var_accessors)
+            multiple_apis = (
+                (part_struct_accessors and global_var_accessors)
+                or (part_struct_accessors and explicit_var_accessors)
+                or (global_var_accessors and explicit_var_accessors)
+            )
 
             if nonpart_template and not use_struct_template:
                 # for non-part templates, we don't use accessors, but specific structs
@@ -639,7 +659,9 @@ class FieldEntry(object):
             else:
 
                 if part_struct_accessors:
-                    templ_part_struct = self.jinja_env.get_template(templ_fname_part_struct)
+                    templ_part_struct = self.jinja_env.get_template(
+                        templ_fname_part_struct
+                    )
                     if multiple_apis or not swift_header:
                         params_dict["API_SUFFIX"] = "_part_struct"
                     api_part_struct = templ_part_struct.render(params_dict)

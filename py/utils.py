@@ -9,7 +9,11 @@ from typing import Union
 import subprocess
 import datetime
 import yaml
-from required_data import _required_particle_fields, _required_particle_file_metadata_swift, _required_other_file_metadata_swift
+from required_data import (
+    _required_particle_fields,
+    _required_particle_file_metadata_swift,
+    _required_other_file_metadata_swift,
+)
 from verbosity import *
 
 
@@ -45,7 +49,9 @@ def verify_dir_exists(dname: str, message: str = ""):
     return
 
 
-def check_output_directory(outdir: Union[str, list], swift_header: bool = False, full_output: bool = False):
+def check_output_directory(
+    outdir: Union[str, list], swift_header: bool = False, full_output: bool = False
+):
     """
     Extract the output directory from the parsed args.
     If it doesn't exist, make it.
@@ -83,7 +89,9 @@ def check_output_directory(outdir: Union[str, list], swift_header: bool = False,
         raise ValueError("Unknown type for output_dir cmdline arg:", type(outdir))
 
     if not os.path.isdir(outdir):
-        vprint(f"check_output_directory(): output directory '{outdir}' doesn't exist, creating it.")
+        vprint(
+            f"check_output_directory(): output directory '{outdir}' doesn't exist, creating it."
+        )
         os.makedirs(outdir)
 
     if swift_header or full_output:
@@ -114,7 +122,9 @@ def get_git_hash() -> str:
             gitstdout = gitstdout.decode("utf8")
         hashstr = gitstdout.strip()
     except subprocess.CalledProcessError:
-        print("get_git_hash(): Something went wrong when trying to obtain hash of latest git commit.")
+        print(
+            "get_git_hash(): Something went wrong when trying to obtain hash of latest git commit."
+        )
         print(f"get_git_hash(): Command that failed was '{git_hash_cmd}'")
         print("get_git_hash(): Using current timestamp instead.")
         hashstr = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
@@ -264,7 +274,9 @@ def read_default_includes(swift_header: bool = False):
 
     fname_full = os.path.join("input", fname)
 
-    vprint(f"read_default_includes(): Using defaults from {fname_full} with additions from yml file")
+    vprint(
+        f"read_default_includes(): Using defaults from {fname_full} with additions from yml file"
+    )
 
     f = open(fname_full, "r")
     lines = f.readlines()
@@ -275,7 +287,9 @@ def read_default_includes(swift_header: bool = False):
     return sanitized
 
 
-def validate_yml_contents(contents_d: dict, filename: str, is_particle: bool=True, testing: bool=False) -> None:
+def validate_yml_contents(
+    contents_d: dict, filename: str, is_particle: bool = True, testing: bool = False
+) -> None:
     """
     Run through the read-in data from the yml file, passed as the dict
     `contents_d`, and validate that there is no issues:
@@ -329,7 +343,9 @@ def validate_yml_contents(contents_d: dict, filename: str, is_particle: bool=Tru
     # make sure all required fields exist.
     for f in _required_particle_fields:
         if f not in field_names:
-            print(f"validate_yml_contents(): Error: required field '{f}' not found in particle yml parameter file {filename}.")
+            print(
+                f"validate_yml_contents(): Error: required field '{f}' not found in particle yml parameter file {filename}."
+            )
             quit(1)
 
     return
@@ -369,7 +385,9 @@ def process_yml_metadata(
         for field in checklist:
             if field not in passed_fields:
                 raise ValueError(
-                    f"process_yml_metadata(): Required field {field} not found in read-in metadata. "+f"metadata_d={metadata_d}, is_particle={is_particle}, "+f"swift_header={swift_header}"
+                    f"process_yml_metadata(): Required field {field} not found in read-in metadata. "
+                    + f"metadata_d={metadata_d}, is_particle={is_particle}, "
+                    + f"swift_header={swift_header}"
                 )
 
     # Now go through fields one-by-one
@@ -390,7 +408,6 @@ def process_yml_metadata(
             metadata_d["doc"] = doc
     else:
         metadata_d["has_doc"] = True
-
 
     if "flavour" not in passed_fields:
         metadata_d["flavour"] = get_git_hash()
@@ -432,9 +449,6 @@ def process_yml_metadata(
         metadata_d["has_extra_includes"] = False
 
     return
-
-
-
 
 
 def check_part_struct_first_in_list(contents_d: dict) -> bool:

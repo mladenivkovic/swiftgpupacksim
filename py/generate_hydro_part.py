@@ -144,7 +144,9 @@ if __name__ == "__main__":
     verbose_settings["verbose"] = args.verbose
     verbose_settings["debug"] = args.debug
 
-    outdir = check_output_directory(args.output_dir, swift_header=swift_header, full_output=full_output)
+    outdir = check_output_directory(
+        args.output_dir, swift_header=swift_header, full_output=full_output
+    )
 
     # Check our setup is sensible.
     verify_file_exists(input_file)
@@ -206,21 +208,33 @@ if __name__ == "__main__":
         id_checks = False
 
     # get timestep limiter data
-    timestep_limiter_input_file = get_full_file_path_relative_to_script(os.path.join("input", "timestep_limiter_struct.yml"))
-    timestep_limiter_d, timestep_limiter_metadata_d = read_input_file(timestep_limiter_input_file)
+    timestep_limiter_input_file = get_full_file_path_relative_to_script(
+        os.path.join("input", "timestep_limiter_struct.yml")
+    )
+    timestep_limiter_d, timestep_limiter_metadata_d = read_input_file(
+        timestep_limiter_input_file
+    )
 
     # check that everything is sensible
-    validate_yml_contents(timestep_limiter_d, timestep_limiter_input_file, is_particle=False, testing=testing)
+    validate_yml_contents(
+        timestep_limiter_d,
+        timestep_limiter_input_file,
+        is_particle=False,
+        testing=testing,
+    )
     process_yml_metadata(timestep_limiter_metadata_d, swift_header=swift_header)
 
     # get rt_struct data
-    rt_struct_input_file = get_full_file_path_relative_to_script(os.path.join("input", "rt_struct.yml"))
+    rt_struct_input_file = get_full_file_path_relative_to_script(
+        os.path.join("input", "rt_struct.yml")
+    )
     rt_struct_d, rt_struct_metadata_d = read_input_file(rt_struct_input_file)
 
     # check that everything is sensible
-    validate_yml_contents(rt_struct_d, rt_struct_input_file, is_particle=False, testing=testing)
+    validate_yml_contents(
+        rt_struct_d, rt_struct_input_file, is_particle=False, testing=testing
+    )
     process_yml_metadata(rt_struct_metadata_d, swift_header=swift_header)
-
 
     # ---------------------------------------
     # Now, the actual file generation
@@ -239,16 +253,17 @@ if __name__ == "__main__":
         testing=testing,
     )
 
-
     #  generate src/hydro_part.h
     inputs = {
-            "timestep_limiter_struct.yml": {
-                "struct": "timestep_limiter_data",
-                "name": "timestep_limiter",},
-            "rt_struct.yml": {
-                "struct": "rt_timestepping_data",
-                "name": "rt_time_data",}
-            }
+        "timestep_limiter_struct.yml": {
+            "struct": "timestep_limiter_data",
+            "name": "timestep_limiter",
+        },
+        "rt_struct.yml": {
+            "struct": "rt_timestepping_data",
+            "name": "rt_time_data",
+        },
+    }
 
     top_level_hydro_part_header = generate_top_level_hydro_part_dot_h(
         inputs,
@@ -257,7 +272,6 @@ if __name__ == "__main__":
         global_var_accessors=global_var_accessors,
         part_struct_accessors=part_struct_accessors,
     )
-
 
     # generate src/timestep_limiter_struct.h
     timestep_limiter_struct_header = generate_timestep_limiter_struct_dot_h(
@@ -359,7 +373,6 @@ if __name__ == "__main__":
             fp.close()
             print("Written", outfile)
 
-
         # are we writing full output?
         if full_output:
 
@@ -380,4 +393,3 @@ if __name__ == "__main__":
             fp.write(rt_struct_header)
             fp.close()
             print("Written", outfile)
-

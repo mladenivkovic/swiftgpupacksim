@@ -12,7 +12,11 @@ from render_templates import (
     jinja_render_timestep_limiter_struct_dot_h,
     jinja_render_top_level_hydro_part_dot_h,
 )
-from utils import check_part_struct_first_in_list, get_full_file_path_relative_to_script, read_input_file
+from utils import (
+    check_part_struct_first_in_list,
+    get_full_file_path_relative_to_script,
+    read_input_file,
+)
 from verbosity import *
 
 
@@ -283,9 +287,7 @@ def generate_hydro_part_arrays_struct_dot_h(
 
     #  generate the file from template
     header_file = jinja_render_hydro_part_arrays_struct_dot_h(
-        part_struct_d,
-        metadata_d,
-        swift_header=swift_header
+        part_struct_d, metadata_d, swift_header=swift_header
     )
 
     return header_file
@@ -402,10 +404,13 @@ def generate_hydro_space_dot_c(
 
     #  generate the file from template
     base_file = jinja_render_hydro_space_dot_c(
-        part_struct_d, metadata_d, swift_header=swift_header,
+        part_struct_d,
+        metadata_d,
+        swift_header=swift_header,
     )
 
     return base_file
+
 
 def generate_timestep_limiter_struct_dot_h(
     limiter_d: dict,
@@ -508,7 +513,6 @@ def generate_timestep_limiter_struct_dot_h(
     return header_file
 
 
-
 def generate_rt_struct_dot_h(
     rt_d: dict,
     metadata_d: dict,
@@ -608,7 +612,6 @@ def generate_rt_struct_dot_h(
     )
 
     return header_file
-
 
 
 def generate_top_level_hydro_part_dot_h(
@@ -731,5 +734,3 @@ def generate_top_level_hydro_part_dot_h(
     )
 
     return header_file
-
-

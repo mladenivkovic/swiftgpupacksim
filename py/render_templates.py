@@ -40,7 +40,6 @@ def init_jinja_env(template_dir: str = "") -> jinja2.Environment:
         else:
             tdir = os.path.join(tdir, template_dir)
 
-
     verify_dir_exists(tdir)
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(tdir), keep_trailing_newline=True
@@ -186,7 +185,7 @@ def jinja_render_parts_dot_h(
     templ_fname = "parts.h.jinja.template"
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join("templates", "files", templ_fname)
-    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+    templ_trunc_name = truncate_repo_file_path(templ_full_fname)
 
     # fill up dict for template rendering
     d = {}
@@ -241,7 +240,7 @@ def jinja_render_hydro_part_arrays_struct_dot_h(
     templ_fname = "hydro_part_arrays_struct.h.jinja.template"
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join("templates", "files", templ_fname)
-    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+    templ_trunc_name = truncate_repo_file_path(templ_full_fname)
 
     # fill up dict for template rendering
     d = {}
@@ -252,7 +251,9 @@ def jinja_render_hydro_part_arrays_struct_dot_h(
     d["HEADER_GUARD"] = get_git_hash()
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_render_hydro_part_arrays_struct_dot_h(): dict passed to jinja renderer:")
+    dprint(
+        "jinja_render_hydro_part_arrays_struct_dot_h(): dict passed to jinja renderer:"
+    )
     dpprint(d)
 
     header_template = templ.render(d)
@@ -295,7 +296,7 @@ def jinja_render_hydro_part_arrays_flush_dot_h(
     templ_fname = "hydro_part_arrays_flush.h.jinja.template"
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join("templates", "files", templ_fname)
-    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+    templ_trunc_name = truncate_repo_file_path(templ_full_fname)
 
     # fill up dict for template rendering
     d = {}
@@ -306,7 +307,9 @@ def jinja_render_hydro_part_arrays_flush_dot_h(
     d["HEADER_GUARD"] = get_git_hash()
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_render_hydro_part_arrays_flush_dot_h(): dict passed to jinja renderer:")
+    dprint(
+        "jinja_render_hydro_part_arrays_flush_dot_h(): dict passed to jinja renderer:"
+    )
     dpprint(d)
 
     header_template = templ.render(d)
@@ -367,7 +370,7 @@ def jinja_render_timestep_limiter_struct_dot_h(
     templ_fname = "timestep_limiter_struct.h.jinja.template"
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join("templates", "files", templ_fname)
-    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+    templ_trunc_name = truncate_repo_file_path(templ_full_fname)
 
     # fill up dict for template rendering
     d = {}
@@ -391,13 +394,14 @@ def jinja_render_timestep_limiter_struct_dot_h(
     d["EXTRA_INCLUDES"] = metadata_d["includes_add"]
     d["INPUT_FILENAME"] = metadata_d["input_file"]
 
-    dprint("jinja_render_timestep_limiter_struct_dot_h(): dict passed to jinja renderer:")
+    dprint(
+        "jinja_render_timestep_limiter_struct_dot_h(): dict passed to jinja renderer:"
+    )
     dpprint(d)
 
     header_template = templ.render(d)
 
     return header_template
-
 
 
 def jinja_render_rt_struct_dot_h(
@@ -453,7 +457,7 @@ def jinja_render_rt_struct_dot_h(
     templ_fname = "rt_struct.h.jinja.template"
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join("templates", "files", templ_fname)
-    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+    templ_trunc_name = truncate_repo_file_path(templ_full_fname)
 
     # fill up dict for template rendering
     d = {}
@@ -483,7 +487,6 @@ def jinja_render_rt_struct_dot_h(
     header_template = templ.render(d)
 
     return header_template
-
 
 
 def jinja_render_top_level_hydro_part_dot_h(
@@ -538,7 +541,7 @@ def jinja_render_top_level_hydro_part_dot_h(
     templ_fname = "top_level_hydro_part.h.jinja.template"
     templ = env.get_template(templ_fname)
     templ_full_fname = os.path.join("templates", "files", templ_fname)
-    templ_trunc_name= truncate_repo_file_path(templ_full_fname)
+    templ_trunc_name = truncate_repo_file_path(templ_full_fname)
 
     inputs_full = [os.path.join("input", i) for i in inputfiles]
     inputs = ", ".join([truncate_repo_file_path(i) for i in inputs_full])
@@ -561,4 +564,3 @@ def jinja_render_top_level_hydro_part_dot_h(
     header_template = templ.render(d)
 
     return header_template
-

@@ -51,4 +51,4 @@ _required_particle_fields = [
     "extra_feedback_data",
     "extra_mhd_data",
     "csds_data",
-    ]
+]
