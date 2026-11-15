@@ -341,7 +341,7 @@ if __name__ == "__main__":
             fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
             # construct output file name
-            outfname = f"loop_splitting_compare_vector_{srcdir}_{experiment}_{access}"
+            outfname = f"loop_splitting_compare_vector_{os.path.basename(srcdir)}_{experiment}_{access}"
             if variant_dir_suffix != "":
                 outfname += variant_dir_suffix
             if normalise:

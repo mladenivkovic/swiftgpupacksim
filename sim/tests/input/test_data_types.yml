@@ -44,3 +44,6 @@ part:
         type: int*
         doc: pointer to integer array
 
+    my_enum:
+        type: enum color
+

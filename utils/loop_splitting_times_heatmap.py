@@ -289,7 +289,7 @@ if __name__ == "__main__":
         fig.tight_layout(w_pad=0, rect=(0.01, 0.01, 0.99, 0.99))
 
         # construct output file name
-        outfname = f"loop_splitting_times_heatmap_{srcdir}_{experiment}_{access_variant}_{nthreads}threads"
+        outfname = f"loop_splitting_times_heatmap_{os.path.basename(srcdir)}_{experiment}_{access_variant}_{nthreads}threads"
         if variant_dir_suffix != "":
             outfname += variant_dir_suffix
         if args.png:

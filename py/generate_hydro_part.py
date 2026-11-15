@@ -8,6 +8,7 @@ from utils import (
     check_output_directory,
     print_separator,
     validate_yml_contents,
+    process_yml_metadata,
     add_auxiliary_fields,
     read_input_file,
 )
@@ -16,6 +17,7 @@ from headers import (
     generate_parts_dot_h,
     generate_hydro_part_arrays_struct_dot_h,
     generate_hydro_part_arrays_flush_dot_h,
+    generate_hydro_space_dot_c,
 )
 
 
@@ -126,10 +128,10 @@ if __name__ == "__main__":
         and (not explicit_var_accessors)
     ):
         raise ValueError(
-            "Neither '--part-struct-accessors' nor "+
-            "'--global-var-accessors' nor "+
-            "'--explicit-var-accessors' selected."+
-            " You must select at least one."
+            "Neither '--part-struct-accessors' nor "
+            + "'--global-var-accessors' nor "
+            + "'--explicit-var-accessors' selected."
+            + " You must select at least one."
         )
 
     # read in data
@@ -145,6 +147,7 @@ if __name__ == "__main__":
 
     # check that everything is sensible
     validate_yml_contents(particle_fields_d)
+    process_yml_metadata(metadata_d, swift_header=swift_header, verbose=verbose)
 
     if (len(particle_fields_d.keys()) == 1) and id_checks:
         print("Have only a single particle struct. Skipping accessor ID checks.")
@@ -178,6 +181,10 @@ if __name__ == "__main__":
         particle_fields_d, swift_header=swift_header, verbose=verbose
     )
 
+    hydro_space_base = generate_hydro_space_dot_c(
+        particle_fields_d, metadata_d, swift_header=swift_header, verbose=verbose
+    )
+
     if dry_run:
         print_separator("hydro_part_header")
         print(hydro_part_header)
@@ -187,31 +194,52 @@ if __name__ == "__main__":
         print(hydro_part_arrays_struct_header)
         print_separator("hydro_part_arrays_flush_header")
         print(hydro_part_arrays_struct_header)
+        print_separator("hydro_space_base")
+        print(hydro_space_base)
     else:
-        outfile = os.path.join(outdir, "hydro_part.h")
-        fp = open(outfile, "w")
-        fp.write(hydro_part_header)
-        fp.close()
-        print("Written", outfile)
 
-        outfile = os.path.join(outdir, "hydro_part_arrays_struct.h")
-        fp = open(outfile, "w")
-        fp.write(hydro_part_arrays_struct_header)
-        fp.close()
-        print("Written", outfile)
-
-        # For now, exit here and don't create other files just yet.
         if swift_header:
-            quit()
 
-        outfile = os.path.join(outdir, "parts.h")
-        fp = open(outfile, "w")
-        fp.write(parts_header)
-        fp.close()
-        print("Written", outfile)
+            outfile = os.path.join(outdir, "hydro_part.h")
+            fp = open(outfile, "w")
+            fp.write(hydro_part_header)
+            fp.close()
+            print("Written", outfile)
 
-        outfile = os.path.join(outdir, "hydro_part_arrays_flush.h")
-        fp = open(outfile, "w")
-        fp.write(hydro_part_arrays_flush_header)
-        fp.close()
-        print("Written", outfile)
+            outfile = os.path.join(outdir, "hydro_part_arrays_struct.h")
+            fp = open(outfile, "w")
+            fp.write(hydro_part_arrays_struct_header)
+            fp.close()
+            print("Written", outfile)
+
+            outfile = os.path.join(outdir, "hydro_space.c")
+            fp = open(outfile, "w")
+            fp.write(hydro_space_base)
+            fp.close()
+            print("Written", outfile)
+
+        else:
+
+            outfile = os.path.join(outdir, "hydro_part.h")
+            fp = open(outfile, "w")
+            fp.write(hydro_part_header)
+            fp.close()
+            print("Written", outfile)
+
+            outfile = os.path.join(outdir, "hydro_part_arrays_struct.h")
+            fp = open(outfile, "w")
+            fp.write(hydro_part_arrays_struct_header)
+            fp.close()
+            print("Written", outfile)
+
+            outfile = os.path.join(outdir, "parts.h")
+            fp = open(outfile, "w")
+            fp.write(parts_header)
+            fp.close()
+            print("Written", outfile)
+
+            outfile = os.path.join(outdir, "hydro_part_arrays_flush.h")
+            fp = open(outfile, "w")
+            fp.write(hydro_part_arrays_flush_header)
+            fp.close()
+            print("Written", outfile)

@@ -6,6 +6,7 @@ from templates import (
     jinja_generate_parts_dot_h,
     jinja_generate_hydro_part_arrays_struct_dot_h,
     jinja_generate_hydro_part_arrays_flush_dot_h,
+    jinja_generate_hydro_space_dot_c,
 )
 from utils import check_part_struct_first_in_list
 
@@ -82,11 +83,18 @@ def generate_hydro_part_dot_h(
 
         declarations = []
         apis = []
+        has_doc = False
+        doc = ""
 
         for field in list(part_d[struct_name].keys()):
             if FieldEntry.prohibited_name(field):
-                if verbose:
-                    print(f"-- Found prohibited field name {field}, skipping it.")
+                if field == "doc" or field == "documentation":
+                    has_doc = True
+                    doc = part_d[struct_name][field]
+                else:
+                    if verbose:
+                        print(f"-- Found prohibited field name {field}, skipping it.")
+                # in either case, don't process further
                 continue
             # parse the field specification
             field_props = part_d[struct_name][field]
@@ -106,7 +114,12 @@ def generate_hydro_part_dot_h(
             apis.append(api)
 
         # store the parsed data
-        part_struct_d[struct_name] = {"API": apis, "DECLARATIONS": declarations}
+        part_struct_d[struct_name] = {
+            "API": apis,
+            "DECLARATIONS": declarations,
+            "HAS_DOC": has_doc,
+            "DOC": doc,
+        }
 
     # Now generate the file from template
     header_file = jinja_generate_hydro_part_dot_h(
@@ -289,7 +302,9 @@ def generate_hydro_part_arrays_flush_dot_h(
 ) -> str:
     """
     Generate a hydro_part_arrays_flush.h, which contains the functions needed for
-    particle data flushing. Parameters
+    particle data flushing.
+
+    Parameters
     ----------
 
     part_d: dict
@@ -354,3 +369,50 @@ def generate_hydro_part_arrays_flush_dot_h(
     )
 
     return header_file
+
+
+def generate_hydro_space_dot_c(
+    part_d: dict,
+    metadata_d: dict,
+    swift_header: bool = True,
+    verbose: bool = False,
+) -> str:
+    """
+    Generate a hydro_space.c which contains the functions needed for
+    Required by `space.[ch]`
+
+    Parameters
+    ----------
+
+    part_d: dict
+        dict containing the read-in particle struct fields
+
+    metadata_d: dict
+        dict containing particle (flavour) metadata
+
+    swift_header: bool
+        if True, generate headers compatible with swift, not swiftgpupacksim
+
+    verbose: bool
+        if True, be talkative
+
+    Returns
+    -------
+
+    header_file: str
+        The contents of the hydro_part.h file.
+    """
+
+    if verbose:
+        print("Generating hydro_space.c")
+
+    struct_names = [name for name in part_d.keys()]
+
+    part_struct_d = {"names": struct_names}
+
+    #  generate the file from template
+    base_file = jinja_generate_hydro_space_dot_c(
+        part_struct_d, metadata_d, swift_header=swift_header, verbose=verbose
+    )
+
+    return base_file

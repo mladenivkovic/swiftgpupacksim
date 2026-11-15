@@ -348,7 +348,7 @@ if __name__ == "__main__":
         fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
         # construct output file name
-        outfname = f"loop_splitting_compare_part_access_{srcdir}_{experiment}_{nthreads}threads"
+        outfname = f"loop_splitting_compare_part_access_{os.path.basename(srcdir)}_{experiment}_{nthreads}threads"
         if variant_dir_suffix != "":
             outfname += variant_dir_suffix
         if normalise:

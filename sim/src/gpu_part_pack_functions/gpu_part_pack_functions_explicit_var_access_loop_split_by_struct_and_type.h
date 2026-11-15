@@ -395,7 +395,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     /* struct force_pack */
-    ps[i].u_rho_c_avisc.x = part_get_alpha_av_explicit(pd, i);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av_explicit(pd, i);
   }
 
 #ifdef VECTORIZE
@@ -633,8 +633,6 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     /* struct force_pack_limiter */
-    ps[i].timebin_minngbtimebin_pjs_pje.x =
-        (int)part_get_time_bin_explicit(pd, i);
     int mintbin =
         (int)part_get_timestep_limiter_min_ngb_time_bin_explicit(pd, i);
     ps[i].timebin_minngbtimebin_pjs_pje.y = mintbin;
@@ -653,7 +651,7 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ps[i].u_rho_c_avisc.x = part_get_u_explicit(pd, i);
     ps[i].u_rho_c_avisc.y = part_get_rho_explicit(pd, i);
     ps[i].u_rho_c_avisc.z = part_get_soundspeed_explicit(pd, i);
-    ps[i].u_rho_c_avisc.z = part_get_alpha_av_explicit(pd, i);
+    ps[i].u_rho_c_avisc.w = part_get_alpha_av_explicit(pd, i);
   }
 
 #ifdef VECTORIZE

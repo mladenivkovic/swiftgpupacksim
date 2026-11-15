@@ -27,6 +27,7 @@ from plotting_utils import (
     linestyles,
 )
 
+mymplparams["legend.fontsize"] = 16
 matplotlib.rcParams.update(mymplparams)
 
 parser = argparse.ArgumentParser(
@@ -161,8 +162,8 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 plotkwargs = {
     #  "marker": "o",
     "lw": 2,
-    "alpha": 0.8,
-    "markersize": 5,
+    "alpha": 0.6,
+    "markersize": 8,
 }
 
 
@@ -173,7 +174,7 @@ if __name__ == "__main__":
 
     aos_ind = layouts.index("aos")
 
-    fig = plt.figure(figsize=(12, 6))
+    fig = plt.figure(figsize=(12, 7.5))
     ax1 = fig.add_subplot(2, 3, 1)
     ax1.set_title("Density/Pack")
     ax2 = fig.add_subplot(2, 3, 2)
@@ -367,12 +368,12 @@ if __name__ == "__main__":
         ncols=ncols,
         handlelength=2.5,
         markerscale=1.0,
-        fontsize="medium",
+        #  fontsize="medium",
     )
-    fig.tight_layout(w_pad=1, rect=(0.01, 0.07, 0.99, 0.99))
+    fig.tight_layout(w_pad=1, rect=(0.01, 0.09, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"compare_part_access_{srcdir}_{nthreads}threads"
+    outfname = f"compare_part_access_{os.path.basename(srcdir)}_{nthreads}threads"
     if variant_dir_suffix != "":
         outfname += variant_dir_suffix
     if normalise:

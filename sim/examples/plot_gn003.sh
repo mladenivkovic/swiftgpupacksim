@@ -1,14 +1,105 @@
 #!/bin/bash
 
+set -e
+
+# run script with -p flag to create png images instead of default pdfs
+PNGFLAG=""
+
+if [ $# -gt 0 ]; then
+  case "$1" in
+  -p | -png | --png )
+    PNGFLAG="--png"
+    ;;
+  *)
+    echo unknown cmdline param "'""$1""'"
+    ;;
+  esac
+fi
+
+
+# ---------------------------------------------
+# PARTICLE ACCESS
+# ---------------------------------------------
+
+# compare_part_access_gn003_5steps_72threads_noflush_normalised.pdf
+# python3 ../../utils/compare_particle_access.py --no-flush data/gn003_5steps --normalise $PNGFLAG
+
+
+# ---------------------------------------------
+# PARTICLE ACCESS + LOOP SPLITTING
+# ---------------------------------------------
+
+# loop_splitting_compare_part_access_to_part-struct_no-split_gn003_5steps_72threads_noflush.png
+# python3 ../../utils/loop_splitting_compare_total_times.py --no-flush data/gn003_5steps $PNGFLAG
+
+# loop_splitting_compare_part_access_to_no-split_gn003_5steps_72threads_noflush.png
+# python3 ../../utils/loop_splitting_compare_total_times_compared_to_no_split.py --no-flush data/gn003_5steps $PNGFLAG
+
+# loop_splitting_compare_part_access_gn003_5steps_Gresho256_72threads_noflush.png
+# loop_splitting_compare_part_access_gn003_5steps_EAGLE25_72threads_noflush.png
+# python3 ../../utils/loop_splitting_compare_particle_access.py data/gn003_5steps --no-flush $PNGFLAG
+
+
+# ---------------------------------------------
+# CACHE FLUSHING
+# ---------------------------------------------
+
+# compare_flush_variants_gn003_explicit-var_none.png
+# ../../utils/compare_flush_variants.py data/gn003_5steps $PNGFLAG
+
+# compare_flush_variants_gn003_explicit-var_none_normalised.png
+# ../../utils/compare_flush_variants.py data/gn003_5steps --normalise $PNGFLAG
+
+
+# ---------------------------------------------
+# FIRST INIT / FIRST TOUCH
+# ---------------------------------------------
+
+# compare_firstinit_gn003_explicit-var_none.png
+# python3 ../../utils/compare_firstinit.py data/gn003 --no-flush $PNGFLAG
+
+# compare_nthreads_gn003_explicit-var_none.png
+# python3 ../../utils/compare_nthreads.py data/gn003 --no-flush $PNGFLAG
+
+
+
+# ---------------------------------------------------------------------
+# PACKING
+# ---------------------------------------------------------------------
+
+# loop_splitting_compare_packed_gn003_Gresho256_part-struct_noflush.png
+# loop_splitting_compare_packed_gn003_Gresho256_explicit-var_noflush.png
+# loop_splitting_compare_packed_gn003_Gresho256_global-var_noflush.png
+# loop_splitting_compare_packed_gn003_EAGLE25_part-struct_noflush.png
+# loop_splitting_compare_packed_gn003_EAGLE25_explicit-var_noflush.png
+# loop_splitting_compare_packed_gn003_EAGLE25_global-var_noflush.png
+python3 ../../utils/loop_splitting_compare_packed.py data/gn003 --no-flush $PNGFLAG
+
+# loop_splitting_compare_packed_gn003_global-var_noflush_relative.png
+python3 ../../utils/loop_splitting_compare_packed_relative.py data/gn003 --no-flush $PNGFLAG
+
+
+
+
+
+
+
+
+# ------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+# OLD CALLS, TODO: COMPARE THAT WE'RE STILL USING ALL
+# ------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+
 # compare_part_access_gn003_72threads_noflush_normalised.png
 # python3 ../../utils/compare_particle_access.py --png --no-flush gn003 --normalise
-python3 ../../utils/compare_particle_access.py --no-flush gn003_5steps --normalise
+# python3 ../../utils/compare_particle_access.py --no-flush gn003_5steps --normalise
 
 # loop_splitting_compare_total_time_gn003_72threads_noflush.png
 # python3 ../../utils/loop_splitting_compare_total_times.py --png --no-flush gn003
-python3 ../../utils/loop_splitting_compare_total_times.py --no-flush gn003_5steps
+# python3 ../../utils/loop_splitting_compare_total_times.py --no-flush gn003_5steps
 
-python3 ../../utils/loop_splitting_compare_total_times_compared_to_no_split.py --no-flush gn003_5steps
+# python3 ../../utils/loop_splitting_compare_total_times_compared_to_no_split.py --no-flush gn003_5steps
 
 # # compare_flush_variants_gn003_explicit-var_none.png
 # python3 ../../utils/compare_flush_variants.py --png gn003

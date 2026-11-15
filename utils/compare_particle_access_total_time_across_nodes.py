@@ -21,7 +21,7 @@ from plotting_utils import (
     EXPERIMENTS,
     LAYOUTS_TO_USE,
     LAYOUTS_TO_USE_MINIMAL,
-    NODES,
+    NODES_5STEPS,
     NODE_LABELS,
     mymplparams,
     mydpi,
@@ -173,14 +173,14 @@ variant_dir_suffix, variant_label_suffix = get_variant_labels(
 plotkwargs = {
     #  "marker": "o",
     "lw": 2,
-    "alpha": 0.8,
-    "markersize": 5,
+    "alpha": 0.6,
+    "markersize": 8,
 }
 
 
 if __name__ == "__main__":
 
-    fig = plt.figure(figsize=(10, 3))
+    fig = plt.figure(figsize=(10, 4.5))
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     axes = [ax1, ax2]
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     #  maxtime = -1.0
     #  mintime = 1e32
 
-    for n, srcdir in enumerate(NODES):
+    for n, srcdir in enumerate(NODES_5STEPS):
 
         if not os.path.exists(srcdir):
             raise FileNotFoundError(f"directory {srcdir} not found.")
@@ -196,9 +196,9 @@ if __name__ == "__main__":
         ax = axes[n]
         ax.set_title(NODE_LABELS[srcdir])
 
-        if srcdir.startswith("dine2"):
+        if srcdir.startswith("dine2") or srcdir.startswith("data/dine2"):
             nthreads = 64
-        elif srcdir.startswith("gn003"):
+        elif srcdir.startswith("gn003") or srcdir.startswith("data/gn003"):
             nthreads = 72
         else:
             raise NotImplementedError
@@ -309,7 +309,7 @@ if __name__ == "__main__":
         ncols=ncols,
         handlelength=2.5,
         markerscale=1.0,
-        fontsize="medium",
+        #  fontsize="large",
     )
     fig.tight_layout(w_pad=1, rect=(0.01, 0.16, 0.99, 0.99))
 

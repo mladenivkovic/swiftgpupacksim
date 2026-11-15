@@ -31,13 +31,33 @@ PART_ACCESS_LABELS = ["part-struct access", "explicit-var access", "global-var a
 EXPERIMENTS = ["Gresho256", "EAGLE25"]
 NTHREADS = ["36", "72"]
 
-#  NODES = ["dine2", "gn003"]
-NODES = ["dine2_5steps", "gn003_5steps"]
+NODES = ["dine2", "gn003"]
+# try a "data/" top level directory, if directories aren't here already
+if not os.path.isdir(NODES[0]):
+    NODES = [os.path.join("data", n) for n in NODES]
+
+NODES_5STEPS = ["dine2_5steps", "gn003_5steps"]
+# try a "data/" top level directory, if directories aren't here already
+if not os.path.isdir(NODES_5STEPS[0]):
+    NODES_5STEPS = [os.path.join("data", n) for n in NODES_5STEPS]
+
 NODE_LABELS = {
     "dine2": "Intel+A30",
+    "./dine2": "Intel+A30",
+    "data/dine2": "Intel+A30",
+    "./data/dine2": "Intel+A30",
     "dine2_5steps": "Intel+A30",
+    "./dine2_5steps": "Intel+A30",
+    "data/dine2_5steps": "Intel+A30",
+    "./data/dine2_5steps": "Intel+A30",
     "gn003": "Grace Hopper",
+    "./gn003": "Grace Hopper",
+    "data/gn003": "Grace Hopper",
+    "./data/gn003": "Grace Hopper",
     "gn003_5steps": "Grace Hopper",
+    "./gn003_5steps": "Grace Hopper",
+    "data/gn003_5steps": "Grace Hopper",
+    "./data/gn003_5steps": "Grace Hopper",
 }
 
 LAYOUTS_TO_USE = [
@@ -67,13 +87,13 @@ LAYOUTS_TO_USE_MINIMAL = [
 
 # Plot parameters
 mymplparams = {
-    "axes.labelsize": 12,
-    "axes.titlesize": 14,
+    "axes.labelsize": 14,
+    "axes.titlesize": 16,
     "font.size": 12,
     "font.family": "serif",
-    "legend.fontsize": 8,
-    "xtick.labelsize": 12,
-    "ytick.labelsize": 12,
+    "legend.fontsize": 14,
+    "xtick.labelsize": 14,
+    "ytick.labelsize": 14,
     "xtick.direction": "in",
     "ytick.direction": "in",
     "xtick.top": True,
@@ -90,7 +110,7 @@ mymplparams = {
     #  "figure.subplot.hspace": 0.12,
 }
 
-mydpi = 120
+mydpi = 300
 
 markers = ["o", "s", "D", "X", "p", "P", "^", "*"]
 linestyles = ["-", ":", "--", "-."]

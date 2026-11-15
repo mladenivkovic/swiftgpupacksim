@@ -355,7 +355,7 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=0, rect=(0.01, 0.25, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"loop_splitting_all_{srcdir}_" + plot_variant
+    outfname = f"loop_splitting_all_{os.path.basename(srcdir)}_" + plot_variant
     if args.png:
         outfname += ".png"
     else:

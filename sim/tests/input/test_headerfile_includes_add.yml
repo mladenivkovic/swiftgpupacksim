@@ -1,0 +1,14 @@
+# Test fixed-size array generation.
+
+metadata:
+    authors: "anonymous"
+    flavour: "header_test"
+    includes_add: 
+        - "a.h"
+        - "b.h"
+        - <stdio.h>
+    doc: "Test file to test header outputs."
+
+part:
+    x:
+

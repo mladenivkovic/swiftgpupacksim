@@ -349,7 +349,7 @@ if __name__ == "__main__":
     fig.tight_layout(w_pad=0, rect=(0.01, 0.12, 0.99, 0.99))
 
     # construct output file name
-    outfname = f"compare_flush_variants_{srcdir}_{access_variant}_{loop_split}"
+    outfname = f"compare_flush_variants_{os.path.basename(srcdir)}_{access_variant}_{loop_split}"
     #  if variant_dir_suffix != "":
     #      outfname += variant_dir_suffix
     if normalise:
