@@ -14,7 +14,6 @@ metadata:
 
 
 # now for the actual particle content
-
 part:
   doc: | 
     Particle fields for the SPH particles

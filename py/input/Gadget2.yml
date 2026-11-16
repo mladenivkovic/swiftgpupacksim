@@ -1,5 +1,3 @@
-# GADGET2 particle struct as it is in the GPUSwift branch
-
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "Gadget2"
@@ -15,7 +13,6 @@ metadata:
 
 
 # now for the actual particle content
-
 part:
   doc: Data of a single particle.
  

@@ -11,7 +11,7 @@ metadata:
 
 part:
   doc: | 
-    @brief Particle fields for the SPH particles
+    Particle fields for the SPH particles
 
     The density and force substructures are used to contain variables only used
     within the density and force loops over neighbours. All more permanent
@@ -266,7 +266,7 @@ part:
 
 xpart:
   doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
+    Particle fields not needed during the SPH loops over neighbours.
 
     This structure contains the particle fields that are not used in the
     density or force loops. Quantities should be used in the kick, drift and

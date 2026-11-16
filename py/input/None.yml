@@ -1,5 +1,3 @@
-# SPHENIX SPH with the particle quantity ordering as in upstream/master
-
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "None"
@@ -7,6 +5,7 @@ metadata:
   doc: Density-Energy conservative implementation of SPH, with added SPHENIX physics (Borrow 2020) (particle definition)
 
 
+# now for the actual particle content
 part:
   id: 
     type: long long

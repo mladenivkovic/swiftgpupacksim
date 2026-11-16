@@ -1,7 +1,7 @@
 # Split struct into sub-structs depending on task subtype and operation.
 # - Prioritize fields for packing
 # - Prioritize force struct over gradient struct
-#
+
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "SPHENIX_PACK_FORCE"

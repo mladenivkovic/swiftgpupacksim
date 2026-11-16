@@ -1,5 +1,3 @@
-# Gasoline particle struct as it is in the GPUSwift branch
-
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "Gasoline"
@@ -9,7 +7,6 @@ metadata:
     with added Gasoline physics (Wadsley+ 2017) (particle definition)
 
 # now for the actual particle content
-
 part:
   doc: | 
     Particle fields for the SPH particles
@@ -207,7 +204,7 @@ part:
 
 xpart:
   doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
+    Particle fields not needed during the SPH loops over neighbours.
 
     This structure contains the particle fields that are not used in the
     density or force loops. Quantities should be used in the kick, drift and

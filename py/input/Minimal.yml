@@ -1,5 +1,3 @@
-# MINIMAL particle struct as it is in the GPUSwift branch
-
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "Minimal"
@@ -17,10 +15,9 @@ metadata:
 
 
 # now for the actual particle content
-
 part:
   doc: | 
-    @brief Particle fields for the SPH particles
+    Particle fields for the SPH particles
 
     The density and force substructures are used to contain variables only used
     within the density and force loops over neighbours. All more permanent
@@ -169,7 +166,7 @@ part:
 
 xpart:
   doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
+    Particle fields not needed during the SPH loops over neighbours.
 
     This structure contains the particle fields that are not used in the
     density or force loops. Quantities should be used in the kick, drift and

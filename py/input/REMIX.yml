@@ -1,5 +1,3 @@
-# SPHENIX particle struct as it is in the GPUSwift branch
-
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "REMIX"
@@ -11,7 +9,6 @@ metadata:
 
 
 # now for the actual particle content
-
 part:
   doc: | 
     Particle fields for the SPH particles
