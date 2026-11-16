@@ -1,5 +1,12 @@
 # SPHENIX SPH with the particle quantity ordering as in upstream/master
 
+# First, some metadata about this SPH flavour.
+metadata:
+  flavour: "SPHENIX"
+  authors: 2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)
+  doc: Density-Energy conservative implementation of SPH, with added SPHENIX physics (Borrow 2020) (particle definition)
+
+
 part:
   id: 
     type: long long
@@ -73,9 +80,11 @@ part:
     contents:
       density:
         type: struct
-        doc: Structure for the variables only used in the density loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the density loop 
-             over neighbours and the ghost task
+        doc: | 
+            Structure for the variables only used in the density loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the density loop 
+            over neighbours and the ghost task
         contents:
           wcount:
             doc: Neighbour number count
@@ -88,9 +97,11 @@ part:
             size: 3
       force:
         type: struct
-        doc: Structure for the variables only used in the force loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the force loop 
-             over neighbours and the ghost, drift and kick tasks
+        doc: |
+            Structure for the variables only used in the force loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the force loop 
+            over neighbours and the ghost, drift and kick tasks
         contents:
           f_gradh:
             doc: "'Grad h' term -- only partial in P-U"
@@ -247,3 +258,62 @@ part:
     doc: Geometrical quantities used for Finite Volume Particle Method RT
 
 
+xpart:
+  doc: |
+    Particle fields not needed during the SPH loops over neighbours.
+
+    This structure contains the particle fields that are not used in the
+    density or force loops. Quantities should be used in the kick, drift and
+    potentially ghost tasks only.
+
+  x_diff:
+    size: 3
+    doc: "Offset between current position and position at last tree rebuild."
+
+  x_diff_sort:
+    size: 3
+    doc: "Offset between the current position and position at the last sort."
+
+  v_full:
+    size: 3
+    doc: "Velocity at the last full step."
+
+  a_grav:
+    size: 3
+    doc: "Gravitational acceleration at the end of the last step"
+
+  u_full:
+    doc: "Internal energy at the last full step."
+
+  extra_split_data:
+    type: struct particle_splitting_data split_data
+    doc: "Additional data used to record particle splits"
+
+  extra_cooling_data:
+    type: struct cooling_xpart_data
+    doc: "Additional data used to record cooling information"
+
+  extra_tracers_data:
+    type: struct tracers_xpart_data
+    doc: "Additional data used by the tracers"
+
+  extra_sf_data:
+    type: struct star_formation_xpart_data
+    doc: "Additional data used by the tracers"
+
+  extra_feedback_data:
+    type: struct feedback_xpart_data
+    doc: "Additional data used by the feedback"
+
+  extra_mhd_data:
+    type: struct mhd_xpart_data
+    doc: "Additional data used by the MHD scheme"
+
+  extra_forcing_data:
+    type: struct forcing_xpart_data
+    doc: "Additional data used by the forcing scheme"
+ 
+  csds_data:
+    type: struct csds_part_data
+    doc: "Additional data for the particle csds"
+    ifdef: WITH_CSDS

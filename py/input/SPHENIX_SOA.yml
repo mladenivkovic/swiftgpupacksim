@@ -1,5 +1,12 @@
 # SPHENIX SPH, but hold every single variable in a separate global array.
 
+# First, some metadata about this SPH flavour.
+metadata:
+  flavour: "SPHENIX_SOA"
+  authors: 2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)
+  doc: Density-Energy conservative implementation of SPH, with added SPHENIX physics (Borrow 2020) (particle definition)
+
+
 part_id:
   id: 
     type: long long

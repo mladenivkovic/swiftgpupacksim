@@ -4,16 +4,29 @@
 metadata:
   flavour: "REMIX"
   authors: "2024 Thomas Sandnes (thomas.d.sandnes@durham.ac.uk) & 2024 Jacob Kegerreis (jacob.kegerreis@durham.ac.uk) & 2016 Matthieu Schaller (matthieu.schaller@durham.ac.uk)"
+  doc: REMIX implementation of SPH (Sandnes et al. 2025)
+  includes_add:
+    - "equation_of_state.h"
+    - "symmetric_matrix.h"
+
 
 # now for the actual particle content
 
 part:
   doc: | 
-    @brief Particle fields for the SPH particles
+    Particle fields for the SPH particles
 
     The density and force substructures are used to contain variables only used
     within the density and force loops over neighbours. All more permanent
-    variables should be declared in the main part of the part structure,
+    variables should be declared in the main part of the part structure.
+
+  id: 
+    type: long long
+    doc:  Particle unique ID
+
+  gpart:
+    type: struct gpart*
+    doc:  Pointer to corresponding gravity part
 
   x:
     type: double
@@ -78,9 +91,11 @@ part:
     contents:
       density:
         type: struct
-        doc: Structure for the variables only used in the density loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the density loop 
-             over neighbours and the ghost task
+        doc: |
+            Structure for the variables only used in the density loop over neighbours 
+            
+            Quantities in this sub-structure should only be accessed in the density loop 
+            over neighbours and the ghost task
         contents:
           wcount:
             doc: Neighbour number count
@@ -90,8 +105,10 @@ part:
             doc: Derivative of density with respect to h
       gradient:
         type: struct
-        doc: Structure for the variables only used in the gradient loop over neighbours
-             Quantities should only be accessed in the gradient loop over neighbours and the extra ghost task
+        doc: |
+            Structure for the variables only used in the gradient loop over neighbours
+            
+            Quantities should only be accessed in the gradient loop over neighbours and the extra ghost task
         contents:
           m0_bar:
             doc: Symmetrised kernel geometric moment m0
@@ -110,10 +127,10 @@ part:
             size: 3
             doc: Contributing term for grad-h component of grad_m1_bar
           m2_bar:
-            type: "struct sym_matrix m2_bar"
+            type: struct sym_matrix m2_bar
             doc: Symmetrised kernel geometric moment m2
           grad_m2_bar:
-            type: "struct sym_matrix grad_m2_bar"
+            type: struct sym_matrix grad_m2_bar
             size: 3
             doc: Gradient of symmetrised kernel geometric moment m2 (x, y, z * components"
           grad_m2_bar_gradhterm:
@@ -121,9 +138,11 @@ part:
             doc: Contributing term for grad-h component of grad_m2_bar
       force:
         type: struct
-        doc: Structure for the variables only used in the force loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the force loop 
-             over neighbours and the ghost, drift and kick tasks
+        doc: |
+            Structure for the variables only used in the force loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the force loop 
+            over neighbours and the ghost, drift and kick tasks
         contents:
           pressure:
             doc: Particle pressure
@@ -151,14 +170,9 @@ part:
           eta_crit:
             doc: Constant needed for slope limiter: 1 / eta_neighbours
 
-
-  id: 
-    type: long long
-    doc:  Particle unique ID
-
-  gpart:
-    type: struct gpart*
-    doc:  Pointer to corresponding gravity part
+  adaptive_softening_data:
+    type: struct adaptive_softening_part_data
+    doc: Additional data used for adaptive softening
 
   mhd_data:
     type: struct mhd_part_data
@@ -200,7 +214,7 @@ part:
     doc: Tree-depth at which size / 2 <= h * gamma < size
     type: char
 
-  is_h_max
+  is_h_max:
     type: char
     doc: Wether or not the particle has h=h_max ('1' or '0')
 
@@ -231,7 +245,7 @@ part:
 
 xpart:
   doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
+    Particle fields not needed during the SPH loops over neighbours.
 
     This structure contains the particle fields that are not used in the
     density or force loops. Quantities should be used in the kick, drift and
@@ -259,31 +273,35 @@ xpart:
   rho_evol_full:
     doc: "Evolved density at the last full step."
 
-  split_data:
-    type: "struct particle_splitting_data split_data"
+  extra_split_data:
+    type: struct particle_splitting_data split_data
     doc: "Additional data used to record particle splits"
 
   extra_cooling_data:
-    type: "struct cooling_xpart_data"
+    type: struct cooling_xpart_data
     doc: "Additional data used to record cooling information"
 
   extra_tracers_data:
+    type: struct tracers_xpart_data
     doc: "Additional data used by the tracers"
-    type: "struct tracers_xpart_data"
 
   extra_sf_data:
+    type: struct star_formation_xpart_data
     doc: "Additional data used by the tracers"
-    type: "struct star_formation_xpart_data"
 
   extra_feedback_data:
+    type: struct feedback_xpart_data
     doc: "Additional data used by the feedback"
-    type: "struct feedback_xpart_data"
 
   extra_mhd_data:
+    type: struct mhd_xpart_data
     doc: "Additional data used by the MHD scheme"
-    type: "struct mhd_xpart_data"
 
   extra_forcing_data:
+    type: struct forcing_xpart_data
     doc: "Additional data used by the forcing scheme"
-    type: "struct forcing_xpart_data"
-
+ 
+  csds_data:
+    type: struct csds_part_data
+    doc: "Additional data for the particle csds"
+    ifdef: WITH_CSDS

@@ -1,27 +1,31 @@
-# GADGET2 particle struct as it is in the GPUSwift branch
-
 # First, some metadata about this SPH flavour.
 metadata:
-  flavour: "GADGET2"
-  authors: "2012 Pedro Gonnet (pedro.gonnet@durham.ac.uk)"
+  flavour: "PressureEnergy"
+  authors: "2016 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
   doc: |
-    SPH interaction functions following the Gadget-2 version of SPH.
-    The interactions computed here are the ones presented in the Gadget-2 paper
-    Springel, V., MNRAS, Volume 364, Issue 4, pp. 1105-1134.
-    We use the same numerical coefficients as the Gadget-2 code. When used with
-    the Spline-3 kernel, the results should be equivalent to the ones obtained
-    with Gadget-2 up to the rounding errors and interactions missed by the
-    Gadget-2 tree-code neighbours search.
+    P-U implementation of SPH (Particle definition)
+
+    The thermal variable is the internal energy (u). A simple constant
+    viscosity term with a Balsara switch is implemented.
+
+    No thermal conduction term is implemented.
+
+    See PressureEnergy/hydro.h for references.
 
 
 # now for the actual particle content
 
 part:
-  doc: Data of a single particle.
- 
-  id:
+  doc: | 
+    Particle fields for the SPH particles
+
+    The density and force substructures are used to contain variables only used
+    within the density and force loops over neighbours. All more permanent
+    variables should be declared in the main part of the part structure,
+
+  id: 
     type: long long
-    doc: Particle ID
+    doc:  Particle unique ID
 
   gpart:
     type: struct gpart*
@@ -30,7 +34,7 @@ part:
   x:
     type: double
     size: 3
-    doc: Particle position
+    doc: the particle position
 
   v:
     size: 3
@@ -39,55 +43,71 @@ part:
   a_hydro:
     size: 3
     doc: Particle acceleration 
-  h:
-    doc: Particle cutoff radius
 
   mass:
     doc: Particle mass
-  
+
+  h:
+    doc: Particle smoothing length
+
+  u:
+    doc: Particle internal energy
+
+  u_dt:
+    doc: Time derivative of the internal energy
+
   rho:
     doc: Particle density
 
-  entropy:
-    doc: Particle entropy
-
-  entropy_dt:
-    doc: Entropy time derivative
+  pressure_bar:
+    doc: Particle pressure
 
   union1:
     type: union
+    doc: Store density/force specific stuff
     contents:
       density:
         type: struct
+        doc: |
+            Structure for the variables only used in the density loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the density loop 
+            over neighbours and the ghost task
         contents:
           wcount:
-            doc: Number of neighbours
+            doc: Neighbour number count
           wcount_dh:
-            doc: Number of neighbours spatial derivative
+            doc: Derivative of the neighbour number with respect to h
           rho_dh:
             doc: Derivative of density with respect to h
+          pressure_bar_dh:
+            doc: Derivative of the weighted pressure with respect to h
           rot_v:
             doc: Particle velocity curl
             size: 3
           div_v:
             doc: Particle velocity divergence
+ 
       force:
         type: struct
+        doc: |
+            Structure for the variables only used in the force loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the force loop 
+            over neighbours and the ghost, drift and kick tasks
         contents:
+          f_gradh:
+            doc: "'Grad h' term -- only partial in P-U"
+          soundspeed: 
+            doc: Particle soundspeed
+          v_sig:
+            doc: Particle signal velocity
+          h_dt:
+            doc: Time derivative of smoothing length
           balsara:
             doc: Balsara switch
-          f:
-            doc: Grad h term
-          P_over_rho2:
-            doc: Pressure over density squared
-          soundspeed:
-            doc: Particle soundspeed
-          v_sig: 
-            doc: Signal velocity
-          h_dt:
-            doc: Time derivative of smoothing length 
-          
-          
+          pressure_bar_with_floor:
+            doc: Pressure term including the pressure floor
 
   adaptive_softening_data:
     type: struct adaptive_softening_part_data
@@ -148,36 +168,18 @@ part:
 
   ti_kick:
     type: integertime_t
-    doc: Time of the last kick
+    doc: Time of the last drift
     ifdef: SWIFT_DEBUG_CHECKS
 
 
-  ids_ngbs_density:
-    type: long long
-    size: MAX_NUM_OF_NEIGHBOURS
-    doc: List of interesting particles in the density SELF and PAIR
-    ifdef: DEBUG_INTERACTIONS_SPH
-
-  ids_ngbs_force:
-    type: long long
-    size: MAX_NUM_OF_NEIGHBOURS
-    doc: List of interesting particles in the force SELF and PAIR
-    ifdef: DEBUG_INTERACTIONS_SPH
-
-
-  num_ngb_density:
-    type: int
-    doc: Number of interactions in the density SELF and PAIR
-    ifdef: DEBUG_INTERACTIONS_SPH
-
-  num_ngb_force:
-    type: int
-    doc: Number of interactions in the force SELF and PAIR
-    ifdef: DEBUG_INTERACTIONS_SPH
-
 
 xpart:
-  doc: Extra particle data not needed during the SPH loops over neighbours.
+  doc: |
+    Particle fields not needed during the SPH loops over neighbours.
+
+    This structure contains the particle fields that are not used in the
+    density or force loops. Quantities should be used in the kick, drift and
+    potentially ghost tasks only.
 
   x_diff:
     size: 3
@@ -195,41 +197,38 @@ xpart:
     size: 3
     doc: "Gravitational acceleration at the end of the last step"
 
-  entropy_full:
-    doc: "Entropy at the last full step."
+  u_full:
+    doc: "Internal energy at the last full step."
 
   extra_split_data:
-    type: "struct particle_splitting_data"
+    type: struct particle_splitting_data split_data
     doc: "Additional data used to record particle splits"
 
   extra_cooling_data:
-    type: "struct cooling_xpart_data"
+    type: struct cooling_xpart_data
     doc: "Additional data used to record cooling information"
 
   extra_tracers_data:
+    type: struct tracers_xpart_data
     doc: "Additional data used by the tracers"
-    type: "struct tracers_xpart_data"
 
   extra_sf_data:
-    doc: "Additional data used by the star formation"
-    type: "struct star_formation_xpart_data"
+    type: struct star_formation_xpart_data
+    doc: "Additional data used by the tracers"
 
   extra_feedback_data:
+    type: struct feedback_xpart_data
     doc: "Additional data used by the feedback"
-    type: "struct feedback_xpart_data"
 
   extra_mhd_data:
+    type: struct mhd_xpart_data
     doc: "Additional data used by the MHD scheme"
-    type: "struct mhd_xpart_data"
 
-  forcing_data:
+  extra_forcing_data:
+    type: struct forcing_xpart_data
     doc: "Additional data used by the forcing scheme"
-    type: "struct forcing_xpart_data"
-  
-  extra_csds_data:
-    type: "struct csds_part_data"
+
+  csds_data:
+    type: struct csds_part_data
     doc: "Additional data for the particle csds"
-    ifdef: "WITH_CSDS"
-
-
-
+    ifdef: WITH_CSDS
