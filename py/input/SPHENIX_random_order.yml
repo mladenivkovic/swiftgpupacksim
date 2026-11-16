@@ -1,5 +1,12 @@
 # SPHENIX SPH with the particle quantity ordering as in upstream/master
 
+# First, some metadata about this SPH flavour.
+metadata:
+  flavour: "SPHENIX_RANDOM_ORDER"
+  authors: 2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)
+  doc: Density-Energy conservative implementation of SPH, with added SPHENIX physics (Borrow 2020) (particle definition)
+
+
 part:
   id: 
     type: long long

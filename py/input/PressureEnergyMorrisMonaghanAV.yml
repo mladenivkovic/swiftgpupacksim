@@ -1,15 +1,23 @@
-# MINIMAL particle struct as it is in the GPUSwift branch
-
 # First, some metadata about this SPH flavour.
 metadata:
-  flavour: "MINIMAL"
-  authors: "2016 Matthieu Schaller (schaller@strw.leidenuniv.nl)"
+  flavour: "PressureEnergyMonaghanAV"
+  authors: "2016 Matthieu Schaller (schaller@strw.leidenuniv.nl) & Josh Borrow (joshua.borrow@durham.ac.uk)"
+  doc: |
+    P-U implementation of SPH (Particle definition)
+
+    The thermal variable is the internal energy (u). A simple variable
+    viscosity term (Morris & Monaghan 1997) with a Balsara switch is
+    implemented.
+
+    No thermal conduction term is implemented.
+
+    See PressureEnergy/hydro.h for references.
+
 
 # now for the actual particle content
-
 part:
   doc: | 
-    @brief Particle fields for the SPH particles
+    Particle fields for the SPH particles
 
     The density and force substructures are used to contain variables only used
     within the density and force loops over neighbours. All more permanent
@@ -23,16 +31,14 @@ part:
     type: struct gpart*
     doc: Pointer to corresponding gravity part
 
-
   x:
     size: 3
     type: double
     doc: Particle position
 
   v:
-    doc: Particle predicted velocity
     size: 3
-
+    doc: Particle predicted velocity
 
   a_hydro:
     size: 3
@@ -53,46 +59,56 @@ part:
   rho:
     doc: Particle density
 
+  pressure_bar:
+    doc: Particle pressure (weighted)
+  
+  alpha:
+    doc: Artificial viscosity
+
   union1:
     type: union
     doc: Store density/force specific stuff
     contents:
       density:
         type: struct
-        doc: Structure for the variables only used in the density loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the density loop 
-             over neighbours and the ghost task
+        doc: |
+            Structure for the variables only used in the density loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the density loop 
+            over neighbours and the ghost task
         contents:
           wcount:
             doc: Neighbour number count
           wcount_dh:
-            doc: Derivative of neighbour number with respect to h
+            doc: Derivative of the neighbour number with respect to h
           rho_dh:
             doc: Derivative of the density with respect to h
-          div_v:
-            doc: Velocity divergence
+          pressure_bar_dh:
+            doc: Derivative of the weighted pressure with respect to h
           rot_v:
-            doc: Particle velocity curl
             size: 3
+            doc: Particle velocity curl 
+          div_v:
+            doc: Particle velocity divergence
+
       force:
         type: struct
-        doc: Structure for the variables only used in the force loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the force loop 
-             over neighbours and the ghost, drift and kick tasks
+        doc: |
+            Structure for the variables only used in the force loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the force loop 
+            over neighbours and the ghost, drift and kick tasks
         contents:
-          f:
-            doc: "'Grad h' term"
-          pressure:
-            doc: Particle pressure
+          f_gradh:
+            doc: "'Grad h' term -- only partial in P-U"
           soundspeed:
             doc: Particle soundspeed
           v_sig: 
             doc: Particle signal velocity
-          h_dt:
-            doc: Time derivative of smoothing length
-          balsara: 
-            doc: Balsara switch 
-
+          h_dt: 
+            doc: Time derivative of smoothing length 
+          balsara:
+            doc: Balsara switch
 
   adaptive_softening_data:
     type: struct adaptive_softening_part_data
@@ -130,13 +146,13 @@ part:
     type: struct rt_timestepping_data
     doc: RT sub-cycling time stepping data
 
-  depth_h:
-    doc: Tree-depth at which size / 2 <= h * gamma < size
-    type: char
-
   time_bin:
     type: timebin_t
     doc: Time-step length
+
+  depth_h:
+    doc: Tree-depth at which size / 2 <= h * gamma < size
+    type: char
 
   limiter_data:
     type: struct timestep_limiter_data
@@ -153,11 +169,9 @@ part:
     ifdef: SWIFT_DEBUG_CHECKS
 
 
-
-
 xpart:
   doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
+    Particle fields not needed during the SPH loops over neighbours.
 
     This structure contains the particle fields that are not used in the
     density or force loops. Quantities should be used in the kick, drift and
@@ -182,31 +196,35 @@ xpart:
   u_full:
     doc: "Internal energy at the last full step."
 
-  split_data:
-    type: "struct particle_splitting_data"
+  extra_split_data:
+    type: struct particle_splitting_data
     doc: "Additional data used to record particle splits"
 
   extra_cooling_data:
-    type: "struct cooling_xpart_data"
+    type: struct cooling_xpart_data
     doc: "Additional data used to record cooling information"
 
   extra_tracers_data:
+    type: struct tracers_xpart_data
     doc: "Additional data used by the tracers"
-    type: "struct tracers_xpart_data"
 
   extra_sf_data:
+    type: struct star_formation_xpart_data
     doc: "Additional data used by the tracers"
-    type: "struct star_formation_xpart_data"
 
   extra_feedback_data:
+    type: struct feedback_xpart_data
     doc: "Additional data used by the feedback"
-    type: "struct feedback_xpart_data"
 
   extra_mhd_data:
+    type: struct mhd_xpart_data
     doc: "Additional data used by the MHD scheme"
-    type: "struct mhd_xpart_data"
 
   forcing_data:
-    type: "struct forcing_xpart_data"
+    type: struct forcing_xpart_data
     doc: "Additional data used by the forcing scheme"
 
+  csds_data:
+    type: struct csds_part_data
+    doc: "Additional data for the particle csds"
+    ifdef: WITH_CSDS

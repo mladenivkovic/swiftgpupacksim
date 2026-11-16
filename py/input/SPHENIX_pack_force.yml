@@ -2,6 +2,13 @@
 # - Prioritize fields for packing
 # - Prioritize force struct over gradient struct
 
+# First, some metadata about this SPH flavour.
+metadata:
+  flavour: "SPHENIX_PACK_FORCE"
+  authors: 2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)
+  doc: Density-Energy conservative implementation of SPH, with added SPHENIX physics (Borrow 2020) (particle definition)
+
+
 x_h_v_m:
 
   x:

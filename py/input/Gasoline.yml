@@ -1,15 +1,15 @@
-# Gasoline particle struct as it is in the GPUSwift branch
-
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "Gasoline"
   authors: "2019 Josh Borrow (joshua.borrow@durham.ac.uk) & Matthieu Schaller (schaller@strw.leidenuniv.nl)"
+  doc: |
+    Density-Energy conservative implementation of SPH,
+    with added Gasoline physics (Wadsley+ 2017) (particle definition)
 
 # now for the actual particle content
-
 part:
   doc: | 
-    @brief Particle fields for the SPH particles
+    Particle fields for the SPH particles
 
     The density and force substructures are used to contain variables only used
     within the density and force loops over neighbours. All more permanent
@@ -56,10 +56,10 @@ part:
     size: 3
 
   weighted_wcount:
-    doc: mj / rho_i r^2 W Weightings for correction factor
+    doc: mj / rho_i r^2 W; Weightings for correction factor
 
   weighted_neighbour_wcount:
-    doc: mj / rho_i r^2 W Weightings for correction factor
+    doc: mj / rho_j r^2 W; Weightings for correction factor
 
   viscosity:
     type: struct
@@ -102,30 +102,40 @@ part:
     contents:
       density:
         type: struct
-        doc: Structure for the variables only used in the density loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the density loop 
-             over neighbours and the ghost task
+        doc: |
+            Structure for the variables only used in the density loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the density loop 
+            over neighbours and the ghost task
         contents:
           
           wcount:
             doc: Neighbour number count
+
           wcount_dh:
             doc: Derivative of the neighbour number with respect to h
+
           rho_dh:
             doc: Derivative of density with respect to h  
 
       force:
         type: struct
-        doc: Structure for the variables only used in the force loop over neighbours 
-             Quantities in this sub-structure should only be accessed in the force loop 
-             over neighbours and the ghost, drift and kick tasks
+        doc: |
+            Structure for the variables only used in the force loop over neighbours 
+
+            Quantities in this sub-structure should only be accessed in the force loop 
+            over neighbours and the ghost, drift and kick tasks
         contents:
-          f:
+
+          f_gradh:
             doc: "'Grad h' term -- only partial in P-U"
+
           pressure:
             doc: Particle pressure
+
           soundspeed: 
             doc: Particle soundspeed
+
           h_dt: 
             doc: Time derivative of smoothing length 
 
@@ -194,7 +204,7 @@ part:
 
 xpart:
   doc: |
-    @brief Particle fields not needed during the SPH loops over neighbours.
+    Particle fields not needed during the SPH loops over neighbours.
 
     This structure contains the particle fields that are not used in the
     density or force loops. Quantities should be used in the kick, drift and
@@ -219,35 +229,35 @@ xpart:
   u_full:
     doc: "Internal energy at the last full step."
 
-  split_data:
+  extra_split_data:
     type: struct particle_splitting_data
     doc: "Additional data used to record particle splits"
 
   extra_cooling_data:
-    type: "struct cooling_xpart_data"
+    type: struct cooling_xpart_data
     doc: "Additional data used to record cooling information"
 
-  tracers_data:
+  extra_tracers_data:
+    type: struct tracers_xpart_data
     doc: "Additional data used by the tracers"
-    type: "struct tracers_xpart_data"
 
-  sf_data:
+  extra_sf_data:
+    type: struct star_formation_xpart_data
     doc: "Additional data used by the tracers"
-    type: "struct star_formation_xpart_data"
 
   extra_feedback_data:
+    type: struct feedback_xpart_data
     doc: "Additional data used by the feedback"
-    type: "struct feedback_xpart_data"
 
   extra_mhd_data:
+    type: struct mhd_xpart_data
     doc: "Additional data used by the MHD scheme"
-    type: "struct mhd_xpart_data"
 
-  forcing_data:
-    type: "struct forcing_xpart_data"
+  extra_forcing_data:
+    type: struct forcing_xpart_data
     doc: "Additional data used by the forcing scheme"
 
   csds_data:
-    type: "struct csds_part_data"
+    type: struct csds_part_data
     doc: "Additional data for the particle csds"
     ifdef: WITH_CSDS
