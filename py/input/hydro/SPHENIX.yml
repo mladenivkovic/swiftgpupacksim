@@ -156,6 +156,10 @@ part:
     type: struct rt_timestepping_data
     doc: RT sub-cycling time stepping data
 
+  geometry:
+    type: struct fvpm_geometry_struct
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
+
   depth_h:
     doc: Tree-depth at which size / 2 <= h * gamma < size
     type: char
@@ -252,10 +256,6 @@ part:
     type: char
     doc: Has this particle been woken up by the limiter?
     ifdef: SWIFT_HYDRO_DENSITY_CHECKS
-
-  geometry:
-    type: struct fvpm_geometry_struct
-    doc: Geometrical quantities used for Finite Volume Particle Method RT
 
 
 xpart:

@@ -138,6 +138,10 @@ part:
     type: struct sink_part_data
     doc: Sink information (eg swallowing ID)
 
+  pressure_floor_data:
+    type: struct pressure_floor_part_data
+    doc: Additional data used by the pressure floor
+
   rt_data:
     type: struct rt_part_data
     doc: Additional Radiative Transfer Data
@@ -145,6 +149,10 @@ part:
   rt_time_data:
     type: struct rt_timestepping_data
     doc: RT sub-cycling time stepping data
+
+  geometry:
+    type: struct fvpm_geometry_struct
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
 
   time_bin:
     type: timebin_t
@@ -203,6 +211,10 @@ xpart:
   extra_cooling_data:
     type: struct cooling_xpart_data
     doc: "Additional data used to record cooling information"
+
+  extra_forcing_data:
+    type: struct forcing_xpart_data
+    doc: "Additional data used by the forcing scheme"
 
   extra_tracers_data:
     type: struct tracers_xpart_data

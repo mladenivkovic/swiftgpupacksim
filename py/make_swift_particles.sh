@@ -1,26 +1,74 @@
 #!/bin/bash
 
-# pretend we have a SWIFT repository here. Later, when everything's done, we'll
-# just replace the SWIFT_PATH variable with an actual path, and won't have to
-# manually move around files to their right places.
-# mkdir -p swift
-# mkdir -p swift/src
-# mkdir -p swift/src/hydro
-# SWIFT_SRC_HYDRO_PATH=./swift/src/hydro
-#
-# for SPH_FLAVOUR in AnarchyPU Gadget2 Gasoline Gizmo \
-#                    Minimal Phantom Planetary PressureEnergy \
-#                    PressureEnergyMorrisMonaghanAV PressureEntropy REMIX SPHENIX;
-# do
-#   mkdir -p "$SWIFT_SRC_HYDRO_PATH"/"$SPH_FLAVOUR"
-# done
-#
-# -----------------------------------------
+set -eo pipefail
 
-SWIFT_SRC_HYDRO_PATH=~/Durham/GPUSWIFT/src/hydro/
+errmsg="
+Generate header files for all SWIFT particles, intended to be placed into and
+used in the SWIFT repository.
+
+Usage: ./generate_swift_particles.sh </path/to/swiftsim/src>
+
+If no </path/to/swiftsim/src> is provided, the files will be generated in the
+current directory.
+
+Options:
+
+-h, --help :  show this message and exit.
+"
+
+OUTPUTDIR="."
+
+# Get cmdlineargs.
+while [[ $# > 0 ]]; do
+  arg="$1"
+
+  case $arg in
+    -h | --help)
+      echo -e "$errmsg"
+      exit
+    ;;
+
+    *)
+    if [ "$OUTPUTDIR" != "." ]; then
+      # we've already read in a path
+      echo "You provided a second positional cmdline argument, '"$arg"'."
+      echo "Don't know what to do with that."
+      echo "Use -h or --help for help."
+      exit 1
+    fi
+    if [ ! -d "$arg" ]; then
+      echo "Provided path to swiftsim/src dir, '"$arg"', not found."
+      echo "Use -h or --help for help."
+      exit 1
+    else
+      OUTPUTDIR="$arg"
+    fi
+    ;;
+  esac
+
+  shift
+done
+
 
 # Now, to the actual work
+for FLAVOUR in \
+  "None" \
+  "Minimal" \
+  "Gadget2" \
+  "PressureEntropy" \
+  "PressureEnergy" \
+  "PressureEnergyMorrisMonaghanAV" \
+  "Phantom" \
+  "Gizmo_MFV" \
+  "Gizmo_MFM" \
+  "Shadowswift" \
+  "Planetary" \
+  "AnarchyPU" \
+  "Gasoline" \
+  "REMIX" \
+  "SPHENIX" \
+; do
 
-./generate_hydro_part.py --global-var-access --swift input/SPHENIX.yml -o $SWIFT_SRC_HYDRO_PATH/SPHENIX
-./generate_hydro_part.py --global-var-access --swift input/AnarchyPU.yml -o $SWIFT_SRC_HYDRO_PATH/AnarchyPU
-./generate_hydro_part.py --global-var-access --swift input/Gasoline.yml -o $SWIFT_SRC_HYDRO_PATH/Gasoline
+  ./generate_hydro_part.py --global-var-access --swift --full input/hydro/"$FLAVOUR".yml -o "$OUTPUTDIR"
+
+done

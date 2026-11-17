@@ -1,4 +1,4 @@
-# First, some metadata about this SPH flavour.
+
 metadata:
   flavour: Planetary
   authors: "2016 Matthieu Schaller (schaller@strw.leidenuniv.nl) & 2018   Jacob Kegerreis (jacob.kegerreis@durham.ac.uk)"
@@ -121,13 +121,21 @@ part:
     type: struct cooling_part_data
     doc: Cooling information
 
+  feedback_data:
+    type: struct feedback_part_data
+    doc: Additional data used by the feedback
+
   black_holes_data:
     type: struct black_holes_part_data
     doc: Black holes information (e.g. swallowing ID)
 
-  sink_part_data:
+  sink_data:
     type: struct sink_part_data
     doc: Sink information (e.g. swallowing ID)
+
+  pressure_floor_data:
+    type: struct pressure_floor_part_data
+    doc: Additional data used by the pressure floor
 
   mat_id:
     type: enum eos_planetary_material_id
@@ -141,6 +149,10 @@ part:
     type: struct rt_timestepping_data
     doc: RT sub-cycling time stepping data
 
+  geometry:
+    type: struct fvpm_geometry_struct
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
+
   depth_h:
     type: char
     doc: Tree-depth at which size / 2 <= h * gamma < size
@@ -149,7 +161,7 @@ part:
     type: timebin_t
     doc: Time-step length
 
-  limiter_data:
+  timestep_limiter:
     type: struct timestep_limiter_data
     doc: Time-step limiter information
 

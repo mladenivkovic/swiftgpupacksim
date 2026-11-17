@@ -98,6 +98,10 @@ part:
     type: struct rt_timestepping_data
     doc: RT sub-cycling time stepping data
 
+  geometry:
+    type: struct fvpm_geometry_struct
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
+
   time_bin:
     type: timebin_t
     doc: Time-step length
@@ -106,7 +110,7 @@ part:
     doc: Tree-depth at which size / 2 <= h * gamma < size
     type: char
 
-  limiter_data:
+  timestep_limiter:
     type: struct timestep_limiter_data
     doc: Time-step limiter information
 

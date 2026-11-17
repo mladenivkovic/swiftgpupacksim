@@ -131,6 +131,10 @@ part:
     type: struct sink_part_data
     doc: Sink information (eg swallowing ID)
 
+  pressure_floor_data:
+    type: struct pressure_floor_part_data
+    doc: Additional data used by the pressure floor
+
   rt_data:
     type: struct rt_part_data
     doc: Additional Radiative Transfer Data
@@ -138,6 +142,10 @@ part:
   rt_time_data:
     type: struct rt_timestepping_data
     doc: RT sub-cycling time stepping data
+
+  geometry:
+    type: struct fvpm_geometry_struct
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
 
   depth_h:
     doc: Tree-depth at which size / 2 <= h * gamma < size
@@ -147,7 +155,7 @@ part:
     type: timebin_t
     doc: Time-step length
 
-  limiter_data:
+  timestep_limiter:
     type: struct timestep_limiter_data
     doc: Time-step limiter information
 

@@ -268,11 +268,11 @@ def read_default_includes(swift_header: bool = False):
     Returns: List of headers as strings
     """
 
-    fname = "default_headers_swiftgpupacksim.h"
+    fname = "default_hydro_headers_swiftgpupacksim.h"
     if swift_header:
-        fname = "default_headers_swift.h"
+        fname = "default_hydro_headers_swift.h"
 
-    fname_full = os.path.join("input", fname)
+    fname_full = os.path.join("input", "hydro", fname)
 
     vprint(
         f"read_default_includes(): Using defaults from {fname_full} with additions from yml file"
@@ -285,6 +285,43 @@ def read_default_includes(swift_header: bool = False):
 
     sanitized = sanitize_include_headers(headers)
     return sanitized
+
+
+def _extract_field_names(fields_d: dict, depth: int = 0) -> list:
+    """
+    Extract field names (keys of dict) into a list and return it.
+    Ignores fields which are part of the _permitted_duplicate_field_names list.
+    Do this recursively if you find a union or a struct.
+
+    Parameters
+    ----------
+
+    fields_d: dict
+        dict containing field names (keys) and their properties (values)
+
+    Returns
+    -------
+
+    field_names: list
+        list of field names in this dict
+    """
+
+    field_names = []
+    for field in list(fields_d.keys()):
+        if field in _permitted_duplicate_field_names:
+            # These are allowed to exist multiple times.
+            continue
+        try:
+            ftype = fields_d[field]["type"]
+        except KeyError:
+            # a definition without the keyword 'type', most likely relying on defaults.
+            ftype = "float"
+        if ftype == "union" or ftype == "struct":
+            # recurse into contents of composite members
+            field_names += _extract_field_names(fields_d[field]["contents"])
+        else:
+            field_names.append(field)
+    return field_names
 
 
 def validate_yml_contents(
@@ -321,20 +358,23 @@ def validate_yml_contents(
     #          raise ValueError(f"particle data struct {key} defined more than once in your input yml file.")
     #      struct_names.append(key)
 
-    field_names = []
-    for key in list(contents_d.keys()):
 
+    # check for unique field names
+    field_names = []
+
+    # loop over top-level particle structs
+    for key in list(contents_d.keys()):
         struct_fields = contents_d[key]
-        for field in list(struct_fields.keys()):
-            if field in _permitted_duplicate_field_names:
-                # These are allowed to exist multiple times.
-                continue
-            if field in field_names:
-                raise ValueError(
-                    f"data field '{field}' defined more than once in your input yml file."
-                    + "This will create multiply defined getters and setters."
-                )
-            field_names.append(field)
+        field_names += _extract_field_names(struct_fields)
+
+    duplicates = [f for f in set(field_names) if field_names.count(f) > 1]
+
+    if len(duplicates) > 0:
+        raise ValueError(
+            f"data fields '{duplicates}' are defined more than once in your input yml file."
+            + "\nThis will create multiply defined getters and setters."
+            + "\nRemember that member names must be unique even across different structs."
+        )
 
     if not is_particle or testing:
         # no more checks necessary.

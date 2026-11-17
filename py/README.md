@@ -1,5 +1,6 @@
 TODO: UPDATE API OUTPUT EXAMPLES TO GLOBALVAR
 TODO: ADD DOC FOR IFNDEF
+TODO: make a note to put new fields in `required_data.py`  which all particles should have
 
 
 # Particle Struct Generation Scripts

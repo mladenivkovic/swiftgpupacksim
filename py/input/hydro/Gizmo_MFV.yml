@@ -45,13 +45,13 @@ part:
     type: struct
     doc: Gradients of the primitive variables
     contents:
-      rho:
+      grad_rho:
         size: 3
         doc: Density gradients
-      v:
+      grad_v:
         size: 3,3
         doc: Fluid velocity gradients
-      P:
+      grad_P:
         size: 3
         doc: Pressure gradients
 
@@ -59,13 +59,13 @@ part:
     type: struct
     doc: Quantities needed eby the slope limiter
     contents:
-      rho:
+      limiter_rho:
         doc: Extreme values of the density among the neighbours
         size: 2
-      v:
+      limiter_v:
         size: 3,2
         doc: Extreme values of the fluid velocity among the neighbours
-      P:
+      limiter_P:
         size: 2
         doc: Extreme values of the pressure among the neighbours
       maxr:
@@ -75,26 +75,32 @@ part:
     type: struct
     doc: The conserved hydrodynamical variables.
     contents:
-      mass:
-        doc: Fluid mass
-      momentum:
+      union_mass:
+        type: union
+        doc: Mass and conserved mass is the same. Use union to be both explicit in naming and to have required field available.
+        contents:
+          mass:
+            doc: Fluid mass
+          conserved_mass:
+            doc: Fluid mass
+      conserved_momentum:
         size: 3
         doc: Fluid momentum
-      energy:
+      conserved_energy:
         doc: Fluid thermal energy (not per unit mass!)
 
   flux:
     type: struct
     doc: Fluxes. No mass flux, since it is always zero.
     contents:
-      mass:
+      flux_mass:
         doc: Mass flux
-      momentum:
+      flux_momentum:
         size: 3
         doc: Momentum flux
-      energy:
+      flux_energy:
         doc: Energy flux
-      dt:
+      flux_dt:
         doc: Particle time step. Used to compute time-integrated fluxes
 
   geometry:
@@ -183,7 +189,7 @@ part:
     type: timebin_t
     doc: Time-step length
 
-  limiter_data:
+  timestep_limiter:
     type: struct timestep_limiter_data
     doc: Time-step limiter information
 

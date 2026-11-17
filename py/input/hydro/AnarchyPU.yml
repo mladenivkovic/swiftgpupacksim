@@ -64,7 +64,7 @@ part:
       div_v_previous_step:
         doc: Particle velocity divergence from previous step
 
-      alpha:
+      alpha_av:
         doc: Artificial viscosity parameter
       
       v_sig:
@@ -78,7 +78,7 @@ part:
       laplace_u:
         doc: del^2 u, a smoothed quantity
 
-      alpha: 
+      alpha_diff: 
         doc: Thermal diffusion coefficient
 
   union1:
@@ -157,6 +157,10 @@ part:
     type: struct sink_part_data
     doc: Sink information (eg swallowing ID)
 
+  pressure_floor_data:
+    type: struct pressure_floor_part_data
+    doc: Additional data used by the pressure floor
+
   rt_data:
     type: struct rt_part_data
     doc: Additional Radiative Transfer Data
@@ -186,6 +190,11 @@ part:
     type: integertime_t
     doc: Time of the last kick
     ifdef: SWIFT_DEBUG_CHECKS
+
+  geometry:
+    type: struct fvpm_geometry_struct
+    doc: Geometrical quantities used for Finite Volume Particle Method RT
+
 
 xpart:
   doc: |
