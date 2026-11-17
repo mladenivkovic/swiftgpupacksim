@@ -6,7 +6,7 @@ errmsg="
 Generate header files for all SWIFT particles, intended to be placed into and
 used in the SWIFT repository.
 
-Usage: ./generate_swift_particles.sh </path/to/swiftsim/src>
+Usage: $0 </path/to/swiftsim/src>
 
 If no </path/to/swiftsim/src> is provided, the files will be generated in the
 current directory.
