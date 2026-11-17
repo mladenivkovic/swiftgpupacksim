@@ -87,7 +87,7 @@
 #define SINK_NONE 1
 
 /* SPHENIX SPH */
-#define SPHENIX_SPH 1
+/* #undef SPHENIX_SPH 1 */
 
 /* Basic stellar model */
 #define STARS_BASIC 1
@@ -216,3 +216,5 @@
 # define _Restrict
 # define __restrict__
 #endif
+
+#define MAX_NUM_OF_NEIGHBOURS 10

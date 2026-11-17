@@ -1,6 +1,6 @@
 # First, some metadata about this SPH flavour.
 metadata:
-  flavour: "PressureEnergyMonaghanAV"
+  flavour: "PressureEnergyMorrisMonaghanAV"
   authors: "2016 Matthieu Schaller (schaller@strw.leidenuniv.nl) & Josh Borrow (joshua.borrow@durham.ac.uk)"
   doc: |
     P-U implementation of SPH (Particle definition)

@@ -6,6 +6,7 @@
 "csds.h"
 "error.h"
 "feedback_struct.h"
+"forcing_struct.h"
 "fvpm_geometry_struct.h"
 "hydro_part_arrays_struct.h"
 "mhd_struct.h"

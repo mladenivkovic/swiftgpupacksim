@@ -124,14 +124,14 @@ part:
             size: 3
             doc: Contributing term for grad-h component of grad_m1_bar
           m2_bar:
-            type: struct sym_matrix m2_bar
+            type: struct sym_matrix
             doc: Symmetrised kernel geometric moment m2
           grad_m2_bar:
-            type: struct sym_matrix grad_m2_bar
+            type: struct sym_matrix
             size: 3
             doc: Gradient of symmetrised kernel geometric moment m2 (x, y, z * components"
           grad_m2_bar_gradhterm:
-            type: "struct sym_matrix grad_m2_bar_gradhterm"
+            type: struct sym_matrix
             doc: Contributing term for grad-h component of grad_m2_bar
       force:
         type: struct
@@ -283,7 +283,7 @@ xpart:
     doc: "Evolved density at the last full step."
 
   extra_split_data:
-    type: struct particle_splitting_data split_data
+    type: struct particle_splitting_data
     doc: "Additional data used to record particle splits"
 
   extra_cooling_data:
