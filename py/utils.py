@@ -316,6 +316,16 @@ def _extract_field_names(fields_d: dict, depth: int = 0) -> list:
         except KeyError:
             # a definition without the keyword 'type', most likely relying on defaults.
             ftype = "float"
+        except TypeError:
+            # if a field has no specified components (no type, doc, etc), then the
+            # value of in the dict entry will be 'None', which isn't subscriptable
+            # and raises TypeError instead of KeyError.
+            # In case I'm missing some other issue, make sure the value is 'None'
+            # indeed.
+            if fields_d[field] is None:
+                ftype = "float"
+            else:
+                raise TypeError(f"Got something weird you need to debug. field={field}, fields_d[field]={fields_d[field]}")
         if ftype == "union" or ftype == "struct":
             # recurse into contents of composite members
             field_names += _extract_field_names(fields_d[field]["contents"])
