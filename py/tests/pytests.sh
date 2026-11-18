@@ -242,68 +242,68 @@ function make_gizmo_subdir_helper_headers(){
 # TEST API GENERATION
 # ---------------------------------------
 
-# # cleanup before we start
-# rm -rf ./hydro_part.h ./hydro_part_arrays_struct.h ./test_header_output.o ./src
-#
-# for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
-#   for testcase in \
-#     "test_data_types" \
-#     "test_arrays" \
-#     "test_multidim_arrays" \
-#     "test_ifdefs" \
-#     "test_struct" \
-#     "test_union" \
-#     "test_split_struct" \
-#     "test_split_struct_nopart" \
-#     "test_split_struct_arrays" \
-#     "test_split_struct_structs_and_unions" \
-#   ; do
-#
-#     echo "==============================================="
-#     echo "running $testcase $flag"
-#     echo "==============================================="
-#
-#     python3 ../../py/swiftpartgen.py --test "$flag" $HEADER_TYPE_FLAG ./input/"$testcase".yml
-#     COMPILE_AND_RUN
-#
-#     if [ "$flag" == "--part-struct-accessor" ]; then
-#       # I only keep the outputs for part struct accessors for comparison for now...
-#       # cp "$OUTPUT_PREFIX"/hydro_part.h "$DIFF_PREFIX"/"$testcase".h
-#       DIFF "$DIFF_PREFIX"/"$testcase".h "$OUTPUT_PREFIX"/hydro_part.h
-#     fi
-#
-#     rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-#   done
-#
-# done # loop over accessor flags
-#
-#
-# # ---------------------------------------
-# # TEST HEADER INCLUSION
-# # ---------------------------------------
-#
-# # testing header inclusion:
-# # we're not generating particle API here, so no point in testing all accessor methods.
-#
-# # make temporary headers which will be included
-# touch a.h b.h c.h
-#
-# for testcase in test_headerfile_includes test_headerfile_includes_add; do
-#
-#   echo "==============================================="
-#   echo "running $testcase $flag"
-#   echo "==============================================="
-#
-#   python3 ../../py/swiftpartgen.py --part-struct-accessors --test $HEADER_TYPE_FLAG ./input/"$testcase".yml
-#   COMPILE_AND_RUN
-#
-#   # cp "$OUTPUT_PREFIX"/hydro_part.h "$DIFF_PREFIX"/"$testcase".h
-#   DIFF "$DIFF_PREFIX"/"$testcase".h "$OUTPUT_PREFIX"/hydro_part.h
-#
-# done
-#
-# rm -f a.h b.h c.h
-#
+# cleanup before we start
+rm -rf ./hydro_part.h ./hydro_part_arrays_struct.h ./test_header_output.o ./src
+
+for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
+  for testcase in \
+    "test_data_types" \
+    "test_arrays" \
+    "test_multidim_arrays" \
+    "test_ifdefs" \
+    "test_struct" \
+    "test_union" \
+    "test_split_struct" \
+    "test_split_struct_nopart" \
+    "test_split_struct_arrays" \
+    "test_split_struct_structs_and_unions" \
+  ; do
+
+    echo "==============================================="
+    echo "running $testcase $flag"
+    echo "==============================================="
+
+    python3 ../../py/swiftpartgen.py --test "$flag" $HEADER_TYPE_FLAG ./input/"$testcase".yml
+    COMPILE_AND_RUN
+
+    if [ "$flag" == "--part-struct-accessor" ]; then
+      # I only keep the outputs for part struct accessors for comparison for now...
+      # cp "$OUTPUT_PREFIX"/hydro_part.h "$DIFF_PREFIX"/"$testcase".h
+      DIFF "$DIFF_PREFIX"/"$testcase".h "$OUTPUT_PREFIX"/hydro_part.h
+    fi
+
+    rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
+  done
+
+done # loop over accessor flags
+
+
+# ---------------------------------------
+# TEST HEADER INCLUSION
+# ---------------------------------------
+
+# testing header inclusion:
+# we're not generating particle API here, so no point in testing all accessor methods.
+
+# make temporary headers which will be included
+touch a.h b.h c.h
+
+for testcase in test_headerfile_includes test_headerfile_includes_add; do
+
+  echo "==============================================="
+  echo "running $testcase $flag"
+  echo "==============================================="
+
+  python3 ../../py/swiftpartgen.py --part-struct-accessors --test $HEADER_TYPE_FLAG ./input/"$testcase".yml
+  COMPILE_AND_RUN
+
+  # cp "$OUTPUT_PREFIX"/hydro_part.h "$DIFF_PREFIX"/"$testcase".h
+  DIFF "$DIFF_PREFIX"/"$testcase".h "$OUTPUT_PREFIX"/hydro_part.h
+
+done
+
+rm -f a.h b.h c.h
+
 
 
 # ---------------------------------------
@@ -313,21 +313,21 @@ function make_gizmo_subdir_helper_headers(){
 # Note: looping over this associating array as we do below will not
 # necessarily loop over all elements in the same order as defined here.
 declare -A SPH_FLAVOURS
-SPH_FLAVOURS["AnarchyPU"]="ANARCHY_PU_SPH"
-SPH_FLAVOURS["Gadget2"]="GADGET2_SPH"
-SPH_FLAVOURS["Gasoline"]="GASOLINE_SPH"
-SPH_FLAVOURS["Gizmo_MFV"]="GIZMO_MFV_SPH"
-SPH_FLAVOURS["Gizmo_MFM"]="GIZMO_MFM_SPH"
-SPH_FLAVOURS["Minimal"]="MINIMAL_SPH"
-SPH_FLAVOURS["None"]="NONE_SPH"
-SPH_FLAVOURS["Phantom"]="PHANTOM_SPH"
+# SPH_FLAVOURS["AnarchyPU"]="ANARCHY_PU_SPH"
+# SPH_FLAVOURS["Gadget2"]="GADGET2_SPH"
+# SPH_FLAVOURS["Gasoline"]="GASOLINE_SPH"
+# SPH_FLAVOURS["Gizmo_MFV"]="GIZMO_MFV_SPH"
+# SPH_FLAVOURS["Gizmo_MFM"]="GIZMO_MFM_SPH"
+# SPH_FLAVOURS["Minimal"]="MINIMAL_SPH"
+# SPH_FLAVOURS["None"]="NONE_SPH"
+# SPH_FLAVOURS["Phantom"]="PHANTOM_SPH"
 SPH_FLAVOURS["Planetary"]="PLANETARY_SPH"
-SPH_FLAVOURS["PressureEnergy"]="HOPKINS_PU_SPH"
-SPH_FLAVOURS["PressureEnergyMorrisMonaghanAV"]="HOPKINS_PU_SPH_MONAGHAN"
-SPH_FLAVOURS["PressureEntropy"]="HOPKINS_PE_SPH"
-SPH_FLAVOURS["REMIX"]="REMIX_SPH"
-SPH_FLAVOURS["Shadowswift"]="SHADOWSWIFT"
-SPH_FLAVOURS["SPHENIX"]="SPHENIX_SPH"
+# SPH_FLAVOURS["PressureEnergy"]="HOPKINS_PU_SPH"
+# SPH_FLAVOURS["PressureEnergyMorrisMonaghanAV"]="HOPKINS_PU_SPH_MONAGHAN"
+# SPH_FLAVOURS["PressureEntropy"]="HOPKINS_PE_SPH"
+# SPH_FLAVOURS["REMIX"]="REMIX_SPH"
+# SPH_FLAVOURS["Shadowswift"]="SHADOWSWIFT"
+# SPH_FLAVOURS["SPHENIX"]="SPHENIX_SPH"
 
 
 
@@ -346,9 +346,15 @@ for FLAVOUR in ${!SPH_FLAVOURS[@]}; do
       make_gizmo_subdir_helper_headers hydro_part_arrays_struct
     fi
 
+    DEFINES="-D${SPH_FLAVOURS[$FLAVOUR]}"
+
+    # if [[ "$FLAVOUR" == "Planetary" ]]; then
+    #   DEFINES+=" -DEOS_PLANETARY"
+    # fi
+
     echo python3 ../../py/swiftpartgen.py $ACCESSOR_FLAG --full $HEADER_TYPE_FLAG input/hydro/"$FLAVOUR".yml
     python3 ../../py/swiftpartgen.py $ACCESSOR_FLAG --full $HEADER_TYPE_FLAG input/hydro/"$FLAVOUR".yml
-    COMPILE_AND_RUN_PARTICLE -D${SPH_FLAVOURS[$FLAVOUR]}
+    COMPILE_AND_RUN_PARTICLE "$DEFINES"
   done
 done
 
