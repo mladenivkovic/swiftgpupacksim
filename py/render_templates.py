@@ -6,7 +6,12 @@ Stuff related to rendering templates.
 
 import jinja2
 import os
-from utils import verify_dir_exists, get_git_hash, truncate_repo_file_path, sanitize_C_macro
+from utils import (
+    verify_dir_exists,
+    get_git_hash,
+    truncate_repo_file_path,
+    sanitize_C_macro,
+)
 from verbosity import *
 
 _root_dir = os.path.dirname(__file__)

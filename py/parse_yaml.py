@@ -411,7 +411,7 @@ class FieldEntry(object):
 
         return d
 
-    def generate_declaration(self, indent_level: int = 1)->str:
+    def generate_declaration(self, indent_level: int = 1) -> str:
         """
         Generate the field declaration
 

@@ -325,7 +325,9 @@ def _extract_field_names(fields_d: dict, depth: int = 0) -> list:
             if fields_d[field] is None:
                 ftype = "float"
             else:
-                raise TypeError(f"Got something weird you need to debug. field={field}, fields_d[field]={fields_d[field]}")
+                raise TypeError(
+                    f"Got something weird you need to debug. field={field}, fields_d[field]={fields_d[field]}"
+                )
         if ftype == "union" or ftype == "struct":
             # recurse into contents of composite members
             field_names += _extract_field_names(fields_d[field]["contents"])
@@ -367,7 +369,6 @@ def validate_yml_contents(
     #      if key in struct_names:
     #          raise ValueError(f"particle data struct {key} defined more than once in your input yml file.")
     #      struct_names.append(key)
-
 
     # check for unique field names
     field_names = []
