@@ -212,6 +212,32 @@ function DIFF(){
 }
 
 
+function make_gizmo_subdir_helper_headers(){
+  # Make a header which includes the appropriate gizmo headers from subdirs.
+  # Usage: make_gizmo_subdir_helper_headers <basename>
+  # where <basename> is the basename ofof the header file and the
+  # one to be included from the MFM/MFV subdirs
+
+  header=$1
+
+  mkdir -p src/hydro/Gizmo
+  GH=src/hydro/Gizmo/"$header".h
+  touch "$GH"
+
+  echo "#ifndef SWIFT_HYDRO_GIZMO_""$header""_H" > "$GH"
+  echo "#define SWIFT_HYDRO_GIZMO_""$header""_H" >> "$GH"
+  echo "/* Import the right hydro particle definition */" >> "$GH"
+  echo "#if defined(GIZMO_MFV_SPH)" >> "$GH"
+  echo '#include "MFV/'"$header"'.h"' >> "$GH"
+  echo "#elif defined(GIZMO_MFM_SPH)" >> "$GH"
+  echo '#include "MFM/'"$header"'.h"' >> "$GH"
+  echo "#endif" >> "$GH"
+  echo >> "$GH"
+  echo "#endif" >> "$GH"
+
+}
+
+
 # ---------------------------------------
 # TEST API GENERATION
 # ---------------------------------------
@@ -290,8 +316,8 @@ declare -A SPH_FLAVOURS
 SPH_FLAVOURS["AnarchyPU"]="ANARCHY_PU_SPH"
 SPH_FLAVOURS["Gadget2"]="GADGET2_SPH"
 SPH_FLAVOURS["Gasoline"]="GASOLINE_SPH"
-# SPH_FLAVOURS["Gizmo_MFV"]="GIZMO_MFV_SPH"
-# SPH_FLAVOURS["Gizmo_MFM"]="GIZMO_MFM_SPH"
+SPH_FLAVOURS["Gizmo_MFV"]="GIZMO_MFV_SPH"
+SPH_FLAVOURS["Gizmo_MFM"]="GIZMO_MFM_SPH"
 SPH_FLAVOURS["Minimal"]="MINIMAL_SPH"
 SPH_FLAVOURS["None"]="NONE_SPH"
 SPH_FLAVOURS["Phantom"]="PHANTOM_SPH"
@@ -311,8 +337,15 @@ for FLAVOUR in ${!SPH_FLAVOURS[@]}; do
     "--explicit-var-accessors" \
     "--global-var-accessors" "--part-struct-accessors --explicit-var-accessors --global-var-accessors" \
   ; do
+
     echo RUNNING FOR $FLAVOUR $ACCESSOR_FLAG
     rm -rf src/*
+
+    if [[ "$FLAVOUR" == "Gizmo_MFV" || $FLAVOUR == "Gizmo_MFM" ]]; then
+      make_gizmo_subdir_helper_headers hydro_part
+      make_gizmo_subdir_helper_headers hydro_part_arrays_struct
+    fi
+
     echo python3 ../../py/swiftpartgen.py $ACCESSOR_FLAG --full $HEADER_TYPE_FLAG input/hydro/"$FLAVOUR".yml
     python3 ../../py/swiftpartgen.py $ACCESSOR_FLAG --full $HEADER_TYPE_FLAG input/hydro/"$FLAVOUR".yml
     COMPILE_AND_RUN_PARTICLE -D${SPH_FLAVOURS[$FLAVOUR]}

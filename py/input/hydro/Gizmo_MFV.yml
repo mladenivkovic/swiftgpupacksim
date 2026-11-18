@@ -2,7 +2,7 @@
 metadata:
   flavour: "Gizmo-MFV"
   authors: 2014 Bert Vandenbroucke (bert.vandenbroucke@ugent.be)
-  doc: Gizmo Meshless-Finite-Mass implementation
+  doc: Gizmo Meshless-Finite-Volume implementation
 
 # now for the actual particle content
 part:
@@ -229,7 +229,7 @@ xpart:
     doc: "Gravitational acceleration at the end of the last step"
 
   extra_split_data:
-    type: struct particle_splitting_data split_data
+    type: struct particle_splitting_data
     doc: "Additional data used to record particle splits"
 
   extra_cooling_data:

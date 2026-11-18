@@ -646,3 +646,17 @@ def add_auxiliary_fields(
                 )
 
     return updated_contents_d
+
+
+def sanitize_C_macro(macro: str) -> str:
+    """
+    Sanitize a string to be used as a C macro
+    """
+
+    san = macro.upper()
+    san = san.replace("-", "_")
+    san = san.replace("/", "_")
+    san = san.replace(" ", "_")
+    san = san.replace(".", "_")
+    san = san.replace(":", "_")
+    return san

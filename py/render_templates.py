@@ -6,7 +6,7 @@ Stuff related to rendering templates.
 
 import jinja2
 import os
-from utils import verify_dir_exists, get_git_hash, truncate_repo_file_path
+from utils import verify_dir_exists, get_git_hash, truncate_repo_file_path, sanitize_C_macro
 from verbosity import *
 
 _root_dir = os.path.dirname(__file__)
@@ -130,7 +130,7 @@ def jinja_render_hydro_part_dot_h(
     d["PART_STRUCT_ACCESSORS"] = part_struct_accessors
 
     d["AUTHORS"] = metadata_d["authors"]
-    d["FLAVOUR_NAME"] = metadata_d["flavour"].upper()
+    d["FLAVOUR_NAME"] = sanitize_C_macro(metadata_d["flavour"])
     d["HAS_FILE_DOC"] = metadata_d["has_doc"]
     d["FILE_DOC"] = metadata_d["doc"]
     d["INCLUDES"] = metadata_d["includes"]

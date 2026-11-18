@@ -96,7 +96,7 @@ def generate_hydro_part_dot_h(
                     has_doc = True
                     doc = part_d[struct_name][field]
                 else:
-                    vprint(f"Found prohibited field name {field}, skipping it.")
+                    print(f"Found prohibited field name {field}, skipping it.")
                 # in either case, don't process further
                 continue
             # parse the field specification

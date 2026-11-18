@@ -411,14 +411,22 @@ class FieldEntry(object):
 
         return d
 
-    def generate_declaration(self, indent_level: int = 1):
+    def generate_declaration(self, indent_level: int = 1)->str:
         """
         Generate the field declaration
+
+        Parameters
+        ----------
 
         indent_level: int
             Increment the indent level of the declaration. Each indent_level
             indents the line by 2 whitespaces.
 
+        Returns
+        -------
+
+        decl: str
+            string containing c-code of member declarations
         """
 
         vprint(f"generate_declaration() for {self.type} {self.name}")
@@ -526,6 +534,7 @@ class FieldEntry(object):
                 if params_dict["IS_UNION"]:
                     # we don't need any modification to the accessors.
                     api_entry = entry.generate_API(
+                        parent_struct=parent_struct,
                         swift_header=swift_header,
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,

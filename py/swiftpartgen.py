@@ -340,6 +340,10 @@ if __name__ == "__main__":
 
         if swift_header or full_output:
             outdir_particle = os.path.join(outdir, "hydro", metadata_d["flavour"])
+            if metadata_d["flavour"] == "Gizmo-MFM":
+                outdir_particle = outdir_particle = os.path.join(outdir, "hydro", "Gizmo", "MFM")
+            elif metadata_d["flavour"] == "Gizmo-MFV":
+                outdir_particle = outdir_particle = os.path.join(outdir, "hydro", "Gizmo", "MFV")
 
         if not os.path.exists(outdir_particle):
             os.makedirs(outdir_particle)
