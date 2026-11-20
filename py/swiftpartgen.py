@@ -145,7 +145,7 @@ if __name__ == "__main__":
     verbose_settings["debug"] = args.debug
 
     outdir = check_output_directory(
-        args.output_dir, swift_header=swift_header, full_output=full_output
+        args.output_dir, swift_header=swift_header, full_output=full_output, testing=testing
     )
 
     # Check our setup is sensible.
@@ -179,8 +179,8 @@ if __name__ == "__main__":
     print(f"Particle input file:                         {input_file}")
     print(f"Accessor type:                               {accessor_type}")
     print(f"Dry run?                                     {dry_run}")
-    print(f"Generate files besides src/hydro/<flavour>/? {full_output}")
     print(f"Outputs for unit tests?                      {testing}")
+    print(f"Generate files besides src/hydro/<flavour>/? {full_output}")
     print(f"Add part ID checks in accessor?              {id_checks}")
     print(f"Manual struct alignment?                     {manual_align}")
     print_separator()
@@ -338,7 +338,7 @@ if __name__ == "__main__":
 
         outdir_particle = outdir
 
-        if swift_header or full_output:
+        if not testing and (swift_header or full_output):
             outdir_particle = os.path.join(outdir, "hydro", metadata_d["flavour"])
             if metadata_d["flavour"] == "Gizmo-MFM":
                 outdir_particle = outdir_particle = os.path.join(

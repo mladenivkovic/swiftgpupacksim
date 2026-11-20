@@ -50,7 +50,7 @@ def verify_dir_exists(dname: str, message: str = ""):
 
 
 def check_output_directory(
-    outdir: Union[str, list], swift_header: bool = False, full_output: bool = False
+        outdir: Union[str, list], swift_header: bool = False, full_output: bool = False, testing: bool = False
 ):
     """
     Extract the output directory from the parsed args.
@@ -67,6 +67,9 @@ def check_output_directory(
 
     full_output: bool
         If True, we're writing all files, not just (hydro) particles
+
+    testing: bool
+        If True, we're writing outputs for unit tests
 
     Return
     ------
@@ -94,7 +97,7 @@ def check_output_directory(
         )
         os.makedirs(outdir)
 
-    if swift_header or full_output:
+    if (swift_header or full_output) and not testing:
         # Assume we're given top level dir. Look for /src and create it if necessary.
         outdir = os.path.join(outdir, "src")
         if not os.path.exists(outdir):
