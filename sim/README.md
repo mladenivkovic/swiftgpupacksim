@@ -1,3 +1,10 @@
+Note: This readme is probably best read in a markdown reader or
+[on github](https://github.com/mladenivkovic/swiftgpupacksim/blob/main/sim/README.md)
+rather than in plain text.
+
+
+
+
 swiftgpupacksim
 ===============
 
@@ -55,14 +62,22 @@ Building the program
 
 
   ```
+  --enable-debug          Enable debugging symbols
+
+  --enable-debugging-checks
+                          Enable additional debugging checks
+
   --enable-sanitizer      Enable memory error detection using address
                           sanitizer [no/yes]
+
   --enable-undefined-sanitizer
                           Enable detection of code that causes undefined
                           behaviour [no/yes]
+
   --enable-compiler-warnings
                           Enable compile time warning flags, if compiler is
                           known [error/no/yes)]
+
   --enable-optreport      Enable optimization reports, if compiler is known
                           [error/no/yes)]
   ```
