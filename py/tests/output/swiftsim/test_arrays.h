@@ -35,6 +35,7 @@
 #include "csds.h"
 #include "error.h"
 #include "feedback_struct.h"
+#include "forcing_struct.h"
 #include "fvpm_geometry_struct.h"
 #include "hydro_part_arrays_struct.h"
 #include "mhd_struct.h"
