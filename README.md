@@ -1,4 +1,11 @@
-# swiftgpupacksim
+
+Note: This readme is probably best read in a markdown reader or
+[on github](https://github.com/mladenivkovic/swiftgpupacksim/blob/main/README.md)
+rather than in plain text.
+
+
+swiftgpupacksim
+===============
 
 Mini-application to experiment with memory layout strategies and benchmark
 SWIFT's gpu packing and unpacking procedures.
@@ -15,11 +22,15 @@ See also the logging format specification in `data/REAMDE.md`.
 
 Some collected data should be available in the `data/` directory of this
 repository. Note that it's stored using `git lfs` and needs to be checked out
-to be made available (see the [instructions](#Instructions) below).
+to be made available (see the [instructions](#getting-sample-experiment-data) below).
 
 
 
-## Instructions
+Installation
+------------
+
+Building the mini-app
+~~~~~~~~~~~~~~~~~~~~~
 
 The mini-benchmark is stored in the `/sim` subdirectory. To install it, run
 ```
@@ -28,6 +39,8 @@ cd sim
 ./configure
 make
 ```
+
+See `sim/README.md` for more details on configuration options.
 
 This installation requires `autotools`, `libtool`, and `make` (same
 requirements as SWIFT).
@@ -41,6 +54,10 @@ reproduce. Run it using
 ```
 
 Some example scripts are given in `/sim/examples`.
+
+
+Getting sample experiment data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some experiment data (logs of packing/unpacking operations on actual GPU runs)
 are stored in the `data/` directory. However, they are stored via `git-lfs`. To
@@ -62,18 +79,40 @@ WARNING: If you run that in a dirty working tree, you'll blow away your
 changes, so don't do that.
 
 
-## Configuration options
+Getting the `swiftpartgen` submodule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[swiftpartgen](https://github.com/SWIFTSIM/swiftpartgen) is used to generate
+header files for various particle layouts and their respective getter/setter
+APIs. If you have need of that, `swiftpartgen` is part of this repository as
+a submodule. To fetch it, run
+
+```
+git submodule init
+git submodule update
+```
+
+
+
+
+
+Configuration options
+---------------------
 
 See `sim/README.md` for more details.
 
-### Development options
+Development options
+~~~~~~~~~~~~~~~~~~~
 
 - `--enable-debug`: Enable debugging symbols
 - `--enable-debugging-checks`: Enable additional debugging checks
 - `--enable-no-cuda-mallochost`: Use `malloc` instead of `cudaMallocHost`
 - `--enable-sanitizer`, `--enable-undefined-sanitizer`: Turn on sanitizers
 
-### Selecting a memory layout, alignments, loop splitting, particle access variant
+
+
+Selecting a memory layout, alignments, loop splitting, particle access variant
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 See `/sim/README.md` for more details.
 
@@ -92,7 +131,10 @@ pack them into buffers in multiple loops instead of a single iteration per
 particle) can be selected using the `--with-loop-split=<value>` flag.
 
 
-## Reading the output
+
+
+Reading the output
+~~~~~~~~~~~~~~~~~~
 
 A simulation run will produce an output file of the form `results_XXX.csv`,
 where `XXX` is determined by the selected memory layout realisation.
@@ -122,7 +164,8 @@ unpack,force,[FLOAT]
 
 
 
-## Adding new measurement data
+Adding new measurement data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The measured event logs are kept under [git-lfs]() revision. To add your new
 data correctly without messing up this repo's size, do the following:
@@ -138,17 +181,26 @@ Consult `/data/README.md` for a specification of the log file formats.
 
 
 
-## Adding new layout realisations
+Adding new layout realisations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TODO
+New layouts are easiest implemented using [swiftpartgen](https://github.com/SWIFTSIM/swiftpartgen).
+It is kept as a git submodule in this repository. To fetch it, use
 
-## Particle struct generation
+```
+git submodule init
+git submodule update
+```
 
-The purpose of this mini-benchmark is to try out various particle memory layout
-realisations. To do so, we can generate different realisations of particle
-structs using `python 3` and the `jinja2` templating engine. Consult the
-`py/README.md` for instructions how to use the scripts.
+Consult [its documentation](https://swiftsim.github.io/swiftpartgen/) on how to
+use it. In short, you'll have to:
 
+- write a `yaml` parameter file specifying your new layout
+- run the `swiftpartgen.py` script
+- add the resulting output to a new subdirectory in `sim/src/realisations`
+- add a new entry for the layout in `sim/configure.ac`
+
+and that should hopefully be it!
 
 
 

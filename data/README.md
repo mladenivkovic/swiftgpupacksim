@@ -1,4 +1,10 @@
-# Contents
+Note: This readme is best read in an markdown reader or
+[on github](https://github.com/mladenivkovic/swiftgpupacksim/blob/main/data/README.md)
+rather than in plain text.
+
+
+Contents
+========
 
 - `IntelXeonGold5218_Gresho64_1thread`: cosma gn001, 64^3 GreshoVortex_3D, single thread
 - `IntelXeonGold5218_Gresho64_4threads`: cosma gn001, 64^3 GreshoVortex_3D, 4 threads
@@ -7,9 +13,11 @@
 
 
 
-# Data Format
+Data Format
+===========
 
-## Run parameter output
+Run parameter output
+--------------------
 
 Aside from the actual logs (see below), we also need to write out some global
 run parameters. The strictly necessary fields are the first thee lines:
@@ -27,7 +35,8 @@ branch/commit used, the configure and compilation flags, and the output of
 
 
 
-## logs format
+logs format
+-----------
 
 The logging outputs are written per thread and per simulation step, as noted in
 the filename of the outputs.
