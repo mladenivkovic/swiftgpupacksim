@@ -1,5 +1,3 @@
-# SPHENIX SPH with the particle quantity ordering as in upstream/master
-
 # First, some metadata about this SPH flavour.
 metadata:
   flavour: "SPHENIX"

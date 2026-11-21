@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+Global verbosity settings and helper functions.
+
+The idea is to set the settings in the main file of the script and
+have that information available everywhere without needing to pass
+boolean flags for verbosity levels and write verbosity level checks
+everywhere. Instead, use the `vprint`  and `dprint` functions below.
+"""
+
 # Note: In order to be modifyable from main, this needs to be
 # stored in a mutable object, not e.g. a boolean literal.
 verbose_settings = {"verbose": False, "debug": False}

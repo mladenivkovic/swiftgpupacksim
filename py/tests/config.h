@@ -1,5 +1,4 @@
-/* config.h.  Generated from config.h.in by configure.  */
-/* config.h.in.  Generated from configure.ac by autoheader.  */
+/* Minimal config.h for compilation tests to work. */
 
 /* No black hole model */
 #define BLACK_HOLES_NONE 1

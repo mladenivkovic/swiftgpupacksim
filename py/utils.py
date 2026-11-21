@@ -137,8 +137,8 @@ def get_git_hash() -> str:
 
 def truncate_repo_file_path(path: str) -> str:
     """
-    cut out everything except this repository's top level dir from the given
-    file `path`.
+    cut out everything preceeding this repository's top level dir from the
+    given file `path`.
 
     Assumes that `path` is within the repository.
     """
@@ -172,7 +172,7 @@ def truncate_repo_file_path(path: str) -> str:
 def get_full_file_path_relative_to_script(relpath: str) -> str:
     """
     get the full (absolute) file path of a file, where the file is specified by
-    `relpath`, the relative to the location of this script
+    `relpath`, its relative path w.r.t. the location of this script
     """
 
     # get full path, just in case
