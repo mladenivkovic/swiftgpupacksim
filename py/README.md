@@ -1,3 +1,11 @@
+TODO: UPDATE API OUTPUT EXAMPLES TO GLOBALVAR
+TODO: ADD DOC FOR IFNDEF
+TODO: make section "developer manual"
+        - make a note to put new fields in `required_data.py`  which all particles should have
+        - make a note to put new features in tests, and explain what tests do
+        - mention use of -p flag to check whether your output is valid C code without re-compiling all of swift
+
+
 # Particle Struct Generation Scripts
 
 This directory contains the scripts used to generate the various C header files
@@ -359,10 +367,13 @@ struct part {
 
 
 
-### IFDEF macros
+### IFDEF and IFNDEF macros
+
+TODO: ADD IFNDEF EXAMPLE
 
 You may want to hide some particle fields behind a macro guard. To do so, use
-the ``ifdef: MACRO_NAME`` keyword.
+the ``ifdef: MACRO_NAME`` keyword or ``ifndef: MACRO_NAME`` keyword,
+respectively. Obviously, you may only use one for each member, not both.
 
 However, to have functional getters and setters API when the macros aren't set,
 we need to provide a return value for the getters. By default, the values will
@@ -376,6 +387,10 @@ part:
   debug_counter:
     type: int
     ifdef: SWIFT_DEBUG_CHECKS
+
+  rt_time_bin:
+    type: int
+    ifndef: RT_NONE
 
   collect_mpi:
     type: float
@@ -393,7 +408,7 @@ this results in:
  * @brief get debug_counter.
  */
 static __attribute__((always_inline)) INLINE int
-  part_get_debug_counter(const struct part *restrict p) {
+  part_get_debug_counter(const size_t pind) {
 #ifdef SWIFT_DEBUG_CHECKS
   return p->_debug_counter;
 #else
@@ -401,13 +416,26 @@ static __attribute__((always_inline)) INLINE int
 #endif
 }
 
+/**
+ * @brief get rt_time_bin.
+ */
+static __attribute__((always_inline)) INLINE int
+  part_get_debug_counter(const size_t pind) {
+#ifdef SWIFT_DEBUG_CHECKS
+  return p->_debug_counter;
+#else
+  return INT_MAX;
+#endif
+}
+
+
 # ... more getters and setters ...
 
 /**
  * @brief get collect_mpi.
  */
 static __attribute__((always_inline)) INLINE float
-  part_get_collect_mpi(const struct part *restrict p) {
+  part_get_collect_mpi(const size_t pind) {
 #ifdef WITH_MPI
   return p->_collect_mpi;
 #else
@@ -485,5 +513,14 @@ multiple structs instead of a single one. To do so, some restrictions apply:
   - If you don't, one will be generated for you.
   - If you don't, the script will also automatically generate getter functions to
     all other structs holding particle data as defined in the yaml file.
+
+
+
+### ToDo
+
+- Documentation:
+  - special files
+  - list which wiles should be generated
+  - document --full, --swift, and which files should be in the output
 
 

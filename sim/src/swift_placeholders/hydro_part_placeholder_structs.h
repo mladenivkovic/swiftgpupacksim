@@ -19,6 +19,9 @@ struct cooling_part_data {};
 /*! Additional data used by the feedback */
 struct feedback_part_data {};
 
+/*! Additional data used by forcing */
+struct forcing_part_data {};
+
 /*! Black holes information (e.g. swallowing ID) */
 struct black_holes_part_data {};
 
@@ -33,3 +36,12 @@ struct rt_part_data {};
 
 /*! Geometrical quantities used for Finite Volume Particle Method RT. */
 struct fvpm_geometry_struct {};
+
+
+struct particle_splitting_data{};
+struct cooling_xpart_data{};
+struct tracers_xpart_data{};
+struct star_formation_xpart_data{};
+struct feedback_xpart_data{};
+struct mhd_xpart_data{};
+struct forcing_xpart_data{};

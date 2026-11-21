@@ -1,0 +1,30 @@
+# rt_struct and rt_timestep_data struct. Should be identical for each particle flavour.
+
+# First, some metadata about this SPH flavour.
+metadata:
+  authors: |
+      2020 Mladen Ivkovic (mladen.ivkovic@durham.ac.uk)
+  includes: 
+    - timeline.h
+    - <config.h>
+    - <float.h>
+    - <limits.h>
+    - <stddef.h>
+
+
+rt_timestepping_data:
+    doc: |
+        data relevant to the sub-cycle timestepping of parts.
+
+    time_bin:
+        type: timebin_t 
+        doc: Time-bin this particle uses for RT interactions
+        ifndef: RT_NONE
+        ifdef_return_val: 0
+
+    min_ngb_time_bin:
+        type: timebin_t 
+        doc: Minimal time-bin across all neighbours
+        ifndef: RT_NONE
+        ifdef_return_val: 0
+

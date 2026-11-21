@@ -3,7 +3,8 @@
 import yaml
 import sys
 from typing import Union
-from templates import init_jinja_env
+from render_templates import init_jinja_env
+from verbosity import *
 
 
 # List of all permissible field descriptors for a particle field.
@@ -14,6 +15,7 @@ _allowed_field_descriptors = [
     "doc",
     "documentation",
     "contents",
+    "ifndef",
     "ifdef",
     "ifdef_return_val",
 ]
@@ -72,14 +74,13 @@ class FieldEntry(object):
     """
 
     # jinja environment used to load and generate templates
-    jinja_env = init_jinja_env()
+    jinja_env = init_jinja_env(template_dir="api")
 
     def __init__(
         self,
         field_name: str,
         field_props: Union[dict, None],
         root_struct: str,
-        verbose=False,
         allow_prohibited=False,
         recursion_level=0,
     ):
@@ -96,9 +97,6 @@ class FieldEntry(object):
 
         root_struct: str
             name of "root" or "top level" struct this field is assigned to
-
-        verbose: bool
-            If true, be talkative about what we find.
 
         allow_prohibited: bool
             Allow the creation of prohibited/reserved field names.
@@ -120,7 +118,6 @@ class FieldEntry(object):
         self.name = field_name
         self.root_struct = root_struct
         self.props = field_props
-        self.verbose = verbose
         self.recursion_level = recursion_level
 
         # initialise default values
@@ -129,6 +126,7 @@ class FieldEntry(object):
         self.documentation = None
         self.sub_entries = []
         self.ifdef = None
+        self.ifndef = None
         self.ifdef_return_val = None
 
         # Now read what was written.
@@ -143,17 +141,15 @@ class FieldEntry(object):
         if self.name == "union":
             raise ValueError("SWITCH TO NEW SYNTAX WITH UNION AS TYPE")
 
-        if self.verbose:
-            print(f"Found field '{self.name}'")
+        dprint(f"  Found field '{self.name}'")
 
         if self.props is None:
             if self.type == "union":
                 raise ValueError("Found 'union' with no further specification?")
             if self.type == "struct":
                 raise ValueError("Found 'struct' with no further specification?")
-            if self.verbose:
                 # default is set in initialiser
-                print(f"  type: default [{self.type}]")
+                dprint(f"    type: default [{self.type}]")
 
             # nothing else to do.
             return
@@ -171,8 +167,7 @@ class FieldEntry(object):
         # Now see what's around.
         try:
             self.type = self.props["type"]
-            if self.verbose:
-                print("  type:", self.type)
+            dprint("    _extract_field_data(): type:", self.type)
         except KeyError:
             pass
 
@@ -195,33 +190,35 @@ class FieldEntry(object):
 
         try:
             self.size = self.props["size"]
-            if self.verbose:
-                print("  size:", self.size)
+            dprint("    _extract_field_data(): size:", self.size)
         except KeyError:
             pass
 
         try:
             self.documentation = self.props["doc"]
-            if self.verbose:
-                print("  documentation:", self.documentation)
+            dprint("    _extract_field_data(): documentation:", self.documentation)
         except KeyError:
             pass
         try:
             self.documentation = self.props["documentation"]
-            if self.verbose:
-                print("  documentation:", self.documentation)
+            dprint("    _extract_field_data(): documentation:", self.documentation)
         except KeyError:
             pass
         try:
             self.ifdef = self.props["ifdef"]
-            if self.verbose:
-                print("  macro guard:", self.ifdef)
+            dprint("    _extract_field_data(): macro ifdef guard:", self.ifdef)
+        except KeyError:
+            pass
+        try:
+            self.ifndef = self.props["ifndef"]
+            dprint("    _extract_field_data(): macro ifndef guard:", self.ifndef)
         except KeyError:
             pass
         try:
             self.ifdef_return_val = self.props["ifdef_return_val"]
-            if self.verbose:
-                print("  getter return value:", self.ifdef_return_val)
+            dprint(
+                "    _extract_field_data(): getter return value:", self.ifdef_return_val
+            )
         except KeyError:
             pass
 
@@ -238,20 +235,24 @@ class FieldEntry(object):
                     key,
                     contents[key],
                     self.root_struct,
-                    verbose=self.verbose,
                     recursion_level=self.recursion_level + 1,
                 )
                 self.sub_entries.append(new_entry)
 
         if self.type == "union":
-            if self.ifdef != None:
+            if self.ifdef != None or self.ifndef != None:
                 raise NotImplementedError(
-                    f"'{self.type} {self.name}': Union hidden behind macro guards not implemented. Use 'ifdef' on its members, instead."
+                    f"'{self.type} {self.name}': Union hidden behind macro guards not implemented. Use 'ifdef' or 'ifndef' on its members, instead."
                 )
             if self.size != 1:
                 raise ValueError(
                     f"'{self.type} {self.name}': fixed-size arrays of unions are illegal. You requested size[{self.size}]"
                 )
+
+        if self.ifdef != None and self.ifndef != None:
+            raise ValueError(
+                f"'{self.type} {self.name}': can't have both ifdef and ifndef guards, pick one!"
+            )
 
         return
 
@@ -269,7 +270,8 @@ class FieldEntry(object):
         explicit_var_accessors: bool = False,
         global_var_accessors: bool = False,
         part_struct_accessors: bool = False,
-        verbose: bool = False,
+        root_struct_override: Union[str, None] = None,
+        root_struct_special_name: Union[str, None] = None,
     ) -> dict:
         """
         Generate a dict with this field's properties for the jinja templates.
@@ -297,9 +299,18 @@ class FieldEntry(object):
         part_struct_accessors: bool
             if True, generate getters/setters which use part structs
 
+        root_struct_override: None or str
+            specify which root struct to use. This is needed in cases like for
+            src/hydro_part.h, which doesn't host the `struct timestep_limiter`
+            itself, but needs to know which struct to use within the API.
+            If not None, this implies to use the specialised API template
+            ("use_struct"), not the default particle one.
 
-        verbose: bool
-            Set verbosity
+        root_struct_special_name: None or str
+            specialised root struct name, to be used for APIs in files outside of
+            src/hydro/<flavour>/.
+            If not None, this implies to use the specialised API template, not the
+            default particle one.
 
         Returns
         -------
@@ -318,7 +329,7 @@ class FieldEntry(object):
             # structs need special ifdef treatment for return values - it's not guaranteed they exist if macro undefined
             is_struct = True
 
-        if self.ifdef:
+        if self.ifdef or self.ifndef:
             # do we use the default return value?
             if self.ifdef_return_val is None:
                 if is_pointer:
@@ -333,12 +344,6 @@ class FieldEntry(object):
                     self.ifdef_return_val = _field_data_type_default_return_vals[
                         self.type
                     ]
-            # if still None, something is wrong.
-            if self.ifdef_return_val is None:
-                raise ValueError(
-                    "No return value available for field with IFDEF."
-                    + f"name: {self.name}, type: {self.type}"
-                )
 
         # allow for array sizes defined by macros and to be multi-dimensional
         is_array = False
@@ -376,13 +381,17 @@ class FieldEntry(object):
             "TYPE": self.type,
             "INDENT_LEVEL": indent_level,
             "IFDEF": self.ifdef,
+            "IFNDEF": self.ifndef,
             "IFDEF_RETURN_VAL": self.ifdef_return_val,
             "PARENT_STRUCT": parent_struct,
             "ROOT_STRUCT": self.root_struct,
+            "ROOT_STRUCT_OVERRIDE": root_struct_override,
+            "ROOT_STRUCT_SPECIAL_NAME": root_struct_special_name,
             "IS_POINTER": is_pointer,
             "IS_STRUCT": is_struct,
             "HAS_DOC": self.documentation is not None,
             "HAS_IFDEF": self.ifdef is not None,
+            "HAS_IFNDEF": self.ifndef is not None,
             "HAS_PARENT_STRUCT": parent_struct is not None,
             "IS_ARRAY": is_array,
             "ARRAY_SIZE_IS_MACRO": array_size_is_macro,
@@ -397,27 +406,32 @@ class FieldEntry(object):
             "DEBUG_ID_CHECKS_MACRO_GUARD": not (self.ifdef == "SWIFT_DEBUG_CHECKS"),
         }
 
-        if verbose:
-            print("----", d)
+        #  dprint("field_dict:")
+        #  dpprint(d)
 
         return d
 
-    def generate_declaration(self, indent_level: int = 1, verbose: bool = False):
+    def generate_declaration(self, indent_level: int = 1) -> str:
         """
         Generate the field declaration
+
+        Parameters
+        ----------
 
         indent_level: int
             Increment the indent level of the declaration. Each indent_level
             indents the line by 2 whitespaces.
 
-        verbose: bool
-            Set verbosity level
+        Returns
+        -------
+
+        decl: str
+            string containing c-code of member declarations
         """
 
-        if verbose:
-            print(f"-- Generating declaration for {self.type} {self.name}")
+        vprint(f"generate_declaration() for {self.type} {self.name}")
 
-        params_dict = self._get_field_dict(indent_level=indent_level, verbose=verbose)
+        params_dict = self._get_field_dict(indent_level=indent_level)
 
         if params_dict["IS_INTERNAL_STRUCT"] or params_dict["IS_UNION"]:
             decl_subfields = ""
@@ -443,11 +457,17 @@ class FieldEntry(object):
         explicit_var_accessors: bool = False,
         global_var_accessors: bool = False,
         part_struct_accessors: bool = False,
+        root_struct_override: Union[str, None] = None,
+        root_struct_special_name: Union[str, None] = None,
         id_checks: bool = True,
-        verbose: bool = False,
     ) -> str:
         """
         Generate the getters and setters C code.
+
+        Note: For SWIFTGPUPACKSIM, we want to allow the simultaneous
+        co-existence of all 3 accessor variants, so all of
+        `explicit_var_accessors`, `global_var_accessors`, and
+        `part_struct_accessors` may be True simultaneously.
 
         Parameters
         ----------
@@ -469,11 +489,22 @@ class FieldEntry(object):
         part_struct_accessors: bool
             if True, generate getters/setters which use part structs
 
+        root_struct_override: None or str
+            specify which root struct to use. This is needed in cases like for
+            src/hydro_part.h, which doesn't host the `struct timestep_limiter`
+            itself, but needs to know which struct to use within the API.
+            If not None, this implies to use the specialised API template
+            ("use_struct"), not the default particle one.
+
+        root_struct_special_name: None or str
+            specialised root struct name, to be used for APIs in files outside of
+            src/hydro/<flavour>/, in particular API which uses a struct as the
+            argument and accesses members of that struct.
+            If not None, this implies to use the specialised API template
+            ("nonpart"), not the default particle one.
+
         id_checks: bool
             If True, add debugging checks whether the struct's accessor IDs align
-
-        verbose: bool
-            Set verbosity level
 
         Returns
         -------
@@ -483,17 +514,16 @@ class FieldEntry(object):
         """
 
         if self.name in _fields_without_api:
-            if verbose:
-                print(f"-- Skipping API for {self.type} {self.name}")
+            vprint(f"Skipping API for '{self.type} {self.name}'")
             return ""
 
-        if verbose:
-            print(f"-- Generating API for {self.type} {self.name}")
+        vprint(f"generate_API() for '{self.type} {self.name}'")
 
         params_dict = self._get_field_dict(
             parent_struct=parent_struct,
+            root_struct_override=root_struct_override,
+            root_struct_special_name=root_struct_special_name,
             id_checks=id_checks,
-            verbose=verbose,
         )
 
         # If we have sub-entries (e.g. members of a struct or union), generate
@@ -504,12 +534,14 @@ class FieldEntry(object):
                 if params_dict["IS_UNION"]:
                     # we don't need any modification to the accessors.
                     api_entry = entry.generate_API(
+                        parent_struct=parent_struct,
                         swift_header=swift_header,
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
                         part_struct_accessors=part_struct_accessors,
+                        root_struct_override=root_struct_override,
+                        root_struct_special_name=root_struct_special_name,
                         id_checks=id_checks,
-                        verbose=verbose,
                     )
                 else:
                     parent = parent_struct
@@ -524,8 +556,9 @@ class FieldEntry(object):
                         explicit_var_accessors=explicit_var_accessors,
                         global_var_accessors=global_var_accessors,
                         part_struct_accessors=part_struct_accessors,
+                        root_struct_override=root_struct_override,
+                        root_struct_special_name=root_struct_special_name,
                         id_checks=id_checks,
-                        verbose=verbose,
                     )
 
                 api_sub_entries.append(api_entry)
@@ -536,58 +569,121 @@ class FieldEntry(object):
             templ_part_struct = None
             templ_explicit = None
             templ_global = None
+
+            # construct template file name to read in from for the current case
+
             if params_dict["IS_ARRAY"]:
                 if params_dict["IS_POINTER"]:
                     raise NotImplementedError(
                         f"Field {self.type} {self.name}[{self.size}]:"
                         + "arrays of pointers is untested, could contain errors."
                     )
-                templ_part_struct = self.jinja_env.get_template(
-                    "api_array_part_struct_accessors.jinja.template"
-                )
-                templ_explicit = self.jinja_env.get_template(
-                    "api_array_explicit_var_accessors.jinja.template"
-                )
-                templ_global = self.jinja_env.get_template(
-                    "api_array_global_var_accessors.jinja.template"
-                )
+                scalar = "array"
+
             elif params_dict["IS_MULTIDIM_ARRAY"]:
-                templ_part_struct = self.jinja_env.get_template(
-                    "api_multidim_array_part_struct_accessors.jinja.template"
-                )
-                templ_explicit = self.jinja_env.get_template(
-                    "api_multidim_array_explicit_var_accessors.jinja.template"
-                )
-                templ_global = self.jinja_env.get_template(
-                    "api_multidim_array_global_var_accessors.jinja.template"
-                )
+                scalar = "multidim_array"
             else:
-                templ_part_struct = self.jinja_env.get_template(
-                    "api_scalar_part_struct_accessors.jinja.template"
-                )
-                templ_explicit = self.jinja_env.get_template(
-                    "api_scalar_explicit_var_accessors.jinja.template"
-                )
-                templ_global = self.jinja_env.get_template(
-                    "api_scalar_global_var_accessors.jinja.template"
+                scalar = "scalar"
+
+            nonpart_template = params_dict["ROOT_STRUCT_SPECIAL_NAME"] is not None
+            use_struct_template = params_dict["ROOT_STRUCT_OVERRIDE"] is not None
+
+            if use_struct_template and not nonpart_template:
+                raise ValueError(
+                    "Trying to use `use_struct` type template, but ROOT_STRUCT_SPECIAL_NAME is not specified."
                 )
 
+            if nonpart_template or use_struct_template:
+                if params_dict["IS_ARRAY"] or params_dict["IS_MULTIDIM_ARRAY"]:
+                    raise NotImplementedError(
+                        f"Field {self.type} {self.name}[{self.size}] ({params_dict["ROOT_STRUCT_SPECIAL_NAME"]}): non-scalar types not implemented yet for special templates"
+                    )
+
+                if scalar == "array":
+                    raise NotImplementedError(
+                        "jinja template for arrays is not implemented yet."
+                    )
+                if scalar == "multidim_array":
+                    raise NotImplementedError(
+                        "jinja template for multidim arrays is not implemented yet."
+                    )
+
+                if use_struct_template:
+                    templ_fname_explicit = (
+                        f"api_{scalar}_use_struct_explicit_var_accessors.jinja.template"
+                    )
+                    templ_fname_global = (
+                        f"api_{scalar}_use_struct_global_var_accessors.jinja.template"
+                    )
+                    templ_fname_part_struct = (
+                        f"api_{scalar}_use_struct_part_struct_accessors.jinja.template"
+                    )
+
+                elif nonpart_template:
+                    # No difference for accessors here.
+                    # Needs to be elif and come second, because nonpart_tempalte is always
+                    # true when use_struct_template is true
+                    templ_fname_explicit = f"api_{scalar}_nonpart.jinja.template"
+                    templ_fname_global = f"api_{scalar}_nonpart.jinja.template"
+                    templ_fname_part_struct = f"api_{scalar}_nonpart.jinja.template"
+
+                else:
+                    raise ValueError("We shouldn't be here.")
+
+            else:
+                # default templates
+                templ_fname_explicit = (
+                    f"api_{scalar}_explicit_var_accessors.jinja.template"
+                )
+                templ_fname_global = f"api_{scalar}_global_var_accessors.jinja.template"
+                templ_fname_part_struct = (
+                    f"api_{scalar}_part_struct_accessors.jinja.template"
+                )
+
+            # For SWIFTGPUPACKSIM, we want to be able to generate all 3
+            # accessor variant APIs simultaneously, so allow for that, but mark
+            # getters/setters with a suffix so they can co-exist
             api_part_struct = ""
             api_explicit = ""
             api_global = ""
 
-            if part_struct_accessors:
-                if not swift_header:
-                    params_dict["API_SUFFIX"] = "_part_struct"
-                api_part_struct = templ_part_struct.render(params_dict)
-            if explicit_var_accessors:
-                if not swift_header:
-                    params_dict["API_SUFFIX"] = "_explicit"
-                api_explicit = templ_explicit.render(params_dict)
-            if global_var_accessors:
-                if not swift_header:
+            # are we writing multiple APIs?
+            multiple_apis = (
+                (part_struct_accessors and global_var_accessors)
+                or (part_struct_accessors and explicit_var_accessors)
+                or (global_var_accessors and explicit_var_accessors)
+            )
+
+            if nonpart_template and not use_struct_template:
+                # for non-part templates, we don't use accessors, but specific structs
+                # to access the data. In those cases, there is no difference between
+                # the resulting code for any accessor, and if more than 1 was selected,
+                # we end up redefining functions. So only use 1 render call (shouldn't
+                # matter which accessor)
+                templ_global = self.jinja_env.get_template(templ_fname_global)
+                if multiple_apis or not swift_header:
                     params_dict["API_SUFFIX"] = "_global"
                 api_global = templ_global.render(params_dict)
+
+            else:
+
+                if part_struct_accessors:
+                    templ_part_struct = self.jinja_env.get_template(
+                        templ_fname_part_struct
+                    )
+                    if multiple_apis or not swift_header:
+                        params_dict["API_SUFFIX"] = "_part_struct"
+                    api_part_struct = templ_part_struct.render(params_dict)
+                if explicit_var_accessors:
+                    templ_explicit = self.jinja_env.get_template(templ_fname_explicit)
+                    if multiple_apis or not swift_header:
+                        params_dict["API_SUFFIX"] = "_explicit"
+                    api_explicit = templ_explicit.render(params_dict)
+                if global_var_accessors:
+                    templ_global = self.jinja_env.get_template(templ_fname_global)
+                    if multiple_apis or not swift_header:
+                        params_dict["API_SUFFIX"] = "_global"
+                    api_global = templ_global.render(params_dict)
 
             api = "".join((api_part_struct, api_explicit, api_global))
 

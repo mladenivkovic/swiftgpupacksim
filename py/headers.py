@@ -1,14 +1,23 @@
 #!/usr/bin/env python3
 
+import os
+
 from parse_yaml import FieldEntry
-from templates import (
-    jinja_generate_hydro_part_dot_h,
-    jinja_generate_parts_dot_h,
-    jinja_generate_hydro_part_arrays_struct_dot_h,
-    jinja_generate_hydro_part_arrays_flush_dot_h,
-    jinja_generate_hydro_space_dot_c,
+from render_templates import (
+    jinja_render_hydro_part_dot_h,
+    jinja_render_parts_dot_h,
+    jinja_render_hydro_part_arrays_struct_dot_h,
+    jinja_render_hydro_part_arrays_flush_dot_h,
+    jinja_render_rt_struct_dot_h,
+    jinja_render_timestep_limiter_struct_dot_h,
+    jinja_render_top_level_hydro_part_dot_h,
 )
-from utils import check_part_struct_first_in_list
+from utils import (
+    check_part_struct_first_in_list,
+    get_full_file_path_relative_to_script,
+    read_input_file,
+)
+from verbosity import *
 
 
 def generate_hydro_part_dot_h(
@@ -21,10 +30,9 @@ def generate_hydro_part_dot_h(
     global_var_accessors: bool = False,
     part_struct_accessors: bool = False,
     testing: bool = False,
-    verbose: bool = False,
 ) -> str:
     """
-    Generate a hydro_part.h.
+    Generate a src/<flavour>/hydro_part.h.
 
     Parameters
     ----------
@@ -59,9 +67,6 @@ def generate_hydro_part_dot_h(
         if True, use minimalistic header template for unit tests to generate
         header file
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -69,8 +74,7 @@ def generate_hydro_part_dot_h(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating particle struct header")
+    vprint("Generating particle struct header")
 
     have_part_struct = check_part_struct_first_in_list(part_d)
 
@@ -92,15 +96,14 @@ def generate_hydro_part_dot_h(
                     has_doc = True
                     doc = part_d[struct_name][field]
                 else:
-                    if verbose:
-                        print(f"-- Found prohibited field name {field}, skipping it.")
+                    print(f"Found prohibited field name {field}, skipping it.")
                 # in either case, don't process further
                 continue
             # parse the field specification
             field_props = part_d[struct_name][field]
-            field_entry = FieldEntry(field, field_props, struct_name, verbose=verbose)
+            field_entry = FieldEntry(field, field_props, struct_name)
             # get the declaration C-code
-            decl = field_entry.generate_declaration(verbose=verbose)
+            decl = field_entry.generate_declaration()
             declarations.append(decl)
             # get the API C-code
             api = field_entry.generate_API(
@@ -109,7 +112,6 @@ def generate_hydro_part_dot_h(
                 global_var_accessors=global_var_accessors,
                 part_struct_accessors=part_struct_accessors,
                 id_checks=id_checks,
-                verbose=verbose,
             )
             apis.append(api)
 
@@ -122,7 +124,7 @@ def generate_hydro_part_dot_h(
         }
 
     # Now generate the file from template
-    header_file = jinja_generate_hydro_part_dot_h(
+    header_file = jinja_render_hydro_part_dot_h(
         part_struct_d,
         metadata_d,
         swift_header=swift_header,
@@ -131,7 +133,6 @@ def generate_hydro_part_dot_h(
         explicit_var_accessors=explicit_var_accessors,
         global_var_accessors=global_var_accessors,
         testing=testing,
-        verbose=verbose,
     )
 
     return header_file
@@ -139,9 +140,9 @@ def generate_hydro_part_dot_h(
 
 def generate_parts_dot_h(
     part_d: dict,
+    metadata_d: dict,
     swift_header: bool = True,
     id_checks: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a parts.h, which contains:
@@ -155,14 +156,14 @@ def generate_parts_dot_h(
     part_d: dict
         dict containing the read-in particle struct fields
 
+    metadata_d: dict
+        dict containing particle (flavour) metadata
+
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
 
     id_checks: bool
         If True, add initialisation of particle accessor_id variables
-
-    verbose: bool
-        if True, be talkative
 
     Returns
     -------
@@ -171,8 +172,7 @@ def generate_parts_dot_h(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating parts.h")
+    vprint("Generating parts.h")
 
     have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
@@ -192,14 +192,12 @@ def generate_parts_dot_h(
         documentation = None
         try:
             documentation = props["doc"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
         try:
             documentation = props["documentation"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
 
@@ -208,12 +206,15 @@ def generate_parts_dot_h(
             "HAS_DOC": documentation is not None,
         }
 
-    if verbose:
-        print("--", part_struct_d)
+    dprint("part_struct_d")
+    dpprint(part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_parts_dot_h(
-        part_struct_d, swift_header=swift_header, id_checks=id_checks, verbose=verbose
+    header_file = jinja_render_parts_dot_h(
+        part_struct_d,
+        metadata_d,
+        swift_header=swift_header,
+        id_checks=id_checks,
     )
 
     return header_file
@@ -221,8 +222,8 @@ def generate_parts_dot_h(
 
 def generate_hydro_part_arrays_struct_dot_h(
     part_d: dict,
+    metadata_d: dict,
     swift_header: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a hydro_part_arrays_struct.h, which contains a `struct part_arrays`, containing
@@ -234,11 +235,11 @@ def generate_hydro_part_arrays_struct_dot_h(
     part_d: dict
         dict containing the read-in particle struct fields
 
+    metadata_d: dict
+        dict containing particle (flavour) metadata
+
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
-
-    verbose: bool
-        if True, be talkative
 
     Returns
     -------
@@ -247,8 +248,7 @@ def generate_hydro_part_arrays_struct_dot_h(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating hydro_part_arrays_struct.h header")
+    vprint("Generating hydro_part_arrays_struct.h header")
 
     have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
@@ -268,14 +268,12 @@ def generate_hydro_part_arrays_struct_dot_h(
         documentation = None
         try:
             documentation = props["doc"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
         try:
             documentation = props["documentation"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
 
@@ -284,12 +282,12 @@ def generate_hydro_part_arrays_struct_dot_h(
             "HAS_DOC": documentation is not None,
         }
 
-    if verbose:
-        print("--", part_struct_d)
+    dprint("part_struct_d")
+    dpprint(part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_hydro_part_arrays_struct_dot_h(
-        part_struct_d, swift_header=swift_header, verbose=verbose
+    header_file = jinja_render_hydro_part_arrays_struct_dot_h(
+        part_struct_d, metadata_d, swift_header=swift_header
     )
 
     return header_file
@@ -297,8 +295,8 @@ def generate_hydro_part_arrays_struct_dot_h(
 
 def generate_hydro_part_arrays_flush_dot_h(
     part_d: dict,
+    metadata_d: dict,
     swift_header: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a hydro_part_arrays_flush.h, which contains the functions needed for
@@ -310,11 +308,11 @@ def generate_hydro_part_arrays_flush_dot_h(
     part_d: dict
         dict containing the read-in particle struct fields
 
+    metadata_d: dict
+        dict containing particle (flavour) metadata
+
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
-
-    verbose: bool
-        if True, be talkative
 
     Returns
     -------
@@ -323,8 +321,7 @@ def generate_hydro_part_arrays_flush_dot_h(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating hydro_part_arrays_flush.h header")
+    vprint("Generating hydro_part_arrays_flush.h header")
 
     have_part_struct = check_part_struct_first_in_list(part_d)
     if not have_part_struct:
@@ -344,14 +341,12 @@ def generate_hydro_part_arrays_flush_dot_h(
         documentation = None
         try:
             documentation = props["doc"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
         try:
             documentation = props["documentation"]
-            if verbose:
-                print("  documentation:", documentation)
+            dprint("  documentation:", documentation)
         except KeyError:
             pass
 
@@ -360,12 +355,14 @@ def generate_hydro_part_arrays_flush_dot_h(
             "HAS_DOC": documentation is not None,
         }
 
-    if verbose:
-        print("--", part_struct_d)
+    dprint("part_struct_d")
+    dpprint(part_struct_d)
 
     #  generate the file from template
-    header_file = jinja_generate_hydro_part_arrays_flush_dot_h(
-        part_struct_d, swift_header=swift_header, verbose=verbose
+    header_file = jinja_render_hydro_part_arrays_flush_dot_h(
+        part_struct_d,
+        metadata_d,
+        swift_header=swift_header,
     )
 
     return header_file
@@ -375,7 +372,6 @@ def generate_hydro_space_dot_c(
     part_d: dict,
     metadata_d: dict,
     swift_header: bool = True,
-    verbose: bool = False,
 ) -> str:
     """
     Generate a hydro_space.c which contains the functions needed for
@@ -393,9 +389,6 @@ def generate_hydro_space_dot_c(
     swift_header: bool
         if True, generate headers compatible with swift, not swiftgpupacksim
 
-    verbose: bool
-        if True, be talkative
-
     Returns
     -------
 
@@ -403,16 +396,341 @@ def generate_hydro_space_dot_c(
         The contents of the hydro_part.h file.
     """
 
-    if verbose:
-        print("Generating hydro_space.c")
+    vprint("Generating hydro_space.c")
 
     struct_names = [name for name in part_d.keys()]
 
     part_struct_d = {"names": struct_names}
 
     #  generate the file from template
-    base_file = jinja_generate_hydro_space_dot_c(
-        part_struct_d, metadata_d, swift_header=swift_header, verbose=verbose
+    base_file = jinja_render_hydro_space_dot_c(
+        part_struct_d,
+        metadata_d,
+        swift_header=swift_header,
     )
 
     return base_file
+
+
+def generate_timestep_limiter_struct_dot_h(
+    limiter_d: dict,
+    metadata_d: dict,
+    swift_header: bool = True,
+    explicit_var_accessors: bool = False,
+    global_var_accessors: bool = False,
+    part_struct_accessors: bool = False,
+) -> str:
+    """
+    Generate a timestep_limiter_struct.h
+
+    Parameters
+    ----------
+
+    limiter_d: dict
+        dict containing the read-in limiter struct fields
+
+    metadata_d: dict
+        dict containing limiter metadata
+
+    swift_header: bool
+        if True, generate headers compatible with swift, not swiftgpupacksim
+
+    explicit_var_accessors: bool
+        if True, generate getters/setters which use explicitly passed pointer
+        as an argument
+
+    global_var_accessors: bool
+        if True, generate getters/setters which use global variable pointer
+
+    part_struct_accessors: bool
+        if True, generate getters/setters using a part struct
+
+    Returns
+    -------
+
+    header_file: str
+        The contents of the timeste_limiter_struct.h file.
+    """
+
+    vprint("Generating timestep_limiter_struct header")
+
+    # Create an empty dict we'll fill out with C-code for the API and
+    # declaration C-code snippets for each struct containing particle data
+    limiter_struct_d = {}
+
+    # Now go through all the structs provided in the yml file
+    for struct_name in limiter_d.keys():
+
+        declarations = []
+        apis = []
+        has_doc = False
+        doc = ""
+
+        for field in list(limiter_d[struct_name].keys()):
+            if FieldEntry.prohibited_name(field):
+                if field == "doc" or field == "documentation":
+                    has_doc = True
+                    doc = limiter_d[struct_name][field]
+                else:
+                    vprint(f"Found prohibited field name {field}, skipping it.")
+                # in either case, don't process further
+                continue
+            # parse the field specification
+            field_props = limiter_d[struct_name][field]
+            field_entry = FieldEntry(field, field_props, struct_name)
+            # get the declaration C-code
+            decl = field_entry.generate_declaration()
+            declarations.append(decl)
+            # get the API C-code
+            api = field_entry.generate_API(
+                swift_header=swift_header,
+                explicit_var_accessors=explicit_var_accessors,
+                global_var_accessors=global_var_accessors,
+                part_struct_accessors=part_struct_accessors,
+                root_struct_special_name="timestep_limiter",
+                id_checks=False,
+            )
+            apis.append(api)
+
+        # store the parsed data
+        limiter_struct_d[struct_name] = {
+            "API": apis,
+            "DECLARATIONS": declarations,
+            "HAS_DOC": has_doc,
+            "DOC": doc,
+        }
+
+    # Now generate the file from template
+    header_file = jinja_render_timestep_limiter_struct_dot_h(
+        limiter_struct_d,
+        metadata_d,
+        swift_header=swift_header,
+        part_struct_accessors=part_struct_accessors,
+        explicit_var_accessors=explicit_var_accessors,
+        global_var_accessors=global_var_accessors,
+    )
+
+    return header_file
+
+
+def generate_rt_struct_dot_h(
+    rt_d: dict,
+    metadata_d: dict,
+    swift_header: bool = True,
+    explicit_var_accessors: bool = False,
+    global_var_accessors: bool = False,
+    part_struct_accessors: bool = False,
+) -> str:
+    """
+    Generate a timestep_limiter_struct.h
+
+    Parameters
+    ----------
+
+    rt_d: dict
+        dict containing the read-in rt struct fields
+
+    metadata_d: dict
+        dict containing limiter metadata
+
+    swift_header: bool
+        if True, generate headers compatible with swift, not swiftgpupacksim
+
+    explicit_var_accessors: bool
+        if True, generate getters/setters which use explicitly passed pointer
+        as an argument
+
+    global_var_accessors: bool
+        if True, generate getters/setters which use global variable pointer
+
+    part_struct_accessors: bool
+        if True, generate getters/setters using a part struct
+
+    Returns
+    -------
+
+    header_file: str
+        The contents of the timeste_limiter_struct.h file.
+    """
+
+    vprint("Generating timestep_limiter_struct header")
+
+    # Create an empty dict we'll fill out with C-code for the API and
+    # declaration C-code snippets for each struct containing particle data
+    rt_struct_d = {}
+
+    # Now go through all the structs provided in the yml file
+    for struct_name in rt_d.keys():
+
+        declarations = []
+        apis = []
+        has_doc = False
+        doc = ""
+
+        for field in list(rt_d[struct_name].keys()):
+            if FieldEntry.prohibited_name(field):
+                if field == "doc" or field == "documentation":
+                    has_doc = True
+                    doc = rt_d[struct_name][field]
+                else:
+                    vprint(f"Found prohibited field name {field}, skipping it.")
+                # in either case, don't process further
+                continue
+            # parse the field specification
+            field_props = rt_d[struct_name][field]
+            field_entry = FieldEntry(field, field_props, struct_name)
+            # get the declaration C-code
+            decl = field_entry.generate_declaration()
+            declarations.append(decl)
+            # get the API C-code
+            api = field_entry.generate_API(
+                swift_header=swift_header,
+                explicit_var_accessors=explicit_var_accessors,
+                global_var_accessors=global_var_accessors,
+                part_struct_accessors=part_struct_accessors,
+                root_struct_special_name="rt_time_data",
+                id_checks=False,
+            )
+            apis.append(api)
+
+        # store the parsed data
+        rt_struct_d[struct_name] = {
+            "API": apis,
+            "DECLARATIONS": declarations,
+            "HAS_DOC": has_doc,
+            "DOC": doc,
+        }
+
+    # Now generate the file from template
+    header_file = jinja_render_rt_struct_dot_h(
+        rt_struct_d,
+        metadata_d,
+        swift_header=swift_header,
+        part_struct_accessors=part_struct_accessors,
+        explicit_var_accessors=explicit_var_accessors,
+        global_var_accessors=global_var_accessors,
+    )
+
+    return header_file
+
+
+def generate_top_level_hydro_part_dot_h(
+    inputs: dict,
+    swift_header: bool = True,
+    explicit_var_accessors: bool = False,
+    global_var_accessors: bool = False,
+    part_struct_accessors: bool = False,
+) -> str:
+    """
+    Generate a top level hydro_part.h file, i.e. src/hydro_part.h.
+
+    This file is special: It contains the getters/setters API for quantities
+    that each particle needs to have, as they are used outside of the hydro
+    kernels, such as time step related variables.
+    As such, the getters/setters access the relevant structs first, not
+    directly particles. Eacch of these structs should have its own getters and
+    setters defined already, using only the struct to access the relevant
+    members.
+
+
+    Parameters
+    ----------
+
+    inputs: dict containing pairs of yml input files (keys) and struct data
+        (values) to be used in the API, where the data should be another dict
+        containing the name of the struct itself ("struct" key) and the name
+        used in the API ("name" key)
+
+        Example:
+        inputs = {"timestep_limiter_struct.yml": data}
+        data = {"struct": "timestep_limiter_data", "name": "timestep_limiter"}
+
+    swift_header: bool
+        if True, generate headers compatible with swift, not swiftgpupacksim
+
+    explicit_var_accessors: bool
+        if True, generate getters/setters which use explicitly passed pointer
+        as an argument
+
+    global_var_accessors: bool
+        if True, generate getters/setters which use global variable pointer
+
+    part_struct_accessors: bool
+        if True, generate getters/setters using a part struct
+
+    Returns
+    -------
+
+    header_file: str
+        The contents of the timeste_limiter_struct.h file.
+    """
+
+    vprint("Generating src/hydro_part.h header")
+
+    # Create an empty dict we'll fill out with C-code for the API and
+    # declaration C-code snippets for each struct containing particle data
+    hydro_part_d = {}
+
+    # Now grab data for each file we need to process
+    for fname in inputs.keys():
+        fullfname = get_full_file_path_relative_to_script(os.path.join("input", fname))
+        data_d, metadata_d = read_input_file(fullfname)
+
+        root_struct_override = inputs[fname]["struct"]
+        root_struct_special_name = inputs[fname]["name"]
+
+        # Now go through all the structs provided in the yml file
+        for struct_name in data_d.keys():
+
+            apis = []
+            has_doc = False
+            doc = ""
+
+            for field in list(data_d[struct_name].keys()):
+                if FieldEntry.prohibited_name(field):
+                    if field == "doc" or field == "documentation":
+                        has_doc = True
+                        doc = data_d[struct_name][field]
+                    else:
+                        vprint(f"Found prohibited field name {field}, skipping it.")
+                    # in either case, don't process further
+                    continue
+
+                # parse the field specification
+                field_props = data_d[struct_name][field]
+                field_entry = FieldEntry(field, field_props, struct_name)
+                # we don't need the declaration C-code here.
+                #  decl = field_entry.generate_declaration()
+                #  declarations.append(decl)
+
+                # get the API C-code
+                api = field_entry.generate_API(
+                    swift_header=swift_header,
+                    explicit_var_accessors=explicit_var_accessors,
+                    global_var_accessors=global_var_accessors,
+                    part_struct_accessors=part_struct_accessors,
+                    root_struct_override=root_struct_override,
+                    root_struct_special_name=root_struct_special_name,
+                    id_checks=False,
+                )
+                apis.append(api)
+
+            # store the parsed data
+            hydro_part_d[struct_name] = {
+                "API": apis,
+                #  "DECLARATIONS": declarations,
+                "HAS_DOC": has_doc,
+                "DOC": doc,
+            }
+
+    # Now generate the file from template
+    header_file = jinja_render_top_level_hydro_part_dot_h(
+        hydro_part_d,
+        list(inputs.keys()),
+        swift_header=swift_header,
+        part_struct_accessors=part_struct_accessors,
+        explicit_var_accessors=explicit_var_accessors,
+        global_var_accessors=global_var_accessors,
+    )
+
+    return header_file

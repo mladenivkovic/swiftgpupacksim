@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
 
+"""
+Various utilities.
+"""
+
 import os
 from typing import Union
 import subprocess
 import datetime
 import yaml
+from required_data import (
+    _required_particle_fields,
+    _required_particle_file_metadata_swift,
+    _required_other_file_metadata_swift,
+)
+from verbosity import *
 
 
 # Allow certain "field names" to be multiply defined for validation checks
@@ -14,11 +24,6 @@ _permitted_duplicate_field_names = [
     "doc",
     "documentation",
     "accessor_id",
-]
-
-_required_file_metadata_swift = [
-    "authors",
-    "flavour",
 ]
 
 
@@ -44,12 +49,36 @@ def verify_dir_exists(dname: str, message: str = ""):
     return
 
 
-def check_output_directory(outdir: Union[str, list], verbose: bool = True):
+def check_output_directory(
+        outdir: Union[str, list], swift_header: bool = False, full_output: bool = False, testing: bool = False
+):
     """
     Extract the output directory from the parsed args.
     If it doesn't exist, make it.
+
+    Parameters
+    ----------
+
+    outdir: str or list
+        (top level) output directory to write output into.
+
+    swift_header: bool
+        If True, assume we're writing files for SWIFT, not SWIFTGPUPACKSIM.
+
+    full_output: bool
+        If True, we're writing all files, not just (hydro) particles
+
+    testing: bool
+        If True, we're writing outputs for unit tests
+
+    Return
+    ------
+
+    outdir: string
+        cleaned and verified output dir.
     """
 
+    # argparse may interpret input as a list, so check for that.
     if isinstance(outdir, list):
         if len(outdir) > 1:
             raise ValueError(
@@ -63,9 +92,16 @@ def check_output_directory(outdir: Union[str, list], verbose: bool = True):
         raise ValueError("Unknown type for output_dir cmdline arg:", type(outdir))
 
     if not os.path.isdir(outdir):
-        if verbose:
-            print(f"output directory '{outdir}' doesn't exist, creating it.")
+        vprint(
+            f"check_output_directory(): output directory '{outdir}' doesn't exist, creating it."
+        )
         os.makedirs(outdir)
+
+    if (swift_header or full_output) and not testing:
+        # Assume we're given top level dir. Look for /src and create it if necessary.
+        outdir = os.path.join(outdir, "src")
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
 
     return outdir
 
@@ -89,12 +125,60 @@ def get_git_hash() -> str:
             gitstdout = gitstdout.decode("utf8")
         hashstr = gitstdout.strip()
     except subprocess.CalledProcessError:
-        print("Something went wrong when trying to obtain hash of latest git commit.")
-        print(f"Command that failed was '{git_hash_cmd}'")
-        print("Using current timestamp instead.")
+        print(
+            "get_git_hash(): Something went wrong when trying to obtain hash of latest git commit."
+        )
+        print(f"get_git_hash(): Command that failed was '{git_hash_cmd}'")
+        print("get_git_hash(): Using current timestamp instead.")
         hashstr = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
 
     return hashstr
+
+
+def truncate_repo_file_path(path: str) -> str:
+    """
+    cut out everything except this repository's top level dir from the given
+    file `path`.
+
+    Assumes that `path` is within the repository.
+    """
+
+    # get full path, just in case
+    path = os.path.abspath(path)
+
+    # get repository root dir
+    cmd = "git rev-parse --show-toplevel"
+
+    gitrevparse = subprocess.run(
+        cmd,
+        shell=True,
+        check=True,
+        capture_output=True,
+    )
+    gitstdout = gitrevparse.stdout
+    if isinstance(gitstdout, bytes):
+        gitstdout = gitstdout.decode("utf8")
+    gitrootdir = gitstdout.strip()
+
+    # get directory name of this repository
+    repodirname = os.path.basename(gitrootdir)
+
+    # get relative path of the file provided
+    relfilepath = os.path.relpath(path, start=gitrootdir)
+
+    return os.path.join(repodirname, relfilepath)
+
+
+def get_full_file_path_relative_to_script(relpath: str) -> str:
+    """
+    get the full (absolute) file path of a file, where the file is specified by
+    `relpath`, the relative to the location of this script
+    """
+
+    # get full path, just in case
+    dname = os.path.dirname(__file__)
+    fullpath = os.path.join(dname, relpath)
+    return fullpath
 
 
 def print_separator(msg: str = ""):
@@ -109,9 +193,9 @@ def read_input_file(filename: str):
     Returns
     -------
 
-    part_data_dict: Dict containing all particle fields specified in yaml file
+    data_d: Dict containing all particle fields specified in yaml file
 
-    metadata_dict: Dict containing (SPH flavour) metadata specified in yaml file
+    metadata_d: Dict containing (SPH flavour) metadata specified in yaml file
     """
 
     verify_file_exists(filename)
@@ -119,22 +203,23 @@ def read_input_file(filename: str):
     yaml_data_d = yaml.safe_load(input_fp)
     input_fp.close()
 
-    part_data_dict = {}
+    data_d = {}
     # Set some default values
-    metadata_dict = {
+    metadata_d = {
         "authors": "NO AUTHORS SPECIFIED",
         "flavour": "NO_FLAVOUR_SPECIFIED",
+        "input_file": truncate_repo_file_path(filename),
     }
 
     for key in yaml_data_d.keys():
         if key == "metadata":
             # copy contents of group "metadata", not entire group
             for key2 in yaml_data_d[key].keys():
-                metadata_dict[key2] = yaml_data_d[key][key2]
+                metadata_d[key2] = yaml_data_d[key][key2]
         else:
-            part_data_dict[key] = yaml_data_d[key]
+            data_d[key] = yaml_data_d[key]
 
-    return part_data_dict, metadata_dict
+    return data_d, metadata_d
 
 
 def sanitize_include_headers(headerfiles: list):
@@ -179,23 +264,22 @@ in your yml file.
     return sanitized
 
 
-def read_default_includes(swift_header: bool = False, verbose: bool = False):
+def read_default_includes(swift_header: bool = False):
     """
     Read default headers to be included.
 
     Returns: List of headers as strings
     """
 
-    fname = "default_headers_swiftgpupacksim.h"
+    fname = "default_hydro_headers_swiftgpupacksim.h"
     if swift_header:
-        fname = "default_headers_swift.h"
+        fname = "default_hydro_headers_swift.h"
 
-    fname_full = os.path.join("input", fname)
+    fname_full = os.path.join("input", "hydro", fname)
 
-    if verbose:
-        print(
-            f"-- checking metadata: Using defaults from {fname_full} with additions from yml file"
-        )
+    vprint(
+        f"read_default_includes(): Using defaults from {fname_full} with additions from yml file"
+    )
 
     f = open(fname_full, "r")
     lines = f.readlines()
@@ -206,10 +290,75 @@ def read_default_includes(swift_header: bool = False, verbose: bool = False):
     return sanitized
 
 
-def validate_yml_contents(contents_d: dict) -> None:
+def _extract_field_names(fields_d: dict, depth: int = 0) -> list:
+    """
+    Extract field names (keys of dict) into a list and return it.
+    Ignores fields which are part of the _permitted_duplicate_field_names list.
+    Do this recursively if you find a union or a struct.
+
+    Parameters
+    ----------
+
+    fields_d: dict
+        dict containing field names (keys) and their properties (values)
+
+    Returns
+    -------
+
+    field_names: list
+        list of field names in this dict
+    """
+
+    field_names = []
+    for field in list(fields_d.keys()):
+        if field in _permitted_duplicate_field_names:
+            # These are allowed to exist multiple times.
+            continue
+        try:
+            ftype = fields_d[field]["type"]
+        except KeyError:
+            # a definition without the keyword 'type', most likely relying on defaults.
+            ftype = "float"
+        except TypeError:
+            # if a field has no specified components (no type, doc, etc), then the
+            # value of in the dict entry will be 'None', which isn't subscriptable
+            # and raises TypeError instead of KeyError.
+            # In case I'm missing some other issue, make sure the value is 'None'
+            # indeed.
+            if fields_d[field] is None:
+                ftype = "float"
+            else:
+                raise TypeError(
+                    f"Got something weird you need to debug. field={field}, fields_d[field]={fields_d[field]}"
+                )
+        if ftype == "union" or ftype == "struct":
+            # recurse into contents of composite members
+            field_names += _extract_field_names(fields_d[field]["contents"])
+        else:
+            field_names.append(field)
+    return field_names
+
+
+def validate_yml_contents(
+    contents_d: dict, filename: str, is_particle: bool = True, testing: bool = False
+) -> None:
     """
     Run through the read-in data from the yml file, passed as the dict
     `contents_d`, and validate that there is no issues:
+
+    Parameters
+    ----------
+
+    contents_d: dict containing the contents of the read-in file
+
+    filename: file name of the read in yml file
+
+    is_particle: bool
+        if True, assume this is the data for a hydro particle
+
+    testing: bool
+        if True, assume the output is intended for unit tests
+        and skip some checks.
 
     (- no top level struct defined twice)
     - no fields with same name defined twice
@@ -224,26 +373,40 @@ def validate_yml_contents(contents_d: dict) -> None:
     #          raise ValueError(f"particle data struct {key} defined more than once in your input yml file.")
     #      struct_names.append(key)
 
+    # check for unique field names
     field_names = []
-    for key in list(contents_d.keys()):
 
+    # loop over top-level particle structs
+    for key in list(contents_d.keys()):
         struct_fields = contents_d[key]
-        for field in list(struct_fields.keys()):
-            if field in _permitted_duplicate_field_names:
-                # These are allowed to exist multiple times.
-                continue
-            if field in field_names:
-                raise ValueError(
-                    f"data field '{field}' defined more than once in your input yml file."
-                    + "This will create multiply defined getters and setters."
-                )
-            field_names.append(field)
+        field_names += _extract_field_names(struct_fields)
+
+    duplicates = [f for f in set(field_names) if field_names.count(f) > 1]
+
+    if len(duplicates) > 0:
+        raise ValueError(
+            f"data fields '{duplicates}' are defined more than once in your input yml file."
+            + "\nThis will create multiply defined getters and setters."
+            + "\nRemember that member names must be unique even across different structs."
+        )
+
+    if not is_particle or testing:
+        # no more checks necessary.
+        return
+
+    # make sure all required fields exist.
+    for f in _required_particle_fields:
+        if f not in field_names:
+            print(
+                f"validate_yml_contents(): Error: required field '{f}' not found in particle yml parameter file {filename}."
+            )
+            quit(1)
 
     return
 
 
 def process_yml_metadata(
-    metadata_d: dict, swift_header: bool = False, verbose: bool = False
+    metadata_d: dict, is_particle: bool = True, swift_header: bool = False
 ) -> None:
     """
     Run through the read-in metadata from the yml file, passed as the dict
@@ -256,12 +419,12 @@ def process_yml_metadata(
     metadata_d: dict
         dict containing read-in metadata items from the yml file
 
+    is_particle: bool
+        if True, assume we're working with a (hydro) particle.
+
     swift_header: bool
         if True, we're creating header files for SWIFT. Otherwise, for
         SWIFTGPUPACKSIM.
-
-    verbose: bool
-        are we talkative?
     """
 
     passed_fields = list(metadata_d.keys())
@@ -269,28 +432,27 @@ def process_yml_metadata(
     if swift_header:
         # we only require metadata to be present if we're compiling swift headers.
 
-        for field in _required_file_metadata_swift:
+        checklist = _required_particle_file_metadata_swift
+        if not is_particle:
+            checklist = _required_other_file_metadata_swift
+
+        for field in checklist:
             if field not in passed_fields:
                 raise ValueError(
-                    f"Required field {field} not found in read-in metadata"
+                    f"process_yml_metadata(): Required field {field} not found in read-in metadata. "
+                    + f"metadata_d={metadata_d}, is_particle={is_particle}, "
+                    + f"swift_header={swift_header}"
                 )
 
     # Now go through fields one-by-one
 
     if "authors" not in passed_fields:
         metadata_d["author"] = "NO AUTHORS SPECIFIED"
-        if verbose:
-            print("-- checking metadata: No authors found")
-
-    if "flavour" not in passed_fields:
-        metadata_d["flavour"] = get_git_hash()
-        if verbose:
-            print("-- checking metadata: No SPH flavour found")
+        vprint("process_yml_metadata(): No authors found")
 
     if ("doc" not in passed_fields) and ("documentation" not in passed_fields):
         metadata_d["has_doc"] = False
-        if verbose:
-            print("-- checking metadata: No file documentation found")
+        vprint("process_yml_metadata(): No file documentation found")
 
         # place documentation contents with a key you'll know to search for later
         if "doc" not in passed_fields:
@@ -301,34 +463,40 @@ def process_yml_metadata(
     else:
         metadata_d["has_doc"] = True
 
-    if ("includes") not in passed_fields:
-        if verbose:
-            print(f"-- checking metadata: No header includes provided.")
+    if "flavour" not in passed_fields:
+        metadata_d["flavour"] = get_git_hash()
+        vprint("process_yml_metadata(): No SPH flavour found")
 
-        # use defaults.
-        incs = read_default_includes(swift_header=swift_header, verbose=verbose)
-        metadata_d["includes"] = incs
+    if "includes" not in passed_fields:
+        vprint(f"process_yml_metadata(): No header includes provided.")
+
+        metadata_d["includes"] = ""
+        if is_particle:
+            # use defaults.
+            incs = read_default_includes(swift_header=swift_header)
+            metadata_d["includes"] = incs
 
     else:
         # sanitize input
         sanitized = sanitize_include_headers(metadata_d["includes"])
         metadata_d["includes"] = sanitized
 
-    if ("includes_add") in passed_fields:
+    if "includes_add" in passed_fields:
 
-        if ("includes") in passed_fields:
+        if "includes" in passed_fields:
             raise ValueError(
                 "Got both 'includes' and 'includes_add' parameters, pick one!"
             )
 
-        # sanitize input
-        sanitized = sanitize_include_headers(metadata_d["includes_add"])
-        metadata_d["includes_add"] = sanitized
-        metadata_d["has_extra_includes"] = True
+        if is_particle:
+            # sanitize input
+            sanitized = sanitize_include_headers(metadata_d["includes_add"])
+            metadata_d["includes_add"] = sanitized
+            metadata_d["has_extra_includes"] = True
 
-        # now use defaults for 'includes' field, then add these later.
-        incs = read_default_includes(swift_header=swift_header, verbose=verbose)
-        metadata_d["includes"] = incs
+            # now use defaults for 'includes' field, then add these later.
+            incs = read_default_includes(swift_header=swift_header)
+            metadata_d["includes"] = incs
 
     else:
         metadata_d["includes_add"] = [""]
@@ -372,7 +540,6 @@ def add_auxiliary_fields(
     contents_d: dict,
     id_checks: bool = True,
     part_struct_accessors: bool = False,
-    verbose: bool = False,
 ) -> dict:
     """
     Run through the read in contents (passed as contents_d) and add auxiliary
@@ -390,10 +557,9 @@ def add_auxiliary_fields(
         if True, add a field for IDs for each struct for debugging checks
 
     part_struct_accessors: bool
-        if True, add auxiliary fields needed for part struct accessors (offset/index in cell's particle arrays for this particle, and pointer to cell_part_arrays)
-
-    verbose: bool
-        if True, be talkative
+        if True, add auxiliary fields needed for part struct accessors
+        (offset/index in cell's particle arrays for this particle, and pointer
+        to cell_part_arrays)
 
 
     Returns:
@@ -440,8 +606,7 @@ def add_auxiliary_fields(
     if not have_part_struct:
         # Add 'struct part' manually. Contents will be filled below.
 
-        if verbose:
-            print("-- Didn't find struct `part`, adding it.")
+        vprint("add_auxiliary_fields(): Didn't find struct `part`, adding it.")
 
         updated_contents_d["part"] = main_part_struct_aux_fields_props
 
@@ -470,10 +635,9 @@ def add_auxiliary_fields(
 
     if id_checks:
         if len(list(updated_contents_d.keys())) == 1:
-            if verbose:
-                print(
-                    "-- Found only one struct for particle data, not adding accessor_id checks"
-                )
+            vprint(
+                "add_auxiliary_fields(): Found only one struct for particle data, not adding accessor_id checks"
+            )
         else:
             # Add struct ID for debugging checks to each struct
             for key in updated_contents_d.keys():
@@ -481,9 +645,22 @@ def add_auxiliary_fields(
                     debug_id_props_name
                 ]
 
-                if verbose:
-                    print(
-                        f"-- Adding debug check field {debug_id_props_name} to struct {key}"
-                    )
+                vprint(
+                    f"add_auxiliary_fields(): Adding debug check field {debug_id_props_name} to struct {key}"
+                )
 
     return updated_contents_d
+
+
+def sanitize_C_macro(macro: str) -> str:
+    """
+    Sanitize a string to be used as a C macro
+    """
+
+    san = macro.upper()
+    san = san.replace("-", "_")
+    san = san.replace("/", "_")
+    san = san.replace(" ", "_")
+    san = san.replace(".", "_")
+    san = san.replace(":", "_")
+    return san

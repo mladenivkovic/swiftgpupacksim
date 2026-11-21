@@ -1,1 +1,0 @@
-../../../py/input/default_headers_swift.h
