@@ -3,6 +3,7 @@ TODO: ADD DOC FOR IFNDEF
 TODO: make section "developer manual"
         - make a note to put new fields in `required_data.py`  which all particles should have
         - make a note to put new features in tests, and explain what tests do
+        - mention use of -p flag to check whether your output is valid C code without re-compiling all of swift
 
 
 # Particle Struct Generation Scripts

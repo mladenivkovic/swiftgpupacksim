@@ -20,7 +20,7 @@ the case, you need to provide a path to one of those using the '-i' flag.
 Alternatively, specify the SWIFTSRCDIR environment variable before running this
 script, e.g.
 
-  SWIFTSRCDIR=/path/to/swiftsim ./pytests.sh
+  SWIFTSRCDIR=/path/to/swiftsim ./pytests.sh [-s, -g] [[ -i -a -H -p -h ]]
 
 Options:
 
@@ -28,7 +28,20 @@ Options:
                               valid C code, write SWIFT headers.
 -g, --swiftgpupacksim :       When testing whether particle file outputs are
                               valid C code, write SWIFTGPUPACKSIM headers.
+
 -i <path>, --include <path> : path to a SWIFT or SWIFTGPUPACKSIM directory.
+                              Used to include headers for compilation tests and
+                              to select the output type.
+
+-a, --apigen, --api-gen :     Run only API generation tests (along anything else
+                              specifically requested through other cmdline args)
+-H, --hinc, --header-inc :    Run only header inclusion tests (along anything
+                              else specifically requested through other cmdline
+                              args)
+-p, --part :                  Run only particle output compilation tests (along
+                              anything else specifically requested through other
+                              cmdline args)
+
 -h, --help :                  show this message and exit.
 "
 
@@ -36,7 +49,13 @@ USE_SWIFT_HEADERS="false"
 USE_SWIFTGPUPACKSIM_HEADERS="false"
 INCDIR=""
 
+RUN_API_GEN_TESTS="false"
+RUN_HEADER_INCLUSION_TESTS="false"
+RUN_PART_OUTPUT_COMPILE_TESTS="false"
+
+# --------------------------
 # Get cmdlineargs.
+# --------------------------
 while [[ $# > 0 ]]; do
   arg="$1"
 
@@ -59,6 +78,18 @@ while [[ $# > 0 ]]; do
       shift
     ;;
 
+    -a | --apigen | --api-gen)
+      RUN_API_GEN_TESTS="true"
+    ;;
+
+    -H | --hinc | --header-inc)
+      RUN_HEADER_INCLUSION_TESTS="true"
+    ;;
+
+    -p | --part )
+      RUN_PART_OUTPUT_COMPILE_TESTS="true"
+    ;;
+
     *)
     echo "Unknown argument:" $arg
     echo "Use -h or --help for help."
@@ -70,7 +101,9 @@ while [[ $# > 0 ]]; do
 done
 
 
+# --------------------------
 # Check and process inputs
+# --------------------------
 
 if [ "$USE_SWIFT_HEADERS" == "true" -a "$USE_SWIFTGPUPACKSIM_HEADERS" == "true" ]; then
   echo "Error: Can't run with -s and -g simultaneously. Pick only one."
@@ -85,20 +118,31 @@ if [ "$USE_SWIFT_HEADERS" == "false" -a "$USE_SWIFTGPUPACKSIM_HEADERS" == "false
 fi
 
 
+
+if [[ "$RUN_API_GEN_TESTS" == "false" && "$RUN_HEADER_INCLUSION_TESTS" == "false" && "$RUN_PART_OUTPUT_COMPILE_TESTS" == "false" ]]; then
+  # if no cmdline request is present, run all tests.
+  RUN_API_GEN_TESTS="true"
+  RUN_HEADER_INCLUSION_TESTS="true"
+  RUN_PART_OUTPUT_COMPILE_TESTS="true"
+fi
+
+
+
+# --------------------------
+# setup "environment"
+# --------------------------
+
 if [ "$USE_SWIFT_HEADERS" == "true" ]; then
 
   HEADER_TYPE_FLAG="--swift"
-  OUTPUT_PREFIX="src/hydro/NO_FLAVOUR_SPECIFIED"
   DIFF_PREFIX="output/swiftsim"
 
   if [ "$INCDIR" == "" ]; then
     # is variable defined?
     if [[ -z ${SWIFTSRCDIR} ]]; then
       # try to find relative path assuming we're in the git submodule
-      echo here1
       if [ -d ../../../swiftsim/src ]; then
         INCDIR=../../../swiftsim
-        echo here2
       else
         echo "Error: Didn't find a swiftsim dir while running with -s."
         echo "Specify a path using '-i' flag."
@@ -108,8 +152,6 @@ if [ "$USE_SWIFT_HEADERS" == "true" ]; then
       INCDIR=${SWIFTSRCDIR}
     fi
   fi
-
-  echo $INCDIR
 
   if [ ! -d "${INCDIR}" ]; then
     echo "Error: Didn't find directory ${INCDIR}"
@@ -121,7 +163,6 @@ fi
 if [ "$USE_SWIFTGPUPACKSIM_HEADERS" == "true" ]; then
 
   HEADER_TYPE_FLAG=""
-  OUTPUT_PREFIX="."
   DIFF_PREFIX="output/swiftgpupacksim"
 
   if [ "$INCDIR" == "" ]; then
@@ -176,6 +217,7 @@ function COMPILE_AND_RUN() {
 }
 
 
+
 function COMPILE_AND_RUN_PARTICLE() {
   # Compile and run the test program.
   # Usage:
@@ -212,6 +254,8 @@ function DIFF(){
 }
 
 
+
+
 function make_gizmo_subdir_helper_headers(){
   # Make a header which includes the appropriate gizmo headers from subdirs.
   # Usage: make_gizmo_subdir_helper_headers <basename>
@@ -245,64 +289,76 @@ function make_gizmo_subdir_helper_headers(){
 # cleanup before we start
 rm -rf ./hydro_part.h ./hydro_part_arrays_struct.h ./test_header_output.o ./src
 
-for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
-  for testcase in \
-    "test_data_types" \
-    "test_arrays" \
-    "test_multidim_arrays" \
-    "test_ifdefs" \
-    "test_struct" \
-    "test_union" \
-    "test_split_struct" \
-    "test_split_struct_nopart" \
-    "test_split_struct_arrays" \
-    "test_split_struct_structs_and_unions" \
-  ; do
+if [[ "$RUN_API_GEN_TESTS" == "true" ]]; then
+  for flag in "--part-struct-accessor" "--global-var-accessor" "--explicit-var-accessor"; do
+    for testcase in \
+      "test_data_types" \
+      "test_arrays" \
+      "test_multidim_arrays" \
+      "test_ifdefs" \
+      "test_struct" \
+      "test_union" \
+      "test_recursive_composite_types" \
+      "test_split_struct" \
+      "test_split_struct_nopart" \
+      "test_split_struct_arrays" \
+      "test_split_struct_structs_and_unions" \
+    ; do
 
-    echo "==============================================="
-    echo "running $testcase $flag"
-    echo "==============================================="
+      echo "==============================================="
+      echo "running $testcase $flag"
+      echo "==============================================="
 
-    python3 ../../py/swiftpartgen.py --test "$flag" $HEADER_TYPE_FLAG ./input/"$testcase".yml
-    COMPILE_AND_RUN
+      echo python3 ../../py/swiftpartgen.py --test "$flag" $HEADER_TYPE_FLAG ./input/"$testcase".yml
+      python3 ../../py/swiftpartgen.py --test "$flag" $HEADER_TYPE_FLAG ./input/"$testcase".yml
+      COMPILE_AND_RUN
 
-    if [ "$flag" == "--part-struct-accessor" ]; then
-      # I only keep the outputs for part struct accessors for comparison for now...
-      # cp "$OUTPUT_PREFIX"/hydro_part.h "$DIFF_PREFIX"/"$testcase".h
-      DIFF "$DIFF_PREFIX"/"$testcase".h "$OUTPUT_PREFIX"/hydro_part.h
-    fi
+      if [ "$flag" == "--part-struct-accessor" ]; then
+        # I only keep the outputs for part struct accessors for comparison for now...
+        # cp ./hydro_part.h "$DIFF_PREFIX"/"$testcase".h
+        DIFF "$DIFF_PREFIX"/"$testcase".h ./hydro_part.h
+      fi
 
-    rm -f ./hydro_part.h ./hydro_part_arrays_struct.h parts.h
-  done
+      rm -f ./hydro_part.h ./hydro_part_arrays_struct.h ./hydro_part_arrays_flush.h ./parts.h
+    done
 
-done # loop over accessor flags
+  done # loop over accessor flags
+fi
+
+
+
 
 
 # ---------------------------------------
 # TEST HEADER INCLUSION
 # ---------------------------------------
 
-# testing header inclusion:
-# we're not generating particle API here, so no point in testing all accessor methods.
+if [[ "$RUN_HEADER_INCLUSION_TESTS" == "true" ]]; then
 
-# make temporary headers which will be included
-touch a.h b.h c.h
+  # testing header inclusion:
+  # we're not generating particle API here, so no point in testing all accessor methods.
 
-for testcase in test_headerfile_includes test_headerfile_includes_add; do
+  # make temporary headers which will be included
+  touch a.h b.h c.h
 
-  echo "==============================================="
-  echo "running $testcase $flag"
-  echo "==============================================="
+  for testcase in test_headerfile_includes test_headerfile_includes_add; do
 
-  python3 ../../py/swiftpartgen.py --part-struct-accessors --test $HEADER_TYPE_FLAG ./input/"$testcase".yml
-  COMPILE_AND_RUN
+    echo "==============================================="
+    echo "running $testcase $flag"
+    echo "==============================================="
 
-  # cp "$OUTPUT_PREFIX"/hydro_part.h "$DIFF_PREFIX"/"$testcase".h
-  DIFF "$DIFF_PREFIX"/"$testcase".h "$OUTPUT_PREFIX"/hydro_part.h
+    python3 ../../py/swiftpartgen.py --part-struct-accessors --test $HEADER_TYPE_FLAG ./input/"$testcase".yml
+    COMPILE_AND_RUN
 
-done
+    # cp ./hydro_part.h "$DIFF_PREFIX"/"$testcase".h
+    DIFF "$DIFF_PREFIX"/"$testcase".h ./hydro_part.h
 
-rm -f a.h b.h c.h
+  done
+
+  rm -f a.h b.h c.h
+
+fi
+
 
 
 
@@ -313,50 +369,50 @@ rm -f a.h b.h c.h
 # Note: looping over this associating array as we do below will not
 # necessarily loop over all elements in the same order as defined here.
 declare -A SPH_FLAVOURS
-# SPH_FLAVOURS["AnarchyPU"]="ANARCHY_PU_SPH"
-# SPH_FLAVOURS["Gadget2"]="GADGET2_SPH"
-# SPH_FLAVOURS["Gasoline"]="GASOLINE_SPH"
-# SPH_FLAVOURS["Gizmo_MFV"]="GIZMO_MFV_SPH"
-# SPH_FLAVOURS["Gizmo_MFM"]="GIZMO_MFM_SPH"
-# SPH_FLAVOURS["Minimal"]="MINIMAL_SPH"
-# SPH_FLAVOURS["None"]="NONE_SPH"
-# SPH_FLAVOURS["Phantom"]="PHANTOM_SPH"
+SPH_FLAVOURS["AnarchyPU"]="ANARCHY_PU_SPH"
+SPH_FLAVOURS["Gadget2"]="GADGET2_SPH"
+SPH_FLAVOURS["Gasoline"]="GASOLINE_SPH"
+SPH_FLAVOURS["Gizmo_MFV"]="GIZMO_MFV_SPH"
+SPH_FLAVOURS["Gizmo_MFM"]="GIZMO_MFM_SPH"
+SPH_FLAVOURS["Minimal"]="MINIMAL_SPH"
+SPH_FLAVOURS["None"]="NONE_SPH"
+SPH_FLAVOURS["Phantom"]="PHANTOM_SPH"
 SPH_FLAVOURS["Planetary"]="PLANETARY_SPH"
-# SPH_FLAVOURS["PressureEnergy"]="HOPKINS_PU_SPH"
-# SPH_FLAVOURS["PressureEnergyMorrisMonaghanAV"]="HOPKINS_PU_SPH_MONAGHAN"
-# SPH_FLAVOURS["PressureEntropy"]="HOPKINS_PE_SPH"
-# SPH_FLAVOURS["REMIX"]="REMIX_SPH"
-# SPH_FLAVOURS["Shadowswift"]="SHADOWSWIFT"
-# SPH_FLAVOURS["SPHENIX"]="SPHENIX_SPH"
+SPH_FLAVOURS["PressureEnergy"]="HOPKINS_PU_SPH"
+SPH_FLAVOURS["PressureEnergyMorrisMonaghanAV"]="HOPKINS_PU_SPH_MONAGHAN"
+SPH_FLAVOURS["PressureEntropy"]="HOPKINS_PE_SPH"
+SPH_FLAVOURS["REMIX"]="REMIX_SPH"
+SPH_FLAVOURS["Shadowswift"]="SHADOWSWIFT"
+SPH_FLAVOURS["SPHENIX"]="SPHENIX_SPH"
 
+if [[ "$RUN_PART_OUTPUT_COMPILE_TESTS" == "true" ]]; then
 
+  for FLAVOUR in ${!SPH_FLAVOURS[@]}; do
+    for ACCESSOR_FLAG in \
+      "--part-struct-accessors" \
+      "--explicit-var-accessors" \
+      "--global-var-accessors" "--part-struct-accessors --explicit-var-accessors --global-var-accessors" \
+    ; do
 
-for FLAVOUR in ${!SPH_FLAVOURS[@]}; do
-  for ACCESSOR_FLAG in \
-    "--part-struct-accessors" \
-    "--explicit-var-accessors" \
-    "--global-var-accessors" "--part-struct-accessors --explicit-var-accessors --global-var-accessors" \
-  ; do
+      echo RUNNING FOR $FLAVOUR $ACCESSOR_FLAG
+      rm -rf src/*
 
-    echo RUNNING FOR $FLAVOUR $ACCESSOR_FLAG
-    rm -rf src/*
+      if [[ "$FLAVOUR" == "Gizmo_MFV" || $FLAVOUR == "Gizmo_MFM" ]]; then
+        make_gizmo_subdir_helper_headers hydro_part
+        make_gizmo_subdir_helper_headers hydro_part_arrays_struct
+      fi
 
-    if [[ "$FLAVOUR" == "Gizmo_MFV" || $FLAVOUR == "Gizmo_MFM" ]]; then
-      make_gizmo_subdir_helper_headers hydro_part
-      make_gizmo_subdir_helper_headers hydro_part_arrays_struct
-    fi
+      DEFINES="-D${SPH_FLAVOURS[$FLAVOUR]}"
 
-    DEFINES="-D${SPH_FLAVOURS[$FLAVOUR]}"
+      # if [[ "$FLAVOUR" == "Planetary" ]]; then
+      #   DEFINES+=" -DEOS_PLANETARY"
+      # fi
 
-    # if [[ "$FLAVOUR" == "Planetary" ]]; then
-    #   DEFINES+=" -DEOS_PLANETARY"
-    # fi
-
-    echo python3 ../../py/swiftpartgen.py $ACCESSOR_FLAG --full $HEADER_TYPE_FLAG input/hydro/"$FLAVOUR".yml
-    python3 ../../py/swiftpartgen.py $ACCESSOR_FLAG --full $HEADER_TYPE_FLAG input/hydro/"$FLAVOUR".yml
-    COMPILE_AND_RUN_PARTICLE "$DEFINES"
+      echo python3 ../../py/swiftpartgen.py $ACCESSOR_FLAG --full $HEADER_TYPE_FLAG input/hydro/"$FLAVOUR".yml
+      python3 ../../py/swiftpartgen.py $ACCESSOR_FLAG --full $HEADER_TYPE_FLAG input/hydro/"$FLAVOUR".yml
+      COMPILE_AND_RUN_PARTICLE "$DEFINES"
+    done
   done
-done
-
+fi
 
 echo "Python tests passed."
