@@ -99,7 +99,9 @@ See `sim/README.md` for more details.
 - `--enable-debugging-checks`: Enable additional debugging checks
 - `--enable-no-cuda-mallochost`: Use `malloc` instead of `cudaMallocHost`
 - `--enable-sanitizer`, `--enable-undefined-sanitizer`: Turn on sanitizers
+- `--enable-optreport`: Switch on optimization reports (works for a selection of compilers)
 
+See `sim/README.md` for more details.
 
 
 
