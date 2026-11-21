@@ -1,4 +1,4 @@
-Note: This readme is best read in an markdown reader or
+Note: This readme is probably best read in a markdown reader or
 [on github](https://github.com/mladenivkovic/swiftgpupacksim/blob/main/sim/README.md)
 rather than in plain text.
 

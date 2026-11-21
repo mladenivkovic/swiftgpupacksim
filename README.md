@@ -4,8 +4,7 @@ Note: This readme is probably best read in a markdown reader or
 rather than in plain text.
 
 
-swiftgpupacksim
-===============
+# swiftgpupacksim
 
 Mini-application to experiment with memory layout strategies and benchmark
 SWIFT's gpu packing and unpacking procedures.
@@ -22,17 +21,18 @@ See also the logging format specification in `data/REAMDE.md`.
 
 Some collected data should be available in the `data/` directory of this
 repository. Note that it's stored using `git lfs` and needs to be checked out
-to be made available (see the [instructions](#getting-sample-experiment-data) below).
+to be made available (see the [instructions](#getting-sample-measurement-data) below).
 
 
 
-Installation
-------------
 
-Building the mini-app
-~~~~~~~~~~~~~~~~~~~~~
+
+## Installation
+
+### Building the mini-app
 
 The mini-benchmark is stored in the `/sim` subdirectory. To install it, run
+
 ```
 cd sim
 ./autogen.sh    # or just autoreconf --install --symlink --force
@@ -56,8 +56,11 @@ reproduce. Run it using
 Some example scripts are given in `/sim/examples`.
 
 
-Getting sample experiment data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+### Getting sample measurement data
 
 Some experiment data (logs of packing/unpacking operations on actual GPU runs)
 are stored in the `data/` directory. However, they are stored via `git-lfs`. To
@@ -75,34 +78,22 @@ limited disk space, use
 git read-tree HEAD && GIT_LFS_SKIP_SMUDGE=1 git checkout -f HEAD
 ```
 
-WARNING: If you run that in a dirty working tree, you'll blow away your
+**WARNING**: If you run that in a dirty working tree, you'll blow away your
 changes, so don't do that.
 
 
-Getting the `swiftpartgen` submodule
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[swiftpartgen](https://github.com/SWIFTSIM/swiftpartgen) is used to generate
-header files for various particle layouts and their respective getter/setter
-APIs. If you have need of that, `swiftpartgen` is part of this repository as
-a submodule. To fetch it, run
-
-```
-git submodule init
-git submodule update
-```
 
 
 
 
-
-Configuration options
----------------------
+### Configuration options
 
 See `sim/README.md` for more details.
 
-Development options
-~~~~~~~~~~~~~~~~~~~
+
+
+
+### Development options
 
 - `--enable-debug`: Enable debugging symbols
 - `--enable-debugging-checks`: Enable additional debugging checks
@@ -111,8 +102,9 @@ Development options
 
 
 
-Selecting a memory layout, alignments, loop splitting, particle access variant
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+### Selecting a memory layout, alignments, loop splitting, particle access variant
 
 See `/sim/README.md` for more details.
 
@@ -133,8 +125,7 @@ particle) can be selected using the `--with-loop-split=<value>` flag.
 
 
 
-Reading the output
-~~~~~~~~~~~~~~~~~~
+## Reading the output
 
 A simulation run will produce an output file of the form `results_XXX.csv`,
 where `XXX` is determined by the selected memory layout realisation.
@@ -164,8 +155,9 @@ unpack,force,[FLOAT]
 
 
 
-Adding new measurement data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+## Adding new measurement data
 
 The measured event logs are kept under [git-lfs]() revision. To add your new
 data correctly without messing up this repo's size, do the following:
@@ -181,8 +173,7 @@ Consult `/data/README.md` for a specification of the log file formats.
 
 
 
-Adding new layout realisations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Adding new layout realisations
 
 New layouts are easiest implemented using [swiftpartgen](https://github.com/SWIFTSIM/swiftpartgen).
 It is kept as a git submodule in this repository. To fetch it, use
@@ -201,6 +192,5 @@ use it. In short, you'll have to:
 - add a new entry for the layout in `sim/configure.ac`
 
 and that should hopefully be it!
-
 
 
