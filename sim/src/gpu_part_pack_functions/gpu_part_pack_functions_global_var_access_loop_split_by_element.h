@@ -288,10 +288,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 #endif
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -307,10 +306,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 #endif
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
   }
 
 #ifdef VECTORIZE
@@ -359,10 +357,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -378,10 +375,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
   }
 
 #ifdef VECTORIZE
@@ -534,10 +530,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -553,10 +548,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (ptrdiff_t i = 0; i < count; i++) {
     ptrdiff_t pi = i + first;
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
   }
 
 #ifdef VECTORIZE

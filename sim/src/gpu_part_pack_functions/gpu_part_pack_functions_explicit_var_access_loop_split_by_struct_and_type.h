@@ -238,10 +238,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   for (int i = 0; i < count; i++) {
     /* struct x_h_v_m */
 
-    const double* x = part_get_const_x_explicit(pd, i);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_explicit(pd, i, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_explicit(pd, i, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_explicit(pd, i, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -251,10 +250,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     /* struct x_h_v_m */
     ps[i].x_h.w = part_get_h_explicit(pd, i);
 
-    const float* v = part_get_const_v_explicit(pd, i);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_explicit(pd, i, 0);
+    ps[i].vx_m.y = part_get_v_ind_explicit(pd, i, 1);
+    ps[i].vx_m.z = part_get_v_ind_explicit(pd, i, 2);
     ps[i].vx_m.w = part_get_mass_explicit(pd, i);
   }
 
@@ -300,10 +298,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
   for (int i = 0; i < count; i++) {
     /* struct x_h_v_m */
 
-    const double* x = part_get_const_x_explicit(pd, i);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_explicit(pd, i, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_explicit(pd, i, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_explicit(pd, i, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -313,10 +310,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     /* struct x_h_v_m */
     ps[i].x_h.w = part_get_h_explicit(pd, i);
 
-    const float* v = part_get_const_v_explicit(pd, i);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_explicit(pd, i, 0);
+    ps[i].vx_m.y = part_get_v_ind_explicit(pd, i, 1);
+    ps[i].vx_m.z = part_get_v_ind_explicit(pd, i, 2);
     ps[i].vx_m.w = part_get_mass_explicit(pd, i);
   }
 
@@ -455,10 +451,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
   for (int i = 0; i < count; i++) {
     /* struct x_h_v_m */
 
-    const double* x = part_get_const_x_explicit(pd, i);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_explicit(pd, i, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_explicit(pd, i, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_explicit(pd, i, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -468,10 +463,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     /* struct x_h_v_m */
     ps[i].x_h.w = part_get_h_explicit(pd, i);
 
-    const float* v = part_get_const_v_explicit(pd, i);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_explicit(pd, i, 0);
+    ps[i].vx_m.y = part_get_v_ind_explicit(pd, i, 1);
+    ps[i].vx_m.z = part_get_v_ind_explicit(pd, i, 2);
     ps[i].vx_m.w = part_get_mass_explicit(pd, i);
   }
 

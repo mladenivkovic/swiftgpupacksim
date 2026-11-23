@@ -282,10 +282,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
 
-    const double* x = part_get_const_x(p);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind(p, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind(p, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind(p, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -302,10 +301,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
 
-    const float* v = part_get_const_v(p);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind(p, 0);
+    ps[i].vx_m.y = part_get_v_ind(p, 1);
+    ps[i].vx_m.z = part_get_v_ind(p, 2);
   }
 
 #ifdef VECTORIZE
@@ -353,10 +351,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-    const double* x = part_get_const_x(p);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind(p, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind(p, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind(p, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -372,10 +369,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-    const float* v = part_get_const_v(p);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind(p, 0);
+    ps[i].vx_m.y = part_get_v_ind(p, 1);
+    ps[i].vx_m.z = part_get_v_ind(p, 2);
   }
 
 #ifdef VECTORIZE
@@ -527,10 +523,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-    const double* x = part_get_const_x(p);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind(p, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind(p, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind(p, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -546,10 +541,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #endif
   for (int i = 0; i < count; i++) {
     const struct part* restrict p = &parts[i];
-    const float* v = part_get_const_v(p);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind(p, 0);
+    ps[i].vx_m.y = part_get_v_ind(p, 1);
+    ps[i].vx_m.z = part_get_v_ind(p, 2);
   }
 
 #ifdef VECTORIZE
