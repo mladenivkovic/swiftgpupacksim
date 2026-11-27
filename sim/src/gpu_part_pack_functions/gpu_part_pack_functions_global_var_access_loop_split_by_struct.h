@@ -250,10 +250,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ptrdiff_t pi = i + first;
     /* struct x_h_v_m_double */
 
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -264,10 +263,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 
     ps[i].x_h.w = part_get_h_global(pi);
 
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
     ps[i].vx_m.w = part_get_mass_global(pi);
 
     ps[i].pjs_pje.x = cjstart;
@@ -284,16 +282,14 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
     ptrdiff_t pi = i + first;
     /* struct x_h_v_m */
 
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
     ps[i].x_h.w = part_get_h_global(pi);
 
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
     ps[i].vx_m.w = part_get_mass_global(pi);
 
     ps[i].pjs_pje.x = cjstart;
@@ -339,10 +335,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ptrdiff_t pi = i + first;
     /* struct x_h_v_m_double */
 
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -354,10 +349,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 
     ps[i].x_h.w = part_get_h_global(pi);
 
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
     ps[i].vx_m.w = part_get_mass_global(pi);
   }
 
@@ -370,16 +364,14 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
     ptrdiff_t pi = i + first;
     /* struct x_h_v_m */
 
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
     ps[i].x_h.w = part_get_h_global(pi);
 
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
     ps[i].vx_m.w = part_get_mass_global(pi);
   }
 #endif
@@ -516,10 +508,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ptrdiff_t pi = i + first;
     /* struct x_h_v_m */
 
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -531,10 +522,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 
     ps[i].x_h.w = part_get_h_global(pi);
 
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
     ps[i].vx_m.w = part_get_mass_global(pi);
   }
 
@@ -547,16 +537,14 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
     ptrdiff_t pi = i + first;
     /* struct x_h_v_m */
 
-    const double* x = part_get_const_x_global(pi);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_global(pi, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_global(pi, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_global(pi, 2) - shift[2];
     ps[i].x_h.w = part_get_h_global(pi);
 
-    const float* v = part_get_const_v_global(pi);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_global(pi, 0);
+    ps[i].vx_m.y = part_get_v_ind_global(pi, 1);
+    ps[i].vx_m.z = part_get_v_ind_global(pi, 2);
     ps[i].vx_m.w = part_get_mass_global(pi);
   }
 #endif

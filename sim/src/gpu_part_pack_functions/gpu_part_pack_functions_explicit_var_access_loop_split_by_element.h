@@ -269,10 +269,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const double* x = part_get_const_x_explicit(pd, i);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_explicit(pd, i, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_explicit(pd, i, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_explicit(pd, i, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -286,10 +285,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_density(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const float* v = part_get_const_v_explicit(pd, i);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_explicit(pd, i, 0);
+    ps[i].vx_m.y = part_get_v_ind_explicit(pd, i, 1);
+    ps[i].vx_m.z = part_get_v_ind_explicit(pd, i, 2);
   }
 
 #ifdef VECTORIZE
@@ -335,10 +333,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const double* x = part_get_const_x_explicit(pd, i);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_explicit(pd, i, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_explicit(pd, i, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_explicit(pd, i, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -352,10 +349,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_gradient(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const float* v = part_get_const_v_explicit(pd, i);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_explicit(pd, i, 0);
+    ps[i].vx_m.y = part_get_v_ind_explicit(pd, i, 1);
+    ps[i].vx_m.z = part_get_v_ind_explicit(pd, i, 2);
   }
 
 #ifdef VECTORIZE
@@ -498,10 +494,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const double* x = part_get_const_x_explicit(pd, i);
-    ps[i].x_h.x = x[0] - shift[0];
-    ps[i].x_h.y = x[1] - shift[1];
-    ps[i].x_h.z = x[2] - shift[2];
+    ps[i].x_h.x = part_get_x_ind_explicit(pd, i, 0) - shift[0];
+    ps[i].x_h.y = part_get_x_ind_explicit(pd, i, 1) - shift[1];
+    ps[i].x_h.z = part_get_x_ind_explicit(pd, i, 2) - shift[2];
   }
 
 #ifdef VECTORIZE
@@ -515,10 +510,9 @@ __attribute__((always_inline)) INLINE static void gpu_pack_part_force(
 #pragma omp simd
 #endif
   for (int i = 0; i < count; i++) {
-    const float* v = part_get_const_v_explicit(pd, i);
-    ps[i].vx_m.x = v[0];
-    ps[i].vx_m.y = v[1];
-    ps[i].vx_m.z = v[2];
+    ps[i].vx_m.x = part_get_v_ind_explicit(pd, i, 0);
+    ps[i].vx_m.y = part_get_v_ind_explicit(pd, i, 1);
+    ps[i].vx_m.z = part_get_v_ind_explicit(pd, i, 2);
   }
 
 #ifdef VECTORIZE
